@@ -121,7 +121,7 @@ export async function runSingleStep(stepId: string, session: any) {
 
         case 'location-ids':
             console.log('Fetching and caching location IDs');
-            const { LocationIdsOperation } = await import('../operations/hr-data/location-ids');
+            const { LocationIdsOperation } = await import('../operations/hr/hr-settings/location-ids');
             const locationIdsOp = new LocationIdsOperation(session.apiClient);
             const cachedLocations = locationIdsOp.getLocationData();
             if (!cachedLocations) {
@@ -136,7 +136,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating qualification groups from CSV data');
             const qualificationGroupsPath = `./data/${session.dataGroup}/qualification-groups.csv`;
             if (fs.existsSync(qualificationGroupsPath)) {
-                const { QualificationGroupsOperation } = await import('../operations/hr-data/qualification-groups');
+                const { QualificationGroupsOperation } = await import('../operations/hr/hr-settings/qualification-groups');
                 const qualificationGroupsOp = new QualificationGroupsOperation(session.apiClient, '3');
                 await qualificationGroupsOp.createQualificationGroups(qualificationGroupsPath);
                 console.log('Qualification groups created successfully');
@@ -149,7 +149,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating occupation groups and storing mappings');
             const occupationGroupsPath = `./data/${session.dataGroup}/occupation-groups.csv`;
             if (fs.existsSync(occupationGroupsPath)) {
-                const { OccupationGroupsOperation } = await import('../operations/hr-data/occupation-groups');
+                const { OccupationGroupsOperation } = await import('../operations/hr/hr-settings/occupation-groups');
                 const occupationGroupsOp = new OccupationGroupsOperation(session.apiClient, '3');
                 session.groupMappings = await occupationGroupsOp.createOccupationGroups(occupationGroupsPath);
                 console.log(`Created ${session.groupMappings?.length || 0} occupation group mappings`);
@@ -162,7 +162,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating occupations and linking to occupation groups');
             const occupationsPath = `./data/${session.dataGroup}/occupations.csv`;
             if (fs.existsSync(occupationsPath) && session.groupMappings?.length > 0) {
-                const { OccupationsOperation } = await import('../operations/hr-data/occupations');
+                const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
                 const occupationsOp = new OccupationsOperation(session.apiClient, '3');
                 await occupationsOp.createOccupations(occupationsPath, session.groupMappings);
                 console.log('Occupations created successfully');
@@ -175,7 +175,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating job titles from CSV data');
             const titlesPath = `./data/${session.dataGroup}/titles.csv`;
             if (fs.existsSync(titlesPath)) {
-                const { TitlesOperation } = await import('../operations/hr-data/titles');
+                const { TitlesOperation } = await import('../operations/hr/hr-settings/titles');
                 const titlesOp = new TitlesOperation(session.apiClient, '3');
                 await titlesOp.createTitles(titlesPath);
                 console.log('Job titles created successfully');
@@ -186,7 +186,7 @@ export async function runSingleStep(stepId: string, session: any) {
 
         case 'reference-data':
             console.log('Fetching and caching reference data');
-            const { ReferenceDataOperation } = await import('../operations/hr-data/reference-data');
+            const { ReferenceDataOperation } = await import('../operations/hr/hr-settings/reference-data');
             session.referenceDataOp = new ReferenceDataOperation(session.apiClient, '3');
             await session.referenceDataOp.fetchAndCache();
             console.log('Reference data cached successfully');
@@ -203,7 +203,7 @@ export async function runSingleStep(stepId: string, session: any) {
         case 'offices':
             console.log('Creating office locations');
             const officesPath = `./data/${session.dataGroup}/offices.csv`;
-            const { OfficesOperation } = await import('../operations/hr-data/offices');
+            const { OfficesOperation } = await import('../operations/hr/hr-settings/offices');
             session.officesOp = new OfficesOperation(session.hrApiClient);
             if (fs.existsSync(officesPath)) {
                 await session.officesOp.createOffices(officesPath);
@@ -216,7 +216,7 @@ export async function runSingleStep(stepId: string, session: any) {
         case 'legal-requirements':
             console.log('Creating legal requirements');
             const legalRequirementsPath = `./data/${session.dataGroup}/legal-requirements.csv`;
-            const { LegalRequirementsOperation } = await import('../operations/hr-data/legal-requirements');
+            const { LegalRequirementsOperation } = await import('../operations/time-tracking/legal-requirements');
             session.legalRequirementsOp = new LegalRequirementsOperation(session.taskManagementApiClient);
             if (fs.existsSync(legalRequirementsPath)) {
                 await session.legalRequirementsOp.createLegalRequirements(legalRequirementsPath);
@@ -228,13 +228,13 @@ export async function runSingleStep(stepId: string, session: any) {
 
         case 'hr-reference-data':
             console.log('Fetching HR reference data');
-            const { HrReferenceDataOperation } = await import('../operations/hr-data/hr-reference-data');
+            const { HrReferenceDataOperation } = await import('../operations/hr/hr-settings/hr-reference-data');
             session.hrReferenceDataOp = new HrReferenceDataOperation(session.hrApiClient, session.referenceDataOp);
             await session.hrReferenceDataOp.fetchAndCache();
             console.log('HR reference data cached successfully');
 
             console.log('Fetching day-off types');
-            const { DayOffTypesOperation } = await import('../operations/hr-data/day-off-types');
+            const { DayOffTypesOperation } = await import('../operations/hr/hr-settings/day-off-types');
             session.dayOffTypesOp = new DayOffTypesOperation(session.hrApiClient);
             await session.dayOffTypesOp.fetchAndCache();
             console.log('Day-off types cached successfully');
@@ -242,7 +242,7 @@ export async function runSingleStep(stepId: string, session: any) {
 
         case 'owner-employee':
             console.log('Creating owner employee');
-            const { OwnerEmployeeOperation } = await import('../operations/employees/owner-employee');
+            const { OwnerEmployeeOperation } = await import('../operations/hr/employees/owner-employee');
             const ownerEmployeeOp = new OwnerEmployeeOperation(session.apiClient, session.hrApiClient, session.authService);
             session.ownerEmployeeId = await ownerEmployeeOp.createOwnerEmployee();
             console.log('Owner employee created successfully');
@@ -257,7 +257,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating employee records and user accounts');
             const employeesPath = `./data/${session.dataGroup}/employees.csv`;
             if (fs.existsSync(employeesPath)) {
-                const { EmployeesOperation } = await import('../operations/employees/employees');
+                const { EmployeesOperation } = await import('../operations/hr/employees/employees');
                 session.employeesOp = new EmployeesOperation(session.hrApiClient, session.hrReferenceDataOp, session.officesOp, session.apiClient);
                 await session.employeesOp.createEmployees(employeesPath, session.emailDomain);
                 console.log('Employees created successfully');
@@ -283,7 +283,7 @@ export async function runSingleStep(stepId: string, session: any) {
             if (fs.existsSync(employeeContractsPath)) {
                 const employeeMappings = session.employeesOp.getMappings();
                 if (employeeMappings) {
-                    const { EmployeeContractsOperation } = await import('../operations/employees/employee-contracts');
+                    const { EmployeeContractsOperation } = await import('../operations/hr/employees/employee-contracts');
                     const employeeContractsOp = new EmployeeContractsOperation(session.hrApiClient, session.hrReferenceDataOp, session.legalRequirementsOp);
                     await employeeContractsOp.updateEmployeeContracts(employeeContractsPath, employeeMappings, `./data/${session.dataGroup}/employee-details.csv`);
                     console.log('Employee contracts updated successfully');
@@ -300,7 +300,7 @@ export async function runSingleStep(stepId: string, session: any) {
             const avatarMappingsPath = `./data/${session.dataGroup}/avatar-mappings.csv`;
             const avatarsDir = `./data/avatars/${session.dataGroup}`;
             if (fs.existsSync(avatarMappingsPath) && fs.existsSync(avatarsDir)) {
-                const { EmployeeAvatarsOperation } = await import('../operations/employees/employee-avatars');
+                const { EmployeeAvatarsOperation } = await import('../operations/hr/employees/employee-avatars');
                 const avatarsOp = new EmployeeAvatarsOperation(session.hrApiClient);
                 const employeeMappings = session.employeesOp.getMappings();
                 if (employeeMappings) {
@@ -318,7 +318,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Processing salary and contributions');
             const employeeMappings = session.employeesOp?.getMappings();
             if (employeeMappings && employeeMappings.length > 0) {
-                const { EmployeeSalaryPrefillOperation } = await import('../operations/employees/employee-salary-prefill');
+                const { EmployeeSalaryPrefillOperation } = await import('../operations/hr/employees/employee-salary-prefill');
                 const salaryPrefillOp = new EmployeeSalaryPrefillOperation(session.hrApiClient);
                 const salariesPath = `./data/${session.dataGroup}/employee-salaries.csv`;
                 await salaryPrefillOp.loadSalaryData(salariesPath);
@@ -328,7 +328,7 @@ export async function runSingleStep(stepId: string, session: any) {
                 await salaryPrefillOp.prefillEmployerContributions(employeeMappings);
 
                 console.log('Creating days-off records');
-                const { EmployeeDaysOffOperation } = await import('../operations/employees/employee-days-off');
+                const { EmployeeDaysOffOperation } = await import('../operations/hr/employees/employee-days-off');
                 const daysOffOp = new EmployeeDaysOffOperation(session.hrApiClient, session.dayOffTypesOp);
                 await daysOffOp.createDaysOff(employeeMappings);
                 console.log('Salary and days-off processing completed successfully');
@@ -343,7 +343,7 @@ export async function runSingleStep(stepId: string, session: any) {
             if (fs.existsSync(departmentsPath)) {
                 const employeeMappingsForDept = session.employeesOp?.getMappings();
                 if (employeeMappingsForDept) {
-                    const { DepartmentsOperation } = await import('../operations/hr-data/departments');
+                    const { DepartmentsOperation } = await import('../operations/hr/hr-settings/departments');
                     const departmentsOp = new DepartmentsOperation(session.hrApiClient);
                     session.departmentMappings = await departmentsOp.createDepartments(
                         departmentsPath,
@@ -365,7 +365,7 @@ export async function runSingleStep(stepId: string, session: any) {
             if (fs.existsSync(teamsPath) && session.departmentMappings?.length > 0) {
                 const employeeMappingsForTeams = session.employeesOp?.getMappings();
                 if (employeeMappingsForTeams) {
-                    const { TeamsOperation } = await import('../operations/hr-data/teams');
+                    const { TeamsOperation } = await import('../operations/hr/hr-settings/teams');
                     const teamsOp = new TeamsOperation(session.hrApiClient);
                     await teamsOp.createTeams(
                         teamsPath,
@@ -388,7 +388,7 @@ export async function runSingleStep(stepId: string, session: any) {
             if (fs.existsSync(cLevelPath) && session.departmentMappings?.length > 0) {
                 const employeeMappingsForCLevel = session.employeesOp?.getMappings();
                 if (employeeMappingsForCLevel) {
-                    const { CLevelOperation } = await import('../operations/employees/c-level');
+                    const { CLevelOperation } = await import('../operations/hr/employees/c-level');
                     const cLevelOp = new CLevelOperation(session.hrApiClient);
                     await cLevelOp.assignCLevel(
                         cLevelPath,
@@ -406,17 +406,17 @@ export async function runSingleStep(stepId: string, session: any) {
             break;
 
         case 'projects':
-            console.log('Creating projects');
+            console.log('Creating project-management');
             const projectsPath = `./data/${session.dataGroup}/projects.csv`;
             if (fs.existsSync(projectsPath)) {
-                const { ProjectsOperation } = await import('../operations/projects/projects');
+                const { ProjectsOperation } = await import('../operations/project-management/projects');
                 const projectsOp = new ProjectsOperation(session.imsCustomersApiClient, session.apiClient);
                 const selectedProjects = session.selectedProjects || [];
                 session.projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects);
                 session.projectsData = projectsOp.getProjectsData();
                 console.log(`Projects created: ${session.projectMappings?.length || 0}`);
             } else {
-                console.log('No projects CSV found, skipping');
+                console.log('No project-management CSV found, skipping');
             }
             break;
 
@@ -424,12 +424,12 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating milestones');
             const milestonesPath = `./data/${session.dataGroup}/milestones.csv`;
             if (fs.existsSync(milestonesPath) && session.projectMappings?.length > 0) {
-                const { MilestonesOperation } = await import('../operations/projects/milestones');
+                const { MilestonesOperation } = await import('../operations/project-management/milestones');
                 const milestonesOp = new MilestonesOperation(session.apiClient);
                 session.milestoneMappings = await milestonesOp.createMilestones(milestonesPath, session.projectMappings);
                 console.log(`Milestones created: ${session.milestoneMappings?.length || 0}`);
             } else {
-                console.log('No milestones CSV found or no projects created, skipping');
+                console.log('No milestones CSV found or no project-management created, skipping');
             }
             break;
 
@@ -441,7 +441,7 @@ export async function runSingleStep(stepId: string, session: any) {
             console.log('Creating work packages with time periods');
             const workPackagesPath = `./data/${session.dataGroup}/work-packages.csv`;
             if (fs.existsSync(workPackagesPath) && session.milestoneMappings?.length > 0 && session.projectsData) {
-                const { WorkPackagesOperation } = await import('../operations/projects/work-packages');
+                const { WorkPackagesOperation } = await import('../operations/project-management/work-packages');
                 const workPackagesOp = new WorkPackagesOperation(session.apiClient);
                 await workPackagesOp.createWorkPackages(workPackagesPath, session.milestoneMappings, session.projectsData);
                 console.log('Work packages created successfully');
@@ -455,8 +455,8 @@ export async function runSingleStep(stepId: string, session: any) {
                 console.log('Yearly PM calculation skipped (includeWorkPackages = false)');
                 break;
             }
-            console.log('Calculating yearly max PM for employees participating in projects');
-            const { EmployeeYearlyPmOperation } = await import('../operations/employees/employee-yearly-pm');
+            console.log('Calculating yearly max PM for employees participating in project-management');
+            const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
             const yearlyPmOp = new EmployeeYearlyPmOperation(session.hrApiClient);
             await yearlyPmOp.calculateYearlyMaxPm();
             console.log('Yearly max PM calculation completed');
@@ -467,28 +467,28 @@ export async function runSingleStep(stepId: string, session: any) {
                 console.log('Project assignments skipped (includeWorkPackages = false)');
                 break;
             }
-            console.log('Assigning employees to projects');
+            console.log('Assigning employees to project-management');
             if (session.projectMappings && session.projectMappings.length > 0) {
-                const { EmployeeYearlyPmOperation: YearlyPmOp } = await import('../operations/employees/employee-yearly-pm');
+                const { EmployeeYearlyPmOperation: YearlyPmOp } = await import('../operations/hr/employees/employee-yearly-pm');
                 const assignmentOp = new YearlyPmOp(session.hrApiClient);
                 await assignmentOp.assignEmployeesToProjects(session.projectMappings, session.apiClient, session.organizationId);
                 console.log('Employee project assignments completed');
 
                 // Assign PM to work packages
                 console.log('Assigning PM to work packages');
-                const { WorkPackagePmAssignmentOperation: WpPmAssignmentOp } = await import('../operations/projects/work-package-pm-assignment');
+                const { WorkPackagePmAssignmentOperation: WpPmAssignmentOp } = await import('../operations/project-management/work-package-pm-assignment');
                 const wpPmAssignmentOp = new WpPmAssignmentOp(session.apiClient);
                 await wpPmAssignmentOp.assignPmToWorkPackages(session.projectMappings, session.organizationId);
                 console.log('Work package PM assignments completed');
 
                 // Assign employees to work packages
                 console.log('Assigning employees to work packages');
-                const { EmployeeWorkPackageAssignmentOperation: EmpWpAssignmentOp } = await import('../operations/employees/employee-work-package-assignment');
+                const { EmployeeWorkPackageAssignmentOperation: EmpWpAssignmentOp } = await import('../operations/hr/employees/employee-work-package-assignment');
                 const empWpAssignmentOp = new EmpWpAssignmentOp(session.apiClient);
                 await empWpAssignmentOp.assignEmployeesToWorkPackages(session.projectMappings, session.organizationId);
                 console.log('Employee-work package assignments completed');
             } else {
-                console.log('No projects found for employee assignment');
+                console.log('No project-management found for employee assignment');
             }
             break;
 
@@ -499,7 +499,7 @@ export async function runSingleStep(stepId: string, session: any) {
             }
             console.log('Setting up Task Management');
             if (session.projectMappings && session.projectMappings.length > 0) {
-                const { TaskManagementOperation } = await import('../operations/projects/task-management');
+                const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                 const taskMgmtOp = new TaskManagementOperation(session.authService);
 
                 // Create task types
@@ -533,7 +533,7 @@ export async function runSingleStep(stepId: string, session: any) {
 
                 console.log('Task Management setup completed');
             } else {
-                console.log('No projects found for task management setup');
+                console.log('No project-management found for task management setup');
             }
             break;
 

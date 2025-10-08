@@ -1,6 +1,6 @@
-import { ApiClient } from '../../api-client';
-import { BaseOperation } from '../utilities/base-operation';
-import { EmployeeMapping } from '../../types';
+import { ApiClient } from '../../../api-client';
+import { BaseOperation } from '../../utilities/base-operation';
+import { EmployeeMapping } from '../../../types';
 
 interface EmployeeContract {
   weekly_hours?: number;
@@ -41,10 +41,10 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
   }
 
   /**
-   * Calculate and update yearly max PM for all employees participating in projects
+   * Calculate and update yearly max PM for all employees participating in project-management
    */
   async calculateYearlyMaxPm(): Promise<void> {
-    console.log('Fetching employees participating in projects\n');
+    console.log('Fetching employees participating in project-management\n');
 
     try {
       // Fetch all employees with contract, rndDetails and rndMeta
@@ -67,11 +67,11 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
         return;
       }
 
-      // Filter employees that participate in projects (client-side filter to avoid API error)
+      // Filter employees that participate in project-management (client-side filter to avoid API error)
       const employees = allEmployees.filter((e: any) => e.participate_in_projects === true || e.participate_in_projects === 1);
 
       if (employees.length === 0) {
-        console.log('No employees found participating in projects');
+        console.log('No employees found participating in project-management');
         return;
       }
 
@@ -292,7 +292,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
   }
 
   /**
-   * Assign employees to projects with year-based PM allocation
+   * Assign employees to project-management with year-based PM allocation
    * Strategy: Each project gets 5-6 random employees
    * @param projectMappings Array of project mappings with dates
    * @param apiClient Main API client (for /pct/api endpoint)
@@ -365,7 +365,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
         console.log('  participate_in_projects:', sample.participate_in_projects || 'MISSING');
       }
 
-      // Filter employees that participate in projects and have auth_user_id
+      // Filter employees that participate in project-management and have auth_user_id
       // Note: API returns auth_user_id, not user_id
       employees = allEmployees.filter((e: any) =>
         (e.participate_in_projects === true || e.participate_in_projects === 1) &&
@@ -414,7 +414,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
       console.log(`Owner will be assigned to at least 2 projects\n`);
     }
 
-    // Track which projects owner has been assigned to
+    // Track which project-management owner has been assigned to
     const ownerAssignedProjects: number[] = [];
 
     let totalAssignments = 0;
@@ -444,7 +444,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
       const shuffledEmployees = [...employees].sort(() => Math.random() - 0.5);
       let selectedEmployees = shuffledEmployees.slice(0, Math.min(numEmployees, employees.length));
 
-      // Ensure owner is included in first 2 projects (minimum requirement)
+      // Ensure owner is included in first 2 project-management (minimum requirement)
       if (ownerEmployee && ownerAssignedProjects.length < 2 && !selectedEmployees.includes(ownerEmployee)) {
         // Replace a random employee with owner
         const replaceIndex = Math.floor(Math.random() * selectedEmployees.length);
@@ -638,7 +638,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
               continue;
             }
 
-            // Get how many projects this employee is assigned to (need to fetch all their projects)
+            // Get how many project-management this employee is assigned to (need to fetch all their project-management)
             const allEmployeeProjects: any = await apiClient.executeRequest(
               'GET',
               '/pct/api/user-partnership-pms',
@@ -663,7 +663,7 @@ export class EmployeeYearlyPmOperation extends BaseOperation {
             // based on the overlap between project dates and employee contract dates
             const projectPmCapacity = (availableMonths / 12) * maxYearlyPm;
 
-            // Divide remaining capacity among projects
+            // Divide remaining capacity among project-management
             // Add randomness: each project gets between 70-100% of equal share
             const equalShare = Math.min(projectPmCapacity, remainingPm / totalProjectsCount);
             const randomFactor = 0.7 + Math.random() * 0.3; // 70-100%

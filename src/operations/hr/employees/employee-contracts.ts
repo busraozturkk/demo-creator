@@ -1,7 +1,7 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, EmployeeContract } from '../../utils/csv-loader';
-import { HrReferenceDataOperation } from '../hr-data/hr-reference-data';
-import { LegalRequirementsOperation } from '../hr-data/legal-requirements';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, EmployeeContract } from '../../../utils/csv-loader';
+import { HrReferenceDataOperation } from '../hr-settings/hr-reference-data';
+import { LegalRequirementsOperation } from '../../time-tracking/legal-requirements';
 
 interface EmployeeMapping {
   email: string;

@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, Occupation } from '../../utils/csv-loader';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, Occupation } from '../../../utils/csv-loader';
 import { OccupationGroupMapping } from './occupation-groups';
 import * as fs from 'fs';
 import * as path from 'path';

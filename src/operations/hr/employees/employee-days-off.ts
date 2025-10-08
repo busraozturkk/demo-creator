@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { DayOffTypesOperation } from '../hr-data/day-off-types';
+import { ApiClient } from '../../../api-client';
+import { DayOffTypesOperation } from '../hr-settings/day-off-types';
 
 interface EmployeeMapping {
   email: string;

@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, Title } from '../../utils/csv-loader';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, Title } from '../../../utils/csv-loader';
 
 export class TitlesOperation {
   private apiClient: ApiClient;

@@ -249,7 +249,7 @@ export class TaskManagementOperation extends BaseOperation {
     console.log('\n=== Fetching Task Management Structure ===\n');
 
     if (!projectMappings || projectMappings.length === 0) {
-      console.log('No projects found. Skipping task management setup.\n');
+      console.log('No project-management found. Skipping task management setup.\n');
       return;
     }
 

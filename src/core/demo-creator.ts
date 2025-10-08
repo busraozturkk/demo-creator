@@ -157,7 +157,7 @@ export async function runDemoCreation(
         }
 
         // Location IDs
-        const { LocationIdsOperation } = await import('../operations/hr-data/location-ids');
+        const { LocationIdsOperation } = await import('../operations/hr/hr-settings/location-ids');
         const locationIdsOp = new LocationIdsOperation(apiClient);
         const cachedLocations = locationIdsOp.getLocationData();
         if (!cachedLocations) {
@@ -169,7 +169,7 @@ export async function runDemoCreation(
         // Qualification Groups
         const qualificationGroupsPath = `./data/${dataGroup}/qualification-groups.csv`;
         if (fs.existsSync(qualificationGroupsPath)) {
-            const { QualificationGroupsOperation } = await import('../operations/hr-data/qualification-groups');
+            const { QualificationGroupsOperation } = await import('../operations/hr/hr-settings/qualification-groups');
             const qualificationGroupsOp = new QualificationGroupsOperation(apiClient, '3');
             await qualificationGroupsOp.createQualificationGroups(qualificationGroupsPath);
         }
@@ -177,7 +177,7 @@ export async function runDemoCreation(
         // Occupation Groups
         const occupationGroupsPath = `./data/${dataGroup}/occupation-groups.csv`;
         if (fs.existsSync(occupationGroupsPath)) {
-            const { OccupationGroupsOperation } = await import('../operations/hr-data/occupation-groups');
+            const { OccupationGroupsOperation } = await import('../operations/hr/hr-settings/occupation-groups');
             const occupationGroupsOp = new OccupationGroupsOperation(apiClient, '3');
             groupMappings = await occupationGroupsOp.createOccupationGroups(occupationGroupsPath);
         }
@@ -185,7 +185,7 @@ export async function runDemoCreation(
         // Occupations
         const occupationsPath = `./data/${dataGroup}/occupations.csv`;
         if (fs.existsSync(occupationsPath) && groupMappings.length > 0) {
-            const { OccupationsOperation } = await import('../operations/hr-data/occupations');
+            const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
             const occupationsOp = new OccupationsOperation(apiClient, '3');
             await occupationsOp.createOccupations(occupationsPath, groupMappings);
         }
@@ -193,14 +193,14 @@ export async function runDemoCreation(
         // Titles
         const titlesPath = `./data/${dataGroup}/titles.csv`;
         if (fs.existsSync(titlesPath)) {
-            const { TitlesOperation } = await import('../operations/hr-data/titles');
+            const { TitlesOperation } = await import('../operations/hr/hr-settings/titles');
             const titlesOp = new TitlesOperation(apiClient, '3');
             await titlesOp.createTitles(titlesPath);
         }
 
         // Reference Data
         socket.emit('log', { type: 'info', message: 'Step 2: Fetching reference data' });
-        const { ReferenceDataOperation } = await import('../operations/hr-data/reference-data');
+        const { ReferenceDataOperation } = await import('../operations/hr/hr-settings/reference-data');
         const referenceDataOp = new ReferenceDataOperation(apiClient, '3');
         await referenceDataOp.fetchAndCache();
 
@@ -211,7 +211,7 @@ export async function runDemoCreation(
 
         // Offices
         const officesPath = `./data/${dataGroup}/offices.csv`;
-        const { OfficesOperation } = await import('../operations/hr-data/offices');
+        const { OfficesOperation } = await import('../operations/hr/hr-settings/offices');
         const officesOp = new OfficesOperation(hrApiClient);
         if (fs.existsSync(officesPath)) {
             await officesOp.createOffices(officesPath);
@@ -219,7 +219,7 @@ export async function runDemoCreation(
 
         // Legal Requirements
         const legalRequirementsPath = `./data/${dataGroup}/legal-requirements.csv`;
-        const { LegalRequirementsOperation } = await import('../operations/hr-data/legal-requirements');
+        const { LegalRequirementsOperation } = await import('../operations/time-tracking/legal-requirements');
         const legalRequirementsOp = new LegalRequirementsOperation(taskManagementApiClient);
         if (fs.existsSync(legalRequirementsPath)) {
             await legalRequirementsOp.createLegalRequirements(legalRequirementsPath);
@@ -227,19 +227,19 @@ export async function runDemoCreation(
 
         // HR Reference Data
         socket.emit('log', { type: 'info', message: 'Step 3: Fetching HR reference data' });
-        const { HrReferenceDataOperation } = await import('../operations/hr-data/hr-reference-data');
+        const { HrReferenceDataOperation } = await import('../operations/hr/hr-settings/hr-reference-data');
         const hrReferenceDataOp = new HrReferenceDataOperation(hrApiClient, referenceDataOp);
         await hrReferenceDataOp.fetchAndCache();
 
         // Day Off Types
-        const { DayOffTypesOperation } = await import('../operations/hr-data/day-off-types');
+        const { DayOffTypesOperation } = await import('../operations/hr/hr-settings/day-off-types');
         const dayOffTypesOp = new DayOffTypesOperation(hrApiClient);
         await dayOffTypesOp.fetchAndCache();
 
         // Owner Employee
         socket.emit('log', { type: 'info', message: '\n=== Creating Owner Employee ===' });
         try {
-            const { OwnerEmployeeOperation } = await import('../operations/employees/owner-employee');
+            const { OwnerEmployeeOperation } = await import('../operations/hr/employees/owner-employee');
             const ownerEmployeeOp = new OwnerEmployeeOperation(apiClient, hrApiClient, authService);
             await ownerEmployeeOp.createOwnerEmployee();
             socket.emit('log', { type: 'success', message: 'Owner employee created\n' });
@@ -260,7 +260,7 @@ export async function runDemoCreation(
         let employeeMappings = null;
         if (fs.existsSync(employeesPath)) {
             try {
-                const { EmployeesOperation } = await import('../operations/employees/employees');
+                const { EmployeesOperation } = await import('../operations/hr/employees/employees');
                 const employeesOp = new EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
                 await employeesOp.createEmployees(employeesPath, emailDomain);
                 employeeMappings = employeesOp.getMappings();
@@ -275,7 +275,7 @@ export async function runDemoCreation(
         }
 
         if (employeeMappings) {
-            const employeesOp = new (await import('../operations/employees/employees')).EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
+            const employeesOp = new (await import('../operations/hr/employees/employees')).EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
 
             // Employee Details
             socket.emit('log', { type: 'info', message: '\n=== Updating Employee Details ===' });
@@ -296,7 +296,7 @@ export async function runDemoCreation(
             // Update owner employee contract first
             socket.emit('log', { type: 'info', message: '\n=== Updating Owner Employee Contract ===' });
             try {
-                const { OwnerEmployeeOperation: OwnerEmpOp } = await import('../operations/employees/owner-employee');
+                const { OwnerEmployeeOperation: OwnerEmpOp } = await import('../operations/hr/employees/owner-employee');
                 const ownerEmpOp = new OwnerEmpOp(apiClient, hrApiClient, authService);
                 const contractStartDate = await ownerEmpOp.updateOwnerEmployeeContract(hrReferenceDataOp, legalRequirementsOp);
                 socket.emit('log', { type: 'success', message: 'Owner employee contract updated\n' });
@@ -318,7 +318,7 @@ export async function runDemoCreation(
             const employeeContractsPath = `./data/${dataGroup}/employee-contracts.csv`;
             if (fs.existsSync(employeeContractsPath) && employeeMappings) {
                 try {
-                    const { EmployeeContractsOperation } = await import('../operations/employees/employee-contracts');
+                    const { EmployeeContractsOperation } = await import('../operations/hr/employees/employee-contracts');
                     const employeeContractsOp = new EmployeeContractsOperation(hrApiClient, hrReferenceDataOp, legalRequirementsOp);
                     await employeeContractsOp.updateEmployeeContracts(employeeContractsPath, employeeMappings, employeeDetailsPath);
                     socket.emit('log', { type: 'success', message: 'Employee contracts updated\n' });
@@ -335,7 +335,7 @@ export async function runDemoCreation(
 
             // Salary & Contributions
             if (employeeMappings && employeeMappings.length > 0) {
-                const { EmployeeSalaryPrefillOperation } = await import('../operations/employees/employee-salary-prefill');
+                const { EmployeeSalaryPrefillOperation } = await import('../operations/hr/employees/employee-salary-prefill');
                 const salaryPrefillOp = new EmployeeSalaryPrefillOperation(hrApiClient);
                 const salariesPath = `./data/${dataGroup}/employee-salaries.csv`;
                 await salaryPrefillOp.loadSalaryData(salariesPath);
@@ -343,7 +343,7 @@ export async function runDemoCreation(
                 await salaryPrefillOp.prefillEmployerContributions(employeeMappings);
 
                 // Days Off
-                const { EmployeeDaysOffOperation } = await import('../operations/employees/employee-days-off');
+                const { EmployeeDaysOffOperation } = await import('../operations/hr/employees/employee-days-off');
                 const daysOffOp = new EmployeeDaysOffOperation(hrApiClient, dayOffTypesOp);
                 await daysOffOp.createDaysOff(employeeMappings);
 
@@ -352,7 +352,7 @@ export async function runDemoCreation(
                 if (fs.existsSync(departmentsPath)) {
                     socket.emit('log', { type: 'info', message: '\n=== Creating Departments ===' });
                     try {
-                        const { DepartmentsOperation } = await import('../operations/hr-data/departments');
+                        const { DepartmentsOperation } = await import('../operations/hr/hr-settings/departments');
                         const departmentsOp = new DepartmentsOperation(hrApiClient);
                         const departmentMappings = await departmentsOp.createDepartments(
                             departmentsPath,
@@ -366,7 +366,7 @@ export async function runDemoCreation(
                         if (fs.existsSync(teamsPath) && departmentMappings.length > 0) {
                             socket.emit('log', { type: 'info', message: '\n=== Creating Teams ===' });
                             try {
-                                const { TeamsOperation } = await import('../operations/hr-data/teams');
+                                const { TeamsOperation } = await import('../operations/hr/hr-settings/teams');
                                 const teamsOp = new TeamsOperation(hrApiClient);
                                 await teamsOp.createTeams(
                                     teamsPath,
@@ -386,7 +386,7 @@ export async function runDemoCreation(
                         if (fs.existsSync(cLevelPath) && departmentMappings.length > 0) {
                             socket.emit('log', { type: 'info', message: '\n=== Assigning C-Level ===' });
                             try {
-                                const { CLevelOperation } = await import('../operations/employees/c-level');
+                                const { CLevelOperation } = await import('../operations/hr/employees/c-level');
                                 const cLevelOp = new CLevelOperation(hrApiClient);
                                 await cLevelOp.assignCLevel(
                                     cLevelPath,
@@ -411,7 +411,7 @@ export async function runDemoCreation(
                 if (fs.existsSync(projectsPath)) {
                     socket.emit('log', { type: 'info', message: '\n=== Creating Projects ===' });
                     try {
-                        const { ProjectsOperation } = await import('../operations/projects/projects');
+                        const { ProjectsOperation } = await import('../operations/project-management/projects');
                         const projectsOp = new ProjectsOperation(imsCustomersApiClient, apiClient);
                         const projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects);
                         socket.emit('log', { type: 'success', message: `✓ Projects created: ${projectMappings?.length || 0}\n` });
@@ -421,7 +421,7 @@ export async function runDemoCreation(
                         if (projectMappings.length > 0 && fs.existsSync(milestonesPath)) {
                             socket.emit('log', { type: 'info', message: '\n=== Creating Milestones ===' });
                             try {
-                                const { MilestonesOperation } = await import('../operations/projects/milestones');
+                                const { MilestonesOperation } = await import('../operations/project-management/milestones');
                                 const milestonesOp = new MilestonesOperation(apiClient);
                                 const milestoneMappings = await milestonesOp.createMilestones(milestonesPath, projectMappings);
                                 socket.emit('log', { type: 'success', message: `✓ Milestones created: ${milestoneMappings?.length || 0}\n` });
@@ -432,7 +432,7 @@ export async function runDemoCreation(
                                     if (milestoneMappings.length > 0 && fs.existsSync(workPackagesPath)) {
                                     socket.emit('log', { type: 'info', message: '\n=== Creating Work Packages ===' });
                                     try {
-                                        const { WorkPackagesOperation } = await import('../operations/projects/work-packages');
+                                        const { WorkPackagesOperation } = await import('../operations/project-management/work-packages');
                                         const workPackagesOp = new WorkPackagesOperation(apiClient);
                                         const projectsData = projectsOp.getProjectsData();
                                         await workPackagesOp.createWorkPackages(workPackagesPath, milestoneMappings, projectsData);
@@ -441,23 +441,23 @@ export async function runDemoCreation(
                                         // Calculate yearly max PM for employees
                                         socket.emit('log', { type: 'info', message: '\n=== Calculating Yearly Max PM ===' });
                                         try {
-                                            const { EmployeeYearlyPmOperation } = await import('../operations/employees/employee-yearly-pm');
+                                            const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
                                             const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
                                             await yearlyPmOp.calculateYearlyMaxPm();
                                             socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
 
-                                            // Assign employees to projects
+                                            // Assign employees to project-management
                                             socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Projects ===' });
                                             try {
                                                 const projectMappingsForAssignment = projectsOp.getMappings();
                                                 if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
                                                     await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
-                                                    socket.emit('log', { type: 'success', message: 'Employees assigned to projects\n' });
+                                                    socket.emit('log', { type: 'success', message: 'Employees assigned to project-management\n' });
 
                                                     // Assign PM to work packages
                                                     socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Work Packages ===' });
                                                     try {
-                                                        const { WorkPackagePmAssignmentOperation } = await import('../operations/projects/work-package-pm-assignment');
+                                                        const { WorkPackagePmAssignmentOperation } = await import('../operations/project-management/work-package-pm-assignment');
                                                         const wpPmAssignmentOp = new WorkPackagePmAssignmentOperation(apiClient);
                                                         await wpPmAssignmentOp.assignPmToWorkPackages(projectMappingsForAssignment, organizationId);
                                                         socket.emit('log', { type: 'success', message: 'Work package PM assignments completed\n' });
@@ -465,7 +465,7 @@ export async function runDemoCreation(
                                                         // Assign employees to work packages
                                                         socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Work Packages ===' });
                                                         try {
-                                                            const { EmployeeWorkPackageAssignmentOperation } = await import('../operations/employees/employee-work-package-assignment');
+                                                            const { EmployeeWorkPackageAssignmentOperation } = await import('../operations/hr/employees/employee-work-package-assignment');
                                                             const empWpAssignmentOp = new EmployeeWorkPackageAssignmentOperation(apiClient);
                                                             await empWpAssignmentOp.assignEmployeesToWorkPackages(projectMappingsForAssignment, organizationId);
                                                             socket.emit('log', { type: 'success', message: 'Employee-work package assignments completed\n' });
@@ -473,7 +473,7 @@ export async function runDemoCreation(
                                                             // Task Management
                                                             socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
                                                             try {
-                                                                const { TaskManagementOperation } = await import('../operations/projects/task-management');
+                                                                const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                                                                 const taskMgmtOp = new TaskManagementOperation(authService);
 
                                                                 // Create task types
@@ -522,7 +522,7 @@ export async function runDemoCreation(
                                                         socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                                     }
                                                 } else {
-                                                    socket.emit('log', { type: 'warning', message: 'No projects found for assignment\n' });
+                                                    socket.emit('log', { type: 'warning', message: 'No project-management found for assignment\n' });
                                                 }
                                             } catch (error: any) {
                                                 socket.emit('log', { type: 'error', message: `Project assignment failed: ${error.message}` });
@@ -558,7 +558,7 @@ export async function runDemoCreation(
             const avatarsDir = `./data/avatars/${dataGroup}`;
             if (fs.existsSync(avatarMappingsPath) && fs.existsSync(avatarsDir) && employeeMappings) {
                 try {
-                    const { EmployeeAvatarsOperation } = await import('../operations/employees/employee-avatars');
+                    const { EmployeeAvatarsOperation } = await import('../operations/hr/employees/employee-avatars');
                     const avatarsOp = new EmployeeAvatarsOperation(hrApiClient);
                     await avatarsOp.uploadAvatars(avatarsDir, avatarMappingsPath, employeeMappings);
                     socket.emit('log', { type: 'success', message: '✓ Employee avatars uploaded successfully\n' });

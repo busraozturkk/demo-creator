@@ -1,11 +1,11 @@
-import { ApiClient } from '../../api-client';
-import { AuthService } from '../../auth';
-import { BaseOperation } from '../utilities/base-operation';
-import { EmployeeMapping } from '../../types';
-import { CACHE_PATHS } from '../../utils/constants';
+import { ApiClient } from '../../../api-client';
+import { AuthService } from '../../../auth';
+import { BaseOperation } from '../../utilities/base-operation';
+import { EmployeeMapping } from '../../../types';
+import { CACHE_PATHS } from '../../../utils/constants';
 import * as fs from 'fs';
-import { HrReferenceDataOperation } from '../hr-data/hr-reference-data';
-import { LegalRequirementsOperation } from '../hr-data/legal-requirements';
+import { HrReferenceDataOperation } from '../hr-settings/hr-reference-data';
+import { LegalRequirementsOperation } from '../../time-tracking/legal-requirements';
 
 export class OwnerEmployeeOperation extends BaseOperation {
   private apiClient: ApiClient;
@@ -96,7 +96,7 @@ export class OwnerEmployeeOperation extends BaseOperation {
     // Prepare employee details update payload
     const employeeUpdateData: any = {
       working_email: userEmail,
-      participate_in_projects: true,  // Enable owner to participate in projects
+      participate_in_projects: true,  // Enable owner to participate in project-management
     };
 
     // Add optional details if provided

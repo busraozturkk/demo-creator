@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { BaseOperation } from '../utilities/base-operation';
+import { ApiClient } from '../../../api-client';
+import { BaseOperation } from '../../utilities/base-operation';
 import * as fs from 'fs';
 import * as path from 'path';
 

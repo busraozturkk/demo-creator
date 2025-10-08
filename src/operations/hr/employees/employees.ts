@@ -1,15 +1,15 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, Employee, EmployeeDetail, EmployeeDetailWithIds } from '../../utils/csv-loader';
-import { HrReferenceDataOperation } from '../hr-data/hr-reference-data';
-import { OfficesOperation } from '../hr-data/offices';
-import { BaseOperation } from '../utilities/base-operation';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, Employee, EmployeeDetail, EmployeeDetailWithIds } from '../../../utils/csv-loader';
+import { HrReferenceDataOperation } from '../hr-settings/hr-reference-data';
+import { OfficesOperation } from '../hr-settings/offices';
+import { BaseOperation } from '../../utilities/base-operation';
 import {
   DEFAULT_USER_ROLE_ID,
   MULTIPART_BOUNDARY,
   EXTERNAL_MODEL_TYPES,
   CACHE_PATHS
-} from '../../utils/constants';
-import { EmployeeMapping } from '../../types';
+} from '../../../utils/constants';
+import { EmployeeMapping } from '../../../types';
 import * as path from 'path';
 
 export class EmployeesOperation extends BaseOperation {
@@ -294,7 +294,7 @@ export class EmployeesOperation extends BaseOperation {
         const dataWithEmail = {
           ...updateData,
           working_email: fullEmail,
-          participate_in_projects: true  // Enable all employees to participate in projects
+          participate_in_projects: true  // Enable all employees to participate in project-management
         };
 
         await this.hrApiClient.executeRequest(

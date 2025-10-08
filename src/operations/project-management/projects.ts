@@ -61,7 +61,7 @@ export class ProjectsOperation {
       console.log(`[${i + 1}/${projectsToCreate.length}] Creating: ${project.short_title}`);
 
       try {
-        const response = await this.apiClient.executeRequest('POST', '/api/projects', {
+        const response = await this.apiClient.executeRequest('POST', '/api/project-management', {
           type_id: project.type_id,
           short_title: project.short_title,
           title: project.title,

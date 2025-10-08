@@ -62,11 +62,11 @@ const STEPS = [
     { id: 'departments', name: 'Departments', description: 'Create departments and assign department heads from employees' },
     { id: 'teams', name: 'Teams', description: 'Create teams under departments and assign team leaders' },
     { id: 'c-level', name: 'C-Level', description: 'Assign C-level executives to departments' },
-    { id: 'projects', name: 'Projects', description: 'Create projects for customer management' },
-    { id: 'milestones', name: 'Milestones', description: 'Create milestones for projects with timelines' },
+    { id: 'projects', name: 'Projects', description: 'Create project-management for customer management' },
+    { id: 'milestones', name: 'Milestones', description: 'Create milestones for project-management with timelines' },
     { id: 'work-packages', name: 'Work Packages', description: 'Create work packages with time periods for milestones' },
     { id: 'yearly-pm', name: 'Yearly Max PM', description: 'Calculate and set yearly maximum person-months for employees based on contract data' },
-    { id: 'project-assignments', name: 'Project Assignments', description: 'Randomly assign employees to projects for resource allocation' },
+    { id: 'project-assignments', name: 'Project Assignments', description: 'Randomly assign employees to project-management for resource allocation' },
     { id: 'task-management', name: 'Task Management', description: 'Create tasks for work packages with assignees, statuses, and details' }
 ];
 
@@ -134,7 +134,7 @@ function initDropdown(selectId, itemsId, inputId) {
             selectItems.classList.remove('show');
             selectSelected.classList.remove('select-arrow-active');
 
-            // Load projects when data group is selected
+            // Load project-management when data group is selected
             if (inputId === 'dataGroup') {
                 loadProjects(this.getAttribute('data-value'));
             }
@@ -143,7 +143,7 @@ function initDropdown(selectId, itemsId, inputId) {
 }
 
 /**
- * Load projects from CSV based on selected data group
+ * Load project-management from CSV based on selected data group
  * @param {string} dataGroup - Selected data group
  */
 async function loadProjects(dataGroup) {
@@ -159,21 +159,21 @@ async function loadProjects(dataGroup) {
     projectSelectionBox.style.display = 'block';
 
     // Show loading state
-    projectList.innerHTML = '<div class="loading-projects">Loading projects...</div>';
+    projectList.innerHTML = '<div class="loading-project-management">Loading project-management...</div>';
 
     try {
         const response = await fetch(`/api/projects/${dataGroup}`);
         const data = await response.json();
 
         if (!response.ok || !data.projects) {
-            throw new Error('Failed to load projects');
+            throw new Error('Failed to load project-management');
         }
 
-        // Render projects
+        // Render project-management
         renderProjects(data.projects);
     } catch (error) {
-        projectList.innerHTML = '<div class="loading-projects">Error loading projects</div>';
-        console.error('Error loading projects:', error);
+        projectList.innerHTML = '<div class="loading-project-management">Error loading project-management</div>';
+        console.error('Error loading project-management:', error);
     }
 }
 
@@ -185,7 +185,7 @@ function renderProjects(projects) {
     const projectList = document.getElementById('projectList');
 
     if (!projects || projects.length === 0) {
-        projectList.innerHTML = '<div class="loading-projects">No projects found</div>';
+        projectList.innerHTML = '<div class="loading-project-management">No project-management found</div>';
         return;
     }
 

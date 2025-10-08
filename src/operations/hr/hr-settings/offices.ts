@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, Office } from '../../utils/csv-loader';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, Office } from '../../../utils/csv-loader';
 import * as fs from 'fs';
 import * as path from 'path';
 

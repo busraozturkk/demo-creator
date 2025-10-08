@@ -1,4 +1,4 @@
-import { ApiClient } from '../../api-client';
+import { ApiClient } from '../../../api-client';
 import { ReferenceDataOperation } from './reference-data';
 import * as fs from 'fs';
 import * as path from 'path';

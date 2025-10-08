@@ -1,5 +1,5 @@
-import { ApiClient } from '../../api-client';
-import { CsvLoader, OccupationGroup } from '../../utils/csv-loader';
+import { ApiClient } from '../../../api-client';
+import { CsvLoader, OccupationGroup } from '../../../utils/csv-loader';
 
 export interface OccupationGroupMapping {
   name: string;

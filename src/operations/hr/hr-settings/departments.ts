@@ -1,10 +1,10 @@
-import { ApiClient } from '../../api-client';
-import { BaseOperation } from '../utilities/base-operation';
+import { ApiClient } from '../../../api-client';
+import { BaseOperation } from '../../utilities/base-operation';
 import { parse } from 'csv-parse/sync';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CACHE_PATHS } from '../../utils/constants';
-import { EmployeeMapping, DepartmentMapping } from '../../types';
+import { CACHE_PATHS } from '../../../utils/constants';
+import { EmployeeMapping, DepartmentMapping } from '../../../types';
 
 interface Department {
   name: string;
