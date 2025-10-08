@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Geschäftsanalyst",
+    "id": 7236,
+    "group_id": 2006
+  },
+  {
+    "name": "Betriebsleiter",
+    "id": 7237,
+    "group_id": 2006
+  },
+  {
+    "name": "Projektmanager",
+    "id": 7238,
+    "group_id": 2006
+  },
+  {
+    "name": "Produktmanager",
+    "id": 7239,
+    "group_id": 2006
+  },
+  {
+    "name": "Strategieberater",
+    "id": 7240,
+    "group_id": 2006
+  },
+  {
+    "name": "Software-Ingenieur",
+    "id": 7241,
+    "group_id": 2007
+  },
+  {
+    "name": "DevOps-Ingenieur",
+    "id": 7242,
+    "group_id": 2007
+  },
+  {
+    "name": "Dateningenieur",
+    "id": 7243,
+    "group_id": 2007
+  },
+  {
+    "name": "Systemarchitekt",
+    "id": 7244,
+    "group_id": 2007
+  },
+  {
+    "name": "QA-Ingenieur",
+    "id": 7245,
+    "group_id": 2007
+  },
+  {
+    "name": "Vertriebsmitarbeiter",
+    "id": 7246,
+    "group_id": 2008
+  },
+  {
+    "name": "Marketing-Manager",
+    "id": 7247,
+    "group_id": 2008
+  },
+  {
+    "name": "Account Executive",
+    "id": 7248,
+    "group_id": 2008
+  },
+  {
+    "name": "Marketing-Spezialist",
+    "id": 7249,
+    "group_id": 2008
+  },
+  {
+    "name": "Markenmanager",
+    "id": 7250,
+    "group_id": 2008
+  },
+  {
+    "name": "Finanzanalyst",
+    "id": 7251,
+    "group_id": 2009
+  },
+  {
+    "name": "Buchhalter",
+    "id": 7252,
+    "group_id": 2009
+  },
+  {
+    "name": "Controller",
+    "id": 7253,
+    "group_id": 2009
+  },
+  {
+    "name": "Steuerspezialist",
+    "id": 7254,
+    "group_id": 2009
+  },
+  {
+    "name": "Wirtschaftsprüfer",
+    "id": 7255,
+    "group_id": 2009
+  },
+  {
+    "name": "Personalleiter",
+    "id": 7256,
+    "group_id": 2010
+  },
+  {
+    "name": "Recruiter",
+    "id": 7257,
+    "group_id": 2010
+  },
+  {
+    "name": "HR Business Partner",
+    "id": 7258,
+    "group_id": 2010
+  },
+  {
+    "name": "Ausbildungsspezialist",
+    "id": 7259,
+    "group_id": 2010
+  },
+  {
+    "name": "Vergütungsanalyst",
+    "id": 7260,
+    "group_id": 2010
+  },
+  {
+    "name": "Kundensupport-Spezialist",
+    "id": 7261,
+    "group_id": 2011
+  },
+  {
+    "name": "Customer Success Manager",
+    "id": 7262,
+    "group_id": 2011
+  },
+  {
+    "name": "Technischer Support-Ingenieur",
+    "id": 7263,
+    "group_id": 2011
+  },
+  {
+    "name": "Service-Desk-Analyst",
+    "id": 7264,
+    "group_id": 2011
+  },
+  {
+    "name": "Kundenerlebnis-Manager",
+    "id": 7265,
+    "group_id": 2011
+  }
+]

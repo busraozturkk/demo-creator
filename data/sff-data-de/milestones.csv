@@ -1,0 +1,66 @@
+project_short_title,milestone_title
+KI-Assistent,Datenerfassung & Vorbereitung
+KI-Assistent,Modellarchitektur-Design
+KI-Assistent,Erstes Training & Validierung
+KI-Assistent,Leistungsoptimierung
+KI-Assistent,Integrationstest
+KI-Assistent,Produktionsbereitstellung
+KI-Assistent,Modellüberwachung-Setup
+KI-Assistent,Dokumentation & Wissenstransfer
+Smart Analytics,Anforderungsanalyse
+Smart Analytics,Datenquellenintegration
+Smart Analytics,Dashboard-Design
+Smart Analytics,ETL-Pipeline-Entwicklung
+Smart Analytics,Echtzeit-Verarbeitung-Setup
+Smart Analytics,Visualisierungsimplementierung
+Smart Analytics,Leistungstest
+Smart Analytics,Benutzerakzeptanztest
+Smart Analytics,Dokumentation
+IoT-Sicherheit,Geräteprotokoll-Analyse
+IoT-Sicherheit,Sicherheitsframework-Design
+IoT-Sicherheit,Authentifizierungsimplementierung
+IoT-Sicherheit,Verschlüsselungsschicht-Entwicklung
+IoT-Sicherheit,Geräteverwaltungsportal
+IoT-Sicherheit,Test & Validierung
+IoT-Sicherheit,Sicherheitsaudit
+IoT-Sicherheit,Produktionseinführung
+Cloud-Migration,Infrastrukturbewertung
+Cloud-Migration,Migrationsstrategie-Design
+Cloud-Migration,Cloud-Architektur-Setup
+Cloud-Migration,Datenmigrations-Planung
+Cloud-Migration,Anwendungsmigration
+Cloud-Migration,Test & Validierung
+Cloud-Migration,Leistungsoptimierung
+Cloud-Migration,Go-Live & Überwachung
+ML-Pipeline,Datenerfassung & Vorbereitung
+ML-Pipeline,Pipeline-Architektur-Design
+ML-Pipeline,Modellentwicklung
+ML-Pipeline,Automatisiertes Training-Setup
+ML-Pipeline,Validierung & Test
+ML-Pipeline,Leistungsoptimierung
+ML-Pipeline,Produktionsbereitstellung
+ML-Pipeline,Überwachung & Wartung
+Blockchain-ID,Blockchain-Auswahl
+Blockchain-ID,Smart-Contract-Design
+Blockchain-ID,Identitätsschema-Entwicklung
+Blockchain-ID,Smart-Contract-Implementierung
+Blockchain-ID,Verifizierungssystem
+Blockchain-ID,Integrationstest
+Blockchain-ID,Sicherheitsaudit
+Blockchain-ID,Produktionsbereitstellung
+Edge Computing,Plattform-Architektur-Design
+Edge Computing,Edge-Node-Setup
+Edge Computing,Kommunikationsprotokoll
+Edge Computing,Datenverarbeitungs-Engine
+Edge Computing,Anwendungsentwicklung
+Edge Computing,Test & Validierung
+Edge Computing,Leistungsoptimierung
+Edge Computing,Bereitstellung & Support
+Grüne Energie,Sensornetzwerk-Setup
+Grüne Energie,Datenerfassungssystem
+Grüne Energie,KI-Modellentwicklung
+Grüne Energie,Optimierungsalgorithmus
+Grüne Energie,Steuerungssystem-Integration
+Grüne Energie,Test & Kalibrierung
+Grüne Energie,Benutzer-Dashboard
+Grüne Energie,Bereitstellung & Schulung

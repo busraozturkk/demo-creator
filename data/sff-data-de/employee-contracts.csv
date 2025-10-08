@@ -1,0 +1,16 @@
+email_username,started_at,end_at,legal_requirement_country_id,contract_type_name,probation_ended_at,vacation_restart_date,weekly_hours,qualification_group_name,annual_days_off,flexible_days,flexible_days_per_week,is_current,rnd_description,is_shareholder
+lukas.mueller,2024-04-15,2026-12-31,332,Fest,2024-06-15,,40,Group A: University degree,24,,,true,Forschung an Finanzkontrollsystemen und regulatorischen Compliance-Frameworks,false
+emma.schmidt,2024-04-20,2026-12-31,332,Fest,2024-06-20,,40,Group A: University degree,24,,,true,Forschung an Geschäftsprozessoptimierung und Datenanalysemethoden,false
+leon.schneider,2024-04-10,2026-12-31,332,Fest,2024-06-10,,40,Group B: Technicians,24,,,true,Forschung und Entwicklung innovativer Softwarelösungen und Systemarchitekturen,false
+mia.fischer,2024-04-18,2026-12-31,332,Fest,2024-06-18,,40,Group A: University degree,24,,,true,Forschung an Geschäftsprozessoptimierung und Datenanalysemethoden,false
+felix.weber,2024-04-25,2026-12-31,332,Fest,2024-06-25,,40,Group B: Technicians,24,,,true,Forschung und Entwicklung innovativer Softwarelösungen und Systemarchitekturen,false
+hannah.meyer,2024-05-01,2026-12-31,332,Fest,2024-07-01,,40,Group C: Other,24,,,true,Forschung an HR-Transformationsstrategien und Workforce-Analytics-Frameworks,false
+jonas.wagner,2024-04-30,2026-12-31,332,Fest,2024-06-30,,40,Group C: Other,24,,,true,Forschung an HR-Transformationsstrategien und Workforce-Analytics-Frameworks,false
+lena.becker,2024-05-05,2026-12-31,332,Fest,2024-07-05,,40,Group C: Other,24,,,true,Forschung an Vertriebsoptimierungsmethoden und Kundenengagement-Strategien,false
+paul.schulz,2024-04-08,2026-12-31,332,Fest,2024-06-08,,40,Group C: Other,24,,,true,Forschung an Vertriebsoptimierungsmethoden und Kundenengagement-Strategien,false
+laura.hoffmann,2024-05-10,2026-12-31,332,Fest,2024-07-10,,40,Group C: Other,24,,,true,Forschung und Entwicklung von Marketing-Automatisierungstools und Kampagnenoptimierung,false
+maximilian.koch,2024-04-22,2026-12-31,332,Fest,2024-06-22,,40,Group C: Other,24,,,true,Forschung und Entwicklung von Marketing-Automatisierungstools und Kampagnenoptimierung,false
+sophia.bauer,2024-05-15,2026-12-31,332,Fest,2024-07-15,,40,Group C: Other,24,,,true,Forschung an agilen Methoden und Projektoptimierungs-Frameworks,false
+noah.richter,2024-04-12,2026-12-31,332,Fest,2024-06-12,,40,Group C: Other,24,,,true,Forschung an agilen Methoden und Projektoptimierungs-Frameworks,false
+marie.klein,2024-05-20,2026-12-31,332,Fest,2024-07-20,,40,Group B: Technicians,24,,,true,Forschung und Entwicklung innovativer Softwarelösungen und Systemarchitekturen,false
+benjamin.wolf,2024-04-28,2026-12-31,332,Fest,2024-06-28,,40,Group C: Other,24,,,true,Forschung an HR-Transformationsstrategien und Workforce-Analytics-Frameworks,false

@@ -1,0 +1,66 @@
+project_short_title,milestone_title
+AI Assistant,Data Collection & Preparation
+AI Assistant,Model Architecture Design
+AI Assistant,Initial Training & Validation
+AI Assistant,Performance Optimization
+AI Assistant,Integration Testing
+AI Assistant,Production Deployment
+AI Assistant,Model Monitoring Setup
+AI Assistant,Documentation & Knowledge Transfer
+Smart Analytics,Requirements Analysis
+Smart Analytics,Data Source Integration
+Smart Analytics,Dashboard Design
+Smart Analytics,ETL Pipeline Development
+Smart Analytics,Real-time Processing Setup
+Smart Analytics,Visualization Implementation
+Smart Analytics,Performance Testing
+Smart Analytics,User Acceptance Testing
+Smart Analytics,Documentation
+IoT Security,Device Protocol Analysis
+IoT Security,Security Framework Design
+IoT Security,Authentication Implementation
+IoT Security,Encryption Layer Development
+IoT Security,Device Management Portal
+IoT Security,Testing & Validation
+IoT Security,Security Audit
+IoT Security,Production Rollout
+Cloud Migration,Infrastructure Assessment
+Cloud Migration,Migration Strategy Design
+Cloud Migration,Cloud Architecture Setup
+Cloud Migration,Data Migration Planning
+Cloud Migration,Application Migration
+Cloud Migration,Testing & Validation
+Cloud Migration,Performance Optimization
+Cloud Migration,Go-Live & Monitoring
+ML Pipeline,Data Collection & Preparation
+ML Pipeline,Pipeline Architecture Design
+ML Pipeline,Model Development
+ML Pipeline,Automated Training Setup
+ML Pipeline,Validation & Testing
+ML Pipeline,Performance Optimization
+ML Pipeline,Production Deployment
+ML Pipeline,Monitoring & Maintenance
+Blockchain ID,Blockchain Selection
+Blockchain ID,Smart Contract Design
+Blockchain ID,Identity Schema Development
+Blockchain ID,Smart Contract Implementation
+Blockchain ID,Verification System
+Blockchain ID,Integration Testing
+Blockchain ID,Security Audit
+Blockchain ID,Production Deployment
+Edge Computing,Platform Architecture Design
+Edge Computing,Edge Node Setup
+Edge Computing,Communication Protocol
+Edge Computing,Data Processing Engine
+Edge Computing,Application Development
+Edge Computing,Testing & Validation
+Edge Computing,Performance Optimization
+Edge Computing,Deployment & Support
+Green Energy,Sensor Network Setup
+Green Energy,Data Collection System
+Green Energy,AI Model Development
+Green Energy,Optimization Algorithm
+Green Energy,Control System Integration
+Green Energy,Testing & Calibration
+Green Energy,User Dashboard
+Green Energy,Deployment & Training

@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Account Creator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎀</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div class="main-container" id="mainContainer"></div>
+<div class="animation-character" id="animationCharacter">
+    <div class="character-art"></div>
+</div>
+
+<div class="container">
+    <div class="app-header">
+        <h1>DEMO CREATOR</h1>
+        <div class="header-border"></div>
+    </div>
+
+    <div class="help-text">
+        This tool will automatically create a new Clusterix account for you!
+        <br><br>
+        <strong>Requirements:</strong>
+        <ul style="margin: 5px 0; padding-left: 20px;">
+            <li>Use a <strong>@yopmail.com</strong> email address (for automatic activation)</li>
+            <li>Choose a unique Company Name</li>
+            <li>Choose a unique Email Domain</li>
+            <li>The account will be automatically registered and activated</li>
+        </ul>
+        <strong>Note:</strong> Do not run this tool twice with the same data. Always use a new email, company name and email domain.
+    </div>
+
+    <form class="form-container" id="demoForm">
+        <div class="form-section">
+            <div class="form-section-title">Company Information</div>
+
+            <div class="form-box" id="companyNameBox">
+                <label class="form-label">
+                    Company Name
+                    <div class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">The system will create a company with this name. Enter a realistic demo company name, but do not use a real company name.</span>
+                    </div>
+                </label>
+                <input type="text" id="companyName" class="form-input" placeholder="Company Name" autocomplete="organization">
+            </div>
+
+            <div class="form-box" id="emailBox">
+                <label class="form-label">
+                    Email (Yopmail required)
+                    <div class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Save this email address! You can access its inbox on Yopmail. The tool will automatically activate the account, no action needed from you.</span>
+                    </div>
+                </label>
+                <input type="email" id="email" class="form-input" placeholder="username@yopmail.com" autocomplete="email">
+            </div>
+
+            <div class="form-box" id="passwordBox">
+                <label class="form-label">
+                    Password
+                    <div class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Save this password! You will use it to login to Clusterix after demo creation.</span>
+                    </div>
+                </label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" class="form-input password-input" placeholder="••••••••" autocomplete="new-password">
+                    <button type="button" class="password-toggle" id="passwordToggle">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-box" id="passwordConfirmBox">
+                <label class="form-label">
+                    Confirm Password
+                </label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="passwordConfirm" class="form-input password-input" placeholder="••••••••" autocomplete="new-password">
+                    <button type="button" class="password-toggle" id="passwordConfirmToggle">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-title">Demo Configuration</div>
+
+            <div class="form-box" id="emailDomainBox">
+                <label class="form-label">
+                    Email Domain
+                    <div class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">This will be the email domain for employees in the organization. Since employee data is always the same, the domain must be different. Add a domain derived from your company name for a better demo experience.</span>
+                    </div>
+                </label>
+                <input type="text" id="emailDomain" class="form-input" placeholder="company-demo.com" autocomplete="off">
+            </div>
+
+            <div class="form-box" id="dataGroupBox">
+            <label class="form-label">
+                Data
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">Select which dataset to populate your account with. Project types and data language will differ based on your selection.</span>
+                </div>
+            </label>
+            <div class="custom-select">
+                <div class="select-selected form-input" id="dataGroupSelect" style="color: #6b7280;">
+                    Please select data
+                </div>
+                <div class="select-items dropdown-menu" id="dataGroupItems">
+                    <% dataGroups.forEach((group, index) => { %>
+                        <div data-value="<%= group.value %>">
+                            <%= group.label %>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            <input type="hidden" id="dataGroup" value="">
+        </div>
+
+        <div class="form-box" id="projectSelectionBox" style="display: none;">
+            <label class="form-label">
+                Select Projects
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">Select which projects to create in the demo account. You can select multiple projects. Each project will have its own milestones and work packages.</span>
+                </div>
+            </label>
+            <div class="project-selection-container">
+                <div class="project-select-all">
+                    <label>
+                        <input type="checkbox" id="selectAllProjects">
+                        <span>Select All</span>
+                    </label>
+                </div>
+                <div class="project-list" id="projectList">
+                    <div class="loading-projects">Loading projects...</div>
+                </div>
+            </div>
+            <input type="hidden" id="selectedProjects" value="">
+        </div>
+
+        <div class="form-box" id="workPackagesBox">
+            <label class="form-label">
+                Include Work Packages & Tasks?
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">
+                        <strong>Yes:</strong> Creates work packages, tasks, and task management data (milestones, boards, assignments).<br><br>
+                        <strong>No:</strong> Only creates projects without detailed work packages and task management.
+                    </span>
+                </div>
+            </label>
+            <div class="mode-toggle">
+                <input type="radio" id="workPackagesYes" name="workPackages" value="yes" checked>
+                <label for="workPackagesYes" class="mode-option">Yes</label>
+
+                <input type="radio" id="workPackagesNo" name="workPackages" value="no">
+                <label for="workPackagesNo" class="mode-option">No</label>
+            </div>
+        </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-title">Execution Settings</div>
+
+            <div class="form-box" id="environmentBox">
+            <label class="form-label">
+                Environment
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">Select the target environment where the account will be created.</span>
+                </div>
+            </label>
+            <div class="custom-select">
+                <div class="select-selected form-input" id="environmentSelect" style="color: #6b7280;">
+                    Please select environment
+                </div>
+                <div class="select-items dropdown-menu" id="environmentItems">
+                    <div data-value="testing">Testing</div>
+                    <div data-value="production">Production</div>
+                </div>
+            </div>
+            <input type="hidden" id="environment" value="">
+        </div>
+
+        <div class="form-box">
+            <label class="form-label">
+                Mode
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">
+                        <strong>Bulk Mode:</strong> Automatically runs all steps from start to finish without interruption. Best for quick demo creation.<br><br>
+                        <strong>Step-by-Step:</strong> Allows you to manually execute each step one at a time. Useful for testing or understanding the process.
+                    </span>
+                </div>
+            </label>
+            <div class="mode-toggle">
+                <input type="radio" id="modeBulk" name="mode" value="bulk" checked>
+                <label for="modeBulk" class="mode-option">Bulk Mode</label>
+
+                <input type="radio" id="modeStep" name="mode" value="step">
+                <label for="modeStep" class="mode-option">Step-by-Step</label>
+            </div>
+        </div>
+        </div>
+
+        <button type="button" id="createBtn" class="btn-primary">
+            <span class="button-text"><i class="fa-solid fa-sparkles"></i> CREATE DEMO ACCOUNT <i class="fa-solid fa-sparkles"></i></span>
+        </button>
+
+        <div id="validationErrors" class="validation-errors-container"></div>
+    </form>
+
+    <div id="stepByStepContainer" class="step-by-step-container" style="display: none;">
+        <div class="steps-panel">
+            <div class="step-by-step-header">STEPS</div>
+            <div id="stepsList" class="steps-list"></div>
+        </div>
+        <div class="step-log-panel">
+            <div class="step-log-header">LOGS</div>
+            <div id="stepLogContent" class="step-log-content"></div>
+        </div>
+    </div>
+
+    <div id="logContainer" class="log-container" style="display: none;">
+        <div class="log-header">LOGS</div>
+        <div id="logContent" class="log-content"></div>
+    </div>
+
+    <div id="progressBar" class="progress-bar" style="display: none;">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <div id="timerContainer" class="timer-container" style="display: none;">
+        <div class="timer-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="timer-display" id="timerDisplay">00:00</div>
+    </div>
+
+    <div class="app-footer">
+        made with <span class="heart">♥</span> by busra • v1.0
+    </div>
+</div>
+
+<!-- Update Notification Toaster -->
+<div id="updateToaster" class="update-toaster" style="display: none;">
+    <div class="toaster-content">
+        <div class="toaster-icon">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+        <div class="toaster-message">
+            <div class="toaster-title">New Version Available!</div>
+        </div>
+        <button id="updateBtn" class="toaster-button">
+            <i class="fa-solid fa-rotate"></i> Update Now
+        </button>
+    </div>
+</div>
+
+<div id="confirmationOverlay" class="confirmation-overlay">
+    <div class="confirmation-modal">
+        <div class="confirmation-title">HEADS UP!</div>
+        <div class="confirmation-message">
+            This will create a new Clusterix demo account with the information you provided.
+            <br><br>
+            <strong>Once started, this process cannot be undone.</strong>
+            <br><br>
+            Please verify your details before proceeding.
+        </div>
+        <div class="confirmation-buttons">
+            <button id="confirmNo" class="confirmation-btn confirmation-btn-no">WAIT, LET ME CHECK</button>
+            <button id="confirmYes" class="confirmation-btn confirmation-btn-yes">YES, LET'S GO!</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

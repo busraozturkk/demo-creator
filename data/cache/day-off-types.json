@@ -1,0 +1,50 @@
+[
+  {
+    "id": 11955,
+    "name": "Vacation",
+    "day_type_flag": "vacation",
+    "icon": "VacationHIcon",
+    "color": "#2186ab",
+    "is_working_day": false,
+    "requires_substitute": true,
+    "is_half_day_allowed": true,
+    "created_at": "2025-10-08T15:36:56.000000Z",
+    "updated_at": "2025-10-08T15:36:56.000000Z"
+  },
+  {
+    "id": 11956,
+    "name": "Sick Day",
+    "day_type_flag": "sick",
+    "icon": "SickHIcon",
+    "color": "#94ba5d",
+    "is_working_day": false,
+    "requires_substitute": true,
+    "is_half_day_allowed": false,
+    "created_at": "2025-10-08T15:36:56.000000Z",
+    "updated_at": "2025-10-08T15:36:56.000000Z"
+  },
+  {
+    "id": 11957,
+    "name": "Home office",
+    "day_type_flag": "home_office",
+    "icon": "HomeHIcon",
+    "color": "#38a09d",
+    "is_working_day": true,
+    "requires_substitute": false,
+    "is_half_day_allowed": false,
+    "created_at": "2025-10-08T15:36:56.000000Z",
+    "updated_at": "2025-10-08T15:36:56.000000Z"
+  },
+  {
+    "id": 11958,
+    "name": "Flexi",
+    "day_type_flag": "other",
+    "icon": "RocketHIcon",
+    "color": "#38a09d",
+    "is_working_day": false,
+    "requires_substitute": true,
+    "is_half_day_allowed": false,
+    "created_at": "2025-10-08T15:36:56.000000Z",
+    "updated_at": "2025-10-08T15:36:56.000000Z"
+  }
+]

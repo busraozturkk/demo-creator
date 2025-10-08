@@ -1,0 +1,147 @@
+[
+  {
+    "email": "test08oct25busra10@yopmail.com",
+    "id": 80130,
+    "user_id": 1008602,
+    "first_name": "Anna",
+    "last_name": "Schmidt",
+    "gender": "male",
+    "started_at": "2025-10-08",
+    "participate_in_projects": true
+  },
+  {
+    "email": "lukas.mueller@test08oct25busra10.com",
+    "id": 80131,
+    "first_name": "Lukas",
+    "last_name": "Müller",
+    "gender": "male",
+    "started_at": "2024-01-15",
+    "user_id": 1008603
+  },
+  {
+    "email": "emma.schmidt@test08oct25busra10.com",
+    "id": 80132,
+    "first_name": "Emma",
+    "last_name": "Schmidt",
+    "gender": "female",
+    "started_at": "2024-01-20",
+    "user_id": 1008604
+  },
+  {
+    "email": "leon.schneider@test08oct25busra10.com",
+    "id": 80133,
+    "first_name": "Leon",
+    "last_name": "Schneider",
+    "gender": "male",
+    "started_at": "2024-02-01",
+    "user_id": 1008605
+  },
+  {
+    "email": "mia.fischer@test08oct25busra10.com",
+    "id": 80134,
+    "first_name": "Mia",
+    "last_name": "Fischer",
+    "gender": "female",
+    "started_at": "2024-02-10",
+    "user_id": 1008606
+  },
+  {
+    "email": "felix.weber@test08oct25busra10.com",
+    "id": 80135,
+    "first_name": "Felix",
+    "last_name": "Weber",
+    "gender": "male",
+    "started_at": "2024-02-15",
+    "user_id": 1008607
+  },
+  {
+    "email": "hannah.meyer@test08oct25busra10.com",
+    "id": 80136,
+    "first_name": "Hannah",
+    "last_name": "Meyer",
+    "gender": "female",
+    "started_at": "2024-03-01",
+    "user_id": 1008609
+  },
+  {
+    "email": "jonas.wagner@test08oct25busra10.com",
+    "id": 80137,
+    "first_name": "Jonas",
+    "last_name": "Wagner",
+    "gender": "male",
+    "started_at": "2024-03-05",
+    "user_id": 1008610
+  },
+  {
+    "email": "lena.becker@test08oct25busra10.com",
+    "id": 80138,
+    "first_name": "Lena",
+    "last_name": "Becker",
+    "gender": "female",
+    "started_at": "2024-03-10",
+    "user_id": 1008611
+  },
+  {
+    "email": "paul.schulz@test08oct25busra10.com",
+    "id": 80139,
+    "first_name": "Paul",
+    "last_name": "Schulz",
+    "gender": "male",
+    "started_at": "2024-03-15",
+    "user_id": 1008612
+  },
+  {
+    "email": "laura.hoffmann@test08oct25busra10.com",
+    "id": 80140,
+    "first_name": "Laura",
+    "last_name": "Hoffmann",
+    "gender": "female",
+    "started_at": "2024-03-20",
+    "user_id": 1008613
+  },
+  {
+    "email": "maximilian.koch@test08oct25busra10.com",
+    "id": 80141,
+    "first_name": "Maximilian",
+    "last_name": "Koch",
+    "gender": "male",
+    "started_at": "2024-04-01",
+    "user_id": 1008614
+  },
+  {
+    "email": "sophia.bauer@test08oct25busra10.com",
+    "id": 80142,
+    "first_name": "Sophia",
+    "last_name": "Bauer",
+    "gender": "female",
+    "started_at": "2024-04-05",
+    "user_id": 1008615
+  },
+  {
+    "email": "noah.richter@test08oct25busra10.com",
+    "id": 80143,
+    "first_name": "Noah",
+    "last_name": "Richter",
+    "gender": "male",
+    "started_at": "2024-04-10",
+    "user_id": 1008616
+  },
+  {
+    "email": "marie.klein@test08oct25busra10.com",
+    "id": 80144,
+    "first_name": "Marie",
+    "last_name": "Klein",
+    "gender": "female",
+    "started_at": "2024-04-15",
+    "user_id": 1008617
+  },
+  {
+    "email": "benjamin.wolf@test08oct25busra10.com",
+    "id": 80145,
+    "first_name": "Benjamin",
+    "last_name": "Wolf",
+    "gender": "male",
+    "started_at": "2024-04-20",
+    "user_id": 1008618
+  }
+]
