@@ -243,7 +243,14 @@ export class EmployeeDaysOffOperation {
   }
 
   private async createDayOff(dayOff: DayOffRequest): Promise<void> {
-    await this.apiClient.executeRequest('POST', '/api/days-off', dayOff);
+    try {
+      await this.apiClient.executeRequest('POST', '/api/days-off', dayOff);
+    } catch (error: any) {
+      // Log the detailed error and request payload for debugging 422 errors
+      console.error(`    Failed to create day-off: ${error.message}`);
+      console.error(`    Request payload: ${JSON.stringify(dayOff, null, 2)}`);
+      throw error;
+    }
   }
 
   private randomInt(min: number, max: number, seed?: number): number {

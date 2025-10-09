@@ -45,7 +45,8 @@ interface WorkPackageEmployeeAssignment {
 }
 
 /**
- * Canonical 3 statuses. NOTE: positions are 1-based to avoid UI edge-cases.
+ * Our custom 3 statuses for project boards.
+ * NOTE: positions are 1-based to avoid UI edge-cases.
  */
 const TASK_STATUSES = [
   { title: 'TO DO',        position: 1, color: '#CCCCCC', type: 'todo',      timer_action: '' },
@@ -211,10 +212,10 @@ export class TaskManagementOperation extends BaseOperation {
       if (s?.type)  byType.set(s.type, s);
     }
 
-    // Create missing with full payload
+    // Create missing statuses based on exact title match (ignore existing statuses with same type but different title)
     for (const d of desired) {
       const key = d.title.toUpperCase();
-      const already = byTitle.get(key) || byType.get(d.type);
+      const already = byTitle.get(key);  // Only check by title, not type
       if (!already) {
         try {
           console.log(`    → Creating status: ${d.title} on board ${boardId}`);
