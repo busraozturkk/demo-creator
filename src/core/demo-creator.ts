@@ -506,6 +506,9 @@ export async function runDemoCreation(
                                                                 const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                                                                 const taskMgmtOp = new TaskManagementOperation(authService);
 
+                                                                // Approve user consent for task management
+                                                                await taskMgmtOp.approveUserConsent();
+
                                                                 // Create task types
                                                                 await taskMgmtOp.createTaskTypes();
 
@@ -530,6 +533,20 @@ export async function runDemoCreation(
 
                                                                 // Fetch and cache structure (boards, statuses)
                                                                 await taskMgmtOp.fetchAndCacheTaskManagementStructure(projectMappingsForAssignment);
+
+                                                                // Create timer categories (activity types for time tracking) after boards are ready
+                                                                if (fs.existsSync(occupationMappingsPath)) {
+                                                                    const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                                                                    if (occupationMappings && occupationMappings.length > 0) {
+                                                                        const roleMappings = occupationMappings.map((occ: any) => ({
+                                                                            id: occ.id.toString(),
+                                                                            title: occ.name
+                                                                        }));
+                                                                        await taskMgmtOp.createTimerCategories(roleMappings);
+                                                                    }
+                                                                } else {
+                                                                    await taskMgmtOp.createTimerCategories();
+                                                                }
 
                                                                 // Create tasks
                                                                 const tasksPath = `./data/${dataGroup}/tasks.csv`;
@@ -598,6 +615,9 @@ export async function runDemoCreation(
                                                     const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                                                     const taskMgmtOp = new TaskManagementOperation(authService);
 
+                                                    // Approve user consent for task management
+                                                    await taskMgmtOp.approveUserConsent();
+
                                                     // Create task types
                                                     await taskMgmtOp.createTaskTypes();
 
@@ -622,6 +642,20 @@ export async function runDemoCreation(
 
                                                     // Setup Task Management for milestones (boards, statuses)
                                                     await taskMgmtOp.setupTaskManagementForMilestones(projectMappingsForAssignment);
+
+                                                    // Create timer categories (activity types for time tracking) after boards are ready
+                                                    if (fs.existsSync(occupationMappingsPath)) {
+                                                        const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                                                        if (occupationMappings && occupationMappings.length > 0) {
+                                                            const roleMappings = occupationMappings.map((occ: any) => ({
+                                                                id: occ.id.toString(),
+                                                                title: occ.name
+                                                            }));
+                                                            await taskMgmtOp.createTimerCategories(roleMappings);
+                                                        }
+                                                    } else {
+                                                        await taskMgmtOp.createTimerCategories();
+                                                    }
 
                                                     // Create tasks for milestones
                                                     const tasksPath = `./data/${dataGroup}/tasks.csv`;

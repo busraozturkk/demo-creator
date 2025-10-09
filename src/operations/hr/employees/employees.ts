@@ -184,10 +184,23 @@ export class EmployeesOperation extends BaseOperation {
                                 'POST',
                                 `/auth/users/${userId}/activate`
                             );
-                            console.log(`  User activated\n`);
+                            console.log(`  User activated`);
                         } catch (activateError) {
                             console.error(`  Error: Failed to activate user`);
                             console.error(`    ${activateError}\n`);
+                        }
+
+                        // Enable time tracking mode
+                        try {
+                            await this.mainApiClient.executeRequest(
+                                'PUT',
+                                `/pct/api/users/${userId}/settings`,
+                                { time_entry_mode: 1 }
+                            );
+                            console.log(`  Time tracking mode enabled\n`);
+                        } catch (timeTrackingError) {
+                            console.error(`  Error: Failed to enable time tracking mode`);
+                            console.error(`    ${timeTrackingError}\n`);
                         }
                     } catch (assignError) {
                         console.error(`  Error: Failed to assign employee to user`);

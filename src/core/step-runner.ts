@@ -511,6 +511,9 @@ export async function runSingleStep(stepId: string, session: any) {
                 const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                 const taskMgmtOp = new TaskManagementOperation(session.authService);
 
+                // Approve user consent for task management
+                await taskMgmtOp.approveUserConsent();
+
                 // Create task types
                 await taskMgmtOp.createTaskTypes();
 
@@ -535,6 +538,20 @@ export async function runSingleStep(stepId: string, session: any) {
 
                 // Fetch and cache task management structure (folders, boards, statuses)
                 await taskMgmtOp.fetchAndCacheTaskManagementStructure(session.projectMappings);
+
+                // Create timer categories (activity types for time tracking) after boards are ready
+                if (fs.existsSync(occupationMappingsPath)) {
+                    const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                    if (occupationMappings && occupationMappings.length > 0) {
+                        const roleMappings = occupationMappings.map((occ: any) => ({
+                            id: occ.id.toString(),
+                            title: occ.name
+                        }));
+                        await taskMgmtOp.createTimerCategories(roleMappings);
+                    }
+                } else {
+                    await taskMgmtOp.createTimerCategories();
+                }
 
                 // Create tasks for work packages
                 const tasksCsvPath = `./data/${session.dataGroup}/tasks.csv`;

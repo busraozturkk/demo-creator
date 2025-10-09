@@ -46,12 +46,12 @@ interface WorkPackageEmployeeAssignment {
 
 /**
  * Our custom 3 statuses for project boards.
- * NOTE: positions are 1-based to avoid UI edge-cases.
+ * NOTE: API uses 0-based positions (0, 1, 2)
  */
 const TASK_STATUSES = [
-  { title: 'TO DO',        position: 1, color: '#CCCCCC', type: 'todo',      timer_action: '' },
-  { title: 'IN PROGRESS',  position: 2, color: '#FECC45', type: 'active',    timer_action: '' },
-  { title: 'DONE',         position: 3, color: '#8AA657', type: 'completed', timer_action: '' },
+  { title: 'TO DO',        position: 0, color: '#CCCCCC', type: 'todo',      timer_action: '' },
+  { title: 'IN PROGRESS',  position: 1, color: '#FECC45', type: 'active',    timer_action: '' },
+  { title: 'DONE',         position: 2, color: '#8AA657', type: 'completed', timer_action: '' },
 ];
 
 const TASK_TYPES = [
@@ -59,6 +59,17 @@ const TASK_TYPES = [
   { title: 'Bug',           icon: 'BugIcon',       color: '#D50000' },
   { title: 'Feature',       icon: 'StarEmptyIcon', color: '#F6BF26' },
   { title: 'Documentation', icon: 'DocIcon',       color: '#8AA657' },
+];
+
+/**
+ * Timer categories for time tracking (activity types for grouping time entries)
+ */
+const TIMER_CATEGORIES = [
+  { title: 'Development',    icon: 'CodeIcon',      color: '#38a09d' },
+  { title: 'Research',       icon: 'SearchIcon',    color: '#F6BF26' },
+  { title: 'Documentation',  icon: 'DocIcon',       color: '#8AA657' },
+  { title: 'Testing',        icon: 'CheckIcon',     color: '#D50000' },
+  { title: 'Meeting',        icon: 'UsersIcon',     color: '#8E6BAC' },
 ];
 
 export class TaskManagementOperation extends BaseOperation {
@@ -188,117 +199,93 @@ export class TaskManagementOperation extends BaseOperation {
   }
 
   /**
-   * Ensure the canonical three statuses exist on a board with correct attributes.
-   * - POST with (title, position, board_id, color, type) when missing
-   * - PUT to normalize existing ones (title, color, type, timer_action, position)
-   * - Positions are 1,2,3 (1-based) to avoid UI quirks
-   * - Retries reads after writes to beat eventual consistency
+   * Replace all statuses on a board with our canonical 3 statuses.
+   * - DELETE all existing statuses
+   * - POST our 3 statuses (TO DO, IN PROGRESS, DONE)
+   * - Positions are 0-based (0, 1, 2) as per API expectation
    */
   private async ensureThreeStatuses(boardId: number): Promise<void> {
     const desired = TASK_STATUSES;
 
-    // Read existing
+    // Step 1: Read all existing statuses
     let existing: any[] = [];
     try {
       existing = await this.fetchStatusesWithRetry(boardId, 5, 800);
+      console.log(`    Found ${existing.length} existing statuses on board ${boardId}`);
     } catch (e: any) {
       console.log(`[ensureThreeStatuses] Initial read failed for board ${boardId}: ${e?.message || e}`);
     }
 
-    const byTitle = new Map<string, any>();
-    const byType = new Map<string, any>();
+    // Step 2: Delete all existing statuses
     for (const s of existing) {
-      if (s?.title) byTitle.set(s.title.toUpperCase(), s);
-      if (s?.type)  byType.set(s.type, s);
-    }
-
-    // Create missing statuses based on exact title match (ignore existing statuses with same type but different title)
-    for (const d of desired) {
-      const key = d.title.toUpperCase();
-      const already = byTitle.get(key);  // Only check by title, not type
-      if (!already) {
-        try {
-          console.log(`    → Creating status: ${d.title} on board ${boardId}`);
-          const createRes: any = await this.taskMgmtApiClient.executeRequest(
-              'POST',
-              '/api/statuses',
-              {
-                title: d.title,
-                position: d.position,
-                board_id: boardId,
-                color: d.color,
-                type: d.type,
-                timer_action: d.timer_action,
-              }
-          );
-          const createdId = createRes?.data?.id || createRes?.id;
-          console.log(`      ✓ Created ${d.title} (ID: ${createdId})`);
-        } catch (err: any) {
-          console.log(`      ✗ Create failed for ${d.title} on board ${boardId}: ${err?.message || err}`);
-        }
-      } else {
-        console.log(`    • ${d.title} already exists on board ${boardId}`);
-      }
-    }
-
-    // Re-read (retry) after writes
-    try {
-      existing = await this.fetchStatusesWithRetry(boardId, 6, 900);
-    } catch (e: any) {
-      console.log(`[ensureThreeStatuses] Post-create read failed for board ${boardId}: ${e?.message || e}`);
-      existing = [];
-    }
-
-    // Normalize attributes and positions
-    const targetByTitle = new Map<string, typeof desired[number]>();
-    desired.forEach(d => targetByTitle.set(d.title.toUpperCase(), d));
-
-    const updates: Array<{ id: number; payload: any }> = [];
-    for (const s of existing) {
-      const want = targetByTitle.get((s.title || '').toUpperCase());
-      if (!want) continue;
-
-      const needUpdate =
-          s.title !== want.title ||
-          s.position !== want.position ||
-          s.color !== want.color ||
-          s.type !== want.type ||
-          (s.timer_action || '') !== (want.timer_action || '');
-
-      if (needUpdate) {
-        updates.push({
-          id: s.id,
-          payload: {
-            title: want.title,
-            color: want.color,
-            type: want.type,
-            timer_action: want.timer_action,
-            position: want.position,
-            board_id: boardId,
-          },
-        });
-      }
-    }
-
-    for (const u of updates.sort((a, b) => a.payload.position - b.payload.position)) {
       try {
-        console.log(`      → Normalizing status ${u.id} on board ${boardId} → ${u.payload.title} (#${u.payload.position})`);
-        await this.taskMgmtApiClient.executeRequest('PUT', `/api/statuses/${u.id}`, u.payload);
-        console.log(`        ✓ Normalized ${u.payload.title}`);
+        console.log(`    → Deleting status: ${s.title} (ID: ${s.id}) from board ${boardId}`);
+        await this.taskMgmtApiClient.executeRequest('DELETE', `/api/statuses/${s.id}`);
+        console.log(`      ✓ Deleted ${s.title}`);
       } catch (err: any) {
-        console.log(`        ✗ Failed to normalize status ${u.id}: ${err?.message || err}`);
+        console.log(`      ✗ Delete failed for ${s.title}: ${err?.message || err}`);
       }
     }
 
-    // Final assert (log)
+    // Small delay after deletions
+    await this.sleep(500);
+
+    // Step 3: Create our 3 canonical statuses
+    for (const d of desired) {
+      try {
+        console.log(`    → Creating status: ${d.title} on board ${boardId}`);
+        const createRes: any = await this.taskMgmtApiClient.executeRequest(
+            'POST',
+            '/api/statuses',
+            {
+              title: d.title,
+              position: d.position,
+              board_id: boardId,
+              color: d.color,
+              type: d.type,
+              timer_action: d.timer_action,
+            }
+        );
+        const createdId = createRes?.data?.id || createRes?.id;
+        console.log(`      ✓ Created ${d.title} (ID: ${createdId}, position: ${d.position})`);
+      } catch (err: any) {
+        console.log(`      ✗ Create failed for ${d.title} on board ${boardId}: ${err?.message || err}`);
+      }
+    }
+
+    // Step 4: Verify final state
     try {
+      await this.sleep(500); // Give API time to update
       const finalList = await this.fetchStatusesWithRetry(boardId, 3, 600);
       const finalPretty = finalList
           .map((s: any) => `${s.position}:${s.title}[${s.type}]`)
-          .sort()
+          .sort((a, b) => {
+            const posA = parseInt(a.split(':')[0]);
+            const posB = parseInt(b.split(':')[0]);
+            return posA - posB;
+          })
           .join(', ');
-      console.log(`    ⇢ Board ${boardId} statuses now: ${finalPretty}`);
+      console.log(`    ⇢ Board ${boardId} final statuses (${finalList.length}): ${finalPretty}`);
     } catch { /* no-op */ }
+  }
+
+  // --------------------------------------------------------------------------
+  // User Consent
+  // --------------------------------------------------------------------------
+
+  async approveUserConsent(): Promise<void> {
+    console.log('\n=== Approving Task Management User Consent ===\n');
+
+    try {
+      await this.taskMgmtApiClient.executeRequest(
+        'POST',
+        '/api/user-consents',
+        { consent_type: 'device_information_consent' }
+      );
+      console.log('✓ User consent approved for task management\n');
+    } catch (error: any) {
+      console.log(`Failed to approve user consent: ${error.message}\n`);
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -329,6 +316,49 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     console.log(`\nCreated ${created} task types (errors: ${errors})\n`);
+  }
+
+  async createTimerCategories(roleMappings?: Array<{ id: string, title: string }>): Promise<void> {
+    console.log('\n=== Creating Timer Categories (Activity Types) ===\n');
+
+    let created = 0;
+    let errors = 0;
+
+    // Get all board IDs for the timer categories
+    const boardIds: number[] = this.boardMappings.map(b => b.id);
+    console.log(`Will assign timer categories to ${boardIds.length} boards\n`);
+
+    // Get all role IDs
+    const roleIds: number[] = roleMappings ? roleMappings.map(r => parseInt(r.id)) : [];
+    console.log(`Will assign timer categories to ${roleIds.length} roles\n`);
+
+    for (const category of TIMER_CATEGORIES) {
+      try {
+        const payload: any = {
+          title: category.title,
+          icon: category.icon,
+          color: category.color,
+          user_ids: [],           // Empty - applies to all users
+          role_ids: roleIds,      // All roles in the organization
+          board_ids: boardIds,    // All milestone boards
+          excluded_user_ids: []   // No exclusions
+        };
+
+        const response: any = await this.taskMgmtApiClient.executeRequest(
+            'POST',
+            '/api/timer-categories',
+            payload
+        );
+        const categoryId = response.data?.id || response.id;
+        console.log(`  ✓ Created: ${category.title} (ID: ${categoryId})`);
+        created++;
+      } catch (error: any) {
+        console.log(`  ✗ Failed to create ${category.title}: ${error.message}`);
+        errors++;
+      }
+    }
+
+    console.log(`\nCreated ${created} timer categories (errors: ${errors})\n`);
   }
 
   async fetchPriorities(): Promise<void> {
@@ -439,6 +469,10 @@ export class TaskManagementOperation extends BaseOperation {
       );
       console.log('');
 
+      // First, map all boards without adding statuses
+      // Track which milestones already have a board mapped (use only one board per milestone)
+      const mappedMilestones = new Set<string>();
+
       for (const board of uniqueBoards) {
         const title = board.title || board.name;
 
@@ -454,6 +488,15 @@ export class TaskManagementOperation extends BaseOperation {
           continue;
         }
 
+        // Create a unique key for this milestone
+        const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
+
+        // Skip if we already have a board for this milestone
+        if (mappedMilestones.has(milestoneKey)) {
+          console.log(`  ⊗ Skipping duplicate board "${title}" (ID: ${board.id}) - milestone already mapped`);
+          continue;
+        }
+
         this.boardMappings.push({
           id: board.id,
           folder_id: board.folder_id,
@@ -462,15 +505,24 @@ export class TaskManagementOperation extends BaseOperation {
           name: title
         });
 
-        console.log(`\nProcessing Board: "${title}" (ID: ${board.id})`);
+        mappedMilestones.add(milestoneKey);
+        console.log(`\nMapped Board: "${title}" (ID: ${board.id})`);
         totalBoards++;
+      }
 
+      // Wait a bit for boards to be fully ready, then add statuses
+      console.log(`\n⏳ Waiting 3 seconds for boards to be fully ready (allowing API to finish default setup)...\n`);
+      await this.sleep(3000);
+
+      console.log('Now adding statuses to boards...\n');
+      for (const boardMapping of this.boardMappings) {
         try {
-          await this.ensureThreeStatuses(board.id);
+          console.log(`Processing Board: "${boardMapping.name}" (ID: ${boardMapping.id})`);
+          await this.ensureThreeStatuses(boardMapping.id);
           totalStatusesEnsured += 3;
-          console.log(`  ✓ Statuses ensured for board ${board.id}`);
+          console.log(`  ✓ Statuses ensured for board ${boardMapping.id}`);
         } catch (stErr: any) {
-          console.log(`  ✗ Failed to ensure statuses for board ${board.id}: ${stErr.message}`);
+          console.log(`  ✗ Failed to ensure statuses for board ${boardMapping.id}: ${stErr.message}`);
           errors++;
         }
       }
@@ -521,6 +573,10 @@ export class TaskManagementOperation extends BaseOperation {
       const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
       console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length}\n`);
 
+      // First, map all boards without adding statuses
+      // Track which milestones already have a board mapped (use only one board per milestone)
+      const mappedMilestones = new Set<string>();
+
       for (const board of milestoneBoards) {
         const title = board.title || board.name;
 
@@ -533,6 +589,15 @@ export class TaskManagementOperation extends BaseOperation {
           continue;
         }
 
+        // Create a unique key for this milestone
+        const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
+
+        // Skip if we already have a board for this milestone
+        if (mappedMilestones.has(milestoneKey)) {
+          console.log(`  ⊗ Skipping duplicate board "${title}" (ID: ${board.id}) - milestone already mapped`);
+          continue;
+        }
+
         this.boardMappings.push({
           id: board.id,
           folder_id: board.folder_id,
@@ -541,13 +606,21 @@ export class TaskManagementOperation extends BaseOperation {
           name: title
         });
 
+        mappedMilestones.add(milestoneKey);
         totalBoards++;
+      }
 
+      // Wait a bit for boards to be fully ready, then add statuses
+      console.log(`\n⏳ Waiting 2 seconds for boards to be fully ready...\n`);
+      await this.sleep(2000);
+
+      console.log('Now adding statuses to boards...\n');
+      for (const boardMapping of this.boardMappings) {
         try {
-          await this.ensureThreeStatuses(board.id);
+          await this.ensureThreeStatuses(boardMapping.id);
           totalStatusesEnsured += 3;
         } catch (e: any) {
-          console.log(`    ✗ Failed to ensure statuses for board ${board.id}: ${e.message}`);
+          console.log(`    ✗ Failed to ensure statuses for board ${boardMapping.id}: ${e.message}`);
           errors++;
         }
       }
@@ -904,6 +977,16 @@ export class TaskManagementOperation extends BaseOperation {
     this.boardMappings = cachedBoards;
     console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
 
+    // Load partnership employees for assignment (these are the employees working on the project)
+    const partnershipEmployees = this.loadFromCache<any[]>('./data/cache/user-partnership-pms.json') || [];
+    console.log(`Loaded ${partnershipEmployees.length} partnership employee assignments\n`);
+
+    // Get unique employees from partnership (remove duplicates by user_id)
+    const uniqueEmployees = Array.from(
+      new Map(partnershipEmployees.map(e => [e.user_id, e])).values()
+    );
+    console.log(`Found ${uniqueEmployees.length} unique employees to assign to tasks\n`);
+
     for (let i = 0; i < milestoneMappings.length; i++) {
       const ms = milestoneMappings[i];
 
@@ -996,6 +1079,23 @@ export class TaskManagementOperation extends BaseOperation {
                 // Use cached statuses instead of fetching again
                 const target = statuses.find((s: any) => s.type === targetType);
                 if (target) {
+                  // Prepare assignees and watchers from partnership employees
+                  const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
+                  for (const emp of uniqueEmployees) {
+                    const e = {
+                      id: emp.user_id,
+                      organization_id: createRes.organization_id,
+                      email: `user${emp.user_id}@example.com`,
+                      first_name: emp.employee_name.split(' ')[0] || emp.employee_name,
+                      last_name: emp.employee_name.split(' ').slice(1).join(' ') || '',
+                      is_active: 1
+                    };
+                    assignees.push(e);
+                    watchers.push(e);
+                    assigneeIds.push(emp.user_id);
+                    watcherIds.push(emp.user_id);
+                  }
+
                   const statusUpdate: any = {
                     id: taskId,
                     organization_id: createRes.organization_id,
@@ -1011,8 +1111,8 @@ export class TaskManagementOperation extends BaseOperation {
                     task_size: 'small',
                     estimated_sprint_points: 2,
                     estimated_time: 4,
-                    assignees: [],
-                    watchers: [],
+                    assignees,
+                    watchers,
                     status: target,
                     created_at: createdAt,
                     encoded_id: createRes.encoded_id || '',
@@ -1027,13 +1127,15 @@ export class TaskManagementOperation extends BaseOperation {
                       value:
                           f === 'description' ? updatePayload.description :
                               f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
-                                  f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id : ''
+                                  f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
+                                      f === 'responsibles' ? assignees :
+                                          f === 'watchers' ? watchers : ''
                     })),
                     checklistSections: [],
                     positionIndex: { destinationIndex: 0, sourceIndex: 0 },
                     source_status_id: target.id,
-                    assignee_ids: [],
-                    watcher_ids: []
+                    assignee_ids: assigneeIds,
+                    watcher_ids: watcherIds
                   };
                   if (completedAt) statusUpdate.completed_at = completedAt;
 
