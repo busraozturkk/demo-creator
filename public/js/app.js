@@ -687,10 +687,11 @@ socket.on('complete', () => {
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
-    resetButton();
-    enableFormInputs();
     hideForceStopButton();
     currentJobId = null;
+
+    // Show "Create New Demo Account" button
+    showCreateNewButton();
 
     // Notify server that demo creation completed
     socket.emit('demo-completed');
@@ -700,10 +701,11 @@ socket.on('error', (data) => {
     addLog('error', `${data.message}`);
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
-    resetButton();
-    enableFormInputs();
     hideForceStopButton();
     currentJobId = null;
+
+    // Show "Create New Demo Account" button
+    showCreateNewButton();
 
     // Notify server that demo creation completed (with error)
     socket.emit('demo-completed');
@@ -718,10 +720,12 @@ socket.on('demo-complete', (data) => {
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
-    resetButton();
-    enableFormInputs();
     hideForceStopButton();
     currentJobId = null;
+
+    // Show "Create New Demo Account" button
+    showCreateNewButton();
+
     socket.emit('demo-completed');
 });
 
@@ -904,13 +908,59 @@ async function forceStopJob() {
     } catch (error) {
         addLog('error', `Error stopping job: ${error.message}`);
     } finally {
-        resetButton();
         hideForceStopButton();
-        enableFormInputs();
         stopTimer();
         document.getElementById('animationCharacter').classList.remove('show');
         currentJobId = null;
+
+        // Show "Create New Demo Account" button instead of resetting immediately
+        showCreateNewButton();
     }
 }
+
+// Show/Hide Create New Demo Account button
+function showCreateNewButton() {
+    document.getElementById('createBtn').style.display = 'none';
+    document.getElementById('createNewBtn').style.display = 'block';
+}
+
+function hideCreateNewButton() {
+    document.getElementById('createBtn').style.display = 'block';
+    document.getElementById('createNewBtn').style.display = 'none';
+}
+
+// Reset everything for new demo creation
+function resetForNewDemo() {
+    // Clear logs
+    document.getElementById('logContent').innerHTML = '';
+
+    // Hide log container, progress bar, timer
+    document.getElementById('logContainer').style.display = 'none';
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('timerContainer').style.display = 'none';
+
+    // Reset progress
+    document.getElementById('progressFill').style.width = '0%';
+    totalLogs = 0;
+
+    // Enable form inputs
+    enableFormInputs();
+
+    // Hide create new button, show create button
+    hideCreateNewButton();
+
+    // Reset button state
+    resetButton();
+}
+
+// Create New Demo Account button handler
+document.addEventListener('DOMContentLoaded', () => {
+    const createNewBtn = document.getElementById('createNewBtn');
+    if (createNewBtn) {
+        createNewBtn.addEventListener('click', () => {
+            resetForNewDemo();
+        });
+    }
+});
 
 // Version checking removed

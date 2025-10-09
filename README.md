@@ -23,22 +23,37 @@ This tool automates the setup of complete demo environments by creating organiza
 
 - Node.js 18+
 - npm or yarn
+- **Redis** (required for job queue management)
 - Access to Clusterix API endpoints
 
 ## Installation
 
 1. Clone the repository
+
 2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Configure environment variables:
+3. **Start Redis** (required for the application to work):
+```bash
+# macOS (using Homebrew)
+brew services start redis
+
+# Or start manually in background
+redis-server --daemonize yes
+
+# Verify Redis is running
+redis-cli ping
+# Should return: PONG
+```
+
+4. Configure environment variables:
 ```bash
 cp .env.example .env
 ```
 
-4. Update `.env` with your credentials:
+5. Update `.env` with your credentials:
 
 **Option 1: Multi-Environment Setup (Recommended)**
 ```env
@@ -79,12 +94,14 @@ IMS_CUSTOMERS_API_BASE_URL=https://ims-customers.innoscripta.com
 
 ### Web Interface (Recommended)
 
-Start the web UI:
+1. **Make sure Redis is running** (see Installation step 3)
+
+2. Start the web UI:
 ```bash
 npm run ui
 ```
 
-Then open http://localhost:3000 in your browser.
+3. Open http://localhost:3000 in your browser
 
 **Features:**
 - **Environment Selection:** Choose between Testing or Production
@@ -218,6 +235,12 @@ demo-creator/
 
 ## Development
 
+### Prerequisites for Development
+Make sure Redis is running before starting development:
+```bash
+redis-server --daemonize yes
+```
+
 Build the project:
 ```bash
 npm run build
@@ -232,6 +255,17 @@ Start web interface:
 ```bash
 npm run ui
 ```
+
+### Common Issues
+
+**"No logs appearing in UI"**
+- Make sure Redis is running: `redis-cli ping` should return `PONG`
+- Check browser console for JavaScript errors
+- Verify the server started successfully
+
+**"Connection refused" errors**
+- Start Redis: `redis-server --daemonize yes`
+- Restart the application
 
 ## Deployment
 
