@@ -1,12 +1,14 @@
 import Bull from 'bull';
 import Redis from 'ioredis';
 
-// Redis connection configuration
+// Redis connection configuration for Bull
+// See: https://github.com/OptimalBits/bull/blob/develop/PATTERNS.md#reusing-redis-connections
 const redisConfig = {
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT || '6379'),
   password: process.env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
+  enableReadyCheck: false,
 };
 
 // Create Redis client for Bull

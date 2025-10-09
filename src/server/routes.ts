@@ -223,6 +223,36 @@ router.get('/api/jobs', async (req, res) => {
 });
 
 /**
+ * Stop/cancel a running job
+ */
+router.post('/api/job/:jobId/stop', async (req, res) => {
+    try {
+        const { demoQueue } = await import('../queue/demo-queue');
+        const job = await demoQueue.getJob(req.params.jobId);
+
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        const state = await job.getState();
+
+        if (state === 'completed' || state === 'failed') {
+            return res.json({ success: false, error: 'Job already finished' });
+        }
+
+        // Remove the job from queue
+        await job.remove();
+
+        console.log(`[API] Job ${job.id} forcefully stopped by user`);
+
+        res.json({ success: true, message: 'Job stopped successfully' });
+    } catch (error: any) {
+        console.error('[API] Failed to stop job:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * Version endpoint for client-side update checking
  */
 router.get('/api/version', (req, res) => {

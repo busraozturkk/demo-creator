@@ -35,6 +35,7 @@ let currentMode = 'bulk';
 let sessionData = null;
 let timerInterval = null;
 let startTime = null;
+let currentJobId = null; // Track current running job
 
 /** @type {Step[]} */
 const STEPS = [
@@ -618,10 +619,17 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     document.getElementById('createBtn').disabled = true;
     document.getElementById('createBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> IN PROGRESS <i class="fa-solid fa-spinner fa-spin"></i>';
 
+    // Disable form inputs while job is running
+    disableFormInputs();
+
+    // Show force stop button
+    showForceStopButton();
+
     document.getElementById('logContainer').style.display = 'block';
     document.getElementById('progressBar').style.display = 'block';
     document.getElementById('timerContainer').style.display = 'flex';
-    document.getElementById('logContent').innerHTML = '';
+    // Don't clear logs - keep them persistent
+    // document.getElementById('logContent').innerHTML = '';
     document.getElementById('progressFill').style.width = '0%';
 
     // Start timer
@@ -655,9 +663,16 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
         if (!data.success) {
             throw new Error(data.error || 'Failed to start demo creation');
         }
+
+        // Store job ID for force stop
+        currentJobId = data.jobId;
+        addLog('info', `📋 Job queued with ID: ${data.jobId}`);
+
     } catch (error) {
         addLog('error', `${error.message}`);
         resetButton();
+        enableFormInputs();
+        hideForceStopButton();
     }
 });
 
@@ -673,6 +688,9 @@ socket.on('complete', () => {
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
     resetButton();
+    enableFormInputs();
+    hideForceStopButton();
+    currentJobId = null;
 
     // Notify server that demo creation completed
     socket.emit('demo-completed');
@@ -683,8 +701,27 @@ socket.on('error', (data) => {
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
     resetButton();
+    enableFormInputs();
+    hideForceStopButton();
+    currentJobId = null;
 
     // Notify server that demo creation completed (with error)
+    socket.emit('demo-completed');
+});
+
+socket.on('demo-complete', (data) => {
+    if (data.success) {
+        addLog('success', '✨ Demo creation completed successfully!');
+    } else {
+        addLog('error', `❌ Demo creation failed: ${data.error || 'Unknown error'}`);
+    }
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('animationCharacter').classList.remove('show');
+    stopTimer();
+    resetButton();
+    enableFormInputs();
+    hideForceStopButton();
+    currentJobId = null;
     socket.emit('demo-completed');
 });
 
@@ -797,6 +834,83 @@ function updateTimer() {
     const seconds = elapsed % 60;
     const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     document.getElementById('timerDisplay').textContent = display;
+}
+
+// Disable/Enable form inputs
+function disableFormInputs() {
+    const inputs = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
+    inputs.forEach(input => {
+        input.disabled = true;
+        input.style.opacity = '0.5';
+        input.style.cursor = 'not-allowed';
+    });
+}
+
+function enableFormInputs() {
+    const inputs = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
+    inputs.forEach(input => {
+        input.disabled = false;
+        input.style.opacity = '';
+        input.style.cursor = '';
+    });
+}
+
+// Force stop button
+function showForceStopButton() {
+    let stopBtn = document.getElementById('forceStopBtn');
+    if (!stopBtn) {
+        stopBtn = document.createElement('button');
+        stopBtn.id = 'forceStopBtn';
+        stopBtn.className = 'btn-danger';
+        stopBtn.innerHTML = '<i class="fa-solid fa-stop"></i> FORCE STOP';
+        stopBtn.onclick = forceStopJob;
+
+        // Insert after the create button
+        const createBtn = document.getElementById('createBtn');
+        createBtn.parentNode.insertBefore(stopBtn, createBtn.nextSibling);
+    }
+    stopBtn.style.display = 'block';
+}
+
+function hideForceStopButton() {
+    const stopBtn = document.getElementById('forceStopBtn');
+    if (stopBtn) {
+        stopBtn.style.display = 'none';
+    }
+}
+
+async function forceStopJob() {
+    if (!currentJobId) {
+        addLog('warning', 'No active job to stop');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to force stop the current job? This cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/job/${currentJobId}/stop`, {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            addLog('warning', '⚠️ Job stopped by user');
+        } else {
+            addLog('error', `Failed to stop job: ${data.error}`);
+        }
+    } catch (error) {
+        addLog('error', `Error stopping job: ${error.message}`);
+    } finally {
+        resetButton();
+        hideForceStopButton();
+        enableFormInputs();
+        stopTimer();
+        document.getElementById('animationCharacter').classList.remove('show');
+        currentJobId = null;
+    }
 }
 
 // Version checking removed
