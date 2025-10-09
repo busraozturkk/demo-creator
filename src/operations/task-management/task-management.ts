@@ -22,7 +22,7 @@ interface FolderMapping {
 interface BoardMapping {
   id: number;
   folder_id: number;
-  project_short_title: string | undefined;  // Project short title for matching
+  project_short_title: string | undefined;
   milestone_title: string;
   name: string;
 }
@@ -44,51 +44,20 @@ interface WorkPackageEmployeeAssignment {
   }>;
 }
 
+/**
+ * Canonical 3 statuses. NOTE: positions are 1-based to avoid UI edge-cases.
+ */
 const TASK_STATUSES = [
-  {
-    title: 'TO DO',
-    position: 0,
-    color: '#CCCCCC',
-    type: 'todo',
-    timer_action: ''
-  },
-  {
-    title: 'IN PROGRESS',
-    position: 1,
-    color: '#FECC45',
-    type: 'active',
-    timer_action: ''
-  },
-  {
-    title: 'DONE',
-    position: 2,
-    color: '#8AA657',
-    type: 'completed',
-    timer_action: ''
-  }
+  { title: 'TO DO',        position: 1, color: '#CCCCCC', type: 'todo',      timer_action: '' },
+  { title: 'IN PROGRESS',  position: 2, color: '#FECC45', type: 'active',    timer_action: '' },
+  { title: 'DONE',         position: 3, color: '#8AA657', type: 'completed', timer_action: '' },
 ];
 
 const TASK_TYPES = [
-  {
-    title: 'Task',
-    icon: 'WhiteFlagIcon',
-    color: '#8E6BAC'
-  },
-  {
-    title: 'Bug',
-    icon: 'BugIcon',
-    color: '#D50000'
-  },
-  {
-    title: 'Feature',
-    icon: 'StarEmptyIcon',
-    color: '#F6BF26'
-  },
-  {
-    title: 'Documentation',
-    icon: 'DocIcon',
-    color: '#8AA657'
-  }
+  { title: 'Task',          icon: 'WhiteFlagIcon', color: '#8E6BAC' },
+  { title: 'Bug',           icon: 'BugIcon',       color: '#D50000' },
+  { title: 'Feature',       icon: 'StarEmptyIcon', color: '#F6BF26' },
+  { title: 'Documentation', icon: 'DocIcon',       color: '#8AA657' },
 ];
 
 export class TaskManagementOperation extends BaseOperation {
@@ -103,14 +72,238 @@ export class TaskManagementOperation extends BaseOperation {
     super();
     // Task Management has its own backend
     this.taskMgmtApiClient = new ApiClient(
-      authService,
-      'https://task-management-backend.innoscripta.com'
+        authService,
+        'https://task-management-backend.innoscripta.com'
     );
   }
 
+  // --------------------------------------------------------------------------
+  // Retry & paging helpers
+  // --------------------------------------------------------------------------
+
+  private sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   /**
-   * Create task types (Task, Bug, Feature, Documentation)
+   * Fetch boards with paging and retry until a readiness condition is met.
+   * - expectedMilestoneCount: how many milestone boards we expect (from cache)
+   * - readinessRatio: consider ready when we see ≥ expected * ratio
    */
+  private async fetchBoardsWithRetry(options?: {
+    retries?: number;
+    baseDelayMs?: number;
+    jitterMs?: number;
+    expectedMilestoneCount?: number;
+    readinessRatio?: number;   // 0..1
+    maxPages?: number;
+  }): Promise<any[]> {
+    const {
+      retries = 10,
+      baseDelayMs = 1500,
+      jitterMs = 400,
+      expectedMilestoneCount = 0,
+      readinessRatio = 0.9,
+      maxPages = 10,
+    } = options || {};
+
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const all: any[] = [];
+
+        // Naive paging (?page=1..maxPages). If the API ignores page param, the first result still works.
+        for (let page = 1; page <= maxPages; page++) {
+          const res: any = await this.taskMgmtApiClient.executeRequest(
+              'GET',
+              '/api/boards',
+              { include: 'pinned', page: page.toString() }
+          );
+          const chunk = res?.data || res || [];
+          if (Array.isArray(chunk)) {
+            all.push(...chunk);
+            if (chunk.length === 0) break; // empty page → stop
+          } else {
+            if (page === 1) all.push(chunk);
+            break;
+          }
+        }
+
+        const milestoneBoards = all.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+        const ready = expectedMilestoneCount === 0
+            ? milestoneBoards.length > 0
+            : milestoneBoards.length >= Math.ceil(expectedMilestoneCount * readinessRatio);
+
+        console.log(
+            `[Boards Retry] attempt ${attempt}/${retries} → total=${all.length}, milestones=${milestoneBoards.length}, expected≈${expectedMilestoneCount}, ready=${ready}`
+        );
+
+        if (ready) return all;
+      } catch (err: any) {
+        lastError = err;
+        console.log(`[Boards Retry] attempt ${attempt}/${retries} failed: ${err?.message || err}`);
+      }
+
+      if (attempt < retries) {
+        const delay = baseDelayMs * attempt + Math.floor(Math.random() * jitterMs);
+        console.log(`[Boards Retry] Waiting ${delay}ms before next attempt...`);
+        await this.sleep(delay);
+      }
+    }
+
+    if (lastError) {
+      throw new Error(`Failed to fetch boards after ${retries} attempts: ${lastError.message || lastError}`);
+    }
+    throw new Error(`Boards not ready after ${retries} attempts (not enough Milestone boards visible)`);
+  }
+
+  /**
+   * Fetch statuses for a board with a few retries (useful right after creation).
+   */
+  private async fetchStatusesWithRetry(boardId: number, retries = 5, delayMs = 800) {
+    let lastError: any = null;
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const res: any = await this.taskMgmtApiClient.executeRequest(
+            'GET',
+            '/api/statuses',
+            { board_id: boardId.toString() }
+        );
+        const statuses = res?.data || res || [];
+        if (Array.isArray(statuses) && statuses.length > 0) return statuses;
+      } catch (err: any) {
+        lastError = err;
+      }
+      if (attempt < retries) {
+        console.log(`[Statuses Retry] Board ${boardId} attempt ${attempt}/${retries} → waiting ${delayMs}ms...`);
+        await this.sleep(delayMs);
+      }
+    }
+    if (lastError) {
+      throw new Error(`Failed to fetch statuses for board ${boardId} after ${retries} attempts: ${lastError.message || lastError}`);
+    }
+    return [];
+  }
+
+  /**
+   * Ensure the canonical three statuses exist on a board with correct attributes.
+   * - POST with (title, position, board_id, color, type) when missing
+   * - PUT to normalize existing ones (title, color, type, timer_action, position)
+   * - Positions are 1,2,3 (1-based) to avoid UI quirks
+   * - Retries reads after writes to beat eventual consistency
+   */
+  private async ensureThreeStatuses(boardId: number): Promise<void> {
+    const desired = TASK_STATUSES;
+
+    // Read existing
+    let existing: any[] = [];
+    try {
+      existing = await this.fetchStatusesWithRetry(boardId, 5, 800);
+    } catch (e: any) {
+      console.log(`[ensureThreeStatuses] Initial read failed for board ${boardId}: ${e?.message || e}`);
+    }
+
+    const byTitle = new Map<string, any>();
+    const byType = new Map<string, any>();
+    for (const s of existing) {
+      if (s?.title) byTitle.set(s.title.toUpperCase(), s);
+      if (s?.type)  byType.set(s.type, s);
+    }
+
+    // Create missing with full payload
+    for (const d of desired) {
+      const key = d.title.toUpperCase();
+      const already = byTitle.get(key) || byType.get(d.type);
+      if (!already) {
+        try {
+          console.log(`    → Creating status: ${d.title} on board ${boardId}`);
+          const createRes: any = await this.taskMgmtApiClient.executeRequest(
+              'POST',
+              '/api/statuses',
+              {
+                title: d.title,
+                position: d.position,
+                board_id: boardId,
+                color: d.color,
+                type: d.type,
+                timer_action: d.timer_action,
+              }
+          );
+          const createdId = createRes?.data?.id || createRes?.id;
+          console.log(`      ✓ Created ${d.title} (ID: ${createdId})`);
+        } catch (err: any) {
+          console.log(`      ✗ Create failed for ${d.title} on board ${boardId}: ${err?.message || err}`);
+        }
+      } else {
+        console.log(`    • ${d.title} already exists on board ${boardId}`);
+      }
+    }
+
+    // Re-read (retry) after writes
+    try {
+      existing = await this.fetchStatusesWithRetry(boardId, 6, 900);
+    } catch (e: any) {
+      console.log(`[ensureThreeStatuses] Post-create read failed for board ${boardId}: ${e?.message || e}`);
+      existing = [];
+    }
+
+    // Normalize attributes and positions
+    const targetByTitle = new Map<string, typeof desired[number]>();
+    desired.forEach(d => targetByTitle.set(d.title.toUpperCase(), d));
+
+    const updates: Array<{ id: number; payload: any }> = [];
+    for (const s of existing) {
+      const want = targetByTitle.get((s.title || '').toUpperCase());
+      if (!want) continue;
+
+      const needUpdate =
+          s.title !== want.title ||
+          s.position !== want.position ||
+          s.color !== want.color ||
+          s.type !== want.type ||
+          (s.timer_action || '') !== (want.timer_action || '');
+
+      if (needUpdate) {
+        updates.push({
+          id: s.id,
+          payload: {
+            title: want.title,
+            color: want.color,
+            type: want.type,
+            timer_action: want.timer_action,
+            position: want.position,
+            board_id: boardId,
+          },
+        });
+      }
+    }
+
+    for (const u of updates.sort((a, b) => a.payload.position - b.payload.position)) {
+      try {
+        console.log(`      → Normalizing status ${u.id} on board ${boardId} → ${u.payload.title} (#${u.payload.position})`);
+        await this.taskMgmtApiClient.executeRequest('PUT', `/api/statuses/${u.id}`, u.payload);
+        console.log(`        ✓ Normalized ${u.payload.title}`);
+      } catch (err: any) {
+        console.log(`        ✗ Failed to normalize status ${u.id}: ${err?.message || err}`);
+      }
+    }
+
+    // Final assert (log)
+    try {
+      const finalList = await this.fetchStatusesWithRetry(boardId, 3, 600);
+      const finalPretty = finalList
+          .map((s: any) => `${s.position}:${s.title}[${s.type}]`)
+          .sort()
+          .join(', ');
+      console.log(`    ⇢ Board ${boardId} statuses now: ${finalPretty}`);
+    } catch { /* no-op */ }
+  }
+
+  // --------------------------------------------------------------------------
+  // Reference data
+  // --------------------------------------------------------------------------
+
   async createTaskTypes(): Promise<void> {
     console.log('\n=== Creating Task Types ===\n');
 
@@ -120,18 +313,12 @@ export class TaskManagementOperation extends BaseOperation {
     for (const taskType of TASK_TYPES) {
       try {
         const response: any = await this.taskMgmtApiClient.executeRequest(
-          'POST',
-          '/api/task-types',
-          {
-            title: taskType.title,
-            icon: taskType.icon,
-            color: taskType.color
-          }
+            'POST',
+            '/api/task-types',
+            { title: taskType.title, icon: taskType.icon, color: taskType.color }
         );
-
         const taskTypeId = response.data?.id || response.id;
-        this.taskTypeIds.push(taskTypeId);
-
+        if (taskTypeId) this.taskTypeIds.push(taskTypeId);
         console.log(`  ✓ Created: ${taskType.title} (ID: ${taskTypeId})`);
         created++;
       } catch (error: any) {
@@ -140,61 +327,33 @@ export class TaskManagementOperation extends BaseOperation {
       }
     }
 
-    console.log(`\nCreated ${created} task types\n`);
+    console.log(`\nCreated ${created} task types (errors: ${errors})\n`);
   }
 
-  /**
-   * Fetch priorities from the system
-   */
   async fetchPriorities(): Promise<void> {
     console.log('\n=== Fetching Priorities ===\n');
-
     try {
-      const response: any = await this.taskMgmtApiClient.executeRequest(
-        'GET',
-        '/api/priorities'
-      );
-
+      const response: any = await this.taskMgmtApiClient.executeRequest('GET', '/api/priorities');
       const priorities = response.data || response || [];
-
-      for (const priority of priorities) {
-        this.priorityIds.push(priority.id);
-      }
-
+      for (const p of priorities) this.priorityIds.push(p.id);
       console.log(`Found ${this.priorityIds.length} priorities\n`);
     } catch (error: any) {
       console.log(`Failed to fetch priorities: ${error.message}\n`);
     }
   }
 
-  /**
-   * Fetch allowed activity types from the system
-   */
   async fetchAllowedActivityTypes(): Promise<void> {
     console.log('\n=== Fetching Allowed Activity Types ===\n');
-
     try {
-      const response: any = await this.taskMgmtApiClient.executeRequest(
-        'GET',
-        '/api/allowed-activity-types'
-      );
-
+      const response: any = await this.taskMgmtApiClient.executeRequest('GET', '/api/allowed-activity-types');
       const activityTypes = response.data || response || [];
-
-      for (const activityType of activityTypes) {
-        this.allowedActivityTypes.push(activityType.value || activityType);
-      }
-
+      for (const a of activityTypes) this.allowedActivityTypes.push(a.value || a);
       console.log(`Found ${this.allowedActivityTypes.length} allowed activity types: ${this.allowedActivityTypes.join(', ')}\n`);
     } catch (error: any) {
       console.log(`Failed to fetch allowed activity types: ${error.message}\n`);
     }
   }
 
-  /**
-   * Create activity type restrictions for all roles
-   * For SFF data, we add all three types: task, timerCategory, pctTask
-   */
   async createActivityTypeRestrictions(roleMappings: Array<{ id: string, title: string }>): Promise<void> {
     console.log('\n=== Creating Activity Type Restrictions ===\n');
 
@@ -203,25 +362,17 @@ export class TaskManagementOperation extends BaseOperation {
       return;
     }
 
-    // For SFF data, always use these three activity types
     const activityTypesForSFF = ['task', 'timerCategory', 'pctTask'];
-
-    let created = 0;
-    let errors = 0;
+    let created = 0, errors = 0;
 
     for (const role of roleMappings) {
       try {
         console.log(`  Creating restriction for role: ${role.title} (ID: ${role.id})`);
-
         await this.taskMgmtApiClient.executeRequest(
-          'POST',
-          '/api/activity-type-restrictions',
-          {
-            role_id: role.id,
-            allowed_activity_types: activityTypesForSFF
-          }
+            'POST',
+            '/api/activity-type-restrictions',
+            { role_id: role.id, allowed_activity_types: activityTypesForSFF }
         );
-
         console.log(`    ✓ Added activity types: ${activityTypesForSFF.join(', ')}`);
         created++;
       } catch (error: any) {
@@ -230,73 +381,19 @@ export class TaskManagementOperation extends BaseOperation {
       }
     }
 
-    console.log(`\n=== Activity Type Restrictions Summary ===`);
-    console.log(`  - Restrictions created: ${created}`);
-    console.log(`  - Errors: ${errors}\n`);
+    console.log(`\n=== Activity Type Restrictions Summary ===\n  - Restrictions created: ${created}\n  - Errors: ${errors}\n`);
   }
 
-  /**
-   * Create folders for each project in Task Management
-   */
-  async createFoldersForProjects(projectMappings: ProjectMapping[]): Promise<Map<string, number>> {
-    console.log('\n=== Creating Folders for Projects ===\n');
-
-    const projectToFolderMap = new Map<string, number>();
-    let created = 0;
-    let errors = 0;
-
-    for (const project of projectMappings) {
-      try {
-        console.log(`  Creating folder for project: ${project.short_title}`);
-
-        const response: any = await this.taskMgmtApiClient.executeRequest(
-          'POST',
-          '/api/folders',
-          {
-            name: project.short_title
-          }
-        );
-
-        const folderId = response.data?.id || response.id;
-
-        if (folderId) {
-          projectToFolderMap.set(project.short_title, folderId);
-          this.folderMappings.push({
-            id: folderId,
-            project_short_title: project.short_title,
-            name: project.short_title
-          });
-          console.log(`  ✓ Created folder "${project.short_title}" (ID: ${folderId})`);
-          created++;
-        } else {
-          console.log(`  ✗ No folder ID returned for "${project.short_title}"`);
-          errors++;
-        }
-      } catch (error: any) {
-        console.log(`  ✗ Failed to create folder for "${project.short_title}": ${error.message}`);
-        errors++;
-      }
-    }
-
-    console.log(`\n=== Folder Creation Summary ===`);
-    console.log(`  - Folders created: ${created}`);
-    console.log(`  - Errors: ${errors}\n`);
-
-    return projectToFolderMap;
-  }
+  // --------------------------------------------------------------------------
+  // Core: Boards & Statuses (NO folder creation/reassignment)
+  // --------------------------------------------------------------------------
 
   /**
-   * Setup Task Management for milestones (when work packages are NOT used)
-   *
-   * Flow:
-   * 1. Fetch all boards (auto-created by system for milestones)
-   * 2. For each board, create statuses (TO DO, IN PROGRESS, DONE)
-   *
-   * Note: Folders and boards are automatically created by the system when milestones are created
+   * Fetch milestone boards, ensure statuses on ALL of them, and cache mappings.
+   * - No folder creation; existing board.folder_id is used as-is.
+   * - Milestone mapping via external_id (task_id) first; fallback to title strip ("X. " prefix).
    */
-  async setupTaskManagementForMilestones(
-    projectMappings: ProjectMapping[]
-  ): Promise<void> {
+  async setupTaskManagementForMilestones(projectMappings: ProjectMapping[]): Promise<void> {
     console.log('\n=== Setting up Task Management for Milestones ===\n');
 
     if (!projectMappings || projectMappings.length === 0) {
@@ -304,125 +401,71 @@ export class TaskManagementOperation extends BaseOperation {
       return;
     }
 
-    // Load milestone mappings
     const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json');
     if (!milestoneMappings || milestoneMappings.length === 0) {
       console.log('No milestone mappings found. Skipping task management setup.\n');
       return;
     }
-
     console.log(`Found ${milestoneMappings.length} milestones\n`);
 
     let totalBoards = 0;
-    let totalStatuses = 0;
+    let totalStatusesEnsured = 0;
     let errors = 0;
 
-    // Step 1: Fetch all boards (auto-created by system)
-    console.log('Fetching boards from Task Management...\n');
-
+    console.log('Fetching boards from Task Management with retry & paging...\n');
     try {
-      const boardsResponse: any = await this.taskMgmtApiClient.executeRequest(
-        'GET',
-        '/api/boards',
-        {
-          'include': 'pinned'
-        }
-      );
+      const boards = await this.fetchBoardsWithRetry({
+        expectedMilestoneCount: milestoneMappings.length,
+        readinessRatio: 0.9,
+        retries: 10,
+        baseDelayMs: 1500,
+        jitterMs: 400,
+        maxPages: 10,
+      });
 
-      const boards = boardsResponse.data || boardsResponse || [];
-      console.log(`Found ${boards.length} boards\n`);
+      const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+      console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length}\n`);
 
-      // Log board details for debugging
       console.log('Board details:');
-      for (const board of boards) {
-        console.log(`  - "${board.title}" (ID: ${board.id}, Type: ${board.external_type}, External ID: ${board.external_id})`);
-      }
+      milestoneBoards.forEach((b: any) =>
+          console.log(`  - "${b.title || b.name}" (ID: ${b.id}, Type: ${b.external_type || b.type}, External ID: ${b.external_id}, Folder: ${b.folder_id})`)
+      );
       console.log('');
 
-      // Step 2: For each milestone board, create statuses
-      for (const board of boards) {
-        // Skip default board or non-milestone boards
-        if (board.title === 'Default Board' || board.external_type !== 'Milestone') {
-          console.log(`  Skipping board "${board.title}" (Type: ${board.external_type})`);
-          continue;
-        }
+      for (const board of milestoneBoards) {
+        const title = board.title || board.name;
 
-        console.log(`\nProcessing Board: "${board.title}" (ID: ${board.id})`);
-
-        // Find matching milestone by external_id (task_id)
-        const matchingMilestone = milestoneMappings.find(m =>
-          m.task_id.toString() === board.external_id
-        );
+        const matchingMilestone =
+            milestoneMappings.find(m => m.task_id?.toString() === (board.external_id ?? '').toString())
+            || milestoneMappings.find(m => {
+              const normalized = title?.replace(/^\d+\.\s*/, '');
+              return m.milestone_title === normalized;
+            });
 
         if (!matchingMilestone) {
-          console.log(`  ⊗ Could not find milestone with task_id ${board.external_id}, skipping board`);
+          console.log(`  ⊗ Could not match milestone for board "${title}" (ID: ${board.id}), skipping`);
           continue;
         }
-
-        const projectShortTitle = matchingMilestone.project_short_title;
 
         this.boardMappings.push({
           id: board.id,
           folder_id: board.folder_id,
-          project_short_title: projectShortTitle,
+          project_short_title: matchingMilestone.project_short_title,
           milestone_title: matchingMilestone.milestone_title,
-          name: board.title
+          name: title
         });
 
-        console.log(`  ✓ Board: ${board.title} (ID: ${board.id}) → Folder: ${board.folder_id}`);
+        console.log(`\nProcessing Board: "${title}" (ID: ${board.id})`);
         totalBoards++;
 
-        // Step 3: Create statuses for this board
-        console.log(`  Creating statuses for board ${board.id}...`);
-        for (const status of TASK_STATUSES) {
-          try {
-            console.log(`    → Creating status: ${status.title}`);
-            const statusResponse: any = await this.taskMgmtApiClient.executeRequest(
-              'POST',
-              '/api/statuses',
-              {
-                title: status.title,
-                position: status.position,
-                board_id: board.id
-              }
-            );
-
-            const statusId = statusResponse.data?.id || statusResponse.id;
-
-            if (!statusId) {
-              console.log(`    ✗ Status creation failed: No ID returned for '${status.title}'`);
-              errors++;
-              continue;
-            }
-
-            console.log(`    ✓ Status created: ${status.title} (ID: ${statusId})`);
-
-            // Update status with color and type
-            try {
-              console.log(`      → Updating status ${statusId} with color and type...`);
-              await this.taskMgmtApiClient.executeRequest(
-                'PUT',
-                `/api/statuses/${statusId}`,
-                {
-                  title: status.title,
-                  color: status.color,
-                  type: status.type,
-                  timer_action: status.timer_action
-                }
-              );
-              console.log(`      ✓ Status updated with color: ${status.color}, type: ${status.type}`);
-              totalStatuses++;
-            } catch (updateError: any) {
-              console.log(`    ✗ Failed to update status '${status.title}': ${updateError.message}`);
-              errors++;
-            }
-          } catch (statusError: any) {
-            console.log(`    ✗ Failed to create status '${status.title}': ${statusError.message}`);
-            errors++;
-          }
+        try {
+          await this.ensureThreeStatuses(board.id);
+          totalStatusesEnsured += 3;
+          console.log(`  ✓ Statuses ensured for board ${board.id}`);
+        } catch (stErr: any) {
+          console.log(`  ✗ Failed to ensure statuses for board ${board.id}: ${stErr.message}`);
+          errors++;
         }
-
-        console.log(`  Status creation completed for board ${board.id}`);
       }
 
     } catch (error: any) {
@@ -431,182 +474,87 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     console.log(`\n=== Task Management Setup Summary ===`);
-    console.log(`  - Boards processed: ${totalBoards}`);
-    console.log(`  - Statuses created: ${totalStatuses}`);
+    console.log(`  - Milestone boards processed: ${totalBoards}`);
+    console.log(`  - Status sets ensured: ${totalStatusesEnsured / 3}`);
     console.log(`  - Errors: ${errors}\n`);
 
-    // Save board mappings to cache
+    // Cache board mappings
     this.saveBoardMappings();
   }
 
   /**
-   * Fetch and cache task management structure (boards)
-   *
-   * Flow:
-   * 1. Create folders for each project
-   * 2. Fetch all boards directly from /api/boards
-   * 3. Match boards to milestones by parsing board title (e.g., "1. Milestone Name")
-   * 4. For each board, create statuses (TO DO, IN PROGRESS, DONE)
+   * Fetch & cache milestone boards only (no folder creation, no reassignment),
+   * and ensure their statuses are present.
    */
-  async fetchAndCacheTaskManagementStructure(
-    projectMappings: ProjectMapping[]
-  ): Promise<void> {
-    console.log('\n=== Fetching Task Management Structure ===\n');
+  async fetchAndCacheTaskManagementStructure(projectMappings: ProjectMapping[]): Promise<void> {
+    console.log('\n=== Fetching & Caching Task Management Structure (No folder creation) ===\n');
 
     if (!projectMappings || projectMappings.length === 0) {
-      console.log('No project-management found. Skipping task management setup.\n');
+      console.log('No project-management found. Skipping.\n');
       return;
     }
 
+    const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
+    console.log(`Milestone mappings: ${milestoneMappings.length}\n`);
+
     let totalBoards = 0;
-    let totalStatuses = 0;
+    let totalStatusesEnsured = 0;
     let errors = 0;
 
-    // First, create folders for each project
-    const projectToFolderMap = await this.createFoldersForProjects(projectMappings);
-
-    // Fetch all boards directly
-    console.log('Fetching boards from Task Management...\n');
-
     try {
-      const boardsResponse: any = await this.taskMgmtApiClient.executeRequest(
-        'GET',
-        '/api/boards',
-        {
-          'include': 'pinned'
-        }
-      );
+      const boards = await this.fetchBoardsWithRetry({
+        expectedMilestoneCount: milestoneMappings.length,
+        readinessRatio: 0.9,
+        retries: 10,
+        baseDelayMs: 1500,
+        jitterMs: 400,
+        maxPages: 10,
+      });
 
-      const boards = boardsResponse.data || boardsResponse || [];
-      console.log(`Found ${boards.length} boards\n`);
+      const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+      console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length}\n`);
 
-      // Process each board and assign to folders
-      for (const board of boards) {
-        console.log(`\nProcessing Board: "${board.title || board.name}" (ID: ${board.id})`);
+      for (const board of milestoneBoards) {
+        const title = board.title || board.name;
 
-        // Board title format: "1. Milestone Name" or "2. Milestone Name"
-        // Extract milestone title by removing the number prefix
-        const milestoneTitle = board.title ? board.title.replace(/^\d+\.\s*/, '') : board.name.replace(/^\d+\.\s*/, '');
-
-        // Match board to project via milestone mappings
-        // We need to find which project this milestone belongs to
-        const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
-        const matchingMilestone = milestoneMappings.find(m =>
-          m.milestone_title === milestoneTitle
-        );
+        const matchingMilestone =
+            milestoneMappings.find(m => m.task_id?.toString() === (board.external_id ?? '').toString())
+            || milestoneMappings.find(m => title?.replace(/^\d+\.\s*/, '') === m.milestone_title);
 
         if (!matchingMilestone) {
-          console.log(`  ⊗ Could not find milestone "${milestoneTitle}" in milestone mappings, skipping board`);
+          console.log(`  ⊗ Could not map milestone for "${title}" (ID: ${board.id}), skipping cache entry`);
           continue;
         }
 
-        const projectShortTitle = matchingMilestone.project_short_title;
-        const folderId = projectToFolderMap.get(projectShortTitle);
+        this.boardMappings.push({
+          id: board.id,
+          folder_id: board.folder_id,
+          project_short_title: matchingMilestone.project_short_title,
+          milestone_title: matchingMilestone.milestone_title,
+          name: title
+        });
 
-        if (!folderId) {
-          console.log(`  ⊗ No folder found for project "${projectShortTitle}", skipping board`);
-          continue;
-        }
+        totalBoards++;
 
-        // Update board to assign it to the correct folder
         try {
-          console.log(`  → Assigning board to folder ${folderId} (Project: ${projectShortTitle})`);
-
-          await this.taskMgmtApiClient.executeRequest(
-            'PUT',
-            `/api/boards/${board.id}`,
-            {
-              folder_id: folderId,
-              title: board.title || board.name
-            }
-          );
-
-          console.log(`  ✓ Board assigned to folder successfully`);
-
-          this.boardMappings.push({
-            id: board.id,
-            folder_id: folderId,
-            project_short_title: projectShortTitle,
-            milestone_title: milestoneTitle,
-            name: board.title || board.name
-          });
-
-          console.log(`  ✓ Board: ${board.title || board.name} (ID: ${board.id}) → Project: ${projectShortTitle}, Milestone: ${milestoneTitle}`);
-          totalBoards++;
-
-          // Create statuses for this board
-          console.log(`  Creating statuses for board ${board.id}...`);
-          for (const status of TASK_STATUSES) {
-            try {
-              // Create status
-              console.log(`    → Creating status: ${status.title}`);
-              const statusResponse: any = await this.taskMgmtApiClient.executeRequest(
-                'POST',
-                '/api/statuses',
-                {
-                  title: status.title,
-                  position: status.position,
-                  board_id: board.id
-                }
-              );
-
-              const statusId = statusResponse.data?.id || statusResponse.id;
-
-              if (!statusId) {
-                console.log(`    ✗ Status creation failed: No ID returned for '${status.title}'`);
-                console.log(`      Response:`, JSON.stringify(statusResponse));
-                errors++;
-                continue;
-              }
-
-              console.log(`    ✓ Status created: ${status.title} (ID: ${statusId})`);
-
-              // Update status with color and type
-              try {
-                console.log(`      → Updating status ${statusId} with color and type...`);
-                await this.taskMgmtApiClient.executeRequest(
-                  'PUT',
-                  `/api/statuses/${statusId}`,
-                  {
-                    title: status.title,
-                    color: status.color,
-                    type: status.type,
-                    timer_action: status.timer_action
-                  }
-                );
-                console.log(`      ✓ Status updated with color: ${status.color}, type: ${status.type}`);
-                totalStatuses++;
-              } catch (updateError: any) {
-                console.log(`    ✗ Failed to update status '${status.title}': ${updateError.message}`);
-                console.log(`      Error details:`, updateError);
-                errors++;
-              }
-            } catch (statusError: any) {
-              console.log(`    ✗ Failed to create status '${status.title}': ${statusError.message}`);
-              console.log(`      Error details:`, statusError);
-              errors++;
-            }
-          }
-
-          console.log(`  Status creation completed for board ${board.id}`);
-        } catch (boardError: any) {
-          console.log(`  ✗ Failed to assign board to folder: ${boardError.message}`);
+          await this.ensureThreeStatuses(board.id);
+          totalStatusesEnsured += 3;
+        } catch (e: any) {
+          console.log(`    ✗ Failed to ensure statuses for board ${board.id}: ${e.message}`);
           errors++;
         }
       }
 
-    } catch (error: any) {
-      console.log(`Failed to fetch boards: ${error.message}\n`);
+    } catch (err: any) {
+      console.log(`Failed to fetch boards: ${err.message}\n`);
       return;
     }
 
-    console.log(`\n=== Task Management Structure Summary ===`);
-    console.log(`  - Boards found: ${totalBoards}`);
-    console.log(`  - Statuses created: ${totalStatuses}`);
+    console.log(`\n=== Structure Summary ===`);
+    console.log(`  - Milestone boards cached: ${totalBoards}`);
+    console.log(`  - Status sets ensured: ${totalStatusesEnsured / 3}`);
     console.log(`  - Errors: ${errors}\n`);
 
-    // Save mappings to cache
-    this.saveFolderMappings();
     this.saveBoardMappings();
   }
 
@@ -620,9 +568,10 @@ export class TaskManagementOperation extends BaseOperation {
     console.log(`Saved ${this.boardMappings.length} board mappings to cache\n`);
   }
 
-  /**
-   * Load task data from CSV file
-   */
+  // --------------------------------------------------------------------------
+  // CSV + utils
+  // --------------------------------------------------------------------------
+
   private loadTasksFromCSV(csvPath?: string): TaskData[] {
     const defaultPath = './data/sff-data-en/tasks.csv';
     const filePath = csvPath || defaultPath;
@@ -636,701 +585,419 @@ export class TaskManagementOperation extends BaseOperation {
     const lines = content.split('\n').filter(line => line.trim());
     const tasks: TaskData[] = [];
 
-    // Skip header line
+    // Skip header
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i];
-
-      // Parse CSV with quoted fields
       const fields: string[] = [];
-      let currentField = '';
-      let insideQuotes = false;
+      let current = '';
+      let quoted = false;
 
       for (let j = 0; j < line.length; j++) {
-        const char = line[j];
-
-        if (char === '"') {
-          if (insideQuotes && line[j + 1] === '"') {
-            // Escaped quote
-            currentField += '"';
-            j++; // Skip next quote
-          } else {
-            // Toggle quotes
-            insideQuotes = !insideQuotes;
-          }
-        } else if (char === ',' && !insideQuotes) {
-          // Field separator
-          fields.push(currentField);
-          currentField = '';
+        const ch = line[j];
+        if (ch === '"') {
+          if (quoted && line[j + 1] === '"') { current += '"'; j++; }
+          else { quoted = !quoted; }
+        } else if (ch === ',' && !quoted) {
+          fields.push(current); current = '';
         } else {
-          currentField += char;
+          current += ch;
         }
       }
-
-      // Add last field
-      fields.push(currentField);
+      fields.push(current);
 
       if (fields.length >= 4) {
         tasks.push({
           work_package_title: fields[0].trim(),
           task_title: fields[1].trim(),
           task_description: fields[2].trim(),
-          task_type: fields[3].trim()
+          task_type: fields[3].trim(),
         });
       }
     }
-
     return tasks;
   }
 
-  /**
-   * Generate random date within a period
-   */
   private randomDateInPeriod(startDate: string, endDate: string): string {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const randomTime = start.getTime() + Math.random() * (end.getTime() - start.getTime());
-    const randomDate = new Date(randomTime);
-
-    // Format as YYYY-MM-DD
-    const year = randomDate.getFullYear();
-    const month = String(randomDate.getMonth() + 1).padStart(2, '0');
-    const day = String(randomDate.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    const d = new Date(randomTime);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
+  // --------------------------------------------------------------------------
+  // Tasks (work-package and milestone flows)
+  // --------------------------------------------------------------------------
+
   /**
-   * Create tasks in boards and link them to work packages
-   *
-   * Flow:
-   * 1. Load work package intervals from cache
-   * 2. Load task data from CSV
-   * 3. For each work package, find its milestone board
-   * 4. Create multiple tasks for the work package
-   * 5. Set created_at and deadline within work package period
-   * 6. Update task with full details including description, assignees, watchers
+   * Create tasks linked to work packages. Assumes milestone boards exist and are status-ready.
    */
   async createTasksForWorkPackages(csvPath?: string): Promise<void> {
     console.log('\n=== Creating Tasks for Work Packages ===\n');
 
-    // Load work package intervals from cache
     const workPackageIntervals = this.loadFromCache<any[]>('./data/cache/work-package-intervals.json');
-
     if (!workPackageIntervals || workPackageIntervals.length === 0) {
       console.log('No work package intervals found. Skipping task creation.\n');
       return;
     }
-
     console.log(`Found ${workPackageIntervals.length} work packages\n`);
 
-    // Load task data from CSV
     const tasksData = this.loadTasksFromCSV(csvPath);
     if (tasksData.length === 0) {
       console.log('No task data found in CSV. Skipping task creation.\n');
       return;
     }
-
     console.log(`Loaded ${tasksData.length} tasks from CSV\n`);
 
-    // Load work package employee assignments from cache
     const wpEmployeeAssignments = this.loadFromCache<WorkPackageEmployeeAssignment[]>('./data/cache/wp-employee-assignments.json') || [];
     console.log(`Loaded ${wpEmployeeAssignments.length} work package employee assignments from cache\n`);
 
-    // Group tasks by work package title
-    const tasksByWorkPackage = new Map<string, TaskData[]>();
-    for (const task of tasksData) {
-      const existing = tasksByWorkPackage.get(task.work_package_title) || [];
-      existing.push(task);
-      tasksByWorkPackage.set(task.work_package_title, existing);
+    const tasksByWP = new Map<string, TaskData[]>();
+    for (const t of tasksData) {
+      const arr = tasksByWP.get(t.work_package_title) || [];
+      arr.push(t);
+      tasksByWP.set(t.work_package_title, arr);
     }
 
-    // Group employees by work package title
-    const employeesByWorkPackage = new Map<string, WorkPackageEmployeeAssignment['assigned_employees']>();
-    for (const assignment of wpEmployeeAssignments) {
-      employeesByWorkPackage.set(assignment.work_package_title, assignment.assigned_employees);
-    }
+    const empsByWP = new Map<string, WorkPackageEmployeeAssignment['assigned_employees']>();
+    for (const a of wpEmployeeAssignments) empsByWP.set(a.work_package_title, a.assigned_employees);
 
-    // Check if we have task types
-    if (this.taskTypeIds.length === 0) {
-      console.log('Warning: No task types created. Tasks will not have a type assigned.\n');
-    }
+    if (this.taskTypeIds.length === 0) console.log('Warning: No task types created.\n');
+    if (this.priorityIds.length === 0) console.log('Warning: No priorities found.\n');
 
-    // Check if we have priorities
-    if (this.priorityIds.length === 0) {
-      console.log('Warning: No priorities found. Tasks will not have a priority assigned.\n');
-    }
-
-    let totalTasks = 0;
-    let errors = 0;
-
-    // Get first status (TO DO) for each board
-    const boardStatuses = new Map<number, number>();
-
-    // Create task type name to ID mapping
-    const taskTypeByName = new Map<string, number>();
-    // We'll need to fetch task types to map names to IDs
-    // For now, use random assignment
+    let totalTasks = 0, errors = 0;
+    const boardTodoStatus = new Map<number, number>();
 
     for (const wp of workPackageIntervals) {
       try {
-        // Find the board for this specific project and milestone
-        const board = this.boardMappings.find(b =>
-          b.project_short_title === wp.project_short_title &&
-          b.milestone_title === wp.milestone_title
-        );
-
+        const board = this.boardMappings.find(b => b.project_short_title === wp.project_short_title && b.milestone_title === wp.milestone_title);
         if (!board) {
-          console.log(`  Warning: Board not found for project ${wp.project_short_title}, milestone ${wp.milestone_title}, skipping work package ${wp.work_package_title}`);
-          console.log(`  Available boards for this project:`);
-          const projectBoards = this.boardMappings.filter(b => b.project_short_title === wp.project_short_title);
-          if (projectBoards.length === 0) {
-            console.log(`    No boards found for project ${wp.project_short_title}`);
-            console.log(`    All available projects in boardMappings: ${[...new Set(this.boardMappings.map(b => b.project_short_title))].join(', ')}`);
-          } else {
-            projectBoards.forEach(b => {
-              console.log(`    - "${b.milestone_title}" (Board ID: ${b.id})`);
-            });
-            console.log(`  Looking for milestone: "${wp.milestone_title}"`);
-          }
+          console.log(`  Warning: Board not found for ${wp.project_short_title} / ${wp.milestone_title} → ${wp.work_package_title}`);
           continue;
         }
 
-        // Get or fetch the first status (TO DO) for this board
-        let statusId: number | undefined = boardStatuses.get(board.id);
+        // Ensure TO DO status id for this board (read from cache map)
+        let statusId = boardTodoStatus.get(board.id);
         if (!statusId) {
-          // Fetch statuses for this board
           try {
-            const statusesResponse: any = await this.taskMgmtApiClient.executeRequest(
-              'GET',
-              '/api/statuses',
-              {
-                board_id: board.id.toString()
+            // Only ensure statuses once per board (already done in setupTaskManagementForMilestones)
+            const statuses = await this.fetchStatusesWithRetry(board.id);
+            const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
+            if (todo?.id) {
+              statusId = todo.id;
+              if (statusId != null) {
+                boardTodoStatus.set(board.id, statusId);
               }
-            );
-
-            const statuses = statusesResponse.data || statusesResponse || [];
-            // Find TO DO status
-            const todoStatus = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
-            if (todoStatus && todoStatus.id) {
-              statusId = todoStatus.id;
-              boardStatuses.set(board.id, todoStatus.id); // Use todoStatus.id directly to avoid undefined
             }
-          } catch (error: any) {
-            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${error.message}`);
+          } catch (e: any) {
+            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
           }
         }
+        if (!statusId) { console.log(`  Warning: No TO DO status on board ${board.id}`); continue; }
 
-        if (!statusId) {
-          console.log(`  Warning: No TO DO status found for board ${board.id}, skipping`);
-          continue;
-        }
-
-        // Get tasks for this work package
-        const wpTasks = tasksByWorkPackage.get(wp.work_package_title) || [];
-
+        const wpTasks = tasksByWP.get(wp.work_package_title) || [];
         if (wpTasks.length === 0) {
-          console.log(`  Warning: No tasks found for work package ${wp.work_package_title}`);
+          console.log(`  Warning: No tasks for WP ${wp.work_package_title}`);
           continue;
         }
 
         console.log(`  ${wp.project_short_title} → ${wp.milestone_title} → ${wp.work_package_title} (${wpTasks.length} tasks)`);
 
-        // Get assigned employees for this work package
-        const assignedEmployees = employeesByWorkPackage.get(wp.work_package_title) || [];
+        const assigned = empsByWP.get(wp.work_package_title) || [];
 
-        // Create each task for this work package
-        for (const taskData of wpTasks) {
+        for (const t of wpTasks) {
           try {
-            // Generate created_at and deadline within work package period
             const createdAt = this.randomDateInPeriod(wp.started_at, wp.finished_at);
-            const deadline = this.randomDateInPeriod(createdAt, wp.finished_at);
+            const deadline  = this.randomDateInPeriod(createdAt, wp.finished_at);
 
-            // Create task
-            const taskResponse: any = await this.taskMgmtApiClient.executeRequest(
-              'POST',
-              '/api/tasks',
-              {
-                title: taskData.task_title,
-                position: totalTasks,
-                board_id: board.id,
-                status_id: statusId
-              }
+            const createRes: any = await this.taskMgmtApiClient.executeRequest(
+                'POST', '/api/tasks',
+                { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId }
             );
+            const taskId = createRes?.data?.id || createRes?.id;
 
-            const taskId = taskResponse.data?.id || taskResponse.id;
-
-            // Update task with full details
             try {
               const updatePayload: any = {
-                title: taskData.task_title,
-                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${taskData.task_description}</div>`,
-                deadline: deadline,
-                fields: [
-                  'pct_task',
-                  'description',
-                  'task_type',
-                  'responsibles',
-                  'watchers',
-                  'sprint_point',
-                  'urgency',
-                  'tags',
-                  'deadline'
-                ],
+                title: t.task_title,
+                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${t.task_description}</div>`,
+                deadline,
+                fields: ['pct_task','description','task_type','responsibles','watchers','sprint_point','urgency','tags','deadline'],
                 checklistSections: []
               };
+              if (this.taskTypeIds.length > 0) updatePayload.task_type_id = this.taskTypeIds[Math.floor(Math.random()*this.taskTypeIds.length)];
+              if (this.priorityIds.length > 0)  updatePayload.priority_id  = this.priorityIds[Math.floor(Math.random()*this.priorityIds.length)];
+              if (wp.task_id) updatePayload.pct_task_id = wp.task_id;
 
-              // Assign a random task type
-              if (this.taskTypeIds.length > 0) {
-                const randomTaskTypeId = this.taskTypeIds[Math.floor(Math.random() * this.taskTypeIds.length)];
-                updatePayload.task_type_id = randomTaskTypeId;
-              }
+              await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, updatePayload);
 
-              // Assign a random priority
-              if (this.priorityIds.length > 0) {
-                const randomPriorityId = this.priorityIds[Math.floor(Math.random() * this.priorityIds.length)];
-                updatePayload.priority_id = randomPriorityId;
-              }
-
-              // Link to work package via pct_task (only if work package exists)
-              if (wp.task_id) {
-                updatePayload.pct_task_id = wp.task_id;
-              }
-
-              await this.taskMgmtApiClient.executeRequest(
-                'PUT',
-                `/api/tasks/${taskId}`,
-                updatePayload
-              );
-
-              // Determine status based on deadline date
+              // Decide target status based on dates, then move if needed
               const now = new Date();
-              const deadlineDate = new Date(deadline);
-              const createdDate = new Date(createdAt);
+              const dd  = new Date(deadline);
+              const cd  = new Date(createdAt);
 
-              let targetStatusId = statusId; // Default TO DO
-              let targetStatusType = 'todo';
-              let completedAt = null;
+              let targetType: 'todo'|'active'|'completed' = 'todo';
+              let completedAt: string | null = null;
 
-              if (deadlineDate < now) {
-                // Past task - mark as DONE
-                targetStatusType = 'completed';
-                // Set completed_at between created_at and deadline
+              if (dd < now) {
+                targetType = 'completed';
                 completedAt = this.randomDateInPeriod(createdAt, deadline);
-              } else if (createdDate < now && deadlineDate > now) {
-                // Current task - randomly DONE or IN PROGRESS
-                const isDone = Math.random() > 0.5;
-                if (isDone) {
-                  targetStatusType = 'completed';
-                  completedAt = this.randomDateInPeriod(createdAt, now.toISOString().split('T')[0]);
-                } else {
-                  targetStatusType = 'active';
-                }
+              } else if (cd < now && dd > now) {
+                targetType = Math.random() > 0.5 ? 'completed' : 'active';
+                if (targetType === 'completed') completedAt = this.randomDateInPeriod(createdAt, now.toISOString().split('T')[0]);
               }
-              // Future tasks stay as TO DO
 
-              // If we need to change status, find and update
-              if (targetStatusType !== 'todo') {
-                try {
-                  // Fetch all statuses for this board if not already fetched
-                  const statusesResponse: any = await this.taskMgmtApiClient.executeRequest(
-                    'GET',
-                    '/api/statuses',
-                    {
-                      board_id: board.id.toString()
-                    }
-                  );
-
-                  const statuses = statusesResponse.data || statusesResponse || [];
-                  const targetStatus = statuses.find((s: any) => s.type === targetStatusType);
-
-                  if (targetStatus) {
-                    targetStatusId = targetStatus.id;
-
-                    // Prepare assignees and watchers (same people from work package)
-                    const assignees: any[] = [];
-                    const watchers: any[] = [];
-                    const assigneeIds: number[] = [];
-                    const watcherIds: number[] = [];
-
-                    // Add assigned employees as both assignees and watchers
-                    for (const emp of assignedEmployees) {
-                      const empData = {
-                        id: emp.user_id,
-                        organization_id: taskResponse.organization_id,
-                        // We don't have all employee details, so minimal info
-                        email: `user${emp.user_id}@example.com`,
-                        first_name: emp.employee_name.split(' ')[0] || emp.employee_name,
-                        last_name: emp.employee_name.split(' ').slice(1).join(' ') || '',
-                        is_active: 1
-                      };
-                      assignees.push(empData);
-                      watchers.push(empData);
-                      assigneeIds.push(emp.user_id);
-                      watcherIds.push(emp.user_id);
-                    }
-
-                    // Update task status
-                    const statusUpdatePayload: any = {
-                      id: taskId,
-                      organization_id: taskResponse.organization_id,
-                      board_id: board.id,
-                      status_id: targetStatusId,
-                      title: taskData.task_title,
-                      fields: updatePayload.fields,
-                      is_checklist: 0,
-                      position: totalTasks,
-                      sprint_position: 1,
-                      time_estimation_unit: 'hour',
-                      total_sprint_points: 0,
-                      task_size: 'small',
-                      estimated_sprint_points: 2,
-                      estimated_time: 4,
-                      assignees: assignees,
-                      watchers: watchers,
-                      status: targetStatus,
-                      created_at: createdAt,
-                      encoded_id: taskResponse.encoded_id || '',
-                      is_public: false,
-                      customer_id: null,
-                      user_task_track_times: [],
-                      user_task_costs: [],
-                      user_hourly_salaries: [],
-                      sectionsDetail: updatePayload.fields.map((field: string, index: number) => ({
-                        id: field,
-                        type: field,
-                        order: index + 1,
-                        dropMeta: {
-                          destination: { droppableId: 'all-sections', index },
-                          type: 'SECTION'
-                        },
-                        value: field === 'description' ? updatePayload.description :
-                               (field === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
-                               (field === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
-                               (field === 'responsibles' ? assignees :
-                               (field === 'watchers' ? watchers : ''))))
-                      })),
-                      checklistSections: [],
-                      positionIndex: { destinationIndex: 0, sourceIndex: 0 },
-                      source_status_id: targetStatusId,
-                      assignee_ids: assigneeIds,
-                      watcher_ids: watcherIds
+              if (targetType !== 'todo') {
+                // Statuses already ensured at board setup, just fetch them
+                const statuses = await this.fetchStatusesWithRetry(board.id);
+                const target = statuses.find((s: any) => s.type === targetType);
+                if (target) {
+                  const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
+                  for (const emp of assigned) {
+                    const e = {
+                      id: emp.user_id,
+                      organization_id: createRes.organization_id,
+                      email: `user${emp.user_id}@example.com`,
+                      first_name: emp.employee_name.split(' ')[0] || emp.employee_name,
+                      last_name: emp.employee_name.split(' ').slice(1).join(' ') || '',
+                      is_active: 1
                     };
-
-                    // Add completed_at if task is done
-                    if (completedAt) {
-                      statusUpdatePayload.completed_at = completedAt;
-                    }
-
-                    await this.taskMgmtApiClient.executeRequest(
-                      'PUT',
-                      `/api/tasks/${taskId}`,
-                      statusUpdatePayload
-                    );
+                    assignees.push(e); watchers.push(e);
+                    assigneeIds.push(emp.user_id); watcherIds.push(emp.user_id);
                   }
-                } catch (statusError: any) {
-                  console.log(`    ✗ Failed to update task status: ${statusError.message}`);
+
+                  const statusUpdate: any = {
+                    id: taskId,
+                    organization_id: createRes.organization_id,
+                    board_id: board.id,
+                    status_id: target.id,
+                    title: t.task_title,
+                    fields: updatePayload.fields,
+                    is_checklist: 0,
+                    position: totalTasks,
+                    sprint_position: 1,
+                    time_estimation_unit: 'hour',
+                    total_sprint_points: 0,
+                    task_size: 'small',
+                    estimated_sprint_points: 2,
+                    estimated_time: 4,
+                    assignees, watchers,
+                    status: target,
+                    created_at: createdAt,
+                    encoded_id: createRes.encoded_id || '',
+                    is_public: false,
+                    customer_id: null,
+                    user_task_track_times: [],
+                    user_task_costs: [],
+                    user_hourly_salaries: [],
+                    sectionsDetail: updatePayload.fields.map((f: string, i: number) => ({
+                      id: f, type: f, order: i + 1,
+                      dropMeta: { destination: { droppableId: 'all-sections', index: i }, type: 'SECTION' },
+                      value:
+                          f === 'description' ? updatePayload.description :
+                              f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
+                                  f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
+                                      f === 'responsibles' ? assignees :
+                                          f === 'watchers' ? watchers : ''
+                    })),
+                    checklistSections: [],
+                    positionIndex: { destinationIndex: 0, sourceIndex: 0 },
+                    source_status_id: target.id,
+                    assignee_ids: assigneeIds,
+                    watcher_ids: watcherIds
+                  };
+                  if (completedAt) statusUpdate.completed_at = completedAt;
+
+                  await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
                 }
               }
 
-            } catch (updateError: any) {
-              console.log(`    ✗ Failed to update task details: ${updateError.message}`);
+            } catch (updErr: any) {
+              console.log(`    ✗ Failed to update task details: ${updErr.message}`);
             }
 
             totalTasks++;
-
-          } catch (taskError: any) {
-            console.log(`    ✗ Failed to create task "${taskData.task_title}": ${taskError.message}`);
+          } catch (createErr: any) {
+            console.log(`    ✗ Failed to create task "${t.task_title}": ${createErr.message}`);
             errors++;
           }
         }
 
-      } catch (error: any) {
-        console.log(`  ✗ Failed to process work package ${wp.work_package_title}: ${error.message}`);
+      } catch (err: any) {
+        console.log(`  ✗ Failed to process WP ${wp.work_package_title}: ${err.message}`);
         errors++;
       }
     }
 
-    console.log(`\n\n=== Task Creation Summary ===`);
-    console.log(`  - Tasks created: ${totalTasks}`);
-    console.log(`  - Errors: ${errors}\n`);
+    console.log(`\n\n=== Task Creation Summary ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
   }
 
   /**
-   * Create tasks directly in milestone boards (without work packages)
-   * Used when work packages are not enabled
+   * Create tasks directly in milestone boards (no work-packages).
+   * Ensures statuses before creating/moving tasks.
    */
   async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[]): Promise<void> {
     console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
 
-    // Load milestone mappings from cache
     const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json');
-
     if (!milestoneMappings || milestoneMappings.length === 0) {
       console.log('No milestone mappings found. Skipping task creation.\n');
       return;
     }
-
     console.log(`Found ${milestoneMappings.length} milestones\n`);
 
-    // Load task data from CSV
     const tasksData = this.loadTasksFromCSV(csvPath);
     if (tasksData.length === 0) {
       console.log('No task data found in CSV. Skipping task creation.\n');
       return;
     }
-
     console.log(`Loaded ${tasksData.length} tasks from CSV\n`);
 
-    // Check if we have task types
-    if (this.taskTypeIds.length === 0) {
-      console.log('Warning: No task types created. Tasks will not have a type assigned.\n');
-    }
+    if (this.taskTypeIds.length === 0) console.log('Warning: No task types created.\n');
+    if (this.priorityIds.length === 0) console.log('Warning: No priorities found.\n');
 
-    // Check if we have priorities
-    if (this.priorityIds.length === 0) {
-      console.log('Warning: No priorities found. Tasks will not have a priority assigned.\n');
-    }
+    let totalTasks = 0, errors = 0;
+    const boardTodoStatus = new Map<number, number>();
 
-    let totalTasks = 0;
-    let errors = 0;
+    // Make sure all milestone boards are present and have statuses
+    await this.setupTaskManagementForMilestones(projectMappings || []);
 
-    // Get first status (TO DO) for each board
-    const boardStatuses = new Map<number, number>();
-
-    // Distribute tasks evenly across all milestones
+    // Distribute tasks evenly across milestones
     const tasksPerMilestone = Math.ceil(tasksData.length / milestoneMappings.length);
 
-    for (let msIndex = 0; msIndex < milestoneMappings.length; msIndex++) {
-      const milestone = milestoneMappings[msIndex];
+    for (let i = 0; i < milestoneMappings.length; i++) {
+      const ms = milestoneMappings[i];
 
       try {
-        // Find the board for this milestone
-        const board = this.boardMappings.find(b =>
-          b.project_short_title === milestone.project_short_title &&
-          b.milestone_title === milestone.milestone_title
-        );
+        const board = this.boardMappings.find(b => b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title);
+        if (!board) { console.log(`  Warning: Board not found for ${ms.project_short_title} / ${ms.milestone_title}`); continue; }
 
-        if (!board) {
-          console.log(`  Warning: Board not found for project ${milestone.project_short_title}, milestone ${milestone.milestone_title}`);
-          continue;
-        }
-
-        // Get or fetch the first status (TO DO) for this board
-        let statusId: number | undefined = boardStatuses.get(board.id);
+        let statusId = boardTodoStatus.get(board.id);
         if (!statusId) {
           try {
-            const statusesResponse: any = await this.taskMgmtApiClient.executeRequest(
-              'GET',
-              '/api/statuses',
-              {
-                board_id: board.id.toString()
-              }
-            );
-
-            const statuses = statusesResponse.data || statusesResponse || [];
-            const todoStatus = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
-            if (todoStatus && todoStatus.id) {
-              statusId = todoStatus.id;
-              boardStatuses.set(board.id, todoStatus.id);
-            }
-          } catch (error: any) {
-            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${error.message}`);
+            // Only fetch statuses (already ensured in setupTaskManagementForMilestones)
+            const statuses = await this.fetchStatusesWithRetry(board.id);
+            const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
+            if (todo?.id) { statusId = todo.id; boardTodoStatus.set(board.id, statusId); }
+          } catch (e: any) {
+            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
           }
         }
+        if (!statusId) { console.log(`  Warning: No TO DO status on board ${board.id}`); continue; }
 
-        if (!statusId) {
-          console.log(`  Warning: No TO DO status found for board ${board.id}, skipping`);
-          continue;
-        }
+        const start = i * tasksPerMilestone;
+        const end   = Math.min(start + tasksPerMilestone, tasksData.length);
+        const msTasks = tasksData.slice(start, end);
+        if (msTasks.length === 0) continue;
 
-        // Get tasks for this milestone (evenly distribute)
-        const startIdx = msIndex * tasksPerMilestone;
-        const endIdx = Math.min(startIdx + tasksPerMilestone, tasksData.length);
-        const milestoneTasks = tasksData.slice(startIdx, endIdx);
+        console.log(`  ${ms.project_short_title} → ${ms.milestone_title} (${msTasks.length} tasks)`);
 
-        if (milestoneTasks.length === 0) {
-          continue;
-        }
-
-        console.log(`  ${milestone.project_short_title} → ${milestone.milestone_title} (${milestoneTasks.length} tasks)`);
-
-        // Create each task for this milestone
-        for (const taskData of milestoneTasks) {
+        for (const t of msTasks) {
           try {
-            // Generate created_at and deadline within milestone period
-            const createdAt = this.randomDateInPeriod(milestone.started_at, milestone.finished_at);
-            const deadline = this.randomDateInPeriod(createdAt, milestone.finished_at);
+            const createdAt = this.randomDateInPeriod(ms.started_at, ms.finished_at);
+            const deadline  = this.randomDateInPeriod(createdAt, ms.finished_at);
 
-            // Create task
-            const taskResponse: any = await this.taskMgmtApiClient.executeRequest(
-              'POST',
-              '/api/tasks',
-              {
-                title: taskData.task_title,
-                position: totalTasks,
-                board_id: board.id,
-                status_id: statusId
-              }
+            const createRes: any = await this.taskMgmtApiClient.executeRequest(
+                'POST', '/api/tasks',
+                { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId }
             );
+            const taskId = createRes?.data?.id || createRes?.id;
 
-            const taskId = taskResponse.data?.id || taskResponse.id;
-
-            // Update task with full details (NO pct_task_id!)
             try {
               const updatePayload: any = {
-                title: taskData.task_title,
-                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${taskData.task_description}</div>`,
-                deadline: deadline,
-                fields: [
-                  'description',
-                  'task_type',
-                  'responsibles',
-                  'watchers',
-                  'sprint_point',
-                  'urgency',
-                  'tags',
-                  'deadline'
-                ],
+                title: t.task_title,
+                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${t.task_description}</div>`,
+                deadline,
+                fields: ['description','task_type','responsibles','watchers','sprint_point','urgency','tags','deadline'],
                 checklistSections: []
               };
+              if (this.taskTypeIds.length > 0) updatePayload.task_type_id = this.taskTypeIds[Math.floor(Math.random()*this.taskTypeIds.length)];
+              if (this.priorityIds.length > 0)  updatePayload.priority_id  = this.priorityIds[Math.floor(Math.random()*this.priorityIds.length)];
 
-              // Assign a random task type
-              if (this.taskTypeIds.length > 0) {
-                const randomTaskTypeId = this.taskTypeIds[Math.floor(Math.random() * this.taskTypeIds.length)];
-                updatePayload.task_type_id = randomTaskTypeId;
-              }
+              await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, updatePayload);
 
-              // Assign a random priority
-              if (this.priorityIds.length > 0) {
-                const randomPriorityId = this.priorityIds[Math.floor(Math.random() * this.priorityIds.length)];
-                updatePayload.priority_id = randomPriorityId;
-              }
-
-              // NO pct_task_id assignment here - tasks are standalone
-
-              await this.taskMgmtApiClient.executeRequest(
-                'PUT',
-                `/api/tasks/${taskId}`,
-                updatePayload
-              );
-
-              // Determine status based on deadline date
               const now = new Date();
-              const deadlineDate = new Date(deadline);
-              const createdDate = new Date(createdAt);
+              const dd  = new Date(deadline);
+              const cd  = new Date(createdAt);
 
-              let targetStatusId = statusId;
-              let targetStatusType = 'todo';
-              let completedAt = null;
+              let targetType: 'todo'|'active'|'completed' = 'todo';
+              let completedAt: string | null = null;
 
-              if (deadlineDate < now) {
-                targetStatusType = 'completed';
-                completedAt = this.randomDateInPeriod(createdAt, deadline);
-              } else if (createdDate < now && deadlineDate > now) {
-                const isDone = Math.random() > 0.5;
-                if (isDone) {
-                  targetStatusType = 'completed';
-                  completedAt = this.randomDateInPeriod(createdAt, now.toISOString().split('T')[0]);
-                } else {
-                  targetStatusType = 'active';
+              if (dd < now) { targetType = 'completed'; completedAt = this.randomDateInPeriod(createdAt, deadline); }
+              else if (cd < now && dd > now) {
+                targetType = Math.random() > 0.5 ? 'completed' : 'active';
+                if (targetType === 'completed') completedAt = this.randomDateInPeriod(createdAt, now.toISOString().split('T')[0]);
+              }
+
+              if (targetType !== 'todo') {
+                // Statuses already ensured at board setup, just fetch them
+                const statuses = await this.fetchStatusesWithRetry(board.id);
+                const target = statuses.find((s: any) => s.type === targetType);
+                if (target) {
+                  const statusUpdate: any = {
+                    id: taskId,
+                    organization_id: createRes.organization_id,
+                    board_id: board.id,
+                    status_id: target.id,
+                    title: t.task_title,
+                    fields: updatePayload.fields,
+                    is_checklist: 0,
+                    position: totalTasks,
+                    sprint_position: 1,
+                    time_estimation_unit: 'hour',
+                    total_sprint_points: 0,
+                    task_size: 'small',
+                    estimated_sprint_points: 2,
+                    estimated_time: 4,
+                    assignees: [],
+                    watchers: [],
+                    status: target,
+                    created_at: createdAt,
+                    encoded_id: createRes.encoded_id || '',
+                    is_public: false,
+                    customer_id: null,
+                    user_task_track_times: [],
+                    user_task_costs: [],
+                    user_hourly_salaries: [],
+                    sectionsDetail: updatePayload.fields.map((f: string, idx: number) => ({
+                      id: f, type: f, order: idx + 1,
+                      dropMeta: { destination: { droppableId: 'all-sections', index: idx }, type: 'SECTION' },
+                      value:
+                          f === 'description' ? updatePayload.description :
+                              f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
+                                  f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id : ''
+                    })),
+                    checklistSections: [],
+                    positionIndex: { destinationIndex: 0, sourceIndex: 0 },
+                    source_status_id: target.id,
+                    assignee_ids: [],
+                    watcher_ids: []
+                  };
+                  if (completedAt) statusUpdate.completed_at = completedAt;
+
+                  await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
                 }
               }
 
-              if (targetStatusType !== 'todo') {
-                try {
-                  const statusesResponse: any = await this.taskMgmtApiClient.executeRequest(
-                    'GET',
-                    '/api/statuses',
-                    {
-                      board_id: board.id.toString()
-                    }
-                  );
-
-                  const statuses = statusesResponse.data || statusesResponse || [];
-                  const targetStatus = statuses.find((s: any) => s.type === targetStatusType);
-
-                  if (targetStatus) {
-                    targetStatusId = targetStatus.id;
-
-                    const statusUpdatePayload: any = {
-                      id: taskId,
-                      organization_id: taskResponse.organization_id,
-                      board_id: board.id,
-                      status_id: targetStatusId,
-                      title: taskData.task_title,
-                      fields: updatePayload.fields,
-                      is_checklist: 0,
-                      position: totalTasks,
-                      sprint_position: 1,
-                      time_estimation_unit: 'hour',
-                      total_sprint_points: 0,
-                      task_size: 'small',
-                      estimated_sprint_points: 2,
-                      estimated_time: 4,
-                      assignees: [],
-                      watchers: [],
-                      status: targetStatus,
-                      created_at: createdAt,
-                      encoded_id: taskResponse.encoded_id || '',
-                      is_public: false,
-                      customer_id: null,
-                      user_task_track_times: [],
-                      user_task_costs: [],
-                      user_hourly_salaries: [],
-                      sectionsDetail: updatePayload.fields.map((field: string, index: number) => ({
-                        id: field,
-                        type: field,
-                        order: index + 1,
-                        dropMeta: {
-                          destination: { droppableId: 'all-sections', index },
-                          type: 'SECTION'
-                        },
-                        value: field === 'description' ? updatePayload.description :
-                               (field === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
-                               (field === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id : ''))
-                      })),
-                      checklistSections: [],
-                      positionIndex: { destinationIndex: 0, sourceIndex: 0 },
-                      source_status_id: targetStatusId,
-                      assignee_ids: [],
-                      watcher_ids: []
-                    };
-
-                    if (completedAt) {
-                      statusUpdatePayload.completed_at = completedAt;
-                    }
-
-                    await this.taskMgmtApiClient.executeRequest(
-                      'PUT',
-                      `/api/tasks/${taskId}`,
-                      statusUpdatePayload
-                    );
-                  }
-                } catch (statusError: any) {
-                  console.log(`    ✗ Failed to update task status: ${statusError.message}`);
-                }
-              }
-
-            } catch (updateError: any) {
-              console.log(`    ✗ Failed to update task details: ${updateError.message}`);
+            } catch (updErr: any) {
+              console.log(`    ✗ Failed to update task details: ${updErr.message}`);
             }
 
             totalTasks++;
-
-          } catch (taskError: any) {
-            console.log(`    ✗ Failed to create task "${taskData.task_title}": ${taskError.message}`);
+          } catch (createErr: any) {
+            console.log(`    ✗ Failed to create task "${t.task_title}": ${createErr.message}`);
             errors++;
           }
         }
 
-      } catch (error: any) {
-        console.log(`  ✗ Failed to process milestone ${milestone.milestone_title}: ${error.message}`);
+      } catch (err: any) {
+        console.log(`  ✗ Failed to process milestone ${ms.milestone_title}: ${err.message}`);
         errors++;
       }
     }
 
-    console.log(`\n\n=== Task Creation Summary (Milestones) ===`);
-    console.log(`  - Tasks created: ${totalTasks}`);
-    console.log(`  - Errors: ${errors}\n`);
+    console.log(`\n\n=== Task Creation Summary (Milestones) ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
   }
 }

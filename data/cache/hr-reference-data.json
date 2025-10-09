@@ -1,262 +1,262 @@
 {
   "genders": [
     {
-      "id": 4279,
+      "id": 4318,
       "name": "Female"
     },
     {
-      "id": 4280,
+      "id": 4319,
       "name": "Male"
     },
     {
-      "id": 4281,
+      "id": 4320,
       "name": "Other"
     }
   ],
   "titles": [
     {
-      "id": 5174,
+      "id": 5335,
+      "name": "Dr. rer. pol."
+    },
+    {
+      "id": 5330,
       "name": "Dr."
     },
     {
-      "id": 5175,
+      "id": 5331,
       "name": "Dr. med."
     },
     {
-      "id": 5176,
+      "id": 5332,
       "name": "Dr. rer. nat."
     },
     {
-      "id": 5177,
+      "id": 5333,
       "name": "Dr. phil."
     },
     {
-      "id": 5178,
+      "id": 5334,
       "name": "Dr. jur."
     },
     {
-      "id": 5180,
+      "id": 5336,
       "name": "Dr. Ing."
     },
     {
-      "id": 5181,
+      "id": 5337,
       "name": "Prof."
     },
     {
-      "id": 5182,
+      "id": 5338,
       "name": "Prof. Dr."
     },
     {
-      "id": 5183,
+      "id": 5339,
       "name": "Prof. Dr. med."
     },
     {
-      "id": 5184,
+      "id": 5340,
       "name": "Prof. Dr. rer. nat."
     },
     {
-      "id": 5185,
+      "id": 5341,
       "name": "Herr"
     },
     {
-      "id": 5186,
+      "id": 5342,
       "name": "Frau"
-    },
-    {
-      "id": 5179,
-      "name": "Dr. rer. pol."
     }
   ],
   "occupations": [
     {
-      "id": 7914,
+      "id": 8253,
       "name": "Geschäftsanalyst",
-      "group_id": 2178
+      "group_id": 2264
     },
     {
-      "id": 7915,
+      "id": 8254,
       "name": "Betriebsleiter",
-      "group_id": 2178
+      "group_id": 2264
     },
     {
-      "id": 7916,
+      "id": 8255,
       "name": "Projektmanager",
-      "group_id": 2178
+      "group_id": 2264
     },
     {
-      "id": 7917,
+      "id": 8256,
       "name": "Produktmanager",
-      "group_id": 2178
+      "group_id": 2264
     },
     {
-      "id": 7918,
+      "id": 8257,
       "name": "Strategieberater",
-      "group_id": 2178
+      "group_id": 2264
     },
     {
-      "id": 7919,
+      "id": 8258,
       "name": "Software-Ingenieur",
-      "group_id": 2179
+      "group_id": 2265
     },
     {
-      "id": 7920,
+      "id": 8259,
       "name": "DevOps-Ingenieur",
-      "group_id": 2179
+      "group_id": 2265
     },
     {
-      "id": 7921,
+      "id": 8260,
       "name": "Dateningenieur",
-      "group_id": 2179
+      "group_id": 2265
     },
     {
-      "id": 7922,
+      "id": 8261,
       "name": "Systemarchitekt",
-      "group_id": 2179
+      "group_id": 2265
     },
     {
-      "id": 7923,
+      "id": 8262,
       "name": "QA-Ingenieur",
-      "group_id": 2179
+      "group_id": 2265
     },
     {
-      "id": 7924,
+      "id": 8263,
       "name": "Vertriebsmitarbeiter",
-      "group_id": 2180
+      "group_id": 2266
     },
     {
-      "id": 7925,
+      "id": 8264,
       "name": "Marketing-Manager",
-      "group_id": 2180
+      "group_id": 2266
     },
     {
-      "id": 7926,
+      "id": 8265,
       "name": "Account Executive",
-      "group_id": 2180
+      "group_id": 2266
     },
     {
-      "id": 7927,
+      "id": 8266,
       "name": "Marketing-Spezialist",
-      "group_id": 2180
+      "group_id": 2266
     },
     {
-      "id": 7928,
+      "id": 8267,
       "name": "Markenmanager",
-      "group_id": 2180
+      "group_id": 2266
     },
     {
-      "id": 7929,
+      "id": 8268,
       "name": "Finanzanalyst",
-      "group_id": 2181
+      "group_id": 2267
     },
     {
-      "id": 7930,
+      "id": 8269,
       "name": "Buchhalter",
-      "group_id": 2181
+      "group_id": 2267
     },
     {
-      "id": 7931,
+      "id": 8270,
       "name": "Controller",
-      "group_id": 2181
+      "group_id": 2267
     },
     {
-      "id": 7932,
+      "id": 8271,
       "name": "Steuerspezialist",
-      "group_id": 2181
+      "group_id": 2267
     },
     {
-      "id": 7933,
+      "id": 8272,
       "name": "Wirtschaftsprüfer",
-      "group_id": 2181
+      "group_id": 2267
     },
     {
-      "id": 7934,
+      "id": 8273,
       "name": "Personalleiter",
-      "group_id": 2182
+      "group_id": 2268
     },
     {
-      "id": 7935,
+      "id": 8274,
       "name": "Recruiter",
-      "group_id": 2182
+      "group_id": 2268
     },
     {
-      "id": 7936,
+      "id": 8275,
       "name": "HR Business Partner",
-      "group_id": 2182
+      "group_id": 2268
     },
     {
-      "id": 7937,
+      "id": 8276,
       "name": "Ausbildungsspezialist",
-      "group_id": 2182
+      "group_id": 2268
     },
     {
-      "id": 7938,
+      "id": 8277,
       "name": "Vergütungsanalyst",
-      "group_id": 2182
+      "group_id": 2268
     },
     {
-      "id": 7939,
+      "id": 8278,
       "name": "Kundensupport-Spezialist",
-      "group_id": 2183
+      "group_id": 2269
     },
     {
-      "id": 7940,
+      "id": 8279,
       "name": "Customer Success Manager",
-      "group_id": 2183
+      "group_id": 2269
     },
     {
-      "id": 7941,
+      "id": 8280,
       "name": "Technischer Support-Ingenieur",
-      "group_id": 2183
+      "group_id": 2269
     },
     {
-      "id": 7942,
+      "id": 8281,
       "name": "Service-Desk-Analyst",
-      "group_id": 2183
+      "group_id": 2269
     },
     {
-      "id": 7943,
+      "id": 8282,
       "name": "Kundenerlebnis-Manager",
-      "group_id": 2183
+      "group_id": 2269
     }
   ],
   "contractTypes": [
     {
-      "id": 2746,
+      "id": 2824,
       "name": "Pflichtpraktikum",
       "can_use_public_holiday": true,
       "can_use_half_day": true,
       "fte_working_hours": 1
     },
     {
-      "id": 2747,
+      "id": 2825,
       "name": "Fest",
       "can_use_public_holiday": true,
       "can_use_half_day": true,
       "fte_working_hours": 1
     },
     {
-      "id": 2748,
+      "id": 2826,
       "name": "Werkstudent",
       "can_use_public_holiday": true,
       "can_use_half_day": false,
       "fte_working_hours": 0.5
     },
     {
-      "id": 2749,
+      "id": 2827,
       "name": "Freelancer",
       "can_use_public_holiday": false,
       "can_use_half_day": false,
       "fte_working_hours": 1
     },
     {
-      "id": 2750,
+      "id": 2828,
       "name": "Teilzeit",
       "can_use_public_holiday": true,
       "can_use_half_day": true,
       "fte_working_hours": 1
     },
     {
-      "id": 2751,
+      "id": 2829,
       "name": "Minijob",
       "can_use_public_holiday": true,
       "can_use_half_day": true,
@@ -265,15 +265,15 @@
   ],
   "qualificationGroups": [
     {
-      "id": 5432,
+      "id": 5462,
       "name": "Group A: University degree (academic - diploma, bachelor's, master's and similar)"
     },
     {
-      "id": 5433,
+      "id": 5463,
       "name": "Group B: Technicians, master craftsmen, business administrators, completed vocational training"
     },
     {
-      "id": 5434,
+      "id": 5464,
       "name": "Group C: Other (apprentices, working students, and people without a degree)"
     }
   ],

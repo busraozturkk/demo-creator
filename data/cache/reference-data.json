@@ -1,234 +1,234 @@
 {
   "titles": [
     {
-      "id": 5174,
+      "id": 5335,
+      "name": "Dr. rer. pol."
+    },
+    {
+      "id": 5330,
       "name": "Dr."
     },
     {
-      "id": 5175,
+      "id": 5331,
       "name": "Dr. med."
     },
     {
-      "id": 5176,
+      "id": 5332,
       "name": "Dr. rer. nat."
     },
     {
-      "id": 5177,
+      "id": 5333,
       "name": "Dr. phil."
     },
     {
-      "id": 5178,
+      "id": 5334,
       "name": "Dr. jur."
     },
     {
-      "id": 5180,
+      "id": 5336,
       "name": "Dr. Ing."
     },
     {
-      "id": 5181,
+      "id": 5337,
       "name": "Prof."
     },
     {
-      "id": 5182,
+      "id": 5338,
       "name": "Prof. Dr."
     },
     {
-      "id": 5183,
+      "id": 5339,
       "name": "Prof. Dr. med."
     },
     {
-      "id": 5184,
+      "id": 5340,
       "name": "Prof. Dr. rer. nat."
     },
     {
-      "id": 5185,
+      "id": 5341,
       "name": "Herr"
     },
     {
-      "id": 5186,
+      "id": 5342,
       "name": "Frau"
-    },
-    {
-      "id": 5179,
-      "name": "Dr. rer. pol."
     }
   ],
   "occupation_groups": [
     {
-      "id": 2178,
+      "id": 2269,
+      "name": "Kundendienst"
+    },
+    {
+      "id": 2264,
       "name": "Geschäft & Betrieb"
     },
     {
-      "id": 2179,
+      "id": 2265,
       "name": "Ingenieurwesen & Technologie"
     },
     {
-      "id": 2180,
+      "id": 2266,
       "name": "Vertrieb & Marketing"
     },
     {
-      "id": 2181,
+      "id": 2267,
       "name": "Finanzen & Buchhaltung"
     },
     {
-      "id": 2182,
+      "id": 2268,
       "name": "Personalwesen"
-    },
-    {
-      "id": 2183,
-      "name": "Kundendienst"
     }
   ],
   "occupations": [
     {
       "name": "Geschäftsanalyst",
-      "id": 7914,
-      "group_id": 2178
+      "id": 8253,
+      "group_id": 2264
     },
     {
       "name": "Betriebsleiter",
-      "id": 7915,
-      "group_id": 2178
+      "id": 8254,
+      "group_id": 2264
     },
     {
       "name": "Projektmanager",
-      "id": 7916,
-      "group_id": 2178
+      "id": 8255,
+      "group_id": 2264
     },
     {
       "name": "Produktmanager",
-      "id": 7917,
-      "group_id": 2178
+      "id": 8256,
+      "group_id": 2264
     },
     {
       "name": "Strategieberater",
-      "id": 7918,
-      "group_id": 2178
+      "id": 8257,
+      "group_id": 2264
     },
     {
       "name": "Software-Ingenieur",
-      "id": 7919,
-      "group_id": 2179
+      "id": 8258,
+      "group_id": 2265
     },
     {
       "name": "DevOps-Ingenieur",
-      "id": 7920,
-      "group_id": 2179
+      "id": 8259,
+      "group_id": 2265
     },
     {
       "name": "Dateningenieur",
-      "id": 7921,
-      "group_id": 2179
+      "id": 8260,
+      "group_id": 2265
     },
     {
       "name": "Systemarchitekt",
-      "id": 7922,
-      "group_id": 2179
+      "id": 8261,
+      "group_id": 2265
     },
     {
       "name": "QA-Ingenieur",
-      "id": 7923,
-      "group_id": 2179
+      "id": 8262,
+      "group_id": 2265
     },
     {
       "name": "Vertriebsmitarbeiter",
-      "id": 7924,
-      "group_id": 2180
+      "id": 8263,
+      "group_id": 2266
     },
     {
       "name": "Marketing-Manager",
-      "id": 7925,
-      "group_id": 2180
+      "id": 8264,
+      "group_id": 2266
     },
     {
       "name": "Account Executive",
-      "id": 7926,
-      "group_id": 2180
+      "id": 8265,
+      "group_id": 2266
     },
     {
       "name": "Marketing-Spezialist",
-      "id": 7927,
-      "group_id": 2180
+      "id": 8266,
+      "group_id": 2266
     },
     {
       "name": "Markenmanager",
-      "id": 7928,
-      "group_id": 2180
+      "id": 8267,
+      "group_id": 2266
     },
     {
       "name": "Finanzanalyst",
-      "id": 7929,
-      "group_id": 2181
+      "id": 8268,
+      "group_id": 2267
     },
     {
       "name": "Buchhalter",
-      "id": 7930,
-      "group_id": 2181
+      "id": 8269,
+      "group_id": 2267
     },
     {
       "name": "Controller",
-      "id": 7931,
-      "group_id": 2181
+      "id": 8270,
+      "group_id": 2267
     },
     {
       "name": "Steuerspezialist",
-      "id": 7932,
-      "group_id": 2181
+      "id": 8271,
+      "group_id": 2267
     },
     {
       "name": "Wirtschaftsprüfer",
-      "id": 7933,
-      "group_id": 2181
+      "id": 8272,
+      "group_id": 2267
     },
     {
       "name": "Personalleiter",
-      "id": 7934,
-      "group_id": 2182
+      "id": 8273,
+      "group_id": 2268
     },
     {
       "name": "Recruiter",
-      "id": 7935,
-      "group_id": 2182
+      "id": 8274,
+      "group_id": 2268
     },
     {
       "name": "HR Business Partner",
-      "id": 7936,
-      "group_id": 2182
+      "id": 8275,
+      "group_id": 2268
     },
     {
       "name": "Ausbildungsspezialist",
-      "id": 7937,
-      "group_id": 2182
+      "id": 8276,
+      "group_id": 2268
     },
     {
       "name": "Vergütungsanalyst",
-      "id": 7938,
-      "group_id": 2182
+      "id": 8277,
+      "group_id": 2268
     },
     {
       "name": "Kundensupport-Spezialist",
-      "id": 7939,
-      "group_id": 2183
+      "id": 8278,
+      "group_id": 2269
     },
     {
       "name": "Customer Success Manager",
-      "id": 7940,
-      "group_id": 2183
+      "id": 8279,
+      "group_id": 2269
     },
     {
       "name": "Technischer Support-Ingenieur",
-      "id": 7941,
-      "group_id": 2183
+      "id": 8280,
+      "group_id": 2269
     },
     {
       "name": "Service-Desk-Analyst",
-      "id": 7942,
-      "group_id": 2183
+      "id": 8281,
+      "group_id": 2269
     },
     {
       "name": "Kundenerlebnis-Manager",
-      "id": 7943,
-      "group_id": 2183
+      "id": 8282,
+      "group_id": 2269
     }
   ]
 }
