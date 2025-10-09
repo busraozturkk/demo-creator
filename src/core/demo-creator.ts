@@ -426,6 +426,36 @@ export async function runDemoCreation(
                                 const milestoneMappings = await milestonesOp.createMilestones(milestonesPath, projectMappings);
                                 socket.emit('log', { type: 'success', message: `✓ Milestones created: ${milestoneMappings?.length || 0}\n` });
 
+                                // If work packages are NOT enabled, configure milestones for R&D assignment
+                                if (!includeWorkPackages && milestoneMappings.length > 0) {
+                                    socket.emit('log', { type: 'info', message: '\n=== Configuring Milestones for R&D ===' });
+                                    try {
+                                        // Enable R&D assignment (use organizationId as partner)
+                                        await milestonesOp.enableRAndDForMilestones(milestoneMappings, projectMappings, organizationId);
+                                        socket.emit('log', { type: 'success', message: '✓ R&D assignment enabled\n' });
+
+                                        // Set periods
+                                        await milestonesOp.setMilestonePeriods(milestoneMappings, projectMappings);
+                                        socket.emit('log', { type: 'success', message: '✓ Periods set for milestones\n' });
+
+                                        // Assign employees to milestones
+                                        await milestonesOp.assignEmployeesToMilestones(milestoneMappings, organizationId);
+                                        socket.emit('log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
+
+                                        // Re-save milestone mappings with updated period info
+                                        const cacheDirPath = './data/cache';
+                                        const cacheFilePath = `${cacheDirPath}/milestone-mappings.json`;
+                                        if (!fs.existsSync(cacheDirPath)) {
+                                            fs.mkdirSync(cacheDirPath, { recursive: true });
+                                        }
+                                        fs.writeFileSync(cacheFilePath, JSON.stringify(milestoneMappings, null, 2));
+                                        socket.emit('log', { type: 'success', message: '✓ Milestone mappings updated with periods\n' });
+                                    } catch (error: any) {
+                                        socket.emit('log', { type: 'error', message: `Milestone R&D configuration failed: ${error.message}` });
+                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                    }
+                                }
+
                                 // Work Packages (only if includeWorkPackages is true)
                                 if (includeWorkPackages) {
                                     const workPackagesPath = `./data/${dataGroup}/work-packages.csv`;
@@ -470,7 +500,7 @@ export async function runDemoCreation(
                                                             await empWpAssignmentOp.assignEmployeesToWorkPackages(projectMappingsForAssignment, organizationId);
                                                             socket.emit('log', { type: 'success', message: 'Employee-work package assignments completed\n' });
 
-                                                            // Task Management
+                                                            // Task Management (always setup structure)
                                                             socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
                                                             try {
                                                                 const { TaskManagementOperation } = await import('../operations/task-management/task-management');
@@ -498,7 +528,7 @@ export async function runDemoCreation(
                                                                     }
                                                                 }
 
-                                                                // Fetch and cache structure
+                                                                // Fetch and cache structure (boards, statuses)
                                                                 await taskMgmtOp.fetchAndCacheTaskManagementStructure(projectMappingsForAssignment);
 
                                                                 // Create tasks
@@ -507,7 +537,7 @@ export async function runDemoCreation(
                                                                     await taskMgmtOp.createTasksForWorkPackages(tasksPath);
                                                                     socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
                                                                 } else {
-                                                                    socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping\n` });
+                                                                    socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                                 }
                                                             } catch (error: any) {
                                                                 socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
@@ -539,6 +569,81 @@ export async function runDemoCreation(
                                     }
                                 } else {
                                     socket.emit('log', { type: 'info', message: '\nℹ Work packages skipped (includeWorkPackages = false)\n' });
+
+                                    // If no work packages, assign PM directly to milestones
+                                    socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
+                                    try {
+                                        const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
+                                        const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
+                                        await yearlyPmOp.calculateYearlyMaxPm();
+                                        socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
+
+                                        // Assign employees to projects
+                                        const projectMappingsForAssignment = projectsOp.getMappings();
+                                        if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
+                                            await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
+                                            socket.emit('log', { type: 'success', message: 'Employees assigned to projects\n' });
+
+                                            // Assign PM to milestones
+                                            socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
+                                            try {
+                                                const { MilestonePmAssignmentOperation } = await import('../operations/project-management/milestone-pm-assignment');
+                                                const msPmAssignmentOp = new MilestonePmAssignmentOperation(apiClient);
+                                                await msPmAssignmentOp.assignPmToMilestones(projectMappingsForAssignment, organizationId);
+                                                socket.emit('log', { type: 'success', message: 'Milestone PM assignments completed\n' });
+
+                                                // Task Management (always setup structure)
+                                                socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
+                                                try {
+                                                    const { TaskManagementOperation } = await import('../operations/task-management/task-management');
+                                                    const taskMgmtOp = new TaskManagementOperation(authService);
+
+                                                    // Create task types
+                                                    await taskMgmtOp.createTaskTypes();
+
+                                                    // Fetch priorities
+                                                    await taskMgmtOp.fetchPriorities();
+
+                                                    // Fetch allowed activity types
+                                                    await taskMgmtOp.fetchAllowedActivityTypes();
+
+                                                    // Create activity type restrictions for all roles
+                                                    const occupationMappingsPath = './data/cache/occupation-mappings.json';
+                                                    if (fs.existsSync(occupationMappingsPath)) {
+                                                        const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                                                        if (occupationMappings && occupationMappings.length > 0) {
+                                                            const roleMappings = occupationMappings.map((occ: any) => ({
+                                                                id: occ.id.toString(),
+                                                                title: occ.name
+                                                            }));
+                                                            await taskMgmtOp.createActivityTypeRestrictions(roleMappings);
+                                                        }
+                                                    }
+
+                                                    // Setup Task Management for milestones (boards, statuses)
+                                                    await taskMgmtOp.setupTaskManagementForMilestones(projectMappingsForAssignment);
+
+                                                    // Create tasks for milestones
+                                                    const tasksPath = `./data/${dataGroup}/tasks.csv`;
+                                                    if (fs.existsSync(tasksPath)) {
+                                                        await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment);
+                                                        socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                    } else {
+                                                        socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
+                                                    }
+                                                } catch (error: any) {
+                                                    socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
+                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                }
+                                            } catch (error: any) {
+                                                socket.emit('log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
+                                                socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                            }
+                                        }
+                                    } catch (error: any) {
+                                        socket.emit('log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
+                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                    }
                                 }
                             } catch (error: any) {
                                 socket.emit('log', { type: 'error', message: `Milestones creation failed: ${error.message}` });

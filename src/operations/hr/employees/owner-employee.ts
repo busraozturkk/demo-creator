@@ -249,8 +249,8 @@ export class OwnerEmployeeOperation extends BaseOperation {
       // Add default birth date (30 years ago)
       const birthDate = new Date();
       birthDate.setFullYear(birthDate.getFullYear() - 30);
-      updateData.birth_date = birthDate.toISOString().split('T')[0];
-      console.log(`  Setting birth date: ${updateData.birth_date}`);
+      updateData.birthdate = birthDate.toISOString().split('T')[0];
+      console.log(`  Setting birth date: ${updateData.birthdate}`);
 
       // Add default nationality (Germany/Deutschland)
       const germany = hrData.countries?.find(c =>
@@ -279,6 +279,18 @@ export class OwnerEmployeeOperation extends BaseOperation {
       // Add personnel number (random 4 digits)
       updateData.personnel_number = Math.floor(1000 + Math.random() * 9000).toString();
       console.log(`  Setting personnel number: ${updateData.personnel_number}`);
+
+      // Add working days (Monday to Friday)
+      updateData.working_days = [0, 1, 2, 3, 4];
+      console.log(`  Setting working days: Monday to Friday`);
+
+      // Add vacation day number type
+      updateData.vacation_day_number_type = 'per_year';
+      console.log(`  Setting vacation day number type: per_year`);
+
+      // Add is_shareholder flag
+      updateData.is_shareholder = false;
+      console.log(`  Setting is_shareholder: false`);
 
       // Update employee with details
       await this.hrApiClient.executeRequest(
@@ -373,9 +385,17 @@ export class OwnerEmployeeOperation extends BaseOperation {
       probationEndDate.setMonth(probationEndDate.getMonth() + 2);
       const probationEndStr = probationEndDate.toISOString().split('T')[0];
 
+      // Get employee's current data to retrieve their contract id
+      console.log(`  Fetching employee data for ID: ${ownerEmployee.id}...`);
+      const currentEmployee = await this.hrApiClient.executeRequest(
+        'GET',
+        `/api/employees/${ownerEmployee.id}`,
+        { include: 'contract' }
+      );
+      console.log(`  Employee data fetched. Contract exists: ${!!currentEmployee.contract}`);
+
       // Create contract data matching the structure from EmployeeContractsOperation
       const contractData: any = {
-        id: ownerEmployee.id,
         started_at: contractStartStr,
         end_at: contractEndStr,
         probation_ended_at: probationEndStr,
@@ -386,7 +406,8 @@ export class OwnerEmployeeOperation extends BaseOperation {
         qualification_group_id: defaultQualificationGroup.id,
         annual_days_off: 24,
         is_current: true,
-        vacation_day_number_type: 'defined',
+        vacation_day_number_type: 'per_year',
+        vacation_restart_date: '1-1', // Vacation days restart on January 1st
         is_shareholder: false,
         contract_history: [],
         // RnD details
@@ -395,6 +416,17 @@ export class OwnerEmployeeOperation extends BaseOperation {
         // RnD meta
         max_yearly_pm: 10.5
       };
+
+      // Add contract id if exists in current employee data
+      if (currentEmployee.contract && currentEmployee.contract.id) {
+        contractData.id = currentEmployee.contract.id;
+        console.log(`  Found existing contract ID: ${currentEmployee.contract.id}`);
+      } else if (currentEmployee.data?.contract?.id) {
+        contractData.id = currentEmployee.data.contract.id;
+        console.log(`  Found existing contract ID: ${currentEmployee.data.contract.id}`);
+      } else {
+        console.log(`  No existing contract found, creating new one`);
+      }
 
       // Update employee with contract data
       await this.hrApiClient.executeRequest(
@@ -439,50 +471,44 @@ export class OwnerEmployeeOperation extends BaseOperation {
     console.log(`Adding salary record for: ${ownerEmployee.first_name} ${ownerEmployee.last_name} (ID: ${ownerEmployee.id})`);
 
     try {
-      // Use contract start date if provided, otherwise use employee's started_at or calculate from today
-      let salaryStartDate: string;
+      // First, prefill salary records (this creates the salary record structure)
+      console.log(`  Prefilling salary records...`);
+      const salaryRecords: any = await this.hrApiClient.executeRequest(
+        'POST',
+        `/api/employees/${ownerEmployee.id}/salary-records/prefill`,
+        null
+      );
 
-      if (contractStartDate) {
-        salaryStartDate = contractStartDate;
-      } else {
-        const today = new Date();
-        const startedAtDate = ownerEmployee.started_at ? new Date(ownerEmployee.started_at) : today;
+      console.log(`  Created ${salaryRecords.length} salary record(s)`);
 
-        // If started_at is today (newly created), set it to 2-3 years ago
-        if (startedAtDate.toISOString().split('T')[0] === today.toISOString().split('T')[0]) {
-          const salaryStart = new Date(today);
-          salaryStart.setFullYear(today.getFullYear() - 2 - Math.floor(Math.random() * 2)); // 2-3 years ago
-          salaryStartDate = salaryStart.toISOString().split('T')[0];
-        } else {
-          salaryStartDate = startedAtDate.toISOString().split('T')[0];
-        }
+      if (salaryRecords.length === 0) {
+        console.log(`  No salary records created, skipping\n`);
+        return;
       }
 
-      // Salary end date: 2-3 years in the future from today
-      const today = new Date();
-      const salaryEndDate = new Date(today);
-      salaryEndDate.setFullYear(today.getFullYear() + 2 + Math.floor(Math.random() * 2));
-      const salaryEndStr = salaryEndDate.toISOString().split('T')[0];
-
-      // Create salary record
-      const salaryData = {
-        employee_id: ownerEmployee.id,
-        started_at: salaryStartDate,
-        end_at: salaryEndStr,
-        amount: annualSalary,
-        is_current: true
-      };
+      // Update the first salary record with actual amount
+      const record = salaryRecords[0];
+      console.log(`  Updating salary record ${record.id}: €${annualSalary.toLocaleString()}`);
 
       await this.hrApiClient.executeRequest(
-        'POST',
-        '/api/salary-records',
-        salaryData
+        'PUT',
+        `/api/salary-records/${record.id}`,
+        {
+          employee_id: ownerEmployee.id,
+          id: record.id,
+          contract_history_id: null,
+          start_at: record.start_at,
+          end_at: record.end_at,
+          taxable_income: annualSalary,
+          type: record.type,
+          wage_type: record.wage_type,
+        }
       );
 
       console.log(`Owner employee salary record created:`);
       console.log(`  - Amount: €${annualSalary.toLocaleString()} annually`);
-      console.log(`  - Started: ${salaryStartDate}`);
-      console.log(`  - Ends: ${salaryEndStr}\n`);
+      console.log(`  - Started: ${record.start_at}`);
+      console.log(`  - Ends: ${record.end_at}\n`);
     } catch (error: any) {
       console.error(`Failed to create owner employee salary record: ${error.message}\n`);
     }

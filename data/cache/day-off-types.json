@@ -1,6 +1,6 @@
 [
   {
-    "id": 11955,
+    "id": 12059,
     "name": "Vacation",
     "day_type_flag": "vacation",
     "icon": "VacationHIcon",
@@ -8,11 +8,11 @@
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": true,
-    "created_at": "2025-10-08T15:36:56.000000Z",
-    "updated_at": "2025-10-08T15:36:56.000000Z"
+    "created_at": "2025-10-09T10:12:01.000000Z",
+    "updated_at": "2025-10-09T10:12:01.000000Z"
   },
   {
-    "id": 11956,
+    "id": 12060,
     "name": "Sick Day",
     "day_type_flag": "sick",
     "icon": "SickHIcon",
@@ -20,11 +20,11 @@
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-08T15:36:56.000000Z",
-    "updated_at": "2025-10-08T15:36:56.000000Z"
+    "created_at": "2025-10-09T10:12:01.000000Z",
+    "updated_at": "2025-10-09T10:12:01.000000Z"
   },
   {
-    "id": 11957,
+    "id": 12061,
     "name": "Home office",
     "day_type_flag": "home_office",
     "icon": "HomeHIcon",
@@ -32,11 +32,11 @@
     "is_working_day": true,
     "requires_substitute": false,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-08T15:36:56.000000Z",
-    "updated_at": "2025-10-08T15:36:56.000000Z"
+    "created_at": "2025-10-09T10:12:01.000000Z",
+    "updated_at": "2025-10-09T10:12:01.000000Z"
   },
   {
-    "id": 11958,
+    "id": 12062,
     "name": "Flexi",
     "day_type_flag": "other",
     "icon": "RocketHIcon",
@@ -44,7 +44,7 @@
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-08T15:36:56.000000Z",
-    "updated_at": "2025-10-08T15:36:56.000000Z"
+    "created_at": "2025-10-09T10:12:01.000000Z",
+    "updated_at": "2025-10-09T10:12:01.000000Z"
   }
 ]

@@ -28,11 +28,11 @@ router.get('/', (req, res) => {
 });
 
 /**
- * Fetch project-management based on data group
+ * Fetch projects based on data group
  */
 router.get('/api/projects/:dataGroup', (req, res) => {
     const { dataGroup } = req.params;
-    const projectsPath = path.join(__dirname, '../../data', dataGroup, 'project-management.csv');
+    const projectsPath = path.join(__dirname, '../../data', dataGroup, 'projects.csv');
 
     if (!fs.existsSync(projectsPath)) {
         return res.status(404).json({ error: 'Projects file not found' });
@@ -57,7 +57,7 @@ router.get('/api/projects/:dataGroup', (req, res) => {
 
         res.json({ projects });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to load project-management' });
+        res.status(500).json({ error: 'Failed to load projects' });
     }
 });
 
