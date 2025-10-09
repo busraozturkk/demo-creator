@@ -65,11 +65,11 @@ const TASK_TYPES = [
  * Timer categories for time tracking (activity types for grouping time entries)
  */
 const TIMER_CATEGORIES = [
-  { title: 'Development',    icon: 'CodeIcon',      color: '#38a09d' },
-  { title: 'Research',       icon: 'SearchIcon',    color: '#F6BF26' },
-  { title: 'Documentation',  icon: 'DocIcon',       color: '#8AA657' },
-  { title: 'Testing',        icon: 'CheckIcon',     color: '#D50000' },
-  { title: 'Meeting',        icon: 'UsersIcon',     color: '#8E6BAC' },
+  { title: 'Development',    icon: 'ItHIcon',      color: '#38a09d' },
+  { title: 'Research',       icon: 'CheckingHIcon',    color: '#F6BF26' },
+  { title: 'Documentation',  icon: 'ClusterDocsHIcon',       color: '#8AA657' },
+  { title: 'Testing',        icon: 'BugHIcon',     color: '#EA787F' },
+  { title: 'Meeting',        icon: 'UserMultiHIcon',     color: '#8E6BAC' },
 ];
 
 export class TaskManagementOperation extends BaseOperation {
