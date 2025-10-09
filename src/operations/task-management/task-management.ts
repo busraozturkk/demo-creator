@@ -677,6 +677,7 @@ export class TaskManagementOperation extends BaseOperation {
 
     let totalTasks = 0, errors = 0;
     const boardTodoStatus = new Map<number, number>();
+    const boardStatusCache = new Map<number, any[]>(); // Cache all statuses per board
 
     for (const wp of workPackageIntervals) {
       try {
@@ -686,21 +687,25 @@ export class TaskManagementOperation extends BaseOperation {
           continue;
         }
 
+        // Fetch and cache all statuses for this board once
+        let statuses = boardStatusCache.get(board.id);
+        if (!statuses) {
+          try {
+            statuses = await this.fetchStatusesWithRetry(board.id);
+            boardStatusCache.set(board.id, statuses);
+          } catch (e: any) {
+            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
+            continue;
+          }
+        }
+
         // Ensure TO DO status id for this board (read from cache map)
         let statusId = boardTodoStatus.get(board.id);
         if (!statusId) {
-          try {
-            // Only ensure statuses once per board (already done in setupTaskManagementForMilestones)
-            const statuses = await this.fetchStatusesWithRetry(board.id);
-            const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
-            if (todo?.id) {
-              statusId = todo.id;
-              if (statusId != null) {
-                boardTodoStatus.set(board.id, statusId);
-              }
-            }
-          } catch (e: any) {
-            console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
+          const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
+          if (todo?.id) {
+            statusId = todo.id;
+            boardTodoStatus.set(board.id, statusId!);
           }
         }
         if (!statusId) { console.log(`  Warning: No TO DO status on board ${board.id}`); continue; }
@@ -722,7 +727,7 @@ export class TaskManagementOperation extends BaseOperation {
 
             const createRes: any = await this.taskMgmtApiClient.executeRequest(
                 'POST', '/api/tasks',
-                { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId }
+                { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId! }
             );
             const taskId = createRes?.data?.id || createRes?.id;
 
@@ -757,8 +762,7 @@ export class TaskManagementOperation extends BaseOperation {
               }
 
               if (targetType !== 'todo') {
-                // Statuses already ensured at board setup, just fetch them
-                const statuses = await this.fetchStatusesWithRetry(board.id);
+                // Use cached statuses instead of fetching again
                 const target = statuses.find((s: any) => s.type === targetType);
                 if (target) {
                   const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
@@ -843,7 +847,7 @@ export class TaskManagementOperation extends BaseOperation {
 
   /**
    * Create tasks directly in milestone boards (no work-packages).
-   * Ensures statuses before creating/moving tasks.
+   * Creates 10 generic tasks per milestone instead of using CSV data.
    */
   async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[]): Promise<void> {
     console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
@@ -855,27 +859,50 @@ export class TaskManagementOperation extends BaseOperation {
     }
     console.log(`Found ${milestoneMappings.length} milestones\n`);
 
-    const tasksData = this.loadTasksFromCSV(csvPath);
-    if (tasksData.length === 0) {
-      console.log('No task data found in CSV. Skipping task creation.\n');
-      return;
-    }
-    console.log(`Loaded ${tasksData.length} tasks from CSV\n`);
+    // Determine language from csvPath (if provided)
+    const isGerman = csvPath?.includes('data-de') || csvPath?.includes('sff-data-de');
+
+    // Generic task templates for milestone mode (10 tasks per milestone)
+    const GENERIC_TASKS_EN = [
+      { title: 'Research and Requirements Analysis', description: 'Conduct comprehensive research and gather requirements for this milestone', type: 'Task' },
+      { title: 'Technical Design and Architecture', description: 'Design the technical architecture and create detailed design documents', type: 'Documentation' },
+      { title: 'Core Implementation Phase 1', description: 'Implement the core functionality for the first phase of this milestone', type: 'Feature' },
+      { title: 'Core Implementation Phase 2', description: 'Complete the core implementation and refine functionality', type: 'Feature' },
+      { title: 'Unit Testing and Quality Assurance', description: 'Write and execute unit tests to ensure code quality', type: 'Task' },
+      { title: 'Integration Testing', description: 'Perform integration testing with dependent systems', type: 'Task' },
+      { title: 'Bug Fixes and Refinements', description: 'Address identified bugs and refine the implementation', type: 'Bug' },
+      { title: 'Performance Optimization', description: 'Optimize performance and improve system efficiency', type: 'Task' },
+      { title: 'Documentation and Knowledge Transfer', description: 'Create comprehensive documentation and conduct knowledge transfer sessions', type: 'Documentation' },
+      { title: 'Final Review and Deployment Preparation', description: 'Conduct final review and prepare for deployment to production', type: 'Task' }
+    ];
+
+    const GENERIC_TASKS_DE = [
+      { title: 'Recherche und Anforderungsanalyse', description: 'Umfassende Recherche durchführen und Anforderungen für diesen Meilenstein sammeln', type: 'Task' },
+      { title: 'Technisches Design und Architektur', description: 'Technische Architektur entwerfen und detaillierte Designdokumente erstellen', type: 'Documentation' },
+      { title: 'Kernimplementierung Phase 1', description: 'Kernfunktionalität für die erste Phase dieses Meilensteins implementieren', type: 'Feature' },
+      { title: 'Kernimplementierung Phase 2', description: 'Kernimplementierung abschließen und Funktionalität verfeinern', type: 'Feature' },
+      { title: 'Unit-Tests und Qualitätssicherung', description: 'Unit-Tests schreiben und ausführen, um Code-Qualität sicherzustellen', type: 'Task' },
+      { title: 'Integrationstests', description: 'Integrationstests mit abhängigen Systemen durchführen', type: 'Task' },
+      { title: 'Fehlerbehebungen und Verfeinerungen', description: 'Identifizierte Fehler beheben und Implementierung verfeinern', type: 'Bug' },
+      { title: 'Leistungsoptimierung', description: 'Leistung optimieren und Systemeffizienz verbessern', type: 'Task' },
+      { title: 'Dokumentation und Wissenstransfer', description: 'Umfassende Dokumentation erstellen und Wissenstransfer-Sitzungen durchführen', type: 'Documentation' },
+      { title: 'Abschließende Prüfung und Deployment-Vorbereitung', description: 'Abschließende Prüfung durchführen und Deployment in Produktion vorbereiten', type: 'Task' }
+    ];
+
+    const GENERIC_TASKS = isGerman ? GENERIC_TASKS_DE : GENERIC_TASKS_EN;
+    console.log(`Will create ${GENERIC_TASKS.length} tasks per milestone (Language: ${isGerman ? 'DE' : 'EN'})\n`);
 
     if (this.taskTypeIds.length === 0) console.log('Warning: No task types created.\n');
     if (this.priorityIds.length === 0) console.log('Warning: No priorities found.\n');
 
     let totalTasks = 0, errors = 0;
     const boardTodoStatus = new Map<number, number>();
+    const boardStatusCache = new Map<number, any[]>(); // Cache all statuses per board
 
     // Load board mappings from cache (already set up in setupTaskManagementForMilestones)
     const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
     this.boardMappings = cachedBoards;
     console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
-
-    // Distribute tasks evenly across milestones
-    const tasksPerMilestone = Math.ceil(tasksData.length / milestoneMappings.length);
-    console.log(`\nTask Distribution Plan: ${tasksData.length} tasks / ${milestoneMappings.length} milestones = ~${tasksPerMilestone} tasks per milestone\n`);
 
     for (let i = 0; i < milestoneMappings.length; i++) {
       const ms = milestoneMappings[i];
@@ -890,51 +917,64 @@ export class TaskManagementOperation extends BaseOperation {
         }
         console.log(`  ✓ Found board ID: ${board.id} (${board.name})`);
 
-        let statusId = boardTodoStatus.get(board.id);
-        if (!statusId) {
+        // Fetch and cache all statuses for this board once
+        let statuses = boardStatusCache.get(board.id);
+        if (!statuses) {
           try {
-            // Only fetch statuses (already ensured in setupTaskManagementForMilestones)
-            const statuses = await this.fetchStatusesWithRetry(board.id);
-            const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
-            if (todo?.id) {
-              statusId = todo.id;
-              if (statusId != null) {
-                boardTodoStatus.set(board.id, statusId);
-              }
-            }
+            statuses = await this.fetchStatusesWithRetry(board.id);
+            boardStatusCache.set(board.id, statuses);
+            console.log(`  ✓ Cached ${statuses.length} statuses for board ${board.id}`);
           } catch (e: any) {
             console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
+            continue;
+          }
+        }
+
+        let statusId = boardTodoStatus.get(board.id);
+        if (!statusId) {
+          const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
+          if (todo?.id) {
+            statusId = todo.id;
+            boardTodoStatus.set(board.id, statusId!);
           }
         }
         if (!statusId) { console.log(`  Warning: No TO DO status on board ${board.id}`); continue; }
 
-        const start = i * tasksPerMilestone;
-        const end   = Math.min(start + tasksPerMilestone, tasksData.length);
-        const msTasks = tasksData.slice(start, end);
-        if (msTasks.length === 0) continue;
+        console.log(`  ${ms.project_short_title} → ${ms.milestone_title} (${GENERIC_TASKS.length} tasks)`);
 
-        console.log(`  ${ms.project_short_title} → ${ms.milestone_title} (${msTasks.length} tasks)`);
-
-        for (const t of msTasks) {
+        for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
+          const t = GENERIC_TASKS[taskIdx];
           try {
             const createdAt = this.randomDateInPeriod(ms.started_at, ms.finished_at);
             const deadline  = this.randomDateInPeriod(createdAt, ms.finished_at);
 
             const createRes: any = await this.taskMgmtApiClient.executeRequest(
                 'POST', '/api/tasks',
-                { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId }
+                { title: t.title, position: totalTasks, board_id: board.id, status_id: statusId! }
             );
             const taskId = createRes?.data?.id || createRes?.id;
 
+            // Small delay to avoid rate limiting (20ms)
+            await this.sleep(20);
+
             try {
               const updatePayload: any = {
-                title: t.task_title,
-                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${t.task_description}</div>`,
+                title: t.title,
+                description: `<div style="font-size: 11pt; font-family: Raleway, sans-serif;" data-node-font-size="11pt" data-node-font-family="Raleway, sans-serif">${t.description}</div>`,
                 deadline,
                 fields: ['description','task_type','responsibles','watchers','sprint_point','urgency','tags','deadline'],
                 checklistSections: []
               };
-              if (this.taskTypeIds.length > 0) updatePayload.task_type_id = this.taskTypeIds[Math.floor(Math.random()*this.taskTypeIds.length)];
+
+              // Map task type from GENERIC_TASKS to task_type_id
+              if (this.taskTypeIds.length > 0) {
+                const typeIndex = TASK_TYPES.findIndex(tt => tt.title === t.type);
+                if (typeIndex >= 0 && typeIndex < this.taskTypeIds.length) {
+                  updatePayload.task_type_id = this.taskTypeIds[typeIndex];
+                } else {
+                  updatePayload.task_type_id = this.taskTypeIds[Math.floor(Math.random() * this.taskTypeIds.length)];
+                }
+              }
               if (this.priorityIds.length > 0)  updatePayload.priority_id  = this.priorityIds[Math.floor(Math.random()*this.priorityIds.length)];
 
               await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, updatePayload);
@@ -953,8 +993,7 @@ export class TaskManagementOperation extends BaseOperation {
               }
 
               if (targetType !== 'todo') {
-                // Statuses already ensured at board setup, just fetch them
-                const statuses = await this.fetchStatusesWithRetry(board.id);
+                // Use cached statuses instead of fetching again
                 const target = statuses.find((s: any) => s.type === targetType);
                 if (target) {
                   const statusUpdate: any = {
@@ -962,7 +1001,7 @@ export class TaskManagementOperation extends BaseOperation {
                     organization_id: createRes.organization_id,
                     board_id: board.id,
                     status_id: target.id,
-                    title: t.task_title,
+                    title: t.title,
                     fields: updatePayload.fields,
                     is_checklist: 0,
                     position: totalTasks,
@@ -1008,7 +1047,7 @@ export class TaskManagementOperation extends BaseOperation {
 
             totalTasks++;
           } catch (createErr: any) {
-            console.log(`    ✗ Failed to create task "${t.task_title}": ${createErr.message}`);
+            console.log(`    ✗ Failed to create task "${t.title}": ${createErr.message}`);
             errors++;
           }
         }

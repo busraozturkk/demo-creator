@@ -63,7 +63,7 @@ router.get('/api/projects/:dataGroup', (req, res) => {
 
 /**
  * Create demo account (full automation)
- * This endpoint will be implemented to use the DemoCreator class
+ * Now uses Bull queue for reliable job processing
  */
 router.post('/api/create-demo', async (req, res) => {
     const { dataGroup, emailDomain, email, password, environment, companyName, selectedProjects, includeWorkPackages } = req.body;
@@ -75,11 +75,33 @@ router.post('/api/create-demo', async (req, res) => {
         return res.status(400).json({ error: 'Socket connection not found' });
     }
 
-    res.json({ success: true, message: 'Demo creation started' });
+    try {
+        // Add job to queue
+        const { demoQueue } = await import('../queue/demo-queue');
+        const job = await demoQueue.add({
+            dataGroup,
+            emailDomain,
+            email,
+            password,
+            environment: environment || 'testing',
+            companyName,
+            selectedProjects: selectedProjects || [],
+            includeWorkPackages: includeWorkPackages !== false,
+            mode: 'bulk',
+            socketId,
+        });
 
-    // Import and run demo creation
-    const { runDemoCreation } = await import('../core/demo-creator');
-    runDemoCreation(socket, dataGroup, emailDomain, email, password, environment || 'testing', companyName, selectedProjects || [], includeWorkPackages !== false);
+        console.log(`[API] Queued demo creation job ${job.id}`);
+
+        res.json({
+            success: true,
+            message: 'Demo creation queued',
+            jobId: job.id
+        });
+    } catch (error: any) {
+        console.error('[API] Failed to queue job:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 /**
@@ -143,6 +165,60 @@ router.post('/api/run-step', async (req, res) => {
             socket.emit('step-log', { type: 'error', message: `Error: ${error.message}` });
         }
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+/**
+ * Get job status and progress
+ */
+router.get('/api/job/:jobId', async (req, res) => {
+    try {
+        const { demoQueue } = await import('../queue/demo-queue');
+        const job = await demoQueue.getJob(req.params.jobId);
+
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        const state = await job.getState();
+        const progress = job.progress();
+        const result = job.returnvalue;
+        const failedReason = job.failedReason;
+
+        res.json({
+            id: job.id,
+            state,
+            progress,
+            result,
+            failedReason,
+            data: job.data,
+        });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * Get all jobs (for monitoring/debugging)
+ */
+router.get('/api/jobs', async (req, res) => {
+    try {
+        const { demoQueue } = await import('../queue/demo-queue');
+        const jobs = await demoQueue.getJobs(['waiting', 'active', 'completed', 'failed']);
+
+        const jobsInfo = await Promise.all(
+            jobs.map(async (job) => ({
+                id: job.id,
+                state: await job.getState(),
+                progress: job.progress(),
+                data: job.data,
+                timestamp: job.timestamp,
+            }))
+        );
+
+        res.json({ jobs: jobsInfo });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
     }
 });
 

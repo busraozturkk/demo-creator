@@ -8,6 +8,9 @@
 import { app, httpServer, io } from './server/app';
 import routes, { sessions } from './server/routes';
 
+// Initialize queue processor
+import './queue/demo-processor';
+
 // Register routes
 app.use(routes);
 
