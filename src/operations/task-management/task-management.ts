@@ -425,15 +425,21 @@ export class TaskManagementOperation extends BaseOperation {
       });
 
       const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
-      console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length}\n`);
 
-      console.log('Board details:');
-      milestoneBoards.forEach((b: any) =>
+      // Remove duplicates by board ID (API pagination bug returns same boards multiple times)
+      const uniqueBoards = Array.from(
+        new Map(milestoneBoards.map((b: any) => [b.id, b])).values()
+      );
+
+      console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length} | Unique: ${uniqueBoards.length}\n`);
+
+      console.log('Board details (unique):');
+      uniqueBoards.forEach((b: any) =>
           console.log(`  - "${b.title || b.name}" (ID: ${b.id}, Type: ${b.external_type || b.type}, External ID: ${b.external_id}, Folder: ${b.folder_id})`)
       );
       console.log('');
 
-      for (const board of milestoneBoards) {
+      for (const board of uniqueBoards) {
         const title = board.title || board.name;
 
         const matchingMilestone =
