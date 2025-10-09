@@ -861,8 +861,10 @@ export class TaskManagementOperation extends BaseOperation {
     let totalTasks = 0, errors = 0;
     const boardTodoStatus = new Map<number, number>();
 
-    // Make sure all milestone boards are present and have statuses
-    await this.setupTaskManagementForMilestones(projectMappings || []);
+    // Load board mappings from cache (already set up in setupTaskManagementForMilestones)
+    const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
+    this.boardMappings = cachedBoards;
+    console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
 
     // Distribute tasks evenly across milestones
     const tasksPerMilestone = Math.ceil(tasksData.length / milestoneMappings.length);
@@ -880,7 +882,12 @@ export class TaskManagementOperation extends BaseOperation {
             // Only fetch statuses (already ensured in setupTaskManagementForMilestones)
             const statuses = await this.fetchStatusesWithRetry(board.id);
             const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
-            if (todo?.id) { statusId = todo.id; boardTodoStatus.set(board.id, statusId); }
+            if (todo?.id) {
+              statusId = todo.id;
+              if (statusId != null) {
+                boardTodoStatus.set(board.id, statusId);
+              }
+            }
           } catch (e: any) {
             console.log(`  Warning: Failed to fetch statuses for board ${board.id}: ${e.message}`);
           }
