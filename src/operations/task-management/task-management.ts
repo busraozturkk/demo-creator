@@ -868,13 +868,20 @@ export class TaskManagementOperation extends BaseOperation {
 
     // Distribute tasks evenly across milestones
     const tasksPerMilestone = Math.ceil(tasksData.length / milestoneMappings.length);
+    console.log(`\nTask Distribution Plan: ${tasksData.length} tasks / ${milestoneMappings.length} milestones = ~${tasksPerMilestone} tasks per milestone\n`);
 
     for (let i = 0; i < milestoneMappings.length; i++) {
       const ms = milestoneMappings[i];
 
       try {
+        console.log(`\n[Milestone ${i + 1}/${milestoneMappings.length}] Looking for board: project="${ms.project_short_title}", milestone="${ms.milestone_title}"`);
         const board = this.boardMappings.find(b => b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title);
-        if (!board) { console.log(`  Warning: Board not found for ${ms.project_short_title} / ${ms.milestone_title}`); continue; }
+        if (!board) {
+          console.log(`  ✗ Warning: Board not found for ${ms.project_short_title} / ${ms.milestone_title}`);
+          console.log(`  Available boards: ${JSON.stringify(this.boardMappings.map(b => ({ id: b.id, project: b.project_short_title, milestone: b.milestone_title })))}`);
+          continue;
+        }
+        console.log(`  ✓ Found board ID: ${board.id} (${board.name})`);
 
         let statusId = boardTodoStatus.get(board.id);
         if (!statusId) {
