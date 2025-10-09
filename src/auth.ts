@@ -143,4 +143,47 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.bearerToken !== null;
   }
+
+  async approveUserConsent(partnerId: string): Promise<void> {
+    if (!this.bearerToken) {
+      throw new AuthError('Not authenticated. Please login first.');
+    }
+
+    try {
+      console.log('Approving user consent for device information...');
+
+      const response = await fetch('https://task-management-backend.innoscripta.com/api/user-consents', {
+        method: 'POST',
+        headers: {
+          'accept': CONTENT_TYPES.JSON,
+          'accept-language': 'en',
+          'content-type': CONTENT_TYPES.JSON,
+          'authorization': `Bearer ${this.bearerToken}`,
+          'partner-id': partnerId,
+          'timezone': 'Europe/Istanbul',
+          'origin': DEFAULT_HEADERS.origin,
+          'referer': DEFAULT_HEADERS.referer,
+          'user-agent': DEFAULT_HEADERS.userAgent,
+        },
+        body: JSON.stringify({
+          consent_type: 'device_information_consent'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new AuthError(
+          `User consent approval failed: ${response.status} - ${errorText}`,
+          response.status
+        );
+      }
+
+      console.log('✓ User consent approved successfully');
+    } catch (error) {
+      if (error instanceof AuthError) {
+        throw error;
+      }
+      throw new AuthError(`Failed to approve user consent: ${error}`);
+    }
+  }
 }

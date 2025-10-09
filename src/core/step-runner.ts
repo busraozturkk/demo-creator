@@ -85,6 +85,15 @@ export async function runSingleStep(stepId: string, session: any) {
 
             await session.authService.login(loginEmail, loginPassword);
             console.log('Successfully authenticated');
+
+            // Approve user consent for device information
+            console.log('Fetching organization ID for consent approval');
+            const { OrganizationIdOperation: OrgIdOp } = await import('../operations/setup/organization-id');
+            const tempApiClient = new ApiClient(session.authService, envConfig.apiBaseUrl);
+            const orgIdOp = new OrgIdOp(tempApiClient, session.authService);
+            const partnerId = await orgIdOp.fetchAndCache();
+            await session.authService.approveUserConsent(partnerId.toString());
+
             console.log('Initializing API clients');
             session.apiClient = new ApiClient(session.authService, envConfig.apiBaseUrl);
             session.hrApiClient = new ApiClient(session.authService, envConfig.hrApiBaseUrl);
