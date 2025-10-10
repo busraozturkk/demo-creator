@@ -1309,15 +1309,12 @@ export class TaskManagementOperation extends BaseOperation {
         dayISO: string;
         hours: number;
         userId: number;
-        pctTaskId: number;          // <— RENAMED (was pctMilestoneId)
+        pctTaskId: number;
         timerCategoryId?: number;
         tz?: string;
     }): Promise<void> {
-        const {
-            dayISO, hours, userId, pctTaskId, timerCategoryId, tz = 'Europe/Istanbul'
-        } = options;
+        const { dayISO, hours, userId, pctTaskId, timerCategoryId, tz = 'Europe/Istanbul' } = options;
 
-        // drift olmaması için finished_at'i aynı gün içinde elde et
         const started_at = `${dayISO} 08:00:00`;
         const totalMins = Math.round(hours * 60);
         const hh = 8 + Math.floor(totalMins / 60);
@@ -1326,17 +1323,10 @@ export class TaskManagementOperation extends BaseOperation {
         const mmStr = String(mm).padStart(2, '0');
         const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
 
-        // Activity type'ını belirle (yeni isim: pctTask; fallback model adı)
-        const pctType = this.allowedActivityTypes?.includes('pctTask')
-            ? 'pctTask'
-            : 'App\\Models\\PctTask';
-
-        // activities array — SIRA: pctTask ÖNCE, sonra TimerCategory
-        const activities: any[] = [
-            { id: pctTaskId, type: pctType },
-        ];
+        // 💡 Canonical type adları: pctTask & timerCategory
+        const activities: any[] = [{ id: pctTaskId, type: 'pctTask' }];
         if (typeof timerCategoryId === 'number') {
-            activities.push({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
+            activities.push({ id: timerCategoryId, type: 'timerCategory' });
         }
 
         const payload = {
@@ -1344,8 +1334,7 @@ export class TaskManagementOperation extends BaseOperation {
             finished_at,
             startTimer: false,
             activities,
-            // pct_milestone_id: X  <-- KALDIRILDI
-            pct_task_id: pctTaskId,         // açık açık alanı set etmek OK
+            pct_task_id: pctTaskId,        // FK’yi ayrıca da set etmeye devam et
             user_id: userId,
             device_type: 'desktop',
             device_name: 'Apple Mac',
@@ -1355,12 +1344,13 @@ export class TaskManagementOperation extends BaseOperation {
         };
 
         console.log(`    [DEBUG] Creating timer for user ${userId} on ${dayISO}`);
-        console.log(`    [DEBUG] PCT Task ID: ${pctTaskId}, Category ID: ${timerCategoryId || 'none'}`);
-        console.log(`    [DEBUG] Activities: ${JSON.stringify(activities)}`);
+        console.log(`    [DEBUG] PCT Task ID: ${pctTaskId}, Category ID: ${timerCategoryId ?? 'none'}`);
+        console.log(`    [DEBUG] Activities (payload): ${JSON.stringify(activities)}`);
+        console.log(`    [DEBUG] Payload FK: pct_task_id=${pctTaskId}`);
 
         const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
 
-        console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 200)}`);
+        console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 300)}`);
         console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → pctTask#${pctTaskId}`);
     }
 
