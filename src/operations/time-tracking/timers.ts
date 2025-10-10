@@ -327,8 +327,8 @@ export class TimersOperation {
     // Helper: Get business days between two dates
     const getBusinessDays = (startISO: string, endISO: string): string[] => {
       const days: string[] = [];
-      const start = new Date(startISO + 'T00:00:00');
-      const end = new Date(endISO + 'T00:00:00');
+      const start = new Date(startISO);
+      const end = new Date(endISO);
 
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const dow = d.getDay(); // 0 = Sunday, 6 = Saturday
@@ -454,7 +454,7 @@ export class TimersOperation {
 
     try {
       await this.mainApiClient.executeRequest(
-        'PUT',
+        'PATCH',
         `/pct/api/users/${userId}/settings`,
         { time_entry_mode: 1 }
       );

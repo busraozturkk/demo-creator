@@ -15,6 +15,7 @@ interface ProjectMapping {
 
 export interface MilestoneMapping {
   project_short_title: string;
+  project_title?: string;  // Full project title for PCT tree queries
   milestone_title: string;
   task_id: number;
   work_plan_id: number;
@@ -83,6 +84,7 @@ export class MilestonesOperation {
 
           allMappings.push({
             project_short_title: project.short_title,
+            project_title: project.title,  // Add full title for PCT tree queries
             milestone_title: milestone,
             task_id: taskId,
             work_plan_id: project.work_plan_id,
