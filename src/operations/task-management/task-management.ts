@@ -47,9 +47,6 @@ interface WorkPackageEmployeeAssignment {
     }>;
 }
 
-type PctFkKey = 'pct_milestone_id' | 'pct_task_id';
-type PctFk = { fkKey: PctFkKey; fkId: number };
-
 /**
  * Our canonical 3 statuses for project boards (positions are 0-based).
  */
@@ -87,14 +84,15 @@ export class TaskManagementOperation extends BaseOperation {
     private allowedActivityTypes: string[] = [];
     private timerCategoryIds: number[] = []; // keep created timer category ids
 
+    // ---- perf: concurrency limit for fast timer posting ----
+    private concurrency = 12; // hızlı ama makul; istersen 20-30 yapılabilir
+
     constructor(authService: AuthService) {
         super();
-        // Task Management has its own backend
         this.taskMgmtApiClient = new ApiClient(
             authService,
             'https://task-management-backend.innoscripta.com'
         );
-        // Main backend for PCT endpoints
         this.mainApiClient = new ApiClient(
             authService,
             'https://api.innoscripta.com'
@@ -214,11 +212,7 @@ export class TaskManagementOperation extends BaseOperation {
         }
     }
 
-    // ---- NEW: milestone responsibles helpers ----
-    /**
-     * milestone-mappings.json içinde olası alanlardan responsible user id’lerini toparlar.
-     * Desteklenen şekiller: number[] veya [{user_id}] / [{id}]
-     */
+    // ---- milestone responsibles helpers ----
     private getMilestoneResponsibleUserIds(ms: any): number[] {
         const tryArrays: any[] = [
             ms?.responsible_user_ids,
@@ -246,6 +240,24 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
+    // PCT tree → milestone IDs
+    // --------------------------------------------------------------------------
+    private async fetchPctMilestoneIdsByProjectTitle(projectTitle: string, partnerId?: string): Promise<number[]> {
+        if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+
+        const res: any = await this.taskMgmtApiClient.executeRequest(
+            'GET',
+            '/api/pct-tree',
+            { title: projectTitle, limit: '200', is_project_assigned: '1', page: '1' }
+        );
+        const data = res?.data || res || [];
+        const children = Array.isArray(data) && data[0]?.children ? data[0].children : [];
+        const ids = children.map((c: any) => Number(c?.id)).filter(Boolean);
+        console.log(`[pct-tree] "${projectTitle}" → ${ids.length} milestone(s): ${ids.join(', ')}`);
+        return ids;
+    }
+
+    // --------------------------------------------------------------------------
     // Retry & paging helpers
     // --------------------------------------------------------------------------
     private async fetchBoardsWithRetry(options?: {
@@ -257,12 +269,12 @@ export class TaskManagementOperation extends BaseOperation {
         maxPages?: number;
     }): Promise<any[]> {
         const {
-            retries = 10,
-            baseDelayMs = 1500,
-            jitterMs = 400,
+            retries = 6,
+            baseDelayMs = 900,
+            jitterMs = 250,
             expectedMilestoneCount = 0,
             readinessRatio = 0.9,
-            maxPages = 10,
+            maxPages = 8,
         } = options || {};
 
         let lastError: any = null;
@@ -304,7 +316,6 @@ export class TaskManagementOperation extends BaseOperation {
 
             if (attempt < retries) {
                 const delay = baseDelayMs * attempt + Math.floor(Math.random() * jitterMs);
-                console.log(`[Boards Retry] Waiting ${delay}ms before next attempt...`);
                 await this.sleep(delay);
             }
         }
@@ -315,7 +326,7 @@ export class TaskManagementOperation extends BaseOperation {
         throw new Error(`Boards not ready after ${retries} attempts (not enough Milestone boards visible)`);
     }
 
-    private async fetchStatusesWithRetry(boardId: number, retries = 5, delayMs = 800) {
+    private async fetchStatusesWithRetry(boardId: number, retries = 4, delayMs = 600) {
         let lastError: any = null;
         for (let attempt = 1; attempt <= retries; attempt++) {
             try {
@@ -334,7 +345,6 @@ export class TaskManagementOperation extends BaseOperation {
                 lastError = err;
             }
             if (attempt < retries) {
-                console.log(`[Statuses Retry] Board ${boardId} attempt ${attempt}/${retries} → waiting ${delayMs}ms...`);
                 await this.sleep(delayMs);
             }
         }
@@ -349,7 +359,7 @@ export class TaskManagementOperation extends BaseOperation {
 
         let existing: any[] = [];
         try {
-            existing = await this.fetchStatusesWithRetry(boardId, 6, 900);
+            existing = await this.fetchStatusesWithRetry(boardId, 5, 600);
             console.log(`    found ${existing.length} statuses on board ${boardId}`);
         } catch (e: any) {
             console.log(`    initial status read failed for board ${boardId}: ${e?.message || e}`);
@@ -381,11 +391,10 @@ export class TaskManagementOperation extends BaseOperation {
                         }
                     );
                     const created = createRes?.data || createRes;
-                    const createdId = created?.id;
-                    console.log(`    created status: ${desired.title} (id: ${createdId}, pos: ${desired.position})`);
                     existing.push(created);
                     byTitle.set(normTitle, created);
                     if (created?.type) byType.set(created.type, created);
+                    console.log(`    created status: ${desired.title}`);
                 } catch (err: any) {
                     console.log(`    create failed for ${desired.title}: ${err?.message || err}`);
                 }
@@ -424,8 +433,7 @@ export class TaskManagementOperation extends BaseOperation {
         }
 
         try {
-            await this.sleep(400);
-            const finalList = await this.fetchStatusesWithRetry(boardId, 3, 600);
+            const finalList = await this.fetchStatusesWithRetry(boardId, 2, 500);
             const pretty = finalList
                 .map((s: any) => `${s.position}:${s.title}[${s.type}]`)
                 .sort((a: string, b: string) => parseInt(a) - parseInt(b))
@@ -555,7 +563,8 @@ export class TaskManagementOperation extends BaseOperation {
             return;
         }
 
-        const activityTypesForSFF = ['task', 'timerCategory', 'pctTask'];
+        // pctTask yerine milestone aktivitelerini de serbest bırakmak istiyorsan ekle: 'pctMilestone'
+        const activityTypesForSFF = ['task', 'timerCategory', 'pctTask', 'pctMilestone'];
         let created = 0, errors = 0;
 
         for (const role of roleMappings) {
@@ -604,10 +613,10 @@ export class TaskManagementOperation extends BaseOperation {
             const boards = await this.fetchBoardsWithRetry({
                 expectedMilestoneCount: milestoneMappings.length,
                 readinessRatio: 0.9,
-                retries: 10,
-                baseDelayMs: 1500,
-                jitterMs: 400,
-                maxPages: 10,
+                retries: 6,
+                baseDelayMs: 900,
+                jitterMs: 250,
+                maxPages: 8,
             });
 
             const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
@@ -667,9 +676,8 @@ export class TaskManagementOperation extends BaseOperation {
                 totalBoards++;
             }
 
-            // Wait a bit for boards to be fully ready, then upsert statuses
-            console.log(`\nWaiting 3 seconds for boards to be fully ready...\n`);
-            await this.sleep(3000);
+            console.log(`\nWaiting 1500ms for boards to be fully ready...\n`);
+            await this.sleep(1500);
 
             console.log('Now ensuring statuses (upsert) on boards...\n');
             for (const boardMapping of this.boardMappings) {
@@ -714,10 +722,10 @@ export class TaskManagementOperation extends BaseOperation {
             const boards = await this.fetchBoardsWithRetry({
                 expectedMilestoneCount: milestoneMappings.length,
                 readinessRatio: 0.9,
-                retries: 10,
-                baseDelayMs: 1500,
-                jitterMs: 400,
-                maxPages: 10,
+                retries: 6,
+                baseDelayMs: 900,
+                jitterMs: 250,
+                maxPages: 8,
             });
 
             const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
@@ -769,8 +777,8 @@ export class TaskManagementOperation extends BaseOperation {
                 totalBoards++;
             }
 
-            console.log(`\nWaiting 2 seconds for boards to be fully ready...\n`);
-            await this.sleep(2000);
+            console.log(`\nWaiting 1200ms for boards to be fully ready...\n`);
+            await this.sleep(1200);
 
             console.log('Now ensuring statuses (upsert) on boards...\n');
             for (const boardMapping of this.boardMappings) {
@@ -1059,7 +1067,6 @@ export class TaskManagementOperation extends BaseOperation {
     async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[], partnerId?: string): Promise<void> {
         console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
 
-        // Set partnerId on both clients if provided
         if (partnerId) {
             this.taskMgmtApiClient.setPartnerId(partnerId);
             this.mainApiClient.setPartnerId(partnerId);
@@ -1162,7 +1169,6 @@ export class TaskManagementOperation extends BaseOperation {
                 // Get user IDs from user-task-year-pms (employees with PM allocations)
                 let assigneeUserIds: number[] = [];
                 try {
-                    // Fetch user-task-year-pms for this milestone (use main backend, not task mgmt)
                     const userTaskYearPms: any = await this.mainApiClient.executeRequest(
                         'GET',
                         '/pct/api/user-task-year-pms',
@@ -1202,8 +1208,6 @@ export class TaskManagementOperation extends BaseOperation {
                             { title: t.title, position: totalTasks, board_id: board.id, status_id: statusId! }
                         );
                         const taskId = createRes?.data?.id || createRes?.id;
-
-                        await this.sleep(20);
 
                         try {
                             const updatePayload: any = {
@@ -1315,57 +1319,8 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
-    // PCT FK çözümleyici ve teşhis
+    // PCT id teşhisi (debug)
     // --------------------------------------------------------------------------
-    private async resolvePctForeignKey(ms: any, board?: BoardMapping): Promise<PctFk> {
-        // 1) Milestone mapping’te doğrudan milestone id var mı?
-        const msMilestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-        if (msMilestoneId) {
-            console.log(`    [FK] from mapping: pct_milestone_id=${msMilestoneId}`);
-            return { fkKey: 'pct_milestone_id', fkId: msMilestoneId };
-        }
-
-        // 2) Milestone mapping’te task id var mı?
-        const msTaskId = Number(ms?.pct_task_id ?? ms?.task_id);
-        if (msTaskId) {
-            // Task → milestone çözmeyi dene
-            try {
-                const res: any = await this.mainApiClient.executeRequest(
-                    'GET', `/pct/api/tasks/${msTaskId}`, { include: 'milestone' }
-                );
-                const data = res?.data || res;
-                const mId = Number(data?.milestone?.id);
-                if (mId) {
-                    console.log(`    [FK] via task->milestone: pct_milestone_id=${mId} (from pct_task_id=${msTaskId})`);
-                    return { fkKey: 'pct_milestone_id', fkId: mId };
-                }
-            } catch (e:any) {
-                console.log(`    [FK] task->milestone resolve failed: ${e?.message || e}`);
-            }
-            console.log(`    [FK] fallback to pct_task_id=${msTaskId}`);
-            return { fkKey: 'pct_task_id', fkId: msTaskId };
-        }
-
-        // 3) Board external’dan çöz
-        if (board) {
-            const extType = String(board.external_type || board.type || '').toLowerCase();
-            const extId = Number(board.external_id);
-            if (extId) {
-                if (extType.includes('milestone')) {
-                    console.log(`    [FK] from board.external: pct_milestone_id=${extId}`);
-                    return { fkKey: 'pct_milestone_id', fkId: extId };
-                }
-                if (extType.includes('task')) {
-                    console.log(`    [FK] from board.external: pct_task_id=${extId}`);
-                    return { fkKey: 'pct_task_id', fkId: extId };
-                }
-            }
-        }
-
-        throw new Error('PCT foreign key çözümlenemedi (ne milestone ne task id bulunamadı).');
-    }
-
-    // Hızlı teşhis: bu id task mı milestone mı?
     async debugWhatIsThisId(id: number): Promise<void> {
         try {
             const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${id}`, {});
@@ -1387,64 +1342,77 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
-    // Timers (owner user, milestone activity)
+    // Timers — FAST: activities + concurrency
     // --------------------------------------------------------------------------
     private async postTimerEntry(options: {
         dayISO: string;
         hours: number;
         userId: number;
-        pctFk: PctFk;
-        timerCategoryId?: number;
+        pctMilestoneId: number;       // zorunlu: PctMilestone id
+        timerCategoryId?: number;     // opsiyonel
         tz?: string;
     }): Promise<void> {
-        const { dayISO, hours, userId, pctFk, timerCategoryId, tz = 'Europe/Istanbul' } = options;
+        const { dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul' } = options;
 
-        const started_at = `${dayISO} 08:00:00`;
-        const totalMins = Math.round(hours * 60);
-        const hh = 8 + Math.floor(totalMins / 60);
-        const mm = totalMins % 60;
-        const hhStr = String(Math.min(hh, 23)).padStart(2, '0');
-        const mmStr = String(mm).padStart(2, '0');
-        const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
+        // örnekle uyumlu: 03:00’te başlat, süreden bitişi hesapla
+        const start = new Date(`${dayISO}T03:00:00`);
+        const totalMins = Math.max(1, Math.round(hours * 60));
+        const end = new Date(start.getTime() + totalMins * 60000);
 
-        const payload: any = {
+        const started_at = `${dayISO} 03:00:00`;
+        const finished_at = `${dayISO} ${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}:00`;
+
+        const activities: Array<{id:number; type:string}> = [
+            { id: pctMilestoneId, type: 'App\\Models\\PctMilestone' }
+        ];
+        if (typeof timerCategoryId === 'number') {
+            activities.unshift({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
+        }
+
+        const payload = {
             started_at,
             finished_at,
             startTimer: false,
+            activities,
             user_id: userId,
             device_type: 'desktop',
             device_name: 'Apple Mac',
             device_os: 'Mac',
             device_os_version: '10.15',
-            device_browser_name: 'Firefox'
+            device_browser_name: 'Chrome'
         };
 
-        // ZORUNLU FK alanını set et
-        payload[pctFk.fkKey] = pctFk.fkId;
-        if (typeof timerCategoryId === 'number') {
-            payload.timer_category_id = timerCategoryId;
-        }
-
-        console.log(`    [DEBUG] Creating timer for user ${userId} on ${dayISO}`);
-        console.log(`    [DEBUG] FK: ${pctFk.fkKey}=${pctFk.fkId} | timer_category_id=${timerCategoryId ?? 'none'}`);
-        console.log(`    [DEBUG] Payload: ${JSON.stringify(payload)}`);
-
+        console.log(`    [TIMER] user=${userId} day=${dayISO} hours=${hours.toFixed(2)} ms#${pctMilestoneId} cat=${timerCategoryId ?? 'none'}`);
         try {
-            const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
-            console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 400)}`);
-            console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → ${pctFk.fkKey}#${pctFk.fkId}`);
+            const resp = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
+            console.log(`    [TIMER] response: ${JSON.stringify(resp).slice(0, 300)}`);
         } catch (e:any) {
-            console.log(`    ! Timer failed: ${e?.message || e}`);
+            console.log(`    ! TIMER failed: ${e?.message || e}`);
             if (e?.response?.data) console.log('    ! Body:', JSON.stringify(e.response.data));
             throw e;
         }
     }
 
+    // küçük bir concurrency limiter
+    private async runWithLimit<T>(items: T[], limit: number, worker: (item: T, idx: number) => Promise<void>): Promise<void> {
+        const q = [...items];
+        let idx = 0;
+        const runners: Promise<void>[] = [];
+        const launch = async () => {
+            while (q.length) {
+                const item = q.shift()!;
+                const myIdx = idx++;
+                try { await worker(item, myIdx); }
+                catch { /* hatayı worker logluyor */ }
+            }
+        };
+        const n = Math.max(1, limit);
+        for (let i = 0; i < n; i++) runners.push(launch());
+        await Promise.all(runners);
+    }
+
     /**
-     * Örnek:
-     * await addOwnerTrackedTime({ userId: 1009550, totalHours: 40, daysBack: 7, partnerId: '11956', timezone: 'Europe/Istanbul' })
-     * - Owner’ın PROJECT PLAN’da responsible olduğu tüm milestone’ların periodu için timer ekler.
-     * - Board’da en az 1 ACTIVE/DONE task şartı korunur.
+     * Owner’ın responsible olduğu milestone günlerine timer ekler (HIZLI)
      */
     async addOwnerTrackedTime(options: {
         userId: number;
@@ -1453,6 +1421,7 @@ export class TaskManagementOperation extends BaseOperation {
         timezone?: string;         // default Europe/Istanbul
         partnerId?: string;        // header için
         defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
+        concurrencyLimit?: number; // varsayılan this.concurrency
     }): Promise<void> {
         const {
             userId,
@@ -1460,7 +1429,8 @@ export class TaskManagementOperation extends BaseOperation {
             daysBack,
             timezone = 'Europe/Istanbul',
             partnerId,
-            defaultTimerCategoryIndex = 0
+            defaultTimerCategoryIndex = 0,
+            concurrencyLimit
         } = options;
 
         if (partnerId) {
@@ -1486,81 +1456,90 @@ export class TaskManagementOperation extends BaseOperation {
         }
         const dailyTarget = totalHours / days.length;
 
-        // Gün => (milestone, board) listesi
-        const dayToMilestones = new Map<string, Array<{ ms: any; board: BoardMapping }>>();
+        // Gün => milestoneId listesi
+        const dayToMilestoneIds = new Map<string, number[]>();
 
         for (const ms of milestoneMappings) {
-            const msDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
-            const msDaysInWindow = msDays.filter(d => days.includes(d));
-            if (msDaysInWindow.length === 0) continue;
+            const msDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at)
+                .filter(d => days.includes(d));
+            if (msDays.length === 0) continue;
 
             const board = this.boardMappings.find(b =>
                 b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title
             );
             if (!board) continue;
 
-            // OWNER, PROJECT PLAN’da bu milestone için responsible mı?
+            // owner mı?
             const msResponsibleIds = this.getMilestoneResponsibleUserIds(ms);
             if (!msResponsibleIds.includes(userId)) continue;
 
-            // Board’ta ACTIVE/DONE task var mı?
+            // board’ta active/done task var mı?
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
-            if (!hasActiveOrDone) {
-                console.log(`  ~ skip timers: board ${board.id} has no ACTIVE/DONE tasks`);
-                continue;
+            if (!hasActiveOrDone) continue;
+
+            // milestone id tercih sırası: mapping.pct_milestone_id → board.external_id → mapping.task_id→task->milestone
+            let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+            if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
+                milestoneId = Number(board.external_id);
             }
-
-            for (const d of msDaysInWindow) {
-                const arr = dayToMilestones.get(d) || [];
-                arr.push({ ms, board });
-                dayToMilestones.set(d, arr);
-            }
-        }
-
-        for (const d of days) {
-            const msList = dayToMilestones.get(d) || [];
-            if (msList.length === 0) continue;
-
-            const parts = this.splitHoursRandom(dailyTarget, msList.length);
-            for (let i = 0; i < msList.length; i++) {
-                const hours = parts[i];
-                if (hours <= 0.01) continue;
+            if (!milestoneId && ms?.task_id) {
                 try {
-                    const fk = await this.resolvePctForeignKey(msList[i].ms, msList[i].board);
-                    await this.postTimerEntry({
-                        dayISO: d,
-                        hours,
-                        userId,
-                        pctFk: fk,
-                        timerCategoryId,
-                        tz: timezone
-                    });
-                } catch (e:any) {
-                    console.log(`  ! timer failed for day ${d}: ${e?.message || e}`);
-                }
+                    const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
+                    milestoneId = Number((t?.data || t)?.milestone?.id);
+                } catch {}
+            }
+            if (!milestoneId) continue;
+
+            for (const d of msDays) {
+                const arr = dayToMilestoneIds.get(d) || [];
+                arr.push(milestoneId);
+                dayToMilestoneIds.set(d, arr);
             }
         }
 
-        console.log(`Tracked time done. Total ≈ ${totalHours}h across ${days.length} business days.`);
+        // hızlı: her gün için milestone’lar paralel
+        const allJobs: Array<{day: string, msId: number, hours: number}> = [];
+        for (const d of days) {
+            const msList = dayToMilestoneIds.get(d) || [];
+            if (msList.length === 0) continue;
+            const parts = this.splitHoursRandom(dailyTarget, msList.length);
+            msList.forEach((msId, i) => {
+                const h = parts[i];
+                if (h > 0.01) allJobs.push({ day: d, msId, hours: h });
+            });
+        }
+
+        console.log(`Scheduling ${allJobs.length} timer posts with concurrency=${concurrencyLimit ?? this.concurrency}`);
+        await this.runWithLimit(allJobs, concurrencyLimit ?? this.concurrency, async (job) => {
+            await this.postTimerEntry({
+                dayISO: job.day,
+                hours: job.hours,
+                userId,
+                pctMilestoneId: job.msId,
+                timerCategoryId,
+                tz: timezone
+            });
+        });
+
+        console.log(`Tracked time done. Total target ≈ ${totalHours}h across ${days.length} business days.`);
     }
 
     /**
-     * Add tracked time for all employees assigned to milestones
-     * - Reads user-task-year-pms to find all employee assignments
-     * - For each employee, creates timers based on milestone period and their PM allocation
-     * - Only creates timers if employee is assigned to tasks on the milestone board
+     * Add tracked time for all employees assigned to milestones (HIZLI)
      */
     async addMilestoneAssigneesTrackedTime(options: {
         totalHoursPerEmployee?: number;  // default: calculated from PM allocation
         timezone?: string;               // default Europe/Istanbul
         partnerId?: string;              // header için
         defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
+        concurrencyLimit?: number; // varsayılan this.concurrency
     }): Promise<void> {
         const {
             totalHoursPerEmployee,
             timezone = 'Europe/Istanbul',
             partnerId,
-            defaultTimerCategoryIndex = 0
+            defaultTimerCategoryIndex = 0,
+            concurrencyLimit
         } = options;
 
         if (partnerId) {
@@ -1578,31 +1557,45 @@ export class TaskManagementOperation extends BaseOperation {
 
         const timerCategoryId = this.timerCategoryIds?.[defaultTimerCategoryIndex];
 
-        console.log('\n=== Adding Tracked Time for Milestone Assignees ===\n');
+        console.log('\n=== Adding Tracked Time for Milestone Assignees (FAST) ===\n');
 
         let totalTimersCreated = 0;
         let errors = 0;
 
-        // Group by milestone to process each one
+        // toplu iş listesi
+        type TimerJob = { dayISO: string; userId: number; msId: number; hours: number };
+        const jobs: TimerJob[] = [];
+
         for (const ms of milestoneMappings) {
             try {
-                console.log(`\n[Milestone: ${ms.project_short_title} / ${ms.milestone_title}]`);
-
                 const board = this.boardMappings.find(b =>
                     b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title
                 );
-                if (!board) {
-                    console.log(`  ⊗ Board not found, skipping`);
+                if (!board) continue;
+
+                // milestone id çöz
+                let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+                if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
+                    milestoneId = Number(board.external_id);
+                }
+                if (!milestoneId && ms?.task_id) {
+                    try {
+                        const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
+                        milestoneId = Number((t?.data || t)?.milestone?.id);
+                    } catch {}
+                }
+                if (!milestoneId) {
+                    console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title}, skipping`);
                     continue;
                 }
 
-                // Fetch user-task-year-pms for this milestone (use main backend, not task mgmt)
+                // PM allocations
                 let userTaskYearPms: any[] = [];
                 try {
                     const response: any = await this.mainApiClient.executeRequest(
                         'GET',
                         '/pct/api/user-task-year-pms',
-                        { 'filter[task_id]': ms.task_id.toString(), 'per_page': '0' }
+                        { 'filter[task_id]': ms.task_id?.toString() ?? '', 'per_page': '0' }
                     );
                     userTaskYearPms = response?.data || response || [];
                 } catch (err: any) {
@@ -1610,75 +1603,31 @@ export class TaskManagementOperation extends BaseOperation {
                     continue;
                 }
 
-                if (userTaskYearPms.length === 0) {
-                    console.log(`  ⊗ No employees assigned via PM allocations, skipping`);
-                    continue;
-                }
+                if (userTaskYearPms.length === 0) continue;
 
-                console.log(`  Found ${userTaskYearPms.length} employee PM allocations`);
-
-                // Get milestone period business days
+                // business days
                 const milestoneDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
-                if (milestoneDays.length === 0) {
-                    console.log(`  ⊗ No business days in milestone period, skipping`);
-                    continue;
-                }
+                if (milestoneDays.length === 0) continue;
 
-                // Process each employee assigned to this milestone
                 for (const userPm of userTaskYearPms) {
                     const userId = userPm.user_id;
                     if (!userId) continue;
 
                     try {
-                        // Check if user is assigned to any task on this board
                         const isAssigned = await this.isUserAssignedToAnyTaskOnBoard(board.id, userId);
-                        if (!isAssigned) {
-                            console.log(`  ~ Skip timers for user ${userId}: not assigned to any task on board ${board.id}`);
-                            continue;
-                        }
+                        if (!isAssigned) continue;
 
-                        // Calculate hours based on PM allocation
-                        // 1 PM = 173.333333 hours (40h/week * 4.333 weeks/month)
                         const pmAmount = userPm.amount || 0;
-                        let hoursToDistribute: number;
+                        const hoursToDistribute = totalHoursPerEmployee ? totalHoursPerEmployee : (pmAmount * 173.333333);
+                        if (hoursToDistribute <= 0) continue;
 
-                        if (totalHoursPerEmployee) {
-                            hoursToDistribute = totalHoursPerEmployee;
-                        } else {
-                            hoursToDistribute = pmAmount * 173.333333;
-                        }
-
-                        if (hoursToDistribute <= 0) {
-                            console.log(`  ~ Skip timers for user ${userId}: no hours to distribute (PM: ${pmAmount})`);
-                            continue;
-                        }
-
-                        // Distribute hours across milestone period business days
                         const dailyHours = hoursToDistribute / milestoneDays.length;
 
-                        console.log(`  + User ${userId}: ${hoursToDistribute.toFixed(1)}h total (${pmAmount} PM) → ${dailyHours.toFixed(2)}h/day over ${milestoneDays.length} days`);
-
-                        // Create timer entries for each business day
                         for (const dayISO of milestoneDays) {
-                            try {
-                                const fk = await this.resolvePctForeignKey(ms, board);
-                                await this.postTimerEntry({
-                                    dayISO,
-                                    hours: dailyHours,
-                                    userId,
-                                    pctFk: fk,
-                                    timerCategoryId,
-                                    tz: timezone
-                                });
-                                totalTimersCreated++;
-                            } catch (timerErr: any) {
-                                console.log(`    ! Timer failed for ${dayISO}: ${timerErr?.message || timerErr}`);
-                                errors++;
-                            }
+                            jobs.push({ dayISO, userId, msId: milestoneId, hours: dailyHours });
                         }
-
                     } catch (userErr: any) {
-                        console.log(`  ! Failed to process user ${userId}: ${userErr?.message || userErr}`);
+                        console.log(`  ! user ${userId} skipped: ${userErr?.message || userErr}`);
                         errors++;
                     }
                 }
@@ -1689,8 +1638,23 @@ export class TaskManagementOperation extends BaseOperation {
             }
         }
 
-        console.log(`\n=== Tracked Time Summary ===`);
-        console.log(`  - Total timers created: ${totalTimersCreated}`);
-        console.log(`  - Errors: ${errors}\n`);
+        console.log(`Posting ${jobs.length} timers with concurrency=${concurrencyLimit ?? this.concurrency} ...`);
+        await this.runWithLimit(jobs, concurrencyLimit ?? this.concurrency, async (job) => {
+            try {
+                await this.postTimerEntry({
+                    dayISO: job.dayISO,
+                    hours: job.hours,
+                    userId: job.userId,
+                    pctMilestoneId: job.msId,
+                    timerCategoryId,
+                    tz: timezone
+                });
+                totalTimersCreated++;
+            } catch {
+                errors++;
+            }
+        });
+
+        console.log(`\n=== Tracked Time Summary ===\n  - Total timers created: ${totalTimersCreated}\n  - Errors: ${errors}\n`);
     }
 }
