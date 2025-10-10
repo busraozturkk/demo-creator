@@ -106,8 +106,10 @@ export class TaskManagementOperation extends BaseOperation {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
+    // aksan/umlaut normalize + baştaki sıra numarası at
     private normalizeTitle(s?: string): string {
-        return (s || '').toString().trim().replace(/^\d+\.\s*/, '').toLowerCase();
+        const t = (s || '').toString().trim().replace(/^\d+\.\s*/, '').toLowerCase();
+        return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     private async deleteBoard(boardId: number): Promise<void> {
@@ -278,39 +280,48 @@ export class TaskManagementOperation extends BaseOperation {
         return hit?.title;
     }
 
+    /**
+     * PctMilestone id’yi **yalnızca pct-tree** üzerinden çöz. (Doğru id uzayı)
+     * Yedek: board.external_id (sadece external_type === 'Milestone' ise)
+     */
     private async resolvePctMilestoneId(
         ms: { project_short_title: string; milestone_title: string; task_id?: number; pct_milestone_id?: number; milestone_id?: number },
         projectMappings?: ProjectMapping[],
         boardForMs?: BoardMapping,
         partnerId?: string
     ): Promise<number | null> {
-        // 1) pct-tree birincil yol
-        const projectTitle = this.getProjectTitleFromShort(projectMappings, ms.project_short_title);
-        if (projectTitle) {
-            const tree = await this.fetchPctTreeByProjectTitle(projectTitle, partnerId);
+        // 1) projectMappings → gerçek proje title
+        const mappedProjectTitle = this.getProjectTitleFromShort(projectMappings, ms.project_short_title);
+        if (mappedProjectTitle) {
+            const tree = await this.fetchPctTreeByProjectTitle(mappedProjectTitle, partnerId);
             const byTree = tree ? this.findChildMilestoneIdByTitle(tree, ms.milestone_title) : null;
-            if (byTree) return byTree;
+            if (byTree) {
+                console.log(`  [RESOLVE] pct-tree child id via mapped title "${mappedProjectTitle}" → ${byTree}`);
+                return byTree;
+            }
         }
 
-        // 2) doğrudan mapping’lerde varsa
-        const direct = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-        if (direct) return direct;
+        // 2) pct-tree’i kısa adla dene (çoğu instance’ta eşleşiyor)
+        {
+            const tree = await this.fetchPctTreeByProjectTitle(ms.project_short_title, partnerId);
+            const byTree = tree ? this.findChildMilestoneIdByTitle(tree, ms.milestone_title) : null;
+            if (byTree) {
+                console.log(`  [RESOLVE] pct-tree child id via short_title "${ms.project_short_title}" → ${byTree}`);
+                return byTree;
+            }
+        }
 
-        // 3) board external id Milestone ise
+        // 3) board external_id Milestone ise (son çare)
         if (boardForMs?.external_id && String(boardForMs?.external_type || boardForMs?.type || '').toLowerCase().includes('milestone')) {
             const ext = Number(boardForMs.external_id);
-            if (ext) return ext;
+            if (ext) {
+                console.log(`  [RESOLVE] fallback board.external_id (Milestone) → ${ext}`);
+                return ext;
+            }
         }
 
-        // 4) task_id üzerinden milestone
-        if (ms?.task_id) {
-            try {
-                const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
-                const mid = Number((t?.data || t)?.milestone?.id);
-                if (mid) return mid;
-            } catch {}
-        }
-
+        // DİKKAT: PCT main milestone_id / task_id KULLANILMIYOR (yanlış id uzayı → timer null)
+        console.log('  [RESOLVE] could not resolve pct-tree child id → null');
         return null;
     }
 
@@ -1353,20 +1364,20 @@ export class TaskManagementOperation extends BaseOperation {
                                         user_hourly_salaries: [],
                                         sectionsDetail: updatePayload.fields.map((f: string, idx: number) => ({
                                             id: f, type: f, order: idx + 1,
-                                            dropMeta: { destination: { droppableId: 'all-sections', index: idx }, type: 'SECTION' },
-                                            value:
-                                                f === 'description' ? updatePayload.description :
-                                                    f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
-                                                        f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
-                                                            f === 'responsibles' ? assignees :
-                                                                f === 'watchers' ? watchers : ''
-                                        })),
-                                        checklistSections: [],
+                                        dropMeta: { destination: { droppableId: 'all-sections', index: idx }, type: 'SECTION' },
+                                        value:
+                                            f === 'description' ? updatePayload.description :
+                                                f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
+                                                    f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
+                                                        f === 'responsibles' ? assignees :
+                                                            f === 'watchers' ? watchers : ''
+                                    })),
+                                    checklistSections: [],
                                         positionIndex: { destinationIndex: 0, sourceIndex: 0 },
-                                        source_status_id: target.id,
+                                    source_status_id: target.id,
                                         assignee_ids: assigneeIds,
                                         watcher_ids: watcherIds
-                                    };
+                                };
                                     if (completedAt) statusUpdate.completed_at = completedAt;
 
                                     await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
@@ -1427,7 +1438,7 @@ export class TaskManagementOperation extends BaseOperation {
         dayISO: string;
         hours: number;
         userId: number;
-        pctMilestoneId: number;       // zorunlu: PctMilestone id
+        pctMilestoneId: number;       // zorunlu: PctMilestone id (pct-tree child id)
         timerCategoryId?: number;     // opsiyonel
         tz?: string;
         origin?: string;
@@ -1455,7 +1466,7 @@ export class TaskManagementOperation extends BaseOperation {
         const finished_at = `${dayISO} ${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}:00`;
 
         // *** ÖNEMLİ: SIRA ***
-        // TimerCategory önce, PctMilestone sonra (tam senin gönderdiğin curl gibi)
+        // TimerCategory önce, PctMilestone sonra
         const activities: Array<{id:number; type:string}> = [];
         if (typeof timerCategoryId === 'number') {
             activities.push({ id: Number(timerCategoryId), type: 'App\\Models\\TimerCategory' });
@@ -1589,7 +1600,7 @@ export class TaskManagementOperation extends BaseOperation {
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
             if (!hasActiveOrDone) continue;
 
-            // pct-tree tabanlı çözüm (birincil) + geri dönüş yolları
+            // pct-tree tabanlı çözüm → DOĞRU id uzayı
             const milestoneId = await this.resolvePctMilestoneId(ms, projectMappings, board, partnerId);
             if (!milestoneId) continue;
 
@@ -1678,10 +1689,10 @@ export class TaskManagementOperation extends BaseOperation {
                 );
                 if (!board) continue;
 
-                // pct-tree tabanlı çözüm (birincil) + geri dönüş yolları
+                // pct-tree tabanlı çözüm → DOĞRU id uzayı
                 const milestoneId = await this.resolvePctMilestoneId(ms, projectMappings, board, partnerId);
                 if (!milestoneId) {
-                    console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title} via pct-tree, skipping`);
+                    console.log(`  ⊗ could not resolve pct-tree child id for ${ms.milestone_title}, skipping`);
                     continue;
                 }
 
