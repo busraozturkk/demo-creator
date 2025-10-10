@@ -240,7 +240,82 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
-    // PCT tree → milestone IDs
+    // pct-tree helpers: project title -> milestone(id) resolution
+    // --------------------------------------------------------------------------
+    private async fetchPctTreeByProjectTitle(projectTitle: string, partnerId?: string): Promise<any | null> {
+        try {
+            if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+            const res: any = await this.taskMgmtApiClient.executeRequest(
+                'GET',
+                '/api/pct-tree',
+                { title: projectTitle, limit: '200', is_project_assigned: '1', page: '1' }
+            );
+            const data = res?.data || res || [];
+            if (Array.isArray(data) && data.length > 0) return data[0];
+            return null;
+        } catch (e:any) {
+            console.log(`[pct-tree] fetch failed for "${projectTitle}": ${e?.message || e}`);
+            return null;
+        }
+    }
+
+    private findChildMilestoneIdByTitle(pctTreeRoot: any, milestoneTitle: string): number | null {
+        if (!pctTreeRoot?.children || !Array.isArray(pctTreeRoot.children)) return null;
+        const norm = this.normalizeTitle(milestoneTitle);
+        for (const child of pctTreeRoot.children) {
+            const ct = this.normalizeTitle(child?.title);
+            if (ct === norm) return Number(child?.id) || null;
+        }
+        const loose = pctTreeRoot.children.find((c: any) =>
+            this.normalizeTitle(c?.title).includes(norm) || norm.includes(this.normalizeTitle(c?.title))
+        );
+        return loose ? Number(loose.id) || null : null;
+    }
+
+    private getProjectTitleFromShort(projectMappings: ProjectMapping[] | undefined, projectShort: string): string | undefined {
+        if (!projectMappings?.length) return undefined;
+        const hit = projectMappings.find(p => this.normalizeTitle(p.short_title) === this.normalizeTitle(projectShort));
+        return hit?.title;
+    }
+
+    private async resolvePctMilestoneId(
+        ms: { project_short_title: string; milestone_title: string; task_id?: number; pct_milestone_id?: number; milestone_id?: number },
+        projectMappings?: ProjectMapping[],
+        boardForMs?: BoardMapping,
+        partnerId?: string
+    ): Promise<number | null> {
+        // 1) pct-tree birincil yol
+        const projectTitle = this.getProjectTitleFromShort(projectMappings, ms.project_short_title);
+        if (projectTitle) {
+            const tree = await this.fetchPctTreeByProjectTitle(projectTitle, partnerId);
+            const byTree = tree ? this.findChildMilestoneIdByTitle(tree, ms.milestone_title) : null;
+            if (byTree) return byTree;
+        }
+
+        // 2) doğrudan mapping’lerde varsa
+        const direct = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+        if (direct) return direct;
+
+        // 3) board external id Milestone ise
+        if (boardForMs?.external_id && String(boardForMs?.external_type || boardForMs?.type || '').toLowerCase().includes('milestone')) {
+            const ext = Number(boardForMs.external_id);
+            if (ext) return ext;
+        }
+
+        // 4) task_id üzerinden milestone
+        if (ms?.task_id) {
+            try {
+                const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
+                const mid = Number((t?.data || t)?.milestone?.id);
+                if (mid) return mid;
+            } catch {}
+        }
+
+        return null;
+    }
+
+    // --------------------------------------------------------------------------
+    // PCT tree → milestone IDs (legacy util; tutuldu)
     // --------------------------------------------------------------------------
     private async fetchPctMilestoneIdsByProjectTitle(projectTitle: string, partnerId?: string): Promise<number[]> {
         if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
@@ -1457,6 +1532,7 @@ export class TaskManagementOperation extends BaseOperation {
         partnerId?: string;        // header için
         defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
         concurrencyLimit?: number; // varsayılan this.concurrency
+        projectMappings?: ProjectMapping[]; // pct-tree için proje adı çözümü
     }): Promise<void> {
         const {
             userId,
@@ -1465,7 +1541,8 @@ export class TaskManagementOperation extends BaseOperation {
             timezone = 'Europe/Istanbul',
             partnerId,
             defaultTimerCategoryIndex = 0,
-            concurrencyLimit
+            concurrencyLimit,
+            projectMappings
         } = options;
 
         if (partnerId) {
@@ -1512,17 +1589,8 @@ export class TaskManagementOperation extends BaseOperation {
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
             if (!hasActiveOrDone) continue;
 
-            // milestone id tercih sırası: mapping.pct_milestone_id → board.external_id → mapping.task_id→task->milestone
-            let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-            if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
-                milestoneId = Number(board.external_id);
-            }
-            if (!milestoneId && ms?.task_id) {
-                try {
-                    const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
-                    milestoneId = Number((t?.data || t)?.milestone?.id);
-                } catch {}
-            }
+            // pct-tree tabanlı çözüm (birincil) + geri dönüş yolları
+            const milestoneId = await this.resolvePctMilestoneId(ms, projectMappings, board, partnerId);
             if (!milestoneId) continue;
 
             for (const d of msDays) {
@@ -1567,14 +1635,16 @@ export class TaskManagementOperation extends BaseOperation {
         timezone?: string;               // default Europe/Istanbul
         partnerId?: string;              // header için
         defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
-        concurrencyLimit?: number; // varsayılan this.concurrency
+        concurrencyLimit?: number;       // varsayılan this.concurrency
+        projectMappings?: ProjectMapping[]; // pct-tree için proje adı çözümü
     }): Promise<void> {
         const {
             totalHoursPerEmployee,
             timezone = 'Europe/Istanbul',
             partnerId,
             defaultTimerCategoryIndex = 0,
-            concurrencyLimit
+            concurrencyLimit,
+            projectMappings
         } = options;
 
         if (partnerId) {
@@ -1608,19 +1678,10 @@ export class TaskManagementOperation extends BaseOperation {
                 );
                 if (!board) continue;
 
-                // milestone id çöz
-                let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-                if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
-                    milestoneId = Number(board.external_id);
-                }
-                if (!milestoneId && ms?.task_id) {
-                    try {
-                        const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
-                        milestoneId = Number((t?.data || t)?.milestone?.id);
-                    } catch {}
-                }
+                // pct-tree tabanlı çözüm (birincil) + geri dönüş yolları
+                const milestoneId = await this.resolvePctMilestoneId(ms, projectMappings, board, partnerId);
                 if (!milestoneId) {
-                    console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title}, skipping`);
+                    console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title} via pct-tree, skipping`);
                     continue;
                 }
 
