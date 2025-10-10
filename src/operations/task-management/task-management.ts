@@ -91,7 +91,7 @@ export class TaskManagementOperation extends BaseOperation {
         // Main backend for PCT endpoints
         this.mainApiClient = new ApiClient(
             authService,
-            'https://pct-backend.innoscripta.com'
+            'https://api.innoscripta.com'
         );
     }
 
@@ -1044,8 +1044,14 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`\n\n=== Task Creation Summary ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
     }
 
-    async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[]): Promise<void> {
+    async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[], partnerId?: string): Promise<void> {
         console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
+
+        // Set partnerId on both clients if provided
+        if (partnerId) {
+            this.taskMgmtApiClient.setPartnerId(partnerId);
+            this.mainApiClient.setPartnerId(partnerId);
+        }
 
         const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json');
         if (!milestoneMappings || milestoneMappings.length === 0) {

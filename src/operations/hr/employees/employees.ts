@@ -217,7 +217,7 @@ export class EmployeesOperation extends BaseOperation {
                         if (shouldEnableTimeTracking) {
                             try {
                                 await this.mainApiClient.executeRequest(
-                                    'PUT',
+                                    'POST',
                                     `/pct/api/users/${userId}/settings`,
                                     { time_entry_mode: 1 }
                                 );

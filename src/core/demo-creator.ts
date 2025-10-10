@@ -673,7 +673,7 @@ export async function runDemoCreation(
                                                     // Create tasks for milestones
                                                     const tasksPath = `./data/${dataGroup}/tasks.csv`;
                                                     if (fs.existsSync(tasksPath)) {
-                                                        await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment);
+                                                        await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment, organizationId.toString());
                                                         socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
                                                         try {
                                                             await taskMgmtOp.addOwnerTrackedTime({
