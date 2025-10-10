@@ -87,6 +87,9 @@ export class TaskManagementOperation extends BaseOperation {
     // ---- perf: concurrency limit for fast timer posting ----
     private concurrency = 12; // hızlı ama makul; istersen 20-30 yapılabilir
 
+    // ---- new: milestone id cache (name → id) ----
+    private milestoneIdCache = new Map<string, number>();
+
     constructor(authService: AuthService) {
         super();
         this.taskMgmtApiClient = new ApiClient(
@@ -108,6 +111,10 @@ export class TaskManagementOperation extends BaseOperation {
 
     private normalizeTitle(s?: string): string {
         return (s || '').toString().trim().replace(/^\d+\.\s*/, '').toLowerCase();
+    }
+
+    private cacheKeyForMilestone(projectTitle?: string, milestoneTitle?: string): string {
+        return `${this.normalizeTitle(projectTitle)}::${this.normalizeTitle(milestoneTitle)}`;
     }
 
     private async deleteBoard(boardId: number): Promise<void> {
@@ -255,6 +262,88 @@ export class TaskManagementOperation extends BaseOperation {
         const ids = children.map((c: any) => Number(c?.id)).filter(Boolean);
         console.log(`[pct-tree] "${projectTitle}" → ${ids.length} milestone(s): ${ids.join(', ')}`);
         return ids;
+    }
+
+    // --------------------------------------------------------------------------
+    // NEW: Resolve PctMilestone id **by milestone name** (primary requirement)
+    // --------------------------------------------------------------------------
+    private async resolvePctMilestoneIdByName(opts: {
+        milestoneTitle: string;
+        projectTitle?: string;          // eşleşme doğruluğu için yardımcı
+        taskIdFallback?: number;        // son çare
+        partnerId?: string;
+    }): Promise<number | null> {
+        const { milestoneTitle, projectTitle, taskIdFallback, partnerId } = opts;
+        if (partnerId) this.mainApiClient.setPartnerId(partnerId);
+
+        const key = this.cacheKeyForMilestone(projectTitle, milestoneTitle);
+        if (this.milestoneIdCache.has(key)) return this.milestoneIdCache.get(key)!;
+
+        const normMs = this.normalizeTitle(milestoneTitle);
+        const normPrj = this.normalizeTitle(projectTitle);
+
+        // 1) Doğrudan /pct/api/milestones ile isimden ara
+        try {
+            const q: any = { 'filter[title]': milestoneTitle, per_page: '0' };
+            const searchRes: any = await this.mainApiClient.executeRequest('GET', '/pct/api/milestones', q);
+            const list = searchRes?.data || searchRes || [];
+            const matches = (Array.isArray(list) ? list : [list]).filter(Boolean);
+            if (matches.length) {
+                // en iyi eşleşmeyi seç: isim normalize eşit ve (varsa) proje de uyumlu
+                let exact = matches.find((m: any) => this.normalizeTitle(m.title) === normMs &&
+                    (!projectTitle || this.normalizeTitle(m?.project?.title) === normPrj));
+                if (!exact) exact = matches.find((m: any) => this.normalizeTitle(m.title) === normMs);
+                if (!exact) exact = matches[0];
+
+                if (exact?.id) {
+                    const id = Number(exact.id);
+                    this.milestoneIdCache.set(key, id);
+                    console.log(`[resolvePctMilestoneIdByName] matched via /pct/api/milestones → ${id} ("${milestoneTitle}")`);
+                    return id;
+                }
+            }
+        } catch (e:any) {
+            console.log(`[resolvePctMilestoneIdByName] direct search failed: ${e?.message || e}`);
+        }
+
+        // 2) Proje başlığı biliniyorsa: /api/pct-tree → çocuk id’ler → tek tek /pct/api/milestones/{id} ile isim kontrol
+        if (projectTitle) {
+            try {
+                const ids = await this.fetchPctMilestoneIdsByProjectTitle(projectTitle, partnerId);
+                for (const mid of ids) {
+                    try {
+                        const mRes: any = await this.mainApiClient.executeRequest('GET', `/pct/api/milestones/${mid}`, {});
+                        const md = mRes?.data || mRes;
+                        if (md?.id && this.normalizeTitle(md.title) === normMs) {
+                            const id = Number(md.id);
+                            this.milestoneIdCache.set(key, id);
+                            console.log(`[resolvePctMilestoneIdByName] matched via pct-tree scan → ${id} ("${milestoneTitle}")`);
+                            return id;
+                        }
+                    } catch { /* ignore single fetch */ }
+                }
+            } catch (e:any) {
+                console.log(`[resolvePctMilestoneIdByName] pct-tree scan failed: ${e?.message || e}`);
+            }
+        }
+
+        // 3) Son çare: task id’den milestone (eğer mapping’de task_id varsa)
+        if (taskIdFallback) {
+            try {
+                const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${taskIdFallback}`, { include: 'milestone' });
+                const mid = Number((t?.data || t)?.milestone?.id);
+                if (mid) {
+                    this.milestoneIdCache.set(key, mid);
+                    console.log(`[resolvePctMilestoneIdByName] fallback task→milestone → ${mid} ("${milestoneTitle}")`);
+                    return mid;
+                }
+            } catch (e:any) {
+                console.log(`[resolvePctMilestoneIdByName] fallback task lookup failed: ${e?.message || e}`);
+            }
+        }
+
+        console.log(`[resolvePctMilestoneIdByName] could not resolve id for "${milestoneTitle}" (project="${projectTitle ?? '-'}")`);
+        return null;
     }
 
     // --------------------------------------------------------------------------
@@ -1197,6 +1286,18 @@ export class TaskManagementOperation extends BaseOperation {
                 }));
                 const assigneeIdsFromMs = assigneeUserIds;
 
+                // ---- NEW: resolve PctMilestone id **by name** (strict) ----
+                const pctMilestoneId = await this.resolvePctMilestoneIdByName({
+                    milestoneTitle: ms.milestone_title,
+                    projectTitle: ms.project_title ?? ms.project_short_title, // mappingte hangisi varsa
+                    taskIdFallback: ms.task_id,
+                    partnerId
+                });
+                if (!pctMilestoneId) {
+                    console.log(`  ⊗ could not resolve milestone id by name for "${ms.milestone_title}", skipping task creation on this board.`);
+                    continue;
+                }
+
                 for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
                     const t = GENERIC_TASKS[taskIdx];
                     try {
@@ -1297,6 +1398,9 @@ export class TaskManagementOperation extends BaseOperation {
                                     await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
                                 }
                             }
+
+                            // (opsiyonel) görev oluşturulduktan hemen sonra örnek 5-15dk timer atılabilir
+                            // ama buradaki ana akış timer değil, görev üretimi. Timerlar aşağıda ayrı fonksiyonlarda.
 
                         } catch (updErr: any) {
                             console.log(`    failed to update task details: ${updErr.message}`);
@@ -1512,17 +1616,13 @@ export class TaskManagementOperation extends BaseOperation {
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
             if (!hasActiveOrDone) continue;
 
-            // milestone id tercih sırası: mapping.pct_milestone_id → board.external_id → mapping.task_id→task->milestone
-            let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-            if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
-                milestoneId = Number(board.external_id);
-            }
-            if (!milestoneId && ms?.task_id) {
-                try {
-                    const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
-                    milestoneId = Number((t?.data || t)?.milestone?.id);
-                } catch {}
-            }
+            // ---- NEW: name-based resolution (strict) ----
+            const milestoneId = await this.resolvePctMilestoneIdByName({
+                milestoneTitle: ms.milestone_title,
+                projectTitle: ms.project_title ?? ms.project_short_title,
+                taskIdFallback: ms.task_id,
+                partnerId
+            });
             if (!milestoneId) continue;
 
             for (const d of msDays) {
@@ -1608,17 +1708,13 @@ export class TaskManagementOperation extends BaseOperation {
                 );
                 if (!board) continue;
 
-                // milestone id çöz
-                let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
-                if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
-                    milestoneId = Number(board.external_id);
-                }
-                if (!milestoneId && ms?.task_id) {
-                    try {
-                        const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
-                        milestoneId = Number((t?.data || t)?.milestone?.id);
-                    } catch {}
-                }
+                // ---- NEW: resolve strictly by milestone name ----
+                const milestoneId = await this.resolvePctMilestoneIdByName({
+                    milestoneTitle: ms.milestone_title,
+                    projectTitle: ms.project_title ?? ms.project_short_title,
+                    taskIdFallback: ms.task_id,
+                    partnerId
+                });
                 if (!milestoneId) {
                     console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title}, skipping`);
                     continue;
