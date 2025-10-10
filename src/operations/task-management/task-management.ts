@@ -87,9 +87,6 @@ export class TaskManagementOperation extends BaseOperation {
     // ---- perf: concurrency limit for fast timer posting ----
     private concurrency = 12; // hızlı ama makul; istersen 20-30 yapılabilir
 
-    // ---- new: milestone id cache (name → id) ----
-    private milestoneIdCache = new Map<string, number>();
-
     constructor(authService: AuthService) {
         super();
         this.taskMgmtApiClient = new ApiClient(
@@ -110,69 +107,7 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     private normalizeTitle(s?: string): string {
-        if (!s) return '';
-        // remove diacritics, emojis/symbols, collapse whitespace, unify dashes/underscores
-        const withoutDiacritics = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        const replaced = withoutDiacritics
-            .replace(/[’'`"]/g, '')                  // quotes
-            .replace(/[\u2013\u2014]/g, '-')         // en/em dash -> hyphen
-            .replace(/[\u200B-\u200D\uFEFF]/g, '')   // zero-width
-            .replace(/[_]/g, ' ')                    // underscore -> space
-            .replace(/[^a-zA-Z0-9\- ]+/g, ' ')       // drop emojis/other punct
-            .replace(/\s+/g, ' ')                    // collapse spaces
-            .trim()
-            .toLowerCase();
-        // also drop leading numbering like "01. " (keep your original behavior)
-        return replaced.replace(/^\d+\.\s*/, '');
-    }
-
-    // helper: quick Levenshtein distance and similarity
-    private levenshtein(a: string, b: string): number {
-        const m = a.length, n = b.length;
-        if (m === 0) return n;
-        if (n === 0) return m;
-        const dp = Array.from({ length: m + 1 }, (_, i) => Array(n + 1).fill(0));
-        for (let i = 0; i <= m; i++) dp[i][0] = i;
-        for (let j = 0; j <= n; j++) dp[0][j] = j;
-        for (let i = 1; i <= m; i++) {
-            for (let j = 1; j <= n; j++) {
-                const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-                dp[i][j] = Math.min(
-                    dp[i - 1][j] + 1,
-                    dp[i][j - 1] + 1,
-                    dp[i - 1][j - 1] + cost
-                );
-            }
-        }
-        return dp[m][n];
-    }
-    private similarity(a: string, b: string): number {
-        const la = a.length || 1, lb = b.length || 1;
-        const d = this.levenshtein(a, b);
-        const maxLen = Math.max(la, lb);
-        return 1 - d / maxLen; // 0..1
-    }
-
-    // new: list all milestone titles under a project (for debugging)
-    async debugListProjectMilestones(projectTitle: string, partnerId?: string): Promise<void> {
-        try {
-            const ids = await this.fetchPctMilestoneIdsByProjectTitle(projectTitle, partnerId);
-            console.log(`\n[debug] Project "${projectTitle}" has ${ids.length} milestones:`);
-            for (const mid of ids) {
-                try {
-                    const mRes: any = await this.mainApiClient.executeRequest('GET', `/pct/api/milestones/${mid}`, {});
-                    const md = mRes?.data || mRes;
-                    console.log(`  - #${md?.id}: "${md?.title}"`);
-                } catch {}
-            }
-            console.log('');
-        } catch (e: any) {
-            console.log(`[debug] failed to list milestones: ${e?.message || e}`);
-        }
-    }
-
-    private cacheKeyForMilestone(projectTitle?: string, milestoneTitle?: string): string {
-        return `${this.normalizeTitle(projectTitle)}::${this.normalizeTitle(milestoneTitle)}`;
+        return (s || '').toString().trim().replace(/^\d+\.\s*/, '').toLowerCase();
     }
 
     private async deleteBoard(boardId: number): Promise<void> {
@@ -320,118 +255,6 @@ export class TaskManagementOperation extends BaseOperation {
         const ids = children.map((c: any) => Number(c?.id)).filter(Boolean);
         console.log(`[pct-tree] "${projectTitle}" → ${ids.length} milestone(s): ${ids.join(', ')}`);
         return ids;
-    }
-
-    // --------------------------------------------------------------------------
-    // NEW: Resolve PctMilestone id **by milestone name** (primary requirement)
-    // --------------------------------------------------------------------------
-    private async resolvePctMilestoneIdByName(opts: {
-        milestoneTitle: string;
-        projectTitle?: string;
-        taskIdFallback?: number;
-        partnerId?: string;
-    }): Promise<number | null> {
-        const { milestoneTitle, projectTitle, taskIdFallback, partnerId } = opts;
-        if (partnerId) this.mainApiClient.setPartnerId(partnerId);
-
-        const key = this.cacheKeyForMilestone(projectTitle, milestoneTitle);
-        if (this.milestoneIdCache.has(key)) return this.milestoneIdCache.get(key)!;
-
-        const normMs = this.normalizeTitle(milestoneTitle);
-        const normPrj = this.normalizeTitle(projectTitle);
-
-        // helper: pick best from candidates
-        const pickBest = (cands: any[]) => {
-            const scored = cands
-                .map((m: any) => {
-                    const t = this.normalizeTitle(m?.title || '');
-                    const p = this.normalizeTitle(m?.project?.title || '');
-                    const sEq = t === normMs ? 1 : 0;
-                    const sStarts = t.startsWith(normMs) || normMs.startsWith(t) ? 0.95 : 0;
-                    const sIncl = t.includes(normMs) || normMs.includes(t) ? 0.9 : 0;
-                    const sSim = this.similarity(t, normMs); // 0..1
-                    const sProj = projectTitle ? (p === normPrj ? 0.1 : 0) : 0;
-                    const score = Math.max(sEq, sStarts, sIncl, sSim) + sProj;
-                    return { m, t, p, score };
-                })
-                .sort((a, b) => b.score - a.score);
-
-            // log top 5 for diagnostics
-            const top = scored.slice(0, 5).map(x => `("${x.m?.title}" ~ ${x.score.toFixed(3)} proj="${x.m?.project?.title ?? ''}")`).join(', ');
-            console.log(`[resolve] candidates(top): ${top}`);
-
-            if (scored.length === 0) return null;
-            const best = scored[0];
-            // accept if strong enough
-            return best.score >= 0.80 ? Number(best.m.id) : null;
-        };
-
-        // 1) direct search by title
-        try {
-            const q: any = { 'filter[title]': milestoneTitle, per_page: '0', include: 'project' };
-            const searchRes: any = await this.mainApiClient.executeRequest('GET', '/pct/api/milestones', q);
-            let list: any[] = searchRes?.data || searchRes || [];
-            if (!Array.isArray(list)) list = [list].filter(Boolean);
-
-            // broaden: also try without hyphens/spaces variations if no results
-            if (list.length === 0 && milestoneTitle.includes('-')) {
-                const alt = milestoneTitle.replace(/[-_]/g, ' ');
-                const q2: any = { 'filter[title]': alt, per_page: '0', include: 'project' };
-                const res2: any = await this.mainApiClient.executeRequest('GET', '/pct/api/milestones', q2);
-                const list2 = res2?.data || res2 || [];
-                if (Array.isArray(list2)) list.push(...list2);
-            }
-
-            const best = pickBest(list);
-            if (best) {
-                this.milestoneIdCache.set(key, best);
-                console.log(`[resolve] matched via /pct/api/milestones → ${best} ("${milestoneTitle}")`);
-                return best;
-            }
-        } catch (e:any) {
-            console.log(`[resolve] direct search failed: ${e?.message || e}`);
-        }
-
-        // 2) scan project tree when project known
-        if (projectTitle) {
-            try {
-                const ids = await this.fetchPctMilestoneIdsByProjectTitle(projectTitle, partnerId);
-                const cands: any[] = [];
-                for (const mid of ids) {
-                    try {
-                        const mRes: any = await this.mainApiClient.executeRequest('GET', `/pct/api/milestones/${mid}`, { include: 'project' });
-                        const md = mRes?.data || mRes;
-                        if (md?.id) cands.push(md);
-                    } catch {}
-                }
-                const best = pickBest(cands);
-                if (best) {
-                    this.milestoneIdCache.set(key, best);
-                    console.log(`[resolve] matched via pct-tree scan → ${best} ("${milestoneTitle}")`);
-                    return best;
-                }
-            } catch (e:any) {
-                console.log(`[resolve] pct-tree scan failed: ${e?.message || e}`);
-            }
-        }
-
-        // 3) last resort: task→milestone
-        if (taskIdFallback) {
-            try {
-                const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${taskIdFallback}`, { include: 'milestone,project' });
-                const mid = Number((t?.data || t)?.milestone?.id);
-                if (mid) {
-                    this.milestoneIdCache.set(key, mid);
-                    console.log(`[resolve] fallback task→milestone → ${mid} ("${milestoneTitle}")`);
-                    return mid;
-                }
-            } catch (e:any) {
-                console.log(`[resolve] fallback task lookup failed: ${e?.message || e}`);
-            }
-        }
-
-        console.log(`[resolve] could not resolve id for "${milestoneTitle}" (project="${projectTitle ?? '-'}")`);
-        return null;
     }
 
     // --------------------------------------------------------------------------
@@ -1374,18 +1197,6 @@ export class TaskManagementOperation extends BaseOperation {
                 }));
                 const assigneeIdsFromMs = assigneeUserIds;
 
-                // ---- NEW: resolve PctMilestone id **by name** (strict) ----
-                const pctMilestoneId = await this.resolvePctMilestoneIdByName({
-                    milestoneTitle: ms.milestone_title,
-                    projectTitle: ms.project_title ?? ms.project_short_title, // mappingte hangisi varsa
-                    taskIdFallback: ms.task_id,
-                    partnerId
-                });
-                if (!pctMilestoneId) {
-                    console.log(`  ⊗ could not resolve milestone id by name for "${ms.milestone_title}", skipping task creation on this board.`);
-                    continue;
-                }
-
                 for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
                     const t = GENERIC_TASKS[taskIdx];
                     try {
@@ -1486,9 +1297,6 @@ export class TaskManagementOperation extends BaseOperation {
                                     await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
                                 }
                             }
-
-                            // (opsiyonel) görev oluşturulduktan hemen sonra örnek 5-15dk timer atılabilir
-                            // ama buradaki ana akış timer değil, görev üretimi. Timerlar aşağıda ayrı fonksiyonlarda.
 
                         } catch (updErr: any) {
                             console.log(`    failed to update task details: ${updErr.message}`);
@@ -1704,13 +1512,17 @@ export class TaskManagementOperation extends BaseOperation {
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
             if (!hasActiveOrDone) continue;
 
-            // ---- NEW: name-based resolution (strict) ----
-            const milestoneId = await this.resolvePctMilestoneIdByName({
-                milestoneTitle: ms.milestone_title,
-                projectTitle: ms.project_title ?? ms.project_short_title,
-                taskIdFallback: ms.task_id,
-                partnerId
-            });
+            // milestone id tercih sırası: mapping.pct_milestone_id → board.external_id → mapping.task_id→task->milestone
+            let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+            if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
+                milestoneId = Number(board.external_id);
+            }
+            if (!milestoneId && ms?.task_id) {
+                try {
+                    const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
+                    milestoneId = Number((t?.data || t)?.milestone?.id);
+                } catch {}
+            }
             if (!milestoneId) continue;
 
             for (const d of msDays) {
@@ -1796,13 +1608,17 @@ export class TaskManagementOperation extends BaseOperation {
                 );
                 if (!board) continue;
 
-                // ---- NEW: resolve strictly by milestone name ----
-                const milestoneId = await this.resolvePctMilestoneIdByName({
-                    milestoneTitle: ms.milestone_title,
-                    projectTitle: ms.project_title ?? ms.project_short_title,
-                    taskIdFallback: ms.task_id,
-                    partnerId
-                });
+                // milestone id çöz
+                let milestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+                if (!milestoneId && board?.external_id && String(board?.external_type || board?.type || '').toLowerCase().includes('milestone')) {
+                    milestoneId = Number(board.external_id);
+                }
+                if (!milestoneId && ms?.task_id) {
+                    try {
+                        const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${ms.task_id}`, { include: 'milestone' });
+                        milestoneId = Number((t?.data || t)?.milestone?.id);
+                    } catch {}
+                }
                 if (!milestoneId) {
                     console.log(`  ⊗ could not resolve milestone id for ${ms.milestone_title}, skipping`);
                     continue;
