@@ -29,13 +29,15 @@
 const socket = io();
 let isCreating = false;
 let totalLogs = 0;
-let estimatedTotalSteps = 2500; // Approximate number of log messages expected
+let estimatedTotalSteps = 1500; // Approximate number of log messages expected
 let currentMode = 'bulk';
 /** @type {SessionData|null} */
 let sessionData = null;
 let timerInterval = null;
 let startTime = null;
 let currentJobId = null; // Track current running job
+// Demo lifecycle state: 'idle' | 'running' | 'completed' | 'stopped' | 'failed'
+let demoState = 'idle';
 
 /** @type {Step[]} */
 const STEPS = [
@@ -94,18 +96,15 @@ function initDropdown(selectId, itemsId, inputId) {
 
     // Toggle dropdown
     selectSelected.addEventListener('click', function(e) {
+        if (isCreating) return;
         e.stopPropagation();
 
         // Close other dropdowns
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            if (menu !== selectItems) {
-                menu.classList.remove('show');
-            }
+            if (menu !== selectItems) menu.classList.remove('show');
         });
         document.querySelectorAll('.select-selected').forEach(select => {
-            if (select !== selectSelected) {
-                select.classList.remove('select-arrow-active');
-            }
+            if (select !== selectSelected) select.classList.remove('select-arrow-active');
         });
 
         // Toggle this dropdown
@@ -117,6 +116,7 @@ function initDropdown(selectId, itemsId, inputId) {
     const items = selectItems.getElementsByTagName('div');
     for (let i = 0; i < items.length; i++) {
         items[i].addEventListener('click', function(e) {
+            if (isCreating) return;
             e.stopPropagation();
 
             // Remove previous selection
@@ -207,6 +207,7 @@ function renderProjects(projects) {
     selectAllCheckbox.checked = false;
 
     selectAllCheckbox.addEventListener('change', function() {
+        if (isCreating) { this.checked = this.checked && false; return; }
         const checkboxes = document.querySelectorAll('.project-checkbox');
         checkboxes.forEach(cb => cb.checked = this.checked);
         updateSelectedProjects();
@@ -220,7 +221,10 @@ function renderProjects(projects) {
 
     // Add change listeners to project checkboxes
     document.querySelectorAll('.project-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', updateSelectedProjects);
+        checkbox.addEventListener('change', function() {
+            if (isCreating) { this.checked = !this.checked; return; }
+            updateSelectedProjects();
+        });
     });
 
     // Add ripple effect to newly created project items
@@ -614,22 +618,21 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     const selectedProjects = selectedProjectsValue ? JSON.parse(selectedProjectsValue) : [];
     const includeWorkPackages = document.querySelector('input[name="workPackages"]:checked').value === 'yes';
 
+    demoState = 'running';
     isCreating = true;
-    totalLogs = 0;
-    document.getElementById('createBtn').disabled = true;
-    document.getElementById('createBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> IN PROGRESS <i class="fa-solid fa-spinner fa-spin"></i>';
 
-    // Disable form inputs while job is running
     disableFormInputs();
-
-    // Show force stop button
     showForceStopButton();
+    updateCreateNewButton();
+
+    totalLogs = 0;
+    const createBtn = document.getElementById('createBtn');
+    createBtn.disabled = true;
+    createBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> IN PROGRESS <i class="fa-solid fa-spinner fa-spin"></i>';
 
     document.getElementById('logContainer').style.display = 'block';
     document.getElementById('progressBar').style.display = 'block';
     document.getElementById('timerContainer').style.display = 'flex';
-    // Don't clear logs - keep them persistent
-    // document.getElementById('logContent').innerHTML = '';
     document.getElementById('progressFill').style.width = '0%';
 
     // Start timer
@@ -673,6 +676,9 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
         resetButton();
         enableFormInputs();
         hideForceStopButton();
+        demoState = 'failed';
+        isCreating = false;
+        updateCreateNewButton();
     }
 });
 
@@ -688,12 +694,13 @@ socket.on('complete', () => {
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
     hideForceStopButton();
+
+    demoState = 'completed';
+    isCreating = false;
     currentJobId = null;
 
-    // Show "Create New Demo Account" button
-    showCreateNewButton();
+    updateCreateNewButton();
 
-    // Notify server that demo creation completed
     socket.emit('demo-completed');
 });
 
@@ -702,29 +709,33 @@ socket.on('error', (data) => {
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
     hideForceStopButton();
+
+    demoState = 'failed';
+    isCreating = false;
     currentJobId = null;
 
-    // Show "Create New Demo Account" button
-    showCreateNewButton();
+    updateCreateNewButton();
 
-    // Notify server that demo creation completed (with error)
     socket.emit('demo-completed');
 });
 
 socket.on('demo-complete', (data) => {
     if (data.success) {
         addLog('success', '✨ Demo creation completed successfully!');
+        demoState = 'completed';
     } else {
         addLog('error', `❌ Demo creation failed: ${data.error || 'Unknown error'}`);
+        demoState = 'failed';
     }
+
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
     hideForceStopButton();
+    isCreating = false;
     currentJobId = null;
 
-    // Show "Create New Demo Account" button
-    showCreateNewButton();
+    updateCreateNewButton();
 
     socket.emit('demo-completed');
 });
@@ -745,6 +756,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add ripple effect to all clickable elements
     addRippleEffect();
+
+    // İlk render'da buton state'ini kur
+    updateCreateNewButton();
 });
 
 // Ripple effect function
@@ -816,8 +830,9 @@ function updateProgress() {
 
 function resetButton() {
     isCreating = false;
-    document.getElementById('createBtn').disabled = false;
-    document.getElementById('createBtn').innerHTML = '<span class="button-text"><i class="fa-solid fa-sparkles"></i> CREATE DEMO <i class="fa-solid fa-sparkles"></i></span>';
+    const btn = document.getElementById('createBtn');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="button-text"><i class="fa-solid fa-sparkles"></i> CREATE DEMO <i class="fa-solid fa-sparkles"></i></span>';
 }
 
 function startTimer() {
@@ -842,20 +857,38 @@ function updateTimer() {
 
 // Disable/Enable form inputs
 function disableFormInputs() {
-    const inputs = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
-    inputs.forEach(input => {
-        input.disabled = true;
-        input.style.opacity = '0.5';
-        input.style.cursor = 'not-allowed';
+    const form = document.getElementById('demoForm');
+    if (form) form.classList.add('is-locked');
+
+    const controls = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
+    controls.forEach(el => {
+        if (el.id === 'forceStopBtn' || el.id === 'createNewBtn') return;
+
+        if ('disabled' in el) el.disabled = true;
+
+        if (el.classList && el.classList.contains('select-selected')) {
+            el.setAttribute('aria-disabled', 'true');
+        }
+        el.style.opacity = '0.5';
+        el.style.cursor = 'not-allowed';
     });
+
+    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+    document.querySelectorAll('.select-selected.select-arrow-active').forEach(s => s.classList.remove('select-arrow-active'));
 }
 
 function enableFormInputs() {
-    const inputs = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
-    inputs.forEach(input => {
-        input.disabled = false;
-        input.style.opacity = '';
-        input.style.cursor = '';
+    const form = document.getElementById('demoForm');
+    if (form) form.classList.remove('is-locked');
+
+    const controls = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
+    controls.forEach(el => {
+        if ('disabled' in el) el.disabled = false;
+        if (el.classList && el.classList.contains('select-selected')) {
+            el.removeAttribute('aria-disabled');
+        }
+        el.style.opacity = '';
+        el.style.cursor = '';
     });
 }
 
@@ -902,6 +935,7 @@ async function forceStopJob() {
 
         if (data.success) {
             addLog('warning', '⚠️ Job stopped by user');
+            demoState = 'stopped';
         } else {
             addLog('error', `Failed to stop job: ${data.error}`);
         }
@@ -911,26 +945,48 @@ async function forceStopJob() {
         hideForceStopButton();
         stopTimer();
         document.getElementById('animationCharacter').classList.remove('show');
-        currentJobId = null;
 
-        // Show "Create New Demo Account" button instead of resetting immediately
-        showCreateNewButton();
+        if (demoState === 'stopped') {
+            isCreating = false;
+            currentJobId = null;
+        }
+
+        updateCreateNewButton();
     }
 }
 
-// Show/Hide Create New Demo Account button
-function showCreateNewButton() {
-    document.getElementById('createBtn').style.display = 'none';
-    document.getElementById('createNewBtn').style.display = 'block';
-}
+function updateCreateNewButton() {
+    const createBtn = document.getElementById('createBtn');
+    const createNewBtn = document.getElementById('createNewBtn');
 
-function hideCreateNewButton() {
-    document.getElementById('createBtn').style.display = 'block';
-    document.getElementById('createNewBtn').style.display = 'none';
+    if (!createBtn || !createNewBtn) return;
+
+    createNewBtn.style.display = 'none';
+    createNewBtn.disabled = true;
+
+    if (demoState === 'completed' || demoState === 'stopped') {
+        createBtn.style.display = 'none';
+        createNewBtn.style.display = 'block';
+        createNewBtn.disabled = false;
+        createNewBtn.style.opacity = '';
+        createNewBtn.style.cursor = '';
+    } else {
+        // idle, running, failed
+        createBtn.style.display = 'block';
+        createNewBtn.style.display = 'none';
+    }
 }
 
 // Reset everything for new demo creation
 function resetForNewDemo() {
+    // State'i sıfırla
+    demoState = 'idle';
+    isCreating = false;
+    currentJobId = null;
+
+    // Formu aç
+    enableFormInputs();
+
     // Clear logs
     document.getElementById('logContent').innerHTML = '';
 
@@ -943,11 +999,7 @@ function resetForNewDemo() {
     document.getElementById('progressFill').style.width = '0%';
     totalLogs = 0;
 
-    // Enable form inputs
-    enableFormInputs();
-
-    // Hide create new button, show create button
-    hideCreateNewButton();
+    updateCreateNewButton();
 
     // Reset button state
     resetButton();
@@ -962,5 +1014,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Version checking removed

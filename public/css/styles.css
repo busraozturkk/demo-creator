@@ -1902,11 +1902,12 @@ button,
     }
 }
 
-/* Force (Stop) Button - Mor uyumlu override */
+/* Force (Stop) Button */
 .btn-danger {
     width: 100%;
     padding: 14px 32px;
-    background: linear-gradient(135deg, #8a5cff 0%, #b084ff 100%); /* mor degrade */
+    background: linear-gradient(135deg, #9b5de5 0%, #ff6b9d 100%);
+    /* #9b5de5 (mor) -> #ff6b9d (accent-primary) */
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -1915,12 +1916,11 @@ button,
     font-family: inherit;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(138, 92, 255, 0.45); /* mor glow */
+    box-shadow: 0 4px 16px rgba(155, 93, 229, 0.45), 0 0 24px rgba(255, 107, 157, 0.25);
     position: relative;
     overflow: hidden;
     margin-top: 12px;
-    /* mevcut davranışın aynı kalması için: JS görünür yapıyorsa dokunma */
-    display: none;
+    display: none; /* JS görünür yapıyor */
 }
 
 .btn-danger::before {
@@ -1937,21 +1937,63 @@ button,
 
 .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(138, 92, 255, 0.55), 0 0 20px rgba(138, 92, 255, 0.25);
+    box-shadow:
+            0 6px 22px rgba(155, 93, 229, 0.55),
+            0 0 28px rgba(255, 107, 157, 0.28);
 }
 
 .btn-danger:hover::before {
     transform: translateX(100%);
 }
 
-.btn-danger:active {
-    transform: translateY(0) scale(0.98);
+.btn-danger:focus-visible {
+    outline: 3px solid rgba(255, 107, 157, 0.35); /* accent-primary ile uyumlu */
+    outline-offset: 2px;
 }
 
 .btn-danger:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none;
 }
 
+
+/* ---- LOCK MODE (is-locked) ---- */
+#demoForm.is-locked {
+    position: relative;
+}
+
+/* Block interacting with all active elements */
+#demoForm.is-locked .select-selected,
+#demoForm.is-locked .dropdown-menu,
+#demoForm.is-locked .project-select-all,
+#demoForm.is-locked .project-item,
+#demoForm.is-locked .mode-option,
+#demoForm.is-locked .step-button,
+#demoForm.is-locked button,
+#demoForm.is-locked input,
+#demoForm.is-locked .btn-primary {
+    pointer-events: none !important;
+}
+
+/* Force Stop ve Create New will be unlocked */
+#demoForm.is-locked #forceStopBtn,
+#demoForm.is-locked #createNewBtn {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
+
+/* Visual feedback for locked mode */
+#demoForm.is-locked .select-selected,
+#demoForm.is-locked .dropdown-menu,
+#demoForm.is-locked .project-select-all,
+#demoForm.is-locked .project-item,
+#demoForm.is-locked .mode-option,
+#demoForm.is-locked .step-button,
+#demoForm.is-locked .btn-primary,
+#demoForm.is-locked input {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
