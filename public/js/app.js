@@ -29,7 +29,7 @@
 const socket = io();
 let isCreating = false;
 let totalLogs = 0;
-let estimatedTotalSteps = 1500; // Approximate number of log messages expected
+let estimatedTotalSteps = 1500;
 let currentMode = 'bulk';
 /** @type {SessionData|null} */
 let sessionData = null;
@@ -38,6 +38,14 @@ let startTime = null;
 let currentJobId = null; // Track current running job
 // Demo lifecycle state: 'idle' | 'running' | 'completed' | 'stopped' | 'failed'
 let demoState = 'idle';
+
+/** Helper: force-collapse any open custom dropdowns */
+function closeAllDropdowns() {
+    document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+    document.querySelectorAll('.select-selected.select-arrow-active').forEach(sel => sel.classList.remove('select-arrow-active'));
+    // Optional aria for accessibility
+    document.querySelectorAll('.select-selected').forEach(sel => sel.setAttribute('aria-expanded', 'false'));
+}
 
 /** @type {Step[]} */
 const STEPS = [
@@ -96,7 +104,7 @@ function initDropdown(selectId, itemsId, inputId) {
 
     // Toggle dropdown
     selectSelected.addEventListener('click', function(e) {
-        if (isCreating) return;
+        if (isCreating) return; // locked: do nothing
         e.stopPropagation();
 
         // Close other dropdowns
@@ -110,13 +118,14 @@ function initDropdown(selectId, itemsId, inputId) {
         // Toggle this dropdown
         selectItems.classList.toggle('show');
         this.classList.toggle('select-arrow-active');
+        this.setAttribute('aria-expanded', selectItems.classList.contains('show') ? 'true' : 'false');
     });
 
     // Select item
     const items = selectItems.getElementsByTagName('div');
     for (let i = 0; i < items.length; i++) {
         items[i].addEventListener('click', function(e) {
-            if (isCreating) return;
+            if (isCreating) return; // locked: do nothing
             e.stopPropagation();
 
             // Remove previous selection
@@ -134,8 +143,9 @@ function initDropdown(selectId, itemsId, inputId) {
             // Close dropdown
             selectItems.classList.remove('show');
             selectSelected.classList.remove('select-arrow-active');
+            selectSelected.setAttribute('aria-expanded', 'false');
 
-            // Load project-management when data group is selected
+            // Load projects when data group is selected
             if (inputId === 'dataGroup') {
                 loadProjects(this.getAttribute('data-value'));
             }
@@ -144,8 +154,8 @@ function initDropdown(selectId, itemsId, inputId) {
 }
 
 /**
- * Load project-management from CSV based on selected data group
- * @param {string} dataGroup - Selected data group
+ * Load projects from CSV based on selected data group
+ * @param {string} dataGroup
  */
 async function loadProjects(dataGroup) {
     const projectSelectionBox = document.getElementById('projectSelectionBox');
@@ -156,10 +166,7 @@ async function loadProjects(dataGroup) {
         return;
     }
 
-    // Show the project selection box
     projectSelectionBox.style.display = 'block';
-
-    // Show loading state
     projectList.innerHTML = '<div class="loading-projects">Loading projects...</div>';
 
     try {
@@ -170,7 +177,6 @@ async function loadProjects(dataGroup) {
             throw new Error('Failed to load projects');
         }
 
-        // Render projects
         renderProjects(data.projects);
     } catch (error) {
         projectList.innerHTML = '<div class="loading-projects">Error loading project-management</div>';
@@ -180,7 +186,7 @@ async function loadProjects(dataGroup) {
 
 /**
  * Render project checkboxes
- * @param {Array} projects - Array of project objects
+ * @param {Array} projects
  */
 function renderProjects(projects) {
     const projectList = document.getElementById('projectList');
@@ -202,7 +208,6 @@ function renderProjects(projects) {
         </div>
     `).join('');
 
-    // Initialize select all checkbox
     const selectAllCheckbox = document.getElementById('selectAllProjects');
     selectAllCheckbox.checked = false;
 
@@ -213,13 +218,11 @@ function renderProjects(projects) {
         updateSelectedProjects();
     });
 
-    // Add ripple effect to select all container
     const selectAllContainer = document.querySelector('.project-select-all');
     if (selectAllContainer) {
         selectAllContainer.addEventListener('mousedown', createRipple);
     }
 
-    // Add change listeners to project checkboxes
     document.querySelectorAll('.project-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             if (isCreating) { this.checked = !this.checked; return; }
@@ -227,21 +230,17 @@ function renderProjects(projects) {
         });
     });
 
-    // Add ripple effect to newly created project items
     document.querySelectorAll('.project-item').forEach(item => {
         item.addEventListener('mousedown', createRipple);
     });
 }
 
-/**
- * Update hidden input with selected project short titles
- */
+/** Update hidden input with selected project short titles */
 function updateSelectedProjects() {
     const selectedCheckboxes = document.querySelectorAll('.project-checkbox:checked');
     const selectedTitles = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-short-title'));
     document.getElementById('selectedProjects').value = JSON.stringify(selectedTitles);
 
-    // Update select all checkbox state
     const allCheckboxes = document.querySelectorAll('.project-checkbox');
     const selectAllCheckbox = document.getElementById('selectAllProjects');
     selectAllCheckbox.checked = allCheckboxes.length > 0 && selectedCheckboxes.length === allCheckboxes.length;
@@ -254,6 +253,7 @@ document.addEventListener('click', function() {
     });
     document.querySelectorAll('.select-selected').forEach(select => {
         select.classList.remove('select-arrow-active');
+        select.setAttribute('aria-expanded', 'false');
     });
 });
 
@@ -367,7 +367,7 @@ async function runStep(stepId) {
         socket.off('step-log', logHandler);
 
         // Re-enable all buttons that are not successful
-        document.querySelectorAll('.step-button').forEach((btn, index) => {
+        document.querySelectorAll('.step-button').forEach((btn) => {
             const stepItem = btn.closest('.step-item');
             if (!stepItem.classList.contains('success')) {
                 btn.disabled = false;
@@ -388,19 +388,14 @@ function createAnimatedHeart(x, y) {
     heart.textContent = '♥';
     heart.style.left = x + 'px';
     heart.style.top = y + 'px';
-
     document.getElementById('mainContainer').appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 2000);
+    setTimeout(() => heart.remove(), 2000);
 }
 
 // Button hover effect
 document.getElementById('createBtn').addEventListener('mouseenter', (e) => {
     const rect = e.target.getBoundingClientRect();
     const heartsCount = 5;
-
     for (let i = 0; i < heartsCount; i++) {
         setTimeout(() => {
             const x = rect.left + Math.random() * rect.width;
@@ -412,31 +407,16 @@ document.getElementById('createBtn').addEventListener('mouseenter', (e) => {
 
 // Animated spell text
 function createAnimatedSpell(x, y) {
-    const spells = [
-        "Lumos",
-        "Nox",
-        "Alohomora",
-        "Expelliarmus",
-        "Expecto Patronum",
-        "Wingardium Leviosa",
-        "Stupefy",
-        "Accio"
-    ];
-
+    const spells = ["Lumos","Nox","Alohomora","Expelliarmus","Expecto Patronum","Wingardium Leviosa","Stupefy","Accio"];
     const animations = ['spellFloat', 'spellFloat2', 'spellFloat3'];
-
     const spell = document.createElement('div');
     spell.className = 'animated-spell';
     spell.textContent = spells[Math.floor(Math.random() * spells.length)];
     spell.style.left = x + 'px';
     spell.style.top = y + 'px';
     spell.style.animationName = animations[Math.floor(Math.random() * animations.length)];
-
     document.getElementById('mainContainer').appendChild(spell);
-
-    setTimeout(() => {
-        spell.remove();
-    }, 2000);
+    setTimeout(() => spell.remove(), 2000);
 }
 
 // Magic wand icon hover effect
@@ -446,15 +426,10 @@ document.addEventListener('DOMContentLoaded', () => {
         magicIcon.addEventListener('mouseenter', (e) => {
             const rect = e.target.getBoundingClientRect();
             const spellsCount = 3;
-
-            // Get center point of the magic icon
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-
             for (let i = 0; i < spellsCount; i++) {
-                setTimeout(() => {
-                    createAnimatedSpell(centerX, centerY);
-                }, i * 150);
+                setTimeout(() => createAnimatedSpell(centerX, centerY), i * 150);
             }
         });
     }
@@ -465,12 +440,10 @@ function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
-
 function clearAllErrors() {
     const container = document.getElementById('validationErrors');
     container.innerHTML = '';
 }
-
 function showValidationError(message) {
     const container = document.getElementById('validationErrors');
     const errorDiv = document.createElement('div');
@@ -483,7 +456,6 @@ function showValidationError(message) {
 document.getElementById('passwordToggle').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
     const icon = this.querySelector('i');
-
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         icon.classList.remove('fa-eye');
@@ -494,11 +466,9 @@ document.getElementById('passwordToggle').addEventListener('click', function() {
         icon.classList.add('fa-eye');
     }
 });
-
 document.getElementById('passwordConfirmToggle').addEventListener('click', function() {
     const passwordConfirmInput = document.getElementById('passwordConfirm');
     const icon = this.querySelector('i');
-
     if (passwordConfirmInput.type === 'password') {
         passwordConfirmInput.type = 'text';
         icon.classList.remove('fa-eye');
@@ -515,8 +485,6 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     if (isCreating) return;
 
     clearAllErrors();
-
-    // Get current mode
     currentMode = document.querySelector('input[name="mode"]:checked').value;
 
     const companyName = document.getElementById('companyName').value.trim();
@@ -529,66 +497,27 @@ document.getElementById('createBtn').addEventListener('click', async () => {
 
     let hasError = false;
 
-    // Validation - all fields
-    if (!companyName) {
-        showValidationError('Company name is required');
-        hasError = true;
-    }
+    if (!companyName) { showValidationError('Company name is required'); hasError = true; }
+    if (!email) { showValidationError('Email is required'); hasError = true; }
+    else if (!validateEmail(email)) { showValidationError('Invalid email format'); hasError = true; }
+    else if (!email.endsWith('@yopmail.com')) { showValidationError('Email must be a yopmail.com address'); hasError = true; }
 
-    if (!email) {
-        showValidationError('Email is required');
-        hasError = true;
-    } else if (!validateEmail(email)) {
-        showValidationError('Invalid email format');
-        hasError = true;
-    } else if (!email.endsWith('@yopmail.com')) {
-        showValidationError('Email must be a yopmail.com address');
-        hasError = true;
-    }
+    if (!password) { showValidationError('Password is required'); hasError = true; }
+    else if (password.length < 8) { showValidationError('Password must be at least 8 characters'); hasError = true; }
 
-    if (!password) {
-        showValidationError('Password is required');
-        hasError = true;
-    } else if (password.length < 8) {
-        showValidationError('Password must be at least 8 characters');
-        hasError = true;
-    }
+    if (!passwordConfirm) { showValidationError('Password confirmation is required'); hasError = true; }
+    else if (password !== passwordConfirm) { showValidationError('Passwords do not match'); hasError = true; }
 
-    if (!passwordConfirm) {
-        showValidationError('Password confirmation is required');
-        hasError = true;
-    } else if (password !== passwordConfirm) {
-        showValidationError('Passwords do not match');
-        hasError = true;
-    }
-
-    if (!dataGroup) {
-        showValidationError('Data selection is required');
-        hasError = true;
-    }
-
-    if (!emailDomain) {
-        showValidationError('Email domain is required');
-        hasError = true;
-    }
-
-    if (!environment) {
-        showValidationError('Environment selection is required');
-        hasError = true;
-    }
+    if (!dataGroup) { showValidationError('Data selection is required'); hasError = true; }
+    if (!emailDomain) { showValidationError('Email domain is required'); hasError = true; }
+    if (!environment) { showValidationError('Environment selection is required'); hasError = true; }
 
     const selectedProjectsValue = document.getElementById('selectedProjects').value;
     const selectedProjects = selectedProjectsValue ? JSON.parse(selectedProjectsValue) : [];
-    if (selectedProjects.length === 0) {
-        showValidationError('Please select at least one project');
-        hasError = true;
-    }
+    if (selectedProjects.length === 0) { showValidationError('Please select at least one project'); hasError = true; }
 
-    if (hasError) {
-        return;
-    }
+    if (hasError) return;
 
-    // For step-by-step mode, show the steps and logs panel
     if (currentMode === 'step') {
         document.getElementById('stepByStepContainer').style.display = 'flex';
         document.getElementById('stepLogContent').innerHTML = '';
@@ -596,7 +525,6 @@ document.getElementById('createBtn').addEventListener('click', async () => {
         return;
     }
 
-    // For bulk mode, show confirmation modal
     document.getElementById('confirmationOverlay').classList.add('show');
 });
 
@@ -621,6 +549,8 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     demoState = 'running';
     isCreating = true;
 
+    // Immediately collapse any open dropdowns, then lock inputs
+    closeAllDropdowns();
     disableFormInputs();
     showForceStopButton();
     updateCreateNewButton();
@@ -635,13 +565,9 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     document.getElementById('timerContainer').style.display = 'flex';
     document.getElementById('progressFill').style.width = '0%';
 
-    // Start timer
     startTimer();
-
-    // Show dancing girl
     document.getElementById('animationCharacter').classList.add('show');
 
-    // Notify server that demo creation started
     socket.emit('demo-started');
 
     try {
@@ -667,10 +593,8 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
             throw new Error(data.error || 'Failed to start demo creation');
         }
 
-        // Store job ID for force stop
         currentJobId = data.jobId;
-        addLog('info', `📋 Job queued with ID: ${data.jobId}`);
-
+        addLog('info', `Job queued with ID: ${data.jobId}`);
     } catch (error) {
         addLog('error', `${error.message}`);
         resetButton();
@@ -689,7 +613,7 @@ socket.on('log', (data) => {
 });
 
 socket.on('complete', () => {
-    addLog('success', 'Completed!');
+    addLog('success', 'Completed');
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('animationCharacter').classList.remove('show');
     stopTimer();
@@ -700,7 +624,6 @@ socket.on('complete', () => {
     currentJobId = null;
 
     updateCreateNewButton();
-
     socket.emit('demo-completed');
 });
 
@@ -715,16 +638,15 @@ socket.on('error', (data) => {
     currentJobId = null;
 
     updateCreateNewButton();
-
     socket.emit('demo-completed');
 });
 
 socket.on('demo-complete', (data) => {
     if (data.success) {
-        addLog('success', '✨ Demo creation completed successfully!');
+        addLog('success', 'Completed');
         demoState = 'completed';
     } else {
-        addLog('error', `❌ Demo creation failed: ${data.error || 'Unknown error'}`);
+        addLog('error', `Failed: ${data.error || 'Unknown error'}`);
         demoState = 'failed';
     }
 
@@ -736,28 +658,22 @@ socket.on('demo-complete', (data) => {
     currentJobId = null;
 
     updateCreateNewButton();
-
     socket.emit('demo-completed');
 });
 
 // Track if user has manually scrolled up
 let isUserScrolledUp = false;
 
-// Detect when user scrolls in log content
 document.addEventListener('DOMContentLoaded', () => {
     const logContent = document.getElementById('logContent');
     if (logContent) {
         logContent.addEventListener('scroll', () => {
-            // Check if user is at the bottom (with small threshold for rounding)
             const isAtBottom = logContent.scrollHeight - logContent.scrollTop - logContent.clientHeight < 10;
             isUserScrolledUp = !isAtBottom;
         });
     }
 
-    // Add ripple effect to all clickable elements
     addRippleEffect();
-
-    // İlk render'da buton state'ini kur
     updateCreateNewButton();
 });
 
@@ -776,11 +692,7 @@ function createRipple(event) {
     ripple.style.top = y + 'px';
 
     button.appendChild(ripple);
-
-    // Remove ripple after animation
-    setTimeout(() => {
-        ripple.remove();
-    }, 600);
+    setTimeout(() => ripple.remove(), 600);
 }
 
 function addRippleEffect() {
@@ -810,7 +722,6 @@ function addLog(type, message) {
     entry.textContent = message;
     logContent.appendChild(entry);
 
-    // Only auto-scroll if user hasn't manually scrolled up
     if (!isUserScrolledUp) {
         logContent.scrollTop = logContent.scrollHeight;
     }
@@ -819,12 +730,7 @@ function addLog(type, message) {
 function updateProgress() {
     totalLogs++;
     const progressFill = document.getElementById('progressFill');
-
-    // Calculate progress based on actual logs received
-    // Cap at 95% until completion
     const progressPercent = Math.min((totalLogs / estimatedTotalSteps) * 100, 95);
-
-    // Smooth transition
     progressFill.style.width = progressPercent + '%';
 }
 
@@ -832,7 +738,7 @@ function resetButton() {
     isCreating = false;
     const btn = document.getElementById('createBtn');
     btn.disabled = false;
-    btn.innerHTML = '<span class="button-text"><i class="fa-solid fa-sparkles"></i> CREATE DEMO <i class="fa-solid fa-sparkles"></i></span>';
+    btn.innerHTML = 'CREATE DEMO';
 }
 
 function startTimer() {
@@ -860,21 +766,19 @@ function disableFormInputs() {
     const form = document.getElementById('demoForm');
     if (form) form.classList.add('is-locked');
 
+    // Collapse dropdowns visually
+    closeAllDropdowns();
+
     const controls = document.querySelectorAll('#demoForm input, #demoForm button, .select-selected');
     controls.forEach(el => {
         if (el.id === 'forceStopBtn' || el.id === 'createNewBtn') return;
-
         if ('disabled' in el) el.disabled = true;
-
         if (el.classList && el.classList.contains('select-selected')) {
             el.setAttribute('aria-disabled', 'true');
         }
         el.style.opacity = '0.5';
         el.style.cursor = 'not-allowed';
     });
-
-    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
-    document.querySelectorAll('.select-selected.select-arrow-active').forEach(s => s.classList.remove('select-arrow-active'));
 }
 
 function enableFormInputs() {
@@ -902,7 +806,6 @@ function showForceStopButton() {
         stopBtn.innerHTML = '<i class="fa-solid fa-stop"></i> FORCE STOP';
         stopBtn.onclick = forceStopJob;
 
-        // Insert after the create button
         const createBtn = document.getElementById('createBtn');
         createBtn.parentNode.insertBefore(stopBtn, createBtn.nextSibling);
     }
@@ -911,9 +814,7 @@ function showForceStopButton() {
 
 function hideForceStopButton() {
     const stopBtn = document.getElementById('forceStopBtn');
-    if (stopBtn) {
-        stopBtn.style.display = 'none';
-    }
+    if (stopBtn) stopBtn.style.display = 'none';
 }
 
 async function forceStopJob() {
@@ -927,14 +828,11 @@ async function forceStopJob() {
     }
 
     try {
-        const response = await fetch(`/api/job/${currentJobId}/stop`, {
-            method: 'POST'
-        });
-
+        const response = await fetch(`/api/job/${currentJobId}/stop`, { method: 'POST' });
         const data = await response.json();
 
         if (data.success) {
-            addLog('warning', '⚠️ Job stopped by user');
+            addLog('warning', 'Job stopped by user');
             demoState = 'stopped';
         } else {
             addLog('error', `Failed to stop job: ${data.error}`);
@@ -958,7 +856,6 @@ async function forceStopJob() {
 function updateCreateNewButton() {
     const createBtn = document.getElementById('createBtn');
     const createNewBtn = document.getElementById('createNewBtn');
-
     if (!createBtn || !createNewBtn) return;
 
     createNewBtn.style.display = 'none';
@@ -971,7 +868,6 @@ function updateCreateNewButton() {
         createNewBtn.style.opacity = '';
         createNewBtn.style.cursor = '';
     } else {
-        // idle, running, failed
         createBtn.style.display = 'block';
         createNewBtn.style.display = 'none';
     }
@@ -979,29 +875,21 @@ function updateCreateNewButton() {
 
 // Reset everything for new demo creation
 function resetForNewDemo() {
-    // State'i sıfırla
     demoState = 'idle';
     isCreating = false;
     currentJobId = null;
 
-    // Formu aç
     enableFormInputs();
 
-    // Clear logs
     document.getElementById('logContent').innerHTML = '';
-
-    // Hide log container, progress bar, timer
     document.getElementById('logContainer').style.display = 'none';
     document.getElementById('progressBar').style.display = 'none';
     document.getElementById('timerContainer').style.display = 'none';
 
-    // Reset progress
     document.getElementById('progressFill').style.width = '0%';
     totalLogs = 0;
 
     updateCreateNewButton();
-
-    // Reset button state
     resetButton();
 }
 
