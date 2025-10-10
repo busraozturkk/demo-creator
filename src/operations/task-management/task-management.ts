@@ -1350,7 +1350,13 @@ export class TaskManagementOperation extends BaseOperation {
             device_browser_name: 'Firefox'
         };
 
-        await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
+        console.log(`    [DEBUG] Creating timer for user ${userId} on ${dayISO}`);
+        console.log(`    [DEBUG] Milestone ID: ${pctMilestoneId}, Category ID: ${timerCategoryId || 'none'}`);
+        console.log(`    [DEBUG] Activities: ${JSON.stringify(activities)}`);
+
+        const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
+
+        console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 200)}`);
         console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → milestone#${pctMilestoneId}`);
     }
 
