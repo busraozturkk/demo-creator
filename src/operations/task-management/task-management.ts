@@ -1317,7 +1317,7 @@ export class TaskManagementOperation extends BaseOperation {
             dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul'
         } = options;
 
-        // drift olmaması için finished_at’i aynı gün içinde elde et
+        // drift olmaması için finished_at'i aynı gün içinde elde et
         const started_at = `${dayISO} 08:00:00`;
         const totalMins = Math.round(hours * 60);
         const hh = 8 + Math.floor(totalMins / 60);
@@ -1326,11 +1326,16 @@ export class TaskManagementOperation extends BaseOperation {
         const mmStr = String(mm).padStart(2, '0');
         const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
 
-        // timesheet’te milestone görünmesi için activity listesinde PctMilestone gönderiyoruz
-        const activities: any[] = [{ id: pctMilestoneId, type: 'App\\Models\\PctMilestone' }];
+        // activities array'i doğru sıra ile oluştur
+        const activities: any[] = [];
+
+        // Timer category önce gelirse
         if (typeof timerCategoryId === 'number') {
-            activities.unshift({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
+            activities.push({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
         }
+
+        // PCT Milestone sonra
+        activities.push({ id: pctMilestoneId, type: 'App\\Models\\PctMilestone' });
 
         const payload = {
             started_at,
