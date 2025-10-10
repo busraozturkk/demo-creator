@@ -268,7 +268,7 @@ export async function runSingleStep(stepId: string, session: any) {
             if (fs.existsSync(employeesPath)) {
                 const { EmployeesOperation } = await import('../operations/hr/employees/employees');
                 session.employeesOp = new EmployeesOperation(session.hrApiClient, session.hrReferenceDataOp, session.officesOp, session.apiClient);
-                await session.employeesOp.createEmployees(employeesPath, session.emailDomain);
+                await session.employeesOp.createEmployees(employeesPath, session.emailDomain, { ownerEmail: loginEmail });
                 console.log('Employees created successfully');
             } else {
                 console.log('No employees CSV found, skipping');

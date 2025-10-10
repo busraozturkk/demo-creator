@@ -78,6 +78,7 @@ export class TaskManagementOperation extends BaseOperation {
     private taskTypeIds: number[] = [];
     private priorityIds: number[] = [];
     private allowedActivityTypes: string[] = [];
+    private timerCategoryIds: number[] = []; // NEW: keep created timer category ids
 
     constructor(authService: AuthService) {
         super();
@@ -116,7 +117,6 @@ export class TaskManagementOperation extends BaseOperation {
         }
     }
 
-
     private saveFolderMappings(): void {
         this.saveToCache('./data/cache/task-folder-mappings.json', this.folderMappings);
         console.log(`Saved ${this.folderMappings.length} folder mappings to cache`);
@@ -127,15 +127,85 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`Saved ${this.boardMappings.length} board mappings to cache\n`);
     }
 
+    // ---- NEW date/hour helpers ----
+    private *iterateBusinessDaysDesc(fromISO: string, daysBack: number): Generator<string> {
+        let d = new Date(fromISO + 'T00:00:00');
+        let left = daysBack;
+        while (left > 0) {
+            const dow = d.getDay(); // 0 Sun, 6 Sat
+            if (dow !== 0 && dow !== 6) {
+                yield d.toISOString().slice(0,10);
+                left--;
+            }
+            d.setDate(d.getDate() - 1);
+        }
+    }
+
+    private businessDaysBetweenInclusive(startISO: string, endISO: string): string[] {
+        const out: string[] = [];
+        const s = new Date(startISO + 'T00:00:00');
+        const e = new Date(endISO   + 'T00:00:00');
+        for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+            const dow = d.getDay();
+            if (dow !== 0 && dow !== 6) out.push(d.toISOString().slice(0,10));
+        }
+        return out;
+    }
+
+    private splitHoursRandom(totalHours: number, bucketCount: number): number[] {
+        if (bucketCount <= 0) return [];
+        if (bucketCount === 1) return [totalHours];
+        const weights = Array.from({length: bucketCount}, () => Math.random() + 0.01);
+        const sum = weights.reduce((a,b)=>a+b,0);
+        return weights.map(w => (w/sum)*totalHours);
+    }
+
+    // ---- NEW assignment & status checks for time entries ----
+    private async isUserAssignedToAnyTaskOnBoard(boardId: number, userId: number): Promise<boolean> {
+        try {
+            // fast path: if API supports assignee filter
+            const r: any = await this.taskMgmtApiClient.executeRequest(
+                'GET', '/api/tasks', { 'filter[board_id]': String(boardId), 'filter[assignee_id]': String(userId) }
+            );
+            const arr = r?.data || r || [];
+            if (Array.isArray(arr)) return arr.length > 0;
+        } catch { /* fall back */ }
+
+        try {
+            const all: any = await this.taskMgmtApiClient.executeRequest(
+                'GET', '/api/tasks', { 'filter[board_id]': String(boardId), 'include': 'assignees' }
+            );
+            const tasks = all?.data || all || [];
+            return tasks.some((t: any) =>
+                (t.assignees || t.responsibles || []).some((u: any) => Number(u?.id || u?.user_id) === userId)
+            );
+        } catch (e:any) {
+            console.log(`  ! assignment check failed for board ${boardId}: ${e?.message || e}`);
+            return false;
+        }
+    }
+
+    private async boardHasActiveOrDoneTasks(boardId: number): Promise<boolean> {
+        try {
+            const r: any = await this.taskMgmtApiClient.executeRequest(
+                'GET', '/api/tasks', { 'filter[board_id]': String(boardId), 'include': 'status' }
+            );
+            const tasks = r?.data || r || [];
+            if (!Array.isArray(tasks)) return !!tasks?.status && ['active','completed'].includes(tasks.status?.type);
+            return tasks.some((t: any) => {
+                const st = t?.status || t?.current_status;
+                const type = st?.type || st?.status_type;
+                return type === 'active' || type === 'completed';
+            });
+        } catch (e:any) {
+            console.log(`  ! status scan failed for board ${boardId}: ${e?.message || e}`);
+            return false;
+        }
+    }
+
     // --------------------------------------------------------------------------
     // Retry & paging helpers
     // --------------------------------------------------------------------------
-
-    /**
-     * Fetch boards with paging and retry until a readiness condition is met.
-     * - expectedMilestoneCount: how many milestone boards we expect (from cache)
-     * - readinessRatio: consider ready when we see ≥ expected * ratio
-     */
     private async fetchBoardsWithRetry(options?: {
         retries?: number;
         baseDelayMs?: number;
@@ -204,10 +274,6 @@ export class TaskManagementOperation extends BaseOperation {
         throw new Error(`Boards not ready after ${retries} attempts (not enough Milestone boards visible)`);
     }
 
-    /**
-     * Fetch statuses for a board with a few retries (useful right after creation).
-     * IMPORTANT: API requires filter[board_id].
-     */
     private async fetchStatusesWithRetry(boardId: number, retries = 5, delayMs = 800) {
         let lastError: any = null;
         for (let attempt = 1; attempt <= retries; attempt++) {
@@ -219,10 +285,8 @@ export class TaskManagementOperation extends BaseOperation {
                 );
                 const statuses = res?.data || res || [];
                 if (Array.isArray(statuses)) {
-                    // If API returns empty array, keep retrying; if non-empty, return.
                     if (statuses.length > 0) return statuses;
                 } else if (statuses) {
-                    // Non-array single object fallback
                     return [statuses];
                 }
             } catch (err: any) {
@@ -239,16 +303,9 @@ export class TaskManagementOperation extends BaseOperation {
         return [];
     }
 
-    /**
-     * Ensure our 3 canonical statuses exist on the board (UPSERT only).
-     * - Do NOT delete any existing statuses.
-     * - Create missing ones.
-     * - Update type/color/position/timer_action for ours.
-     */
     private async ensureThreeStatuses(boardId: number): Promise<void> {
         console.log(`  ensuring statuses for board ${boardId}`);
 
-        // Read current list (retry to tolerate eventual consistency)
         let existing: any[] = [];
         try {
             existing = await this.fetchStatusesWithRetry(boardId, 6, 900);
@@ -258,7 +315,6 @@ export class TaskManagementOperation extends BaseOperation {
             existing = [];
         }
 
-        // Index existing by title and by type (normalized)
         const byTitle = new Map<string, any>();
         const byType = new Map<string, any>();
         for (const s of existing) {
@@ -266,7 +322,6 @@ export class TaskManagementOperation extends BaseOperation {
             if (s?.type)  byType.set(s.type, s);
         }
 
-        // Create missing desired statuses
         for (const desired of TASK_STATUSES) {
             const normTitle = this.normalizeTitle(desired.title);
             const match = byTitle.get(normTitle) || byType.get(desired.type);
@@ -277,7 +332,7 @@ export class TaskManagementOperation extends BaseOperation {
                         '/api/statuses',
                         {
                             title: desired.title,
-                            position: desired.position, // 0-based
+                            position: desired.position,
                             board_id: boardId,
                             color: desired.color,
                             type: desired.type,
@@ -296,7 +351,6 @@ export class TaskManagementOperation extends BaseOperation {
             }
         }
 
-        // Update our 3 statuses (type/color/position) to canonical values
         for (const desired of TASK_STATUSES) {
             const normTitle = this.normalizeTitle(desired.title);
             const match = byTitle.get(normTitle) || byType.get(desired.type);
@@ -314,7 +368,7 @@ export class TaskManagementOperation extends BaseOperation {
                         'PUT',
                         `/api/statuses/${match.id}`,
                         {
-                            title: desired.title, // keep consistent
+                            title: desired.title,
                             position: desired.position,
                             color: desired.color,
                             type: desired.type,
@@ -328,7 +382,6 @@ export class TaskManagementOperation extends BaseOperation {
             }
         }
 
-        // Final verify (best-effort)
         try {
             await this.sleep(400);
             const finalList = await this.fetchStatusesWithRetry(boardId, 3, 600);
@@ -343,7 +396,6 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // User Consent
     // --------------------------------------------------------------------------
-
     async approveUserConsent(): Promise<void> {
         console.log('\n=== Approving Task Management User Consent ===\n');
 
@@ -362,7 +414,6 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // Reference data
     // --------------------------------------------------------------------------
-
     async createTaskTypes(): Promise<void> {
         console.log('\n=== Creating Task Types ===\n');
 
@@ -395,11 +446,9 @@ export class TaskManagementOperation extends BaseOperation {
         let created = 0;
         let errors = 0;
 
-        // All board IDs (after mapping)
         const boardIds: number[] = this.boardMappings.map(b => b.id);
         console.log(`Will assign timer categories to ${boardIds.length} boards\n`);
 
-        // All roles
         const roleIds: number[] = roleMappings ? roleMappings.map(r => parseInt(r.id)) : [];
         console.log(`Will assign timer categories to ${roleIds.length} roles\n`);
 
@@ -421,6 +470,7 @@ export class TaskManagementOperation extends BaseOperation {
                     payload
                 );
                 const categoryId = response.data?.id || response.id;
+                if (categoryId) this.timerCategoryIds.push(categoryId); // NEW: store ids
                 console.log(`  created: ${category.title} (id: ${categoryId})`);
                 created++;
             } catch (error: any) {
@@ -489,11 +539,6 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // Core: Boards & Statuses (no folder creation/reassignment)
     // --------------------------------------------------------------------------
-
-    /**
-     * Fetch milestone boards, keep only one per milestone (delete duplicates or project-name boards),
-     * ensure statuses (upsert), and cache mappings.
-     */
     async setupTaskManagementForMilestones(projectMappings: ProjectMapping[]): Promise<void> {
         console.log('\n=== Setting up Task Management for Milestones ===\n');
 
@@ -609,17 +654,10 @@ export class TaskManagementOperation extends BaseOperation {
         this.saveBoardMappings();
     }
 
-    /**
-     * Fetch & cache milestone boards only (no folder creation), keep one per milestone,
-     * ensure statuses (upsert).
-     */
     async fetchAndCacheTaskManagementStructure(projectMappings: ProjectMapping[]): Promise<void> {
         console.log('\n=== Fetching & Caching Task Management Structure (No folder creation) ===\n');
 
-        if (!projectMappings || projectMappings.length === 0) {
-            console.log('No projects found. Skipping.\n');
-            return;
-        }
+        if (!projectMappings || projectMappings.length === 0) return;
 
         const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
         console.log(`Milestone mappings: ${milestoneMappings.length}\n`);
@@ -641,7 +679,6 @@ export class TaskManagementOperation extends BaseOperation {
             const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
             console.log(`Total boards: ${boards.length} | Milestone boards: ${milestoneBoards.length}\n`);
 
-            // Map boards with duplicate/project-title rules
             const mappedMilestones = new Set<string>();
 
             for (const board of milestoneBoards) {
@@ -657,7 +694,6 @@ export class TaskManagementOperation extends BaseOperation {
                     continue;
                 }
 
-                // Delete board if it looks like project name
                 const proj = projectMappings.find(p => p.short_title === matchingMilestone.project_short_title);
                 const projTitleNorm = this.normalizeTitle(proj?.title);
                 const projShortNorm = this.normalizeTitle(proj?.short_title);
@@ -686,7 +722,6 @@ export class TaskManagementOperation extends BaseOperation {
                 totalBoards++;
             }
 
-            // Wait a bit then upsert statuses
             console.log(`\nWaiting 2 seconds for boards to be fully ready...\n`);
             await this.sleep(2000);
 
@@ -717,7 +752,6 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // CSV + utils
     // --------------------------------------------------------------------------
-
     private loadTasksFromCSV(csvPath?: string): TaskData[] {
         const defaultPath = './data/sff-data-en/tasks.csv';
         const filePath = csvPath || defaultPath;
@@ -731,7 +765,6 @@ export class TaskManagementOperation extends BaseOperation {
         const lines = content.split('\n').filter(line => line.trim());
         const tasks: TaskData[] = [];
 
-        // Skip header
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i];
             const fields: string[] = [];
@@ -777,10 +810,6 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // Tasks (work-package and milestone flows)
     // --------------------------------------------------------------------------
-
-    /**
-     * Create tasks linked to work packages. Assumes milestone boards exist and are status-ready.
-     */
     async createTasksForWorkPackages(csvPath?: string): Promise<void> {
         console.log('\n=== Creating Tasks for Work Packages ===\n');
 
@@ -826,7 +855,6 @@ export class TaskManagementOperation extends BaseOperation {
                     continue;
                 }
 
-                // Fetch and cache all statuses for this board once
                 let statuses = boardStatusCache.get(board.id);
                 if (!statuses) {
                     try {
@@ -838,7 +866,6 @@ export class TaskManagementOperation extends BaseOperation {
                     }
                 }
 
-                // Ensure TO DO status id for this board
                 let statusId = boardTodoStatus.get(board.id);
                 if (!statusId) {
                     const todo = statuses.find((s: any) => s.title === 'TO DO' || s.type === 'todo');
@@ -884,7 +911,6 @@ export class TaskManagementOperation extends BaseOperation {
 
                             await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, updatePayload);
 
-                            // Decide target status based on dates, then move if needed
                             const now = new Date();
                             const dd  = new Date(deadline);
                             const cd  = new Date(createdAt);
@@ -901,7 +927,6 @@ export class TaskManagementOperation extends BaseOperation {
                             }
 
                             if (targetType !== 'todo') {
-                                // Use cached statuses instead of fetching again
                                 const target = statuses.find((s: any) => s.type === targetType);
                                 if (target) {
                                     const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
@@ -984,10 +1009,6 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`\n\n=== Task Creation Summary ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
     }
 
-    /**
-     * Create tasks directly in milestone boards (no work-packages).
-     * Creates 10 generic tasks per milestone instead of using CSV data.
-     */
     async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[]): Promise<void> {
         console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
 
@@ -1036,16 +1057,13 @@ export class TaskManagementOperation extends BaseOperation {
         const boardTodoStatus = new Map<number, number>();
         const boardStatusCache = new Map<number, any[]>(); // Cache all statuses per board
 
-        // Load board mappings from cache (already set up)
         const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
         this.boardMappings = cachedBoards;
         console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
 
-        // Load partnership employees for assignment
         const partnershipEmployees = this.loadFromCache<any[]>('./data/cache/user-partnership-pms.json') || [];
         console.log(`Loaded ${partnershipEmployees.length} partnership employee assignments\n`);
 
-        // Unique employees by user_id
         const uniqueEmployees = Array.from(new Map(partnershipEmployees.map(e => [e.user_id, e])).values());
         console.log(`Found ${uniqueEmployees.length} unique employees to assign to tasks\n`);
 
@@ -1062,7 +1080,6 @@ export class TaskManagementOperation extends BaseOperation {
                 }
                 console.log(`  Found board ID: ${board.id} (${board.name})`);
 
-                // Fetch and cache all statuses for this board once
                 let statuses = boardStatusCache.get(board.id);
                 if (!statuses) {
                     try {
@@ -1099,7 +1116,6 @@ export class TaskManagementOperation extends BaseOperation {
                         );
                         const taskId = createRes?.data?.id || createRes?.id;
 
-                        // Small delay to avoid rate limiting
                         await this.sleep(20);
 
                         try {
@@ -1137,10 +1153,8 @@ export class TaskManagementOperation extends BaseOperation {
                             }
 
                             if (targetType !== 'todo') {
-                                // Use cached statuses instead of fetching again
                                 const target = statuses.find((s: any) => s.type === targetType);
                                 if (target) {
-                                    // Prepare assignees and watchers from partnership employees
                                     const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
                                     for (const emp of uniqueEmployees) {
                                         const e = {
@@ -1222,5 +1236,146 @@ export class TaskManagementOperation extends BaseOperation {
         }
 
         console.log(`\n\n=== Task Creation Summary (Milestones) ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
+    }
+
+    // --------------------------------------------------------------------------
+    // NEW: Timers (owner user, only boards with ACTIVE/DONE tasks)
+    // --------------------------------------------------------------------------
+    private async postTimerEntry(options: {
+        dayISO: string;
+        hours: number;
+        userId: number;
+        pctMilestoneId: number;
+        timerCategoryId?: number;
+        tz?: string;
+    }): Promise<void> {
+        const {
+            dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul'
+        } = options;
+
+        const started_at = `${dayISO} 08:00:00`;
+        const end = new Date(`${dayISO}T08:00:00`);
+        end.setMinutes(end.getMinutes() + Math.round(hours * 60));
+        const finished_at = `${end.toISOString().slice(0,10)} ${end.toTimeString().slice(0,8)}`;
+
+        const activities: any[] = [{ id: pctMilestoneId, type: 'App\\Models\\PctMilestone' }];
+        if (typeof timerCategoryId === 'number') {
+            activities.unshift({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
+        }
+
+        const payload = {
+            started_at,
+            finished_at,
+            startTimer: false,
+            activities,
+            user_id: userId,
+            device_type: 'desktop',
+            device_name: 'Apple Mac',
+            device_os: 'Mac',
+            device_os_version: '10.15',
+            device_browser_name: 'Firefox'
+        };
+
+        await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
+        console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → milestone#${pctMilestoneId}`);
+    }
+
+    /**
+     * Örnek çağrı:
+     * await addOwnerTrackedTime({ userId: 1009550, totalHours: 40, daysBack: 7, partnerId: '11956', timezone: 'Europe/Istanbul' })
+     * - Sadece: (a) owner assign olduğu ve (b) board’ında en az 1 ACTIVE/DONE task bulunan milestone’lara timer ekler.
+     */
+    async addOwnerTrackedTime(options: {
+        userId: number;
+        totalHours: number;        // e.g. 40
+        daysBack: number;          // e.g. 7 (bugün dahil geriye)
+        timezone?: string;         // default Europe/Istanbul
+        partnerId?: string;        // header için
+        defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
+    }): Promise<void> {
+        const {
+            userId,
+            totalHours,
+            daysBack,
+            timezone = 'Europe/Istanbul',
+            partnerId,
+            defaultTimerCategoryIndex = 0
+        } = options;
+
+        if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+
+        const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
+        const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
+        if (cachedBoards.length === 0 || milestoneMappings.length === 0) {
+            console.log('No boards or milestones cached; aborting addOwnerTrackedTime.');
+            return;
+        }
+        this.boardMappings = cachedBoards;
+
+        const timerCategoryId = this.timerCategoryIds?.[defaultTimerCategoryIndex];
+
+        const todayISO = new Date().toISOString().slice(0,10);
+        const days = Array.from(this.iterateBusinessDaysDesc(todayISO, daysBack)).reverse();
+        if (days.length === 0) {
+            console.log('No business days in selected window.');
+            return;
+        }
+        const dailyTarget = totalHours / days.length;
+
+        // Gün => (milestoneId, boardId) listesi
+        const dayToMilestones = new Map<string, Array<{ pctMilestoneId: number; boardId: number }>>();
+
+        for (const ms of milestoneMappings) {
+            const msDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
+            const msDaysInWindow = msDays.filter(d => days.includes(d));
+            if (msDaysInWindow.length === 0) continue;
+
+            const board = this.boardMappings.find(b =>
+                b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title
+            );
+            if (!board) continue;
+
+            // (a) owner assign mı?
+            const assigned = await this.isUserAssignedToAnyTaskOnBoard(board.id, userId);
+            if (!assigned) continue;
+
+            // (b) board’ta ACTIVE/DONE task var mı?
+            const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
+            if (!hasActiveOrDone) {
+                console.log(`  ~ skip timers: board ${board.id} has no ACTIVE/DONE tasks`);
+                continue;
+            }
+
+            for (const d of msDaysInWindow) {
+                const arr = dayToMilestones.get(d) || [];
+                arr.push({ pctMilestoneId: ms.task_id, boardId: board.id });
+                dayToMilestones.set(d, arr);
+            }
+        }
+
+        for (const d of days) {
+            const msList = dayToMilestones.get(d) || [];
+            if (msList.length === 0) continue;
+
+            const parts = this.splitHoursRandom(dailyTarget, msList.length);
+            for (let i = 0; i < msList.length; i++) {
+                const hours = parts[i];
+                if (hours <= 0.01) continue;
+                try {
+                    await this.postTimerEntry({
+                        dayISO: d,
+                        hours,
+                        userId,
+                        pctMilestoneId: msList[i].pctMilestoneId,
+                        timerCategoryId,
+                        tz: timezone
+                    });
+                } catch (e:any) {
+                    console.log(`  ! timer failed for day ${d} ms#${msList[i].pctMilestoneId}: ${e?.message || e}`);
+                }
+            }
+        }
+
+        console.log(`Tracked time done. Total ≈ ${totalHours}h across ${days.length} business days.`);
     }
 }

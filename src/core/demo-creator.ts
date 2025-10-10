@@ -262,7 +262,7 @@ export async function runDemoCreation(
             try {
                 const { EmployeesOperation } = await import('../operations/hr/employees/employees');
                 const employeesOp = new EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
-                await employeesOp.createEmployees(employeesPath, emailDomain);
+                await employeesOp.createEmployees(employeesPath, emailDomain, { ownerEmail: loginEmail });
                 employeeMappings = employeesOp.getMappings();
                 socket.emit('log', { type: 'success', message: `Employees created: ${employeeMappings?.length || 0} employees\n` });
             } catch (error: any) {
@@ -553,6 +553,19 @@ export async function runDemoCreation(
                                                                 if (fs.existsSync(tasksPath)) {
                                                                     await taskMgmtOp.createTasksForWorkPackages(tasksPath);
                                                                     socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                                    try {
+                                                                        await taskMgmtOp.addOwnerTrackedTime({
+                                                                            userId: authService.getUserId(),          // owner user
+                                                                            totalHours: 40,                           // örnek: 1 hafta = 5 iş günü → günlük 8h
+                                                                            daysBack: 7,                              // “bugünden geriye” pencere
+                                                                            timezone: 'Europe/Istanbul',
+                                                                            partnerId: organizationId.toString(),     // Partner header
+                                                                            defaultTimerCategoryIndex: 0              // Development
+                                                                        });
+                                                                        socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
+                                                                    } catch (e: any) {
+                                                                        socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                                    }
                                                                 } else {
                                                                     socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                                 }
@@ -662,6 +675,19 @@ export async function runDemoCreation(
                                                     if (fs.existsSync(tasksPath)) {
                                                         await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment);
                                                         socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                        try {
+                                                            await taskMgmtOp.addOwnerTrackedTime({
+                                                                userId: authService.getUserId(),
+                                                                totalHours: 40,
+                                                                daysBack: 7,
+                                                                timezone: 'Europe/Istanbul',
+                                                                partnerId: organizationId.toString(),
+                                                                defaultTimerCategoryIndex: 0
+                                                            });
+                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
+                                                        } catch (e: any) {
+                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                        }
                                                     } else {
                                                         socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                     }

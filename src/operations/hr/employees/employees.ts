@@ -101,7 +101,11 @@ export class EmployeesOperation extends BaseOperation {
     return detailWithIds as EmployeeDetailWithIds;
   }
 
-    async createEmployees(csvPath: string, emailDomain: string): Promise<EmployeeMapping[]> {
+    async createEmployees(
+        csvPath: string,
+        emailDomain: string,
+        options?: { ownerEmail?: string }   // <— NEW (optional)
+    ): Promise<EmployeeMapping[]> {
         console.log(`Loading employees from: ${csvPath}`);
         const employees = CsvLoader.loadEmployees(csvPath);
 
@@ -111,7 +115,9 @@ export class EmployeesOperation extends BaseOperation {
 
         for (let i = 0; i < employees.length; i++) {
             const employee = employees[i];
-            console.log(`[${i + 1}/${employees.length}] Creating: ${employee.first_name} ${employee.last_name} (${employee.gender})`);
+            console.log(
+                `[${i + 1}/${employees.length}] Creating: ${employee.first_name} ${employee.last_name} (${(employee as any).gender || 'n/a'})`
+            );
 
             try {
                 const response = await this.hrApiClient.executeRequest(
@@ -120,13 +126,32 @@ export class EmployeesOperation extends BaseOperation {
                     {
                         first_name: employee.first_name,
                         last_name: employee.last_name,
-                        started_at: employee.started_at,
+                        started_at: (employee as any).started_at,
                     }
                 );
 
                 console.log(`  Employee created (ID: ${response.id})`);
 
-                const working_email = `${employee.email_username}@${emailDomain}`;
+                const working_email = `${(employee as any).email_username}@${emailDomain}`;
+
+                // Detect owner:
+                // 1) CSV flags: is_owner / owner / isOwner
+                // 2) options.ownerEmail fallback
+                const rawIsOwner =
+                    (employee as any).is_owner ??
+                    (employee as any).owner ??
+                    (employee as any).isOwner;
+
+                const isOwnerFlag =
+                    typeof rawIsOwner === 'string'
+                        ? ['1', 'true', 'yes', 'owner'].includes(rawIsOwner.toLowerCase())
+                        : !!rawIsOwner;
+
+                const ownerEmailMatch =
+                    options?.ownerEmail &&
+                    working_email.toLowerCase() === options.ownerEmail.toLowerCase();
+
+                const shouldEnableTimeTracking = isOwnerFlag || !!ownerEmailMatch;
 
                 // Create user for this employee
                 let userId: number | undefined;
@@ -143,9 +168,7 @@ export class EmployeesOperation extends BaseOperation {
                         }
                     );
 
-                    // User ID can be in different places in response
                     userId = userResponse.id || userResponse.data?.id || userResponse.user?.id;
-
                     if (!userId) {
                         console.error(`  User response:`, JSON.stringify(userResponse, null, 2));
                         throw new Error('User ID not found in response');
@@ -155,7 +178,7 @@ export class EmployeesOperation extends BaseOperation {
 
                     // Assign employee to user
                     try {
-                        // Create multipart/form-data body manually
+                        // Build multipart/form-data body manually
                         let body = '';
 
                         body += `--${MULTIPART_BOUNDARY}\r\n`;
@@ -173,7 +196,7 @@ export class EmployeesOperation extends BaseOperation {
                             `/auth/users/${userId}`,
                             body,
                             {
-                                'content-type': `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`
+                                'content-type': `multipart/form-data; boundary=${MULTIPART_BOUNDARY}`,
                             }
                         );
                         console.log(`  Employee assigned to user`);
@@ -190,17 +213,21 @@ export class EmployeesOperation extends BaseOperation {
                             console.error(`    ${activateError}\n`);
                         }
 
-                        // Enable time tracking mode
-                        try {
-                            await this.mainApiClient.executeRequest(
-                                'PUT',
-                                `/pct/api/users/${userId}/settings`,
-                                { time_entry_mode: 1 }
-                            );
-                            console.log(`  Time tracking mode enabled\n`);
-                        } catch (timeTrackingError) {
-                            console.error(`  Error: Failed to enable time tracking mode`);
-                            console.error(`    ${timeTrackingError}\n`);
+                        // Enable time tracking mode ONLY for owner
+                        if (shouldEnableTimeTracking) {
+                            try {
+                                await this.mainApiClient.executeRequest(
+                                    'PUT',
+                                    `/pct/api/users/${userId}/settings`,
+                                    { time_entry_mode: 1 }
+                                );
+                                console.log(`  Time tracking mode enabled (owner)\n`);
+                            } catch (timeTrackingError) {
+                                console.error(`  Error: Failed to enable time tracking mode (owner)`);
+                                console.error(`    ${timeTrackingError}\n`);
+                            }
+                        } else {
+                            console.log(`  Time tracking mode skipped (not owner)\n`);
                         }
                     } catch (assignError) {
                         console.error(`  Error: Failed to assign employee to user`);
@@ -216,12 +243,14 @@ export class EmployeesOperation extends BaseOperation {
                     id: response.id,
                     first_name: employee.first_name,
                     last_name: employee.last_name,
-                    gender: employee.gender,
-                    started_at: employee.started_at,
-                    user_id: userId,  // Add user_id to mappings
+                    gender: (employee as any).gender,
+                    started_at: (employee as any).started_at,
+                    user_id: userId, // keep user id
                 });
             } catch (error) {
-                console.error(`Failed to create employee: ${employee.first_name} ${employee.last_name}`);
+                console.error(
+                    `Failed to create employee: ${employee.first_name} ${employee.last_name}`
+                );
                 console.error('Error details:', error);
                 if (error instanceof Error) {
                     console.error('Error message:', error.message);
@@ -234,7 +263,6 @@ export class EmployeesOperation extends BaseOperation {
         console.log(`Completed! Processed ${employees.length} employees.`);
         console.log(`Created ${mappings.length} employees with IDs\n`);
 
-        // Save mappings to cache for later use (only if we created new employees)
         if (mappings.length > 0) {
             this.saveMappings(mappings);
         } else {
@@ -244,7 +272,7 @@ export class EmployeesOperation extends BaseOperation {
         return mappings;
     }
 
-  private saveMappings(mappings: EmployeeMapping[]): void {
+    private saveMappings(mappings: EmployeeMapping[]): void {
     // Load existing mappings (may include owner employee) and merge
     const existingMappings = this.loadFromCache<EmployeeMapping[]>(CACHE_PATHS.EMPLOYEE_MAPPINGS) || [];
 
