@@ -216,15 +216,22 @@ export class EmployeesOperation extends BaseOperation {
                         // Enable time tracking mode ONLY for owner
                         if (shouldEnableTimeTracking) {
                             try {
-                                await this.mainApiClient.executeRequest(
+                                console.log(`  Setting time tracking mode for user ${userId}...`);
+                                const settingsResponse = await this.mainApiClient.executeRequest(
                                     'POST',
                                     `/pct/api/users/${userId}/settings`,
                                     { time_entry_mode: 1 }
                                 );
+                                console.log(`  Time tracking mode response:`, JSON.stringify(settingsResponse));
                                 console.log(`  Time tracking mode enabled (owner)\n`);
-                            } catch (timeTrackingError) {
+                            } catch (timeTrackingError: any) {
                                 console.error(`  Error: Failed to enable time tracking mode (owner)`);
-                                console.error(`    ${timeTrackingError}\n`);
+                                console.error(`    Status: ${timeTrackingError?.statusCode || 'unknown'}`);
+                                console.error(`    Message: ${timeTrackingError?.message || timeTrackingError}`);
+                                if (timeTrackingError?.responseBody) {
+                                    console.error(`    Response: ${timeTrackingError.responseBody}`);
+                                }
+                                console.error('');
                             }
                         } else {
                             console.log(`  Time tracking mode skipped (not owner)\n`);
