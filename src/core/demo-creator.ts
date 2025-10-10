@@ -460,142 +460,142 @@ export async function runDemoCreation(
                                 if (includeWorkPackages) {
                                     const workPackagesPath = `./data/${dataGroup}/work-packages.csv`;
                                     if (milestoneMappings.length > 0 && fs.existsSync(workPackagesPath)) {
-                                    socket.emit('log', { type: 'info', message: '\n=== Creating Work Packages ===' });
-                                    try {
-                                        const { WorkPackagesOperation } = await import('../operations/project-management/work-packages');
-                                        const workPackagesOp = new WorkPackagesOperation(apiClient);
-                                        const projectsData = projectsOp.getProjectsData();
-                                        await workPackagesOp.createWorkPackages(workPackagesPath, milestoneMappings, projectsData);
-                                        socket.emit('log', { type: 'success', message: '✓ Work packages created\n' });
-
-                                        // Calculate yearly max PM for employees
-                                        socket.emit('log', { type: 'info', message: '\n=== Calculating Yearly Max PM ===' });
+                                        socket.emit('log', { type: 'info', message: '\n=== Creating Work Packages ===' });
                                         try {
-                                            const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
-                                            const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
-                                            await yearlyPmOp.calculateYearlyMaxPm();
-                                            socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
+                                            const { WorkPackagesOperation } = await import('../operations/project-management/work-packages');
+                                            const workPackagesOp = new WorkPackagesOperation(apiClient);
+                                            const projectsData = projectsOp.getProjectsData();
+                                            await workPackagesOp.createWorkPackages(workPackagesPath, milestoneMappings, projectsData);
+                                            socket.emit('log', { type: 'success', message: '✓ Work packages created\n' });
 
-                                            // Assign employees to project-management
-                                            socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Projects ===' });
+                                            // Calculate yearly max PM for employees
+                                            socket.emit('log', { type: 'info', message: '\n=== Calculating Yearly Max PM ===' });
                                             try {
-                                                const projectMappingsForAssignment = projectsOp.getMappings();
-                                                if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
-                                                    await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
-                                                    socket.emit('log', { type: 'success', message: 'Employees assigned to project-management\n' });
+                                                const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
+                                                const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
+                                                await yearlyPmOp.calculateYearlyMaxPm();
+                                                socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
 
-                                                    // Assign PM to work packages
-                                                    socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Work Packages ===' });
-                                                    try {
-                                                        const { WorkPackagePmAssignmentOperation } = await import('../operations/project-management/work-package-pm-assignment');
-                                                        const wpPmAssignmentOp = new WorkPackagePmAssignmentOperation(apiClient);
-                                                        await wpPmAssignmentOp.assignPmToWorkPackages(projectMappingsForAssignment, organizationId);
-                                                        socket.emit('log', { type: 'success', message: 'Work package PM assignments completed\n' });
+                                                // Assign employees to project-management
+                                                socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Projects ===' });
+                                                try {
+                                                    const projectMappingsForAssignment = projectsOp.getMappings();
+                                                    if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
+                                                        await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
+                                                        socket.emit('log', { type: 'success', message: 'Employees assigned to project-management\n' });
 
-                                                        // Assign employees to work packages
-                                                        socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Work Packages ===' });
+                                                        // Assign PM to work packages
+                                                        socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Work Packages ===' });
                                                         try {
-                                                            const { EmployeeWorkPackageAssignmentOperation } = await import('../operations/hr/employees/employee-work-package-assignment');
-                                                            const empWpAssignmentOp = new EmployeeWorkPackageAssignmentOperation(apiClient);
-                                                            await empWpAssignmentOp.assignEmployeesToWorkPackages(projectMappingsForAssignment, organizationId);
-                                                            socket.emit('log', { type: 'success', message: 'Employee-work package assignments completed\n' });
+                                                            const { WorkPackagePmAssignmentOperation } = await import('../operations/project-management/work-package-pm-assignment');
+                                                            const wpPmAssignmentOp = new WorkPackagePmAssignmentOperation(apiClient);
+                                                            await wpPmAssignmentOp.assignPmToWorkPackages(projectMappingsForAssignment, organizationId);
+                                                            socket.emit('log', { type: 'success', message: 'Work package PM assignments completed\n' });
 
-                                                            // Task Management (always setup structure)
-                                                            socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
+                                                            // Assign employees to work packages
+                                                            socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Work Packages ===' });
                                                             try {
-                                                                const { TaskManagementOperation } = await import('../operations/task-management/task-management');
-                                                                const taskMgmtOp = new TaskManagementOperation(authService);
+                                                                const { EmployeeWorkPackageAssignmentOperation } = await import('../operations/hr/employees/employee-work-package-assignment');
+                                                                const empWpAssignmentOp = new EmployeeWorkPackageAssignmentOperation(apiClient);
+                                                                await empWpAssignmentOp.assignEmployeesToWorkPackages(projectMappingsForAssignment, organizationId);
+                                                                socket.emit('log', { type: 'success', message: 'Employee-work package assignments completed\n' });
 
-                                                                // Approve user consent for task management
-                                                                await taskMgmtOp.approveUserConsent();
+                                                                // Task Management (always setup structure)
+                                                                socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
+                                                                try {
+                                                                    const { TaskManagementOperation } = await import('../operations/task-management/task-management');
+                                                                    const taskMgmtOp = new TaskManagementOperation(authService);
 
-                                                                // Create task types
-                                                                await taskMgmtOp.createTaskTypes();
+                                                                    // Approve user consent for task management
+                                                                    await taskMgmtOp.approveUserConsent();
 
-                                                                // Fetch priorities
-                                                                await taskMgmtOp.fetchPriorities();
+                                                                    // Create task types
+                                                                    await taskMgmtOp.createTaskTypes();
 
-                                                                // Fetch allowed activity types
-                                                                await taskMgmtOp.fetchAllowedActivityTypes();
+                                                                    // Fetch priorities
+                                                                    await taskMgmtOp.fetchPriorities();
 
-                                                                // Create activity type restrictions for all roles
-                                                                const occupationMappingsPath = './data/cache/occupation-mappings.json';
-                                                                if (fs.existsSync(occupationMappingsPath)) {
-                                                                    const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
-                                                                    if (occupationMappings && occupationMappings.length > 0) {
-                                                                        const roleMappings = occupationMappings.map((occ: any) => ({
-                                                                            id: occ.id.toString(),
-                                                                            title: occ.name
-                                                                        }));
-                                                                        await taskMgmtOp.createActivityTypeRestrictions(roleMappings);
+                                                                    // Fetch allowed activity types
+                                                                    await taskMgmtOp.fetchAllowedActivityTypes();
+
+                                                                    // Create activity type restrictions for all roles
+                                                                    const occupationMappingsPath = './data/cache/occupation-mappings.json';
+                                                                    if (fs.existsSync(occupationMappingsPath)) {
+                                                                        const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                                                                        if (occupationMappings && occupationMappings.length > 0) {
+                                                                            const roleMappings = occupationMappings.map((occ: any) => ({
+                                                                                id: occ.id.toString(),
+                                                                                title: occ.name
+                                                                            }));
+                                                                            await taskMgmtOp.createActivityTypeRestrictions(roleMappings);
+                                                                        }
                                                                     }
-                                                                }
 
-                                                                // Fetch and cache structure (boards, statuses)
-                                                                await taskMgmtOp.fetchAndCacheTaskManagementStructure(projectMappingsForAssignment);
+                                                                    // Fetch and cache structure (boards, statuses)
+                                                                    await taskMgmtOp.fetchAndCacheTaskManagementStructure(projectMappingsForAssignment);
 
-                                                                // Create timer categories (activity types for time tracking) after boards are ready
-                                                                if (fs.existsSync(occupationMappingsPath)) {
-                                                                    const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
-                                                                    if (occupationMappings && occupationMappings.length > 0) {
-                                                                        const roleMappings = occupationMappings.map((occ: any) => ({
-                                                                            id: occ.id.toString(),
-                                                                            title: occ.name
-                                                                        }));
-                                                                        await taskMgmtOp.createTimerCategories(roleMappings);
+                                                                    // Create timer categories (activity types for time tracking) after boards are ready
+                                                                    if (fs.existsSync(occupationMappingsPath)) {
+                                                                        const occupationMappings = JSON.parse(fs.readFileSync(occupationMappingsPath, 'utf-8'));
+                                                                        if (occupationMappings && occupationMappings.length > 0) {
+                                                                            const roleMappings = occupationMappings.map((occ: any) => ({
+                                                                                id: occ.id.toString(),
+                                                                                title: occ.name
+                                                                            }));
+                                                                            await taskMgmtOp.createTimerCategories(roleMappings);
+                                                                        }
+                                                                    } else {
+                                                                        await taskMgmtOp.createTimerCategories();
                                                                     }
-                                                                } else {
-                                                                    await taskMgmtOp.createTimerCategories();
-                                                                }
 
-                                                                // Create tasks
-                                                                const tasksPath = `./data/${dataGroup}/tasks.csv`;
-                                                                if (fs.existsSync(tasksPath)) {
-                                                                    await taskMgmtOp.createTasksForWorkPackages(tasksPath);
-                                                                    socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
-                                                                    try {
-                                                                        await taskMgmtOp.addOwnerTrackedTime({
-                                                                            userId: authService.getUserId(),          // owner user
-                                                                            totalHours: 40,                           // örnek: 1 hafta = 5 iş günü → günlük 8h
-                                                                            daysBack: 7,                              // “bugünden geriye” pencere
-                                                                            timezone: 'Europe/Istanbul',
-                                                                            partnerId: organizationId.toString(),     // Partner header
-                                                                            defaultTimerCategoryIndex: 0              // Development
-                                                                        });
-                                                                        socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
-                                                                    } catch (e: any) {
-                                                                        socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                                    // Create tasks
+                                                                    const tasksPath = `./data/${dataGroup}/tasks.csv`;
+                                                                    if (fs.existsSync(tasksPath)) {
+                                                                        await taskMgmtOp.createTasksForWorkPackages(tasksPath);
+                                                                        socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                                        try {
+                                                                            await taskMgmtOp.addOwnerTrackedTime({
+                                                                                userId: authService.getUserId(),          // owner user
+                                                                                totalHours: 40,                           // örnek: 1 hafta = 5 iş günü → günlük 8h
+                                                                                daysBack: 7,                              // “bugünden geriye” pencere
+                                                                                timezone: 'Europe/Istanbul',
+                                                                                partnerId: organizationId.toString(),     // Partner header
+                                                                                defaultTimerCategoryIndex: 0              // Development
+                                                                            });
+                                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
+                                                                        } catch (e: any) {
+                                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                                        }
+                                                                    } else {
+                                                                        socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                                     }
-                                                                } else {
-                                                                    socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
+                                                                } catch (error: any) {
+                                                                    socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
+                                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                                                 }
                                                             } catch (error: any) {
-                                                                socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
+                                                                socket.emit('log', { type: 'error', message: `Employee-work package assignment failed: ${error.message}` });
                                                                 socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                                             }
                                                         } catch (error: any) {
-                                                            socket.emit('log', { type: 'error', message: `Employee-work package assignment failed: ${error.message}` });
+                                                            socket.emit('log', { type: 'error', message: `Work package PM assignment failed: ${error.message}` });
                                                             socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                                         }
-                                                    } catch (error: any) {
-                                                        socket.emit('log', { type: 'error', message: `Work package PM assignment failed: ${error.message}` });
-                                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                    } else {
+                                                        socket.emit('log', { type: 'warning', message: 'No project-management found for assignment\n' });
                                                     }
-                                                } else {
-                                                    socket.emit('log', { type: 'warning', message: 'No project-management found for assignment\n' });
+                                                } catch (error: any) {
+                                                    socket.emit('log', { type: 'error', message: `Project assignment failed: ${error.message}` });
+                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                                 }
                                             } catch (error: any) {
-                                                socket.emit('log', { type: 'error', message: `Project assignment failed: ${error.message}` });
+                                                socket.emit('log', { type: 'error', message: `Yearly PM calculation failed: ${error.message}` });
                                                 socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                             }
                                         } catch (error: any) {
-                                            socket.emit('log', { type: 'error', message: `Yearly PM calculation failed: ${error.message}` });
+                                            socket.emit('log', { type: 'error', message: `Work packages creation failed: ${error.message}` });
                                             socket.emit('log', { type: 'warning', message: 'Continuing\n' });
                                         }
-                                    } catch (error: any) {
-                                        socket.emit('log', { type: 'error', message: `Work packages creation failed: ${error.message}` });
-                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
-                                    }
                                     }
                                 } else {
                                     socket.emit('log', { type: 'info', message: '\nℹ Work packages skipped (includeWorkPackages = false)\n' });
@@ -675,45 +675,30 @@ export async function runDemoCreation(
                                                     if (fs.existsSync(tasksPath)) {
                                                         await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment, organizationId.toString());
                                                         socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
-
-                                                        // Use new TimersOperation for creating timers
                                                         try {
-                                                            socket.emit('log', { type: 'info', message: '\n=== Creating Timers for Owner User ===' });
-                                                            const { TimersOperation } = await import('../operations/time-tracking/timers');
-                                                            const timersOp = new TimersOperation(taskManagementApiClient, apiClient);
-
-                                                            // Load milestone mappings from cache
-                                                            const milestoneMappingsPath = './data/cache/milestone-mappings.json';
-                                                            if (fs.existsSync(milestoneMappingsPath)) {
-                                                                const milestoneMappingsData = JSON.parse(fs.readFileSync(milestoneMappingsPath, 'utf-8'));
-
-                                                                // Get first timer category ID (Development)
-                                                                const taskMgmtOpAny = taskMgmtOp as any;
-                                                                const timerCategoryId = taskMgmtOpAny.timerCategoryIds?.[0];
-
-                                                                // Try to enable time tracking for owner user (may fail, not critical)
-                                                                try {
-                                                                    socket.emit('log', { type: 'info', message: 'Enabling time tracking for owner user...' });
-                                                                    await timersOp.enableTimeTrackingForUser(authService.getUserId(), organizationId.toString());
-                                                                    socket.emit('log', { type: 'success', message: '✓ Time tracking enabled for owner user\n' });
-                                                                } catch (settingsErr: any) {
-                                                                    socket.emit('log', { type: 'info', message: `Could not update time tracking settings (may already be enabled): ${settingsErr.message}\n` });
-                                                                }
-
-                                                                // Create timers for owner user only
-                                                                await timersOp.createTimersForOwnerUser({
-                                                                    milestoneMappings: milestoneMappingsData,
-                                                                    ownerUserId: authService.getUserId(),
-                                                                    partnerId: organizationId.toString(),
-                                                                    defaultTimerCategoryId: timerCategoryId,
-                                                                    timezone: 'Europe/Istanbul'
-                                                                });
-                                                                socket.emit('log', { type: 'success', message: '✓ Timers created for owner user\n' });
-                                                            } else {
-                                                                socket.emit('log', { type: 'warning', message: 'Milestone mappings not found, skipping timer creation\n' });
-                                                            }
+                                                            await taskMgmtOp.addOwnerTrackedTime({
+                                                                userId: authService.getUserId(),
+                                                                totalHours: 40,
+                                                                daysBack: 7,
+                                                                timezone: 'Europe/Istanbul',
+                                                                partnerId: organizationId.toString(),
+                                                                defaultTimerCategoryIndex: 0
+                                                            });
+                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created\n' });
                                                         } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Timer creation failed: ${e.message}\n` });
+                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed: ${e.message}\n` });
+                                                        }
+
+                                                        // Add tracked time for milestone assignees
+                                                        try {
+                                                            await taskMgmtOp.addMilestoneAssigneesTrackedTime({
+                                                                timezone: 'Europe/Istanbul',
+                                                                partnerId: organizationId.toString(),
+                                                                defaultTimerCategoryIndex: 0
+                                                            });
+                                                            socket.emit('log', { type: 'success', message: '✓ Milestone assignees tracked time created\n' });
+                                                        } catch (e: any) {
+                                                            socket.emit('log', { type: 'warning', message: `Milestone assignees tracked time failed: ${e.message}\n` });
                                                         }
                                                     } else {
                                                         socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
