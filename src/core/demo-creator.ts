@@ -675,30 +675,41 @@ export async function runDemoCreation(
                                                     if (fs.existsSync(tasksPath)) {
                                                         await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment, organizationId.toString());
                                                         socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
-                                                        try {
-                                                            await taskMgmtOp.addOwnerTrackedTime({
-                                                                userId: authService.getUserId(),
-                                                                totalHours: 40,
-                                                                daysBack: 7,
-                                                                timezone: 'Europe/Istanbul',
-                                                                partnerId: organizationId.toString(),
-                                                                defaultTimerCategoryIndex: 0
-                                                            });
-                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created\n' });
-                                                        } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed: ${e.message}\n` });
-                                                        }
 
-                                                        // Add tracked time for milestone assignees
+                                                        // Use new TimersOperation for creating timers
                                                         try {
-                                                            await taskMgmtOp.addMilestoneAssigneesTrackedTime({
-                                                                timezone: 'Europe/Istanbul',
-                                                                partnerId: organizationId.toString(),
-                                                                defaultTimerCategoryIndex: 0
-                                                            });
-                                                            socket.emit('log', { type: 'success', message: '✓ Milestone assignees tracked time created\n' });
+                                                            socket.emit('log', { type: 'info', message: '\n=== Creating Timers for Owner User ===' });
+                                                            const { TimersOperation } = await import('../operations/time-tracking/timers');
+                                                            const timersOp = new TimersOperation(taskManagementApiClient, apiClient);
+
+                                                            // Load milestone mappings from cache
+                                                            const milestoneMappingsPath = './data/cache/milestone-mappings.json';
+                                                            if (fs.existsSync(milestoneMappingsPath)) {
+                                                                const milestoneMappingsData = JSON.parse(fs.readFileSync(milestoneMappingsPath, 'utf-8'));
+
+                                                                // Get first timer category ID (Development)
+                                                                const taskMgmtOpAny = taskMgmtOp as any;
+                                                                const timerCategoryId = taskMgmtOpAny.timerCategoryIds?.[0];
+
+                                                                // Enable time tracking for owner user first
+                                                                socket.emit('log', { type: 'info', message: 'Enabling time tracking for owner user...' });
+                                                                await timersOp.enableTimeTrackingForUser(authService.getUserId(), organizationId.toString());
+                                                                socket.emit('log', { type: 'success', message: '✓ Time tracking enabled for owner user\n' });
+
+                                                                // Create timers for owner user only
+                                                                await timersOp.createTimersForOwnerUser({
+                                                                    milestoneMappings: milestoneMappingsData,
+                                                                    ownerUserId: authService.getUserId(),
+                                                                    partnerId: organizationId.toString(),
+                                                                    defaultTimerCategoryId: timerCategoryId,
+                                                                    timezone: 'Europe/Istanbul'
+                                                                });
+                                                                socket.emit('log', { type: 'success', message: '✓ Timers created for owner user\n' });
+                                                            } else {
+                                                                socket.emit('log', { type: 'warning', message: 'Milestone mappings not found, skipping timer creation\n' });
+                                                            }
                                                         } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Milestone assignees tracked time failed: ${e.message}\n` });
+                                                            socket.emit('log', { type: 'warning', message: `Timer creation failed: ${e.message}\n` });
                                                         }
                                                     } else {
                                                         socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
