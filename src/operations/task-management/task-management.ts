@@ -1309,12 +1309,12 @@ export class TaskManagementOperation extends BaseOperation {
         dayISO: string;
         hours: number;
         userId: number;
-        pctMilestoneId: number;
+        pctTaskId: number;          // <— RENAMED (was pctMilestoneId)
         timerCategoryId?: number;
         tz?: string;
     }): Promise<void> {
         const {
-            dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul'
+            dayISO, hours, userId, pctTaskId, timerCategoryId, tz = 'Europe/Istanbul'
         } = options;
 
         // drift olmaması için finished_at'i aynı gün içinde elde et
@@ -1326,22 +1326,26 @@ export class TaskManagementOperation extends BaseOperation {
         const mmStr = String(mm).padStart(2, '0');
         const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
 
-        // activities array'i doğru sıra ile oluştur
-        const activities: any[] = [];
+        // Activity type'ını belirle (yeni isim: pctTask; fallback model adı)
+        const pctType = this.allowedActivityTypes?.includes('pctTask')
+            ? 'pctTask'
+            : 'App\\Models\\PctTask';
 
-        // Timer category önce gelirse
+        // activities array — SIRA: pctTask ÖNCE, sonra TimerCategory
+        const activities: any[] = [
+            { id: pctTaskId, type: pctType },
+        ];
         if (typeof timerCategoryId === 'number') {
             activities.push({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
         }
-
-        // PCT Milestone sonra
-        activities.push({ id: pctMilestoneId, type: 'App\\Models\\PctMilestone' });
 
         const payload = {
             started_at,
             finished_at,
             startTimer: false,
             activities,
+            // pct_milestone_id: X  <-- KALDIRILDI
+            pct_task_id: pctTaskId,         // açık açık alanı set etmek OK
             user_id: userId,
             device_type: 'desktop',
             device_name: 'Apple Mac',
@@ -1351,13 +1355,13 @@ export class TaskManagementOperation extends BaseOperation {
         };
 
         console.log(`    [DEBUG] Creating timer for user ${userId} on ${dayISO}`);
-        console.log(`    [DEBUG] Milestone ID: ${pctMilestoneId}, Category ID: ${timerCategoryId || 'none'}`);
+        console.log(`    [DEBUG] PCT Task ID: ${pctTaskId}, Category ID: ${timerCategoryId || 'none'}`);
         console.log(`    [DEBUG] Activities: ${JSON.stringify(activities)}`);
 
         const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
 
         console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 200)}`);
-        console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → milestone#${pctMilestoneId}`);
+        console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → pctTask#${pctTaskId}`);
     }
 
     /**
@@ -1406,8 +1410,8 @@ export class TaskManagementOperation extends BaseOperation {
         }
         const dailyTarget = totalHours / days.length;
 
-        // Gün => (milestoneId, boardId) listesi
-        const dayToMilestones = new Map<string, Array<{ pctMilestoneId: number; boardId: number }>>();
+        // Gün => (pctTaskId, boardId) listesi
+        const dayToMilestones = new Map<string, Array<{ pctTaskId: number; boardId: number }>>();
 
         for (const ms of milestoneMappings) {
             const msDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
@@ -1432,7 +1436,7 @@ export class TaskManagementOperation extends BaseOperation {
 
             for (const d of msDaysInWindow) {
                 const arr = dayToMilestones.get(d) || [];
-                arr.push({ pctMilestoneId: ms.task_id, boardId: board.id });
+                arr.push({ pctTaskId: ms.task_id, boardId: board.id });
                 dayToMilestones.set(d, arr);
             }
         }
@@ -1450,12 +1454,12 @@ export class TaskManagementOperation extends BaseOperation {
                         dayISO: d,
                         hours,
                         userId,
-                        pctMilestoneId: msList[i].pctMilestoneId,
+                        pctTaskId: msList[i].pctTaskId,
                         timerCategoryId,
                         tz: timezone
                     });
                 } catch (e:any) {
-                    console.log(`  ! timer failed for day ${d} ms#${msList[i].pctMilestoneId}: ${e?.message || e}`);
+                    console.log(`  ! timer failed for day ${d} pctTask#${msList[i].pctTaskId}: ${e?.message || e}`);
                 }
             }
         }
@@ -1585,7 +1589,7 @@ export class TaskManagementOperation extends BaseOperation {
                                     dayISO,
                                     hours: dailyHours,
                                     userId,
-                                    pctMilestoneId: ms.task_id,
+                                    pctTaskId: ms.task_id,
                                     timerCategoryId,
                                     tz: timezone
                                 });
