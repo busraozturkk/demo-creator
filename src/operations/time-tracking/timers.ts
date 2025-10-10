@@ -396,16 +396,72 @@ export class TimersOperation {
         console.log(`  Owner PM allocation: ${pmAmount.toFixed(2)} → ${totalHours.toFixed(0)}h total, ${hoursPerDay.toFixed(2)}h/day`);
 
         // Resolve milestone ID from PCT tree
-        const milestones = await this.fetchPctTree(ms.project_title || ms.project_short_title);
+        const projectTitleForQuery = ms.project_title || ms.project_short_title;
+        console.log(`  Querying PCT tree with: "${projectTitleForQuery}"`);
+
+        const milestones = await this.fetchPctTree(projectTitleForQuery);
+
+        if (milestones.length === 0) {
+          console.log(`  ⊗ No milestones found in PCT tree for project "${projectTitleForQuery}"`);
+          console.log(`  ⊗ Attempting fallback: using task_id ${ms.task_id} as PCT milestone ID`);
+
+          // Fallback: use task_id directly as PCT milestone ID
+          const pctMilestoneId = ms.task_id;
+          console.log(`  Using task_id as PCT Milestone ID: ${pctMilestoneId}`);
+
+          // Create timers with this ID
+          for (const dayISO of milestoneDays) {
+            try {
+              await this.createTimerForDay({
+                dayISO,
+                hours: hoursPerDay,
+                userId: ownerUserId,
+                pctMilestoneId,
+                timerCategoryId: defaultTimerCategoryId,
+                timezone,
+              });
+              totalTimersCreated++;
+            } catch (err: any) {
+              console.log(`    ! Failed to create timer for ${dayISO}: ${err?.message || err}`);
+              errors++;
+            }
+          }
+          continue;
+        }
+
         const matchedMilestone = milestones.find(m => m.title === ms.milestone_title || m.id === ms.task_id);
 
         if (!matchedMilestone) {
-          console.log(`  ⊗ Could not resolve PCT milestone ID`);
+          console.log(`  ⊗ Could not match milestone "${ms.milestone_title}" in PCT tree`);
+          console.log(`  Available milestones: ${milestones.map(m => m.title).join(', ')}`);
+          console.log(`  ⊗ Attempting fallback: using task_id ${ms.task_id} as PCT milestone ID`);
+
+          // Fallback: use task_id directly
+          const pctMilestoneId = ms.task_id;
+          console.log(`  Using task_id as PCT Milestone ID: ${pctMilestoneId}`);
+
+          // Create timers with this ID
+          for (const dayISO of milestoneDays) {
+            try {
+              await this.createTimerForDay({
+                dayISO,
+                hours: hoursPerDay,
+                userId: ownerUserId,
+                pctMilestoneId,
+                timerCategoryId: defaultTimerCategoryId,
+                timezone,
+              });
+              totalTimersCreated++;
+            } catch (err: any) {
+              console.log(`    ! Failed to create timer for ${dayISO}: ${err?.message || err}`);
+              errors++;
+            }
+          }
           continue;
         }
 
         const pctMilestoneId = matchedMilestone.id;
-        console.log(`  PCT Milestone ID: ${pctMilestoneId}`);
+        console.log(`  ✓ Matched PCT Milestone ID: ${pctMilestoneId}`);
 
         // Create timer for each business day
         for (const dayISO of milestoneDays) {
