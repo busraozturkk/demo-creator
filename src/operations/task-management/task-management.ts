@@ -1344,6 +1344,10 @@ export class TaskManagementOperation extends BaseOperation {
     // --------------------------------------------------------------------------
     // Timers — FAST: activities + concurrency
     // --------------------------------------------------------------------------
+    /**
+     * Backend'in beklediği *tam* sırayla ve istenen headerlarla timer atar.
+     * activities: [TimerCategory?, PctMilestone]
+     */
     private async postTimerEntry(options: {
         dayISO: string;
         hours: number;
@@ -1351,10 +1355,23 @@ export class TaskManagementOperation extends BaseOperation {
         pctMilestoneId: number;       // zorunlu: PctMilestone id
         timerCategoryId?: number;     // opsiyonel
         tz?: string;
+        origin?: string;
+        referer?: string;
+        priorityHeader?: string;
     }): Promise<void> {
-        const { dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul' } = options;
+        const {
+            dayISO,
+            hours,
+            userId,
+            pctMilestoneId,
+            timerCategoryId,
+            tz = 'Europe/Istanbul',
+            origin = 'https://clusterix.io',
+            referer = 'https://clusterix.io/',
+            priorityHeader = 'u=1, i'
+        } = options;
 
-        // örnekle uyumlu: 03:00’te başlat, süreden bitişi hesapla
+        // 03:00’te başlat, süreden bitişi hesapla (curl ile uyumlu)
         const start = new Date(`${dayISO}T03:00:00`);
         const totalMins = Math.max(1, Math.round(hours * 60));
         const end = new Date(start.getTime() + totalMins * 60000);
@@ -1362,19 +1379,20 @@ export class TaskManagementOperation extends BaseOperation {
         const started_at = `${dayISO} 03:00:00`;
         const finished_at = `${dayISO} ${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}:00`;
 
-        const activities: Array<{id:number; type:string}> = [
-            { id: pctMilestoneId, type: 'App\\Models\\PctMilestone' }
-        ];
+        // *** ÖNEMLİ: SIRA ***
+        // TimerCategory önce, PctMilestone sonra (tam senin gönderdiğin curl gibi)
+        const activities: Array<{id:number; type:string}> = [];
         if (typeof timerCategoryId === 'number') {
-            activities.unshift({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
+            activities.push({ id: Number(timerCategoryId), type: 'App\\Models\\TimerCategory' });
         }
+        activities.push({ id: Number(pctMilestoneId), type: 'App\\Models\\PctMilestone' });
 
         const payload = {
             started_at,
             finished_at,
             startTimer: false,
             activities,
-            user_id: userId,
+            user_id: Number(userId),
             device_type: 'desktop',
             device_name: 'Apple Mac',
             device_os: 'Mac',
@@ -1382,10 +1400,27 @@ export class TaskManagementOperation extends BaseOperation {
             device_browser_name: 'Chrome'
         };
 
+        // log
         console.log(`    [TIMER] user=${userId} day=${dayISO} hours=${hours.toFixed(2)} ms#${pctMilestoneId} cat=${timerCategoryId ?? 'none'}`);
+        console.log(`    [TIMER] payload: ${JSON.stringify(payload)}`);
+
         try {
-            const resp = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
-            console.log(`    [TIMER] response: ${JSON.stringify(resp).slice(0, 300)}`);
+            // executeRequest 4. param: ek headerlar
+            const resp = await this.taskMgmtApiClient.executeRequest(
+                'POST',
+                '/api/timers',
+                payload,
+                {
+                    timezone: tz,
+                    origin,
+                    referer,
+                    priority: priorityHeader,
+                    'sec-ch-ua': '"Google Chrome";v="141", "Not?A_Brand";v="8", "Chromium";v="141"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"macOS"'
+                }
+            );
+            console.log(`    [TIMER] response: ${JSON.stringify(resp)}`);
         } catch (e:any) {
             console.log(`    ! TIMER failed: ${e?.message || e}`);
             if (e?.response?.data) console.log('    ! Body:', JSON.stringify(e.response.data));
