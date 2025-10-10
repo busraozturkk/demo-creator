@@ -25,6 +25,9 @@ interface BoardMapping {
     project_short_title: string | undefined;
     milestone_title: string;
     name: string;
+    external_id?: number;
+    external_type?: string;
+    type?: string;
 }
 
 interface TaskData {
@@ -43,6 +46,9 @@ interface WorkPackageEmployeeAssignment {
         pm: number;
     }>;
 }
+
+type PctFkKey = 'pct_milestone_id' | 'pct_task_id';
+type PctFk = { fkKey: PctFkKey; fkId: number };
 
 /**
  * Our canonical 3 statuses for project boards (positions are 0-based).
@@ -650,7 +656,10 @@ export class TaskManagementOperation extends BaseOperation {
                     folder_id: board.folder_id,
                     project_short_title: matchingMilestone.project_short_title,
                     milestone_title: matchingMilestone.milestone_title,
-                    name: title
+                    name: title,
+                    external_id: board.external_id,
+                    external_type: board.external_type,
+                    type: board.type
                 });
 
                 mappedMilestones.add(milestoneKey);
@@ -750,7 +759,10 @@ export class TaskManagementOperation extends BaseOperation {
                     folder_id: board.folder_id,
                     project_short_title: matchingMilestone.project_short_title,
                     milestone_title: matchingMilestone.milestone_title,
-                    name: title
+                    name: title,
+                    external_id: board.external_id,
+                    external_type: board.external_type,
+                    type: board.type
                 });
 
                 mappedMilestones.add(milestoneKey);
@@ -1303,17 +1315,89 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
+    // PCT FK çözümleyici ve teşhis
+    // --------------------------------------------------------------------------
+    private async resolvePctForeignKey(ms: any, board?: BoardMapping): Promise<PctFk> {
+        // 1) Milestone mapping’te doğrudan milestone id var mı?
+        const msMilestoneId = Number(ms?.pct_milestone_id ?? ms?.milestone_id);
+        if (msMilestoneId) {
+            console.log(`    [FK] from mapping: pct_milestone_id=${msMilestoneId}`);
+            return { fkKey: 'pct_milestone_id', fkId: msMilestoneId };
+        }
+
+        // 2) Milestone mapping’te task id var mı?
+        const msTaskId = Number(ms?.pct_task_id ?? ms?.task_id);
+        if (msTaskId) {
+            // Task → milestone çözmeyi dene
+            try {
+                const res: any = await this.mainApiClient.executeRequest(
+                    'GET', `/pct/api/tasks/${msTaskId}`, { include: 'milestone' }
+                );
+                const data = res?.data || res;
+                const mId = Number(data?.milestone?.id);
+                if (mId) {
+                    console.log(`    [FK] via task->milestone: pct_milestone_id=${mId} (from pct_task_id=${msTaskId})`);
+                    return { fkKey: 'pct_milestone_id', fkId: mId };
+                }
+            } catch (e:any) {
+                console.log(`    [FK] task->milestone resolve failed: ${e?.message || e}`);
+            }
+            console.log(`    [FK] fallback to pct_task_id=${msTaskId}`);
+            return { fkKey: 'pct_task_id', fkId: msTaskId };
+        }
+
+        // 3) Board external’dan çöz
+        if (board) {
+            const extType = String(board.external_type || board.type || '').toLowerCase();
+            const extId = Number(board.external_id);
+            if (extId) {
+                if (extType.includes('milestone')) {
+                    console.log(`    [FK] from board.external: pct_milestone_id=${extId}`);
+                    return { fkKey: 'pct_milestone_id', fkId: extId };
+                }
+                if (extType.includes('task')) {
+                    console.log(`    [FK] from board.external: pct_task_id=${extId}`);
+                    return { fkKey: 'pct_task_id', fkId: extId };
+                }
+            }
+        }
+
+        throw new Error('PCT foreign key çözümlenemedi (ne milestone ne task id bulunamadı).');
+    }
+
+    // Hızlı teşhis: bu id task mı milestone mı?
+    async debugWhatIsThisId(id: number): Promise<void> {
+        try {
+            const t: any = await this.mainApiClient.executeRequest('GET', `/pct/api/tasks/${id}`, {});
+            const td = t?.data || t;
+            if (td?.id) {
+                console.log(`[WHOIS] ${id} = PCT TASK (title="${td.title}")`);
+                return;
+            }
+        } catch {}
+        try {
+            const m: any = await this.mainApiClient.executeRequest('GET', `/pct/api/milestones/${id}`, {});
+            const md = m?.data || m;
+            if (md?.id) {
+                console.log(`[WHOIS] ${id} = PCT MILESTONE (title="${md.title}")`);
+                return;
+            }
+        } catch {}
+        console.log(`[WHOIS] ${id} = bilinmiyor (task/milestone bulunamadı — proje/board/external olabilir).`);
+    }
+
+    // --------------------------------------------------------------------------
     // Timers (owner user, milestone activity)
     // --------------------------------------------------------------------------
     private async postTimerEntry(options: {
         dayISO: string;
         hours: number;
         userId: number;
-        pctTaskId: number;
+        pctFk: PctFk;
         timerCategoryId?: number;
         tz?: string;
     }): Promise<void> {
-        const { dayISO, hours, userId, pctTaskId, timerCategoryId, tz = 'Europe/Istanbul' } = options;
+        const { dayISO, hours, userId, pctFk, timerCategoryId, tz = 'Europe/Istanbul' } = options;
 
         const started_at = `${dayISO} 08:00:00`;
         const totalMins = Math.round(hours * 60);
@@ -1323,18 +1407,10 @@ export class TaskManagementOperation extends BaseOperation {
         const mmStr = String(mm).padStart(2, '0');
         const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
 
-        // 💡 Canonical type adları: pctTask & timerCategory
-        const activities: any[] = [{ id: pctTaskId, type: 'pctTask' }];
-        if (typeof timerCategoryId === 'number') {
-            activities.push({ id: timerCategoryId, type: 'timerCategory' });
-        }
-
-        const payload = {
+        const payload: any = {
             started_at,
             finished_at,
             startTimer: false,
-            activities,
-            pct_task_id: pctTaskId,        // FK’yi ayrıca da set etmeye devam et
             user_id: userId,
             device_type: 'desktop',
             device_name: 'Apple Mac',
@@ -1343,15 +1419,25 @@ export class TaskManagementOperation extends BaseOperation {
             device_browser_name: 'Firefox'
         };
 
+        // ZORUNLU FK alanını set et
+        payload[pctFk.fkKey] = pctFk.fkId;
+        if (typeof timerCategoryId === 'number') {
+            payload.timer_category_id = timerCategoryId;
+        }
+
         console.log(`    [DEBUG] Creating timer for user ${userId} on ${dayISO}`);
-        console.log(`    [DEBUG] PCT Task ID: ${pctTaskId}, Category ID: ${timerCategoryId ?? 'none'}`);
-        console.log(`    [DEBUG] Activities (payload): ${JSON.stringify(activities)}`);
-        console.log(`    [DEBUG] Payload FK: pct_task_id=${pctTaskId}`);
+        console.log(`    [DEBUG] FK: ${pctFk.fkKey}=${pctFk.fkId} | timer_category_id=${timerCategoryId ?? 'none'}`);
+        console.log(`    [DEBUG] Payload: ${JSON.stringify(payload)}`);
 
-        const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
-
-        console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 300)}`);
-        console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → pctTask#${pctTaskId}`);
+        try {
+            const response = await this.taskMgmtApiClient.executeRequest('POST', '/api/timers', payload, { timezone: tz });
+            console.log(`    [DEBUG] Timer response: ${JSON.stringify(response).substring(0, 400)}`);
+            console.log(`    + timer ${dayISO} ${hours.toFixed(2)}h → ${pctFk.fkKey}#${pctFk.fkId}`);
+        } catch (e:any) {
+            console.log(`    ! Timer failed: ${e?.message || e}`);
+            if (e?.response?.data) console.log('    ! Body:', JSON.stringify(e.response.data));
+            throw e;
+        }
     }
 
     /**
@@ -1400,8 +1486,8 @@ export class TaskManagementOperation extends BaseOperation {
         }
         const dailyTarget = totalHours / days.length;
 
-        // Gün => (pctTaskId, boardId) listesi
-        const dayToMilestones = new Map<string, Array<{ pctTaskId: number; boardId: number }>>();
+        // Gün => (milestone, board) listesi
+        const dayToMilestones = new Map<string, Array<{ ms: any; board: BoardMapping }>>();
 
         for (const ms of milestoneMappings) {
             const msDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
@@ -1426,7 +1512,7 @@ export class TaskManagementOperation extends BaseOperation {
 
             for (const d of msDaysInWindow) {
                 const arr = dayToMilestones.get(d) || [];
-                arr.push({ pctTaskId: ms.task_id, boardId: board.id });
+                arr.push({ ms, board });
                 dayToMilestones.set(d, arr);
             }
         }
@@ -1440,16 +1526,17 @@ export class TaskManagementOperation extends BaseOperation {
                 const hours = parts[i];
                 if (hours <= 0.01) continue;
                 try {
+                    const fk = await this.resolvePctForeignKey(msList[i].ms, msList[i].board);
                     await this.postTimerEntry({
                         dayISO: d,
                         hours,
                         userId,
-                        pctTaskId: msList[i].pctTaskId,
+                        pctFk: fk,
                         timerCategoryId,
                         tz: timezone
                     });
                 } catch (e:any) {
-                    console.log(`  ! timer failed for day ${d} pctTask#${msList[i].pctTaskId}: ${e?.message || e}`);
+                    console.log(`  ! timer failed for day ${d}: ${e?.message || e}`);
                 }
             }
         }
@@ -1558,7 +1645,6 @@ export class TaskManagementOperation extends BaseOperation {
                         if (totalHoursPerEmployee) {
                             hoursToDistribute = totalHoursPerEmployee;
                         } else {
-                            // Calculate from PM: 1 PM = 173.333333 hours
                             hoursToDistribute = pmAmount * 173.333333;
                         }
 
@@ -1575,11 +1661,12 @@ export class TaskManagementOperation extends BaseOperation {
                         // Create timer entries for each business day
                         for (const dayISO of milestoneDays) {
                             try {
+                                const fk = await this.resolvePctForeignKey(ms, board);
                                 await this.postTimerEntry({
                                     dayISO,
                                     hours: dailyHours,
                                     userId,
-                                    pctTaskId: ms.task_id,
+                                    pctFk: fk,
                                     timerCategoryId,
                                     tz: timezone
                                 });
