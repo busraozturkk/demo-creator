@@ -684,9 +684,21 @@ export async function runDemoCreation(
                                                                 partnerId: organizationId.toString(),
                                                                 defaultTimerCategoryIndex: 0
                                                             });
-                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
+                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created\n' });
                                                         } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed: ${e.message}\n` });
+                                                        }
+
+                                                        // Add tracked time for milestone assignees
+                                                        try {
+                                                            await taskMgmtOp.addMilestoneAssigneesTrackedTime({
+                                                                timezone: 'Europe/Istanbul',
+                                                                partnerId: organizationId.toString(),
+                                                                defaultTimerCategoryIndex: 0
+                                                            });
+                                                            socket.emit('log', { type: 'success', message: '✓ Milestone assignees tracked time created\n' });
+                                                        } catch (e: any) {
+                                                            socket.emit('log', { type: 'warning', message: `Milestone assignees tracked time failed: ${e.message}\n` });
                                                         }
                                                     } else {
                                                         socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });

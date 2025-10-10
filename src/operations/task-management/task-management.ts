@@ -1127,17 +1127,45 @@ export class TaskManagementOperation extends BaseOperation {
 
                 console.log(`  ${ms.project_short_title} → ${ms.milestone_title} (${GENERIC_TASKS.length} tasks)`);
 
-                // Assignee’leri project plan’daki milestone responsibles’tan al
-                const msResponsibles = this.getMilestoneResponsibles(ms);
-                const assigneesFromMs = msResponsibles.map(r => ({
-                    id: r.id,
+                // Load task-year-pm-assignments to get all employees assigned to this milestone
+                const taskYearPmAssignments = this.loadFromCache<any[]>('./data/cache/task-year-pm-assignments.json') || [];
+
+                // Find all employees assigned to this milestone via task-year-pm
+                const milestoneAssignments = taskYearPmAssignments.filter((assignment: any) =>
+                    assignment.task_id === ms.task_id
+                );
+
+                // Get user IDs from user-task-year-pms (employees with PM allocations)
+                let assigneeUserIds: number[] = [];
+                try {
+                    // Fetch user-task-year-pms for this milestone
+                    const userTaskYearPms: any = await this.taskMgmtApiClient.executeRequest(
+                        'GET',
+                        '/pct/api/user-task-year-pms',
+                        { 'filter[task_id]': ms.task_id.toString(), 'per_page': '0' }
+                    );
+                    const userPms = userTaskYearPms?.data || userTaskYearPms || [];
+                    assigneeUserIds = Array.from(new Set(userPms.map((pm: any) => pm.user_id).filter(Boolean)));
+                    console.log(`  Found ${assigneeUserIds.length} employees assigned to milestone via PM allocations`);
+                } catch (err: any) {
+                    console.log(`  Warning: Could not fetch user-task-year-pms: ${err?.message || err}`);
+                }
+
+                // Fallback: use milestone responsibles from project plan if no PM assignments found
+                if (assigneeUserIds.length === 0) {
+                    const msResponsibles = this.getMilestoneResponsibles(ms);
+                    assigneeUserIds = msResponsibles.map(r => r.id);
+                }
+
+                const assigneesFromMs = assigneeUserIds.map(userId => ({
+                    id: userId,
                     organization_id: undefined,
-                    email: `user${r.id}@example.com`,
+                    email: `user${userId}@example.com`,
                     first_name: '',
                     last_name: '',
                     is_active: 1
                 }));
-                const assigneeIdsFromMs = msResponsibles.map(r => r.id);
+                const assigneeIdsFromMs = assigneeUserIds;
 
                 for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
                     const t = GENERIC_TASKS[taskIdx];
@@ -1407,5 +1435,152 @@ export class TaskManagementOperation extends BaseOperation {
         }
 
         console.log(`Tracked time done. Total ≈ ${totalHours}h across ${days.length} business days.`);
+    }
+
+    /**
+     * Add tracked time for all employees assigned to milestones
+     * - Reads user-task-year-pms to find all employee assignments
+     * - For each employee, creates timers based on milestone period and their PM allocation
+     * - Only creates timers if employee is assigned to tasks on the milestone board
+     */
+    async addMilestoneAssigneesTrackedTime(options: {
+        totalHoursPerEmployee?: number;  // default: calculated from PM allocation
+        timezone?: string;               // default Europe/Istanbul
+        partnerId?: string;              // header için
+        defaultTimerCategoryIndex?: number; // varsayılan 0 (Development)
+    }): Promise<void> {
+        const {
+            totalHoursPerEmployee,
+            timezone = 'Europe/Istanbul',
+            partnerId,
+            defaultTimerCategoryIndex = 0
+        } = options;
+
+        if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+
+        const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
+        const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
+        if (cachedBoards.length === 0 || milestoneMappings.length === 0) {
+            console.log('No boards or milestones cached; aborting addMilestoneAssigneesTrackedTime.');
+            return;
+        }
+        this.boardMappings = cachedBoards;
+
+        const timerCategoryId = this.timerCategoryIds?.[defaultTimerCategoryIndex];
+
+        console.log('\n=== Adding Tracked Time for Milestone Assignees ===\n');
+
+        let totalTimersCreated = 0;
+        let errors = 0;
+
+        // Group by milestone to process each one
+        for (const ms of milestoneMappings) {
+            try {
+                console.log(`\n[Milestone: ${ms.project_short_title} / ${ms.milestone_title}]`);
+
+                const board = this.boardMappings.find(b =>
+                    b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title
+                );
+                if (!board) {
+                    console.log(`  ⊗ Board not found, skipping`);
+                    continue;
+                }
+
+                // Fetch user-task-year-pms for this milestone
+                let userTaskYearPms: any[] = [];
+                try {
+                    const response: any = await this.taskMgmtApiClient.executeRequest(
+                        'GET',
+                        '/pct/api/user-task-year-pms',
+                        { 'filter[task_id]': ms.task_id.toString(), 'per_page': '0' }
+                    );
+                    userTaskYearPms = response?.data || response || [];
+                } catch (err: any) {
+                    console.log(`  ⊗ Could not fetch user-task-year-pms: ${err?.message || err}`);
+                    continue;
+                }
+
+                if (userTaskYearPms.length === 0) {
+                    console.log(`  ⊗ No employees assigned via PM allocations, skipping`);
+                    continue;
+                }
+
+                console.log(`  Found ${userTaskYearPms.length} employee PM allocations`);
+
+                // Get milestone period business days
+                const milestoneDays = this.businessDaysBetweenInclusive(ms.started_at, ms.finished_at);
+                if (milestoneDays.length === 0) {
+                    console.log(`  ⊗ No business days in milestone period, skipping`);
+                    continue;
+                }
+
+                // Process each employee assigned to this milestone
+                for (const userPm of userTaskYearPms) {
+                    const userId = userPm.user_id;
+                    if (!userId) continue;
+
+                    try {
+                        // Check if user is assigned to any task on this board
+                        const isAssigned = await this.isUserAssignedToAnyTaskOnBoard(board.id, userId);
+                        if (!isAssigned) {
+                            console.log(`  ~ Skip timers for user ${userId}: not assigned to any task on board ${board.id}`);
+                            continue;
+                        }
+
+                        // Calculate hours based on PM allocation
+                        // 1 PM = 173.333333 hours (40h/week * 4.333 weeks/month)
+                        const pmAmount = userPm.amount || 0;
+                        let hoursToDistribute: number;
+
+                        if (totalHoursPerEmployee) {
+                            hoursToDistribute = totalHoursPerEmployee;
+                        } else {
+                            // Calculate from PM: 1 PM = 173.333333 hours
+                            hoursToDistribute = pmAmount * 173.333333;
+                        }
+
+                        if (hoursToDistribute <= 0) {
+                            console.log(`  ~ Skip timers for user ${userId}: no hours to distribute (PM: ${pmAmount})`);
+                            continue;
+                        }
+
+                        // Distribute hours across milestone period business days
+                        const dailyHours = hoursToDistribute / milestoneDays.length;
+
+                        console.log(`  + User ${userId}: ${hoursToDistribute.toFixed(1)}h total (${pmAmount} PM) → ${dailyHours.toFixed(2)}h/day over ${milestoneDays.length} days`);
+
+                        // Create timer entries for each business day
+                        for (const dayISO of milestoneDays) {
+                            try {
+                                await this.postTimerEntry({
+                                    dayISO,
+                                    hours: dailyHours,
+                                    userId,
+                                    pctMilestoneId: ms.task_id,
+                                    timerCategoryId,
+                                    tz: timezone
+                                });
+                                totalTimersCreated++;
+                            } catch (timerErr: any) {
+                                console.log(`    ! Timer failed for ${dayISO}: ${timerErr?.message || timerErr}`);
+                                errors++;
+                            }
+                        }
+
+                    } catch (userErr: any) {
+                        console.log(`  ! Failed to process user ${userId}: ${userErr?.message || userErr}`);
+                        errors++;
+                    }
+                }
+
+            } catch (msErr: any) {
+                console.log(`  ! Failed to process milestone ${ms.milestone_title}: ${msErr?.message || msErr}`);
+                errors++;
+            }
+        }
+
+        console.log(`\n=== Tracked Time Summary ===`);
+        console.log(`  - Total timers created: ${totalTimersCreated}`);
+        console.log(`  - Errors: ${errors}\n`);
     }
 }
