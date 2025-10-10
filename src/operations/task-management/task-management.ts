@@ -78,7 +78,7 @@ export class TaskManagementOperation extends BaseOperation {
     private taskTypeIds: number[] = [];
     private priorityIds: number[] = [];
     private allowedActivityTypes: string[] = [];
-    private timerCategoryIds: number[] = []; // NEW: keep created timer category ids
+    private timerCategoryIds: number[] = []; // keep created timer category ids
 
     constructor(authService: AuthService) {
         super();
@@ -127,7 +127,7 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`Saved ${this.boardMappings.length} board mappings to cache\n`);
     }
 
-    // ---- NEW date/hour helpers ----
+    // ---- date/hour helpers ----
     private *iterateBusinessDaysDesc(fromISO: string, daysBack: number): Generator<string> {
         let d = new Date(fromISO + 'T00:00:00');
         let left = daysBack;
@@ -160,10 +160,9 @@ export class TaskManagementOperation extends BaseOperation {
         return weights.map(w => (w/sum)*totalHours);
     }
 
-    // ---- NEW assignment & status checks for time entries ----
+    // ---- assignment & status checks for time entries ----
     private async isUserAssignedToAnyTaskOnBoard(boardId: number, userId: number): Promise<boolean> {
         try {
-            // fast path: if API supports assignee filter
             const r: any = await this.taskMgmtApiClient.executeRequest(
                 'GET', '/api/tasks', { 'filter[board_id]': String(boardId), 'filter[assignee_id]': String(userId) }
             );
@@ -203,6 +202,37 @@ export class TaskManagementOperation extends BaseOperation {
         }
     }
 
+    // ---- NEW: milestone responsibles helpers ----
+    /**
+     * milestone-mappings.json içinde olası alanlardan responsible user id’lerini toparlar.
+     * Desteklenen şekiller: number[] veya [{user_id}] / [{id}]
+     */
+    private getMilestoneResponsibleUserIds(ms: any): number[] {
+        const tryArrays: any[] = [
+            ms?.responsible_user_ids,
+            ms?.assigned_user_ids,
+            ms?.assignees,
+            ms?.employees,
+            ms?.responsibles,
+            ms?.assigned_employees
+        ].filter(Boolean);
+
+        for (const arr of tryArrays) {
+            if (Array.isArray(arr)) {
+                if (arr.length === 0) continue;
+                if (typeof arr[0] === 'number') return arr as number[];
+                const ids = (arr as any[]).map(x => Number(x?.user_id ?? x?.id)).filter(Boolean);
+                if (ids.length) return ids;
+            }
+        }
+        return [];
+    }
+
+    private getMilestoneResponsibles(ms: any): Array<{id:number; name?:string}> {
+        const ids = this.getMilestoneResponsibleUserIds(ms);
+        return ids.map(id => ({ id, name: undefined }));
+    }
+
     // --------------------------------------------------------------------------
     // Retry & paging helpers
     // --------------------------------------------------------------------------
@@ -229,7 +259,6 @@ export class TaskManagementOperation extends BaseOperation {
             try {
                 const all: any[] = [];
 
-                // Naive paging (?page=1..maxPages)
                 for (let page = 1; page <= maxPages; page++) {
                     const res: any = await this.taskMgmtApiClient.executeRequest(
                         'GET',
@@ -239,7 +268,7 @@ export class TaskManagementOperation extends BaseOperation {
                     const chunk = res?.data || res || [];
                     if (Array.isArray(chunk)) {
                         all.push(...chunk);
-                        if (chunk.length === 0) break; // empty page → stop
+                        if (chunk.length === 0) break;
                     } else {
                         if (page === 1) all.push(chunk);
                         break;
@@ -470,7 +499,7 @@ export class TaskManagementOperation extends BaseOperation {
                     payload
                 );
                 const categoryId = response.data?.id || response.id;
-                if (categoryId) this.timerCategoryIds.push(categoryId); // NEW: store ids
+                if (categoryId) this.timerCategoryIds.push(categoryId);
                 console.log(`  created: ${category.title} (id: ${categoryId})`);
                 created++;
             } catch (error: any) {
@@ -1061,12 +1090,6 @@ export class TaskManagementOperation extends BaseOperation {
         this.boardMappings = cachedBoards;
         console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
 
-        const partnershipEmployees = this.loadFromCache<any[]>('./data/cache/user-partnership-pms.json') || [];
-        console.log(`Loaded ${partnershipEmployees.length} partnership employee assignments\n`);
-
-        const uniqueEmployees = Array.from(new Map(partnershipEmployees.map(e => [e.user_id, e])).values());
-        console.log(`Found ${uniqueEmployees.length} unique employees to assign to tasks\n`);
-
         for (let i = 0; i < milestoneMappings.length; i++) {
             const ms = milestoneMappings[i];
 
@@ -1103,6 +1126,18 @@ export class TaskManagementOperation extends BaseOperation {
                 if (!statusId) { console.log(`  Warning: No TO DO status on board ${board.id}`); continue; }
 
                 console.log(`  ${ms.project_short_title} → ${ms.milestone_title} (${GENERIC_TASKS.length} tasks)`);
+
+                // Assignee’leri project plan’daki milestone responsibles’tan al
+                const msResponsibles = this.getMilestoneResponsibles(ms);
+                const assigneesFromMs = msResponsibles.map(r => ({
+                    id: r.id,
+                    organization_id: undefined,
+                    email: `user${r.id}@example.com`,
+                    first_name: '',
+                    last_name: '',
+                    is_active: 1
+                }));
+                const assigneeIdsFromMs = msResponsibles.map(r => r.id);
 
                 for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
                     const t = GENERIC_TASKS[taskIdx];
@@ -1155,21 +1190,10 @@ export class TaskManagementOperation extends BaseOperation {
                             if (targetType !== 'todo') {
                                 const target = statuses.find((s: any) => s.type === targetType);
                                 if (target) {
-                                    const assignees: any[] = [], watchers: any[] = [], assigneeIds: number[] = [], watcherIds: number[] = [];
-                                    for (const emp of uniqueEmployees) {
-                                        const e = {
-                                            id: emp.user_id,
-                                            organization_id: createRes.organization_id,
-                                            email: `user${emp.user_id}@example.com`,
-                                            first_name: emp.employee_name.split(' ')[0] || emp.employee_name,
-                                            last_name: emp.employee_name.split(' ').slice(1).join(' ') || '',
-                                            is_active: 1
-                                        };
-                                        assignees.push(e);
-                                        watchers.push(e);
-                                        assigneeIds.push(emp.user_id);
-                                        watcherIds.push(emp.user_id);
-                                    }
+                                    const assignees = assigneesFromMs;
+                                    const watchers  = assigneesFromMs;
+                                    const assigneeIds = assigneeIdsFromMs;
+                                    const watcherIds  = assigneeIdsFromMs;
 
                                     const statusUpdate: any = {
                                         id: taskId,
@@ -1239,7 +1263,7 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     // --------------------------------------------------------------------------
-    // NEW: Timers (owner user, only boards with ACTIVE/DONE tasks)
+    // Timers (owner user, milestone activity)
     // --------------------------------------------------------------------------
     private async postTimerEntry(options: {
         dayISO: string;
@@ -1253,11 +1277,16 @@ export class TaskManagementOperation extends BaseOperation {
             dayISO, hours, userId, pctMilestoneId, timerCategoryId, tz = 'Europe/Istanbul'
         } = options;
 
+        // drift olmaması için finished_at’i aynı gün içinde elde et
         const started_at = `${dayISO} 08:00:00`;
-        const end = new Date(`${dayISO}T08:00:00`);
-        end.setMinutes(end.getMinutes() + Math.round(hours * 60));
-        const finished_at = `${end.toISOString().slice(0,10)} ${end.toTimeString().slice(0,8)}`;
+        const totalMins = Math.round(hours * 60);
+        const hh = 8 + Math.floor(totalMins / 60);
+        const mm = totalMins % 60;
+        const hhStr = String(Math.min(hh, 23)).padStart(2, '0');
+        const mmStr = String(mm).padStart(2, '0');
+        const finished_at = `${dayISO} ${hhStr}:${mmStr}:00`;
 
+        // timesheet’te milestone görünmesi için activity listesinde PctMilestone gönderiyoruz
         const activities: any[] = [{ id: pctMilestoneId, type: 'App\\Models\\PctMilestone' }];
         if (typeof timerCategoryId === 'number') {
             activities.unshift({ id: timerCategoryId, type: 'App\\Models\\TimerCategory' });
@@ -1281,9 +1310,10 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     /**
-     * Örnek çağrı:
+     * Örnek:
      * await addOwnerTrackedTime({ userId: 1009550, totalHours: 40, daysBack: 7, partnerId: '11956', timezone: 'Europe/Istanbul' })
-     * - Sadece: (a) owner assign olduğu ve (b) board’ında en az 1 ACTIVE/DONE task bulunan milestone’lara timer ekler.
+     * - Owner’ın PROJECT PLAN’da responsible olduğu tüm milestone’ların periodu için timer ekler.
+     * - Board’da en az 1 ACTIVE/DONE task şartı korunur.
      */
     async addOwnerTrackedTime(options: {
         userId: number;
@@ -1335,11 +1365,11 @@ export class TaskManagementOperation extends BaseOperation {
             );
             if (!board) continue;
 
-            // (a) owner assign mı?
-            const assigned = await this.isUserAssignedToAnyTaskOnBoard(board.id, userId);
-            if (!assigned) continue;
+            // OWNER, PROJECT PLAN’da bu milestone için responsible mı?
+            const msResponsibleIds = this.getMilestoneResponsibleUserIds(ms);
+            if (!msResponsibleIds.includes(userId)) continue;
 
-            // (b) board’ta ACTIVE/DONE task var mı?
+            // Board’ta ACTIVE/DONE task var mı?
             const hasActiveOrDone = await this.boardHasActiveOrDoneTasks(board.id);
             if (!hasActiveOrDone) {
                 console.log(`  ~ skip timers: board ${board.id} has no ACTIVE/DONE tasks`);

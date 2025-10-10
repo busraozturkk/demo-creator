@@ -1,152 +1,152 @@
 [
   {
     "name": "Geschäftsanalyst",
-    "id": 9016,
-    "group_id": 2460
+    "id": 9082,
+    "group_id": 2476
   },
   {
     "name": "Betriebsleiter",
-    "id": 9017,
-    "group_id": 2460
+    "id": 9083,
+    "group_id": 2476
   },
   {
     "name": "Projektmanager",
-    "id": 9018,
-    "group_id": 2460
+    "id": 9084,
+    "group_id": 2476
   },
   {
     "name": "Produktmanager",
-    "id": 9019,
-    "group_id": 2460
+    "id": 9085,
+    "group_id": 2476
   },
   {
     "name": "Strategieberater",
-    "id": 9020,
-    "group_id": 2460
+    "id": 9086,
+    "group_id": 2476
   },
   {
     "name": "Software-Ingenieur",
-    "id": 9021,
-    "group_id": 2461
+    "id": 9087,
+    "group_id": 2477
   },
   {
     "name": "DevOps-Ingenieur",
-    "id": 9022,
-    "group_id": 2461
+    "id": 9088,
+    "group_id": 2477
   },
   {
     "name": "Dateningenieur",
-    "id": 9023,
-    "group_id": 2461
+    "id": 9089,
+    "group_id": 2477
   },
   {
     "name": "Systemarchitekt",
-    "id": 9024,
-    "group_id": 2461
+    "id": 9090,
+    "group_id": 2477
   },
   {
     "name": "QA-Ingenieur",
-    "id": 9025,
-    "group_id": 2461
+    "id": 9091,
+    "group_id": 2477
   },
   {
     "name": "Vertriebsmitarbeiter",
-    "id": 9026,
-    "group_id": 2462
+    "id": 9092,
+    "group_id": 2478
   },
   {
     "name": "Marketing-Manager",
-    "id": 9027,
-    "group_id": 2462
+    "id": 9093,
+    "group_id": 2478
   },
   {
     "name": "Account Executive",
-    "id": 9028,
-    "group_id": 2462
+    "id": 9094,
+    "group_id": 2478
   },
   {
     "name": "Marketing-Spezialist",
-    "id": 9029,
-    "group_id": 2462
+    "id": 9095,
+    "group_id": 2478
   },
   {
     "name": "Markenmanager",
-    "id": 9030,
-    "group_id": 2462
+    "id": 9096,
+    "group_id": 2478
   },
   {
     "name": "Finanzanalyst",
-    "id": 9031,
-    "group_id": 2463
+    "id": 9097,
+    "group_id": 2479
   },
   {
     "name": "Buchhalter",
-    "id": 9032,
-    "group_id": 2463
+    "id": 9098,
+    "group_id": 2479
   },
   {
     "name": "Controller",
-    "id": 9033,
-    "group_id": 2463
+    "id": 9099,
+    "group_id": 2479
   },
   {
     "name": "Steuerspezialist",
-    "id": 9034,
-    "group_id": 2463
+    "id": 9100,
+    "group_id": 2479
   },
   {
     "name": "Wirtschaftsprüfer",
-    "id": 9035,
-    "group_id": 2463
+    "id": 9101,
+    "group_id": 2479
   },
   {
     "name": "Personalleiter",
-    "id": 9036,
-    "group_id": 2464
+    "id": 9102,
+    "group_id": 2480
   },
   {
     "name": "Recruiter",
-    "id": 9037,
-    "group_id": 2464
+    "id": 9103,
+    "group_id": 2480
   },
   {
     "name": "HR Business Partner",
-    "id": 9038,
-    "group_id": 2464
+    "id": 9104,
+    "group_id": 2480
   },
   {
     "name": "Ausbildungsspezialist",
-    "id": 9039,
-    "group_id": 2464
+    "id": 9105,
+    "group_id": 2480
   },
   {
     "name": "Vergütungsanalyst",
-    "id": 9040,
-    "group_id": 2464
+    "id": 9106,
+    "group_id": 2480
   },
   {
     "name": "Kundensupport-Spezialist",
-    "id": 9041,
-    "group_id": 2465
+    "id": 9107,
+    "group_id": 2481
   },
   {
     "name": "Customer Success Manager",
-    "id": 9042,
-    "group_id": 2465
+    "id": 9108,
+    "group_id": 2481
   },
   {
     "name": "Technischer Support-Ingenieur",
-    "id": 9043,
-    "group_id": 2465
+    "id": 9109,
+    "group_id": 2481
   },
   {
     "name": "Service-Desk-Analyst",
-    "id": 9044,
-    "group_id": 2465
+    "id": 9110,
+    "group_id": 2481
   },
   {
     "name": "Kundenerlebnis-Manager",
-    "id": 9045,
-    "group_id": 2465
+    "id": 9111,
+    "group_id": 2481
   }
 ]
