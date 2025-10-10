@@ -438,8 +438,8 @@ export async function runDemoCreation(
                                         await milestonesOp.setMilestonePeriods(milestoneMappings, projectMappings);
                                         socket.emit('log', { type: 'success', message: '✓ Periods set for milestones\n' });
 
-                                        // Assign employees to milestones
-                                        await milestonesOp.assignEmployeesToMilestones(milestoneMappings, organizationId);
+                                        // Assign employees to milestones (include owner user)
+                                        await milestonesOp.assignEmployeesToMilestones(milestoneMappings, organizationId, authService.getUserId());
                                         socket.emit('log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
 
                                         // Re-save milestone mappings with updated period info

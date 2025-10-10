@@ -73,6 +73,7 @@ const TIMER_CATEGORIES = [
 
 export class TaskManagementOperation extends BaseOperation {
     private taskMgmtApiClient: ApiClient;
+    private mainApiClient: ApiClient; // For PCT/main backend endpoints
     private folderMappings: FolderMapping[] = [];
     private boardMappings: BoardMapping[] = [];
     private taskTypeIds: number[] = [];
@@ -86,6 +87,11 @@ export class TaskManagementOperation extends BaseOperation {
         this.taskMgmtApiClient = new ApiClient(
             authService,
             'https://task-management-backend.innoscripta.com'
+        );
+        // Main backend for PCT endpoints
+        this.mainApiClient = new ApiClient(
+            authService,
+            'https://pct-backend.innoscripta.com'
         );
     }
 
@@ -1138,8 +1144,8 @@ export class TaskManagementOperation extends BaseOperation {
                 // Get user IDs from user-task-year-pms (employees with PM allocations)
                 let assigneeUserIds: number[] = [];
                 try {
-                    // Fetch user-task-year-pms for this milestone
-                    const userTaskYearPms: any = await this.taskMgmtApiClient.executeRequest(
+                    // Fetch user-task-year-pms for this milestone (use main backend, not task mgmt)
+                    const userTaskYearPms: any = await this.mainApiClient.executeRequest(
                         'GET',
                         '/pct/api/user-task-year-pms',
                         { 'filter[task_id]': ms.task_id.toString(), 'per_page': '0' }
@@ -1486,10 +1492,10 @@ export class TaskManagementOperation extends BaseOperation {
                     continue;
                 }
 
-                // Fetch user-task-year-pms for this milestone
+                // Fetch user-task-year-pms for this milestone (use main backend, not task mgmt)
                 let userTaskYearPms: any[] = [];
                 try {
-                    const response: any = await this.taskMgmtApiClient.executeRequest(
+                    const response: any = await this.mainApiClient.executeRequest(
                         'GET',
                         '/pct/api/user-task-year-pms',
                         { 'filter[task_id]': ms.task_id.toString(), 'per_page': '0' }
