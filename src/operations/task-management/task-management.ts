@@ -1366,7 +1366,10 @@ export class TaskManagementOperation extends BaseOperation {
             defaultTimerCategoryIndex = 0
         } = options;
 
-        if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+        if (partnerId) {
+            this.taskMgmtApiClient.setPartnerId(partnerId);
+            this.mainApiClient.setPartnerId(partnerId);
+        }
 
         const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
         const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
@@ -1462,7 +1465,10 @@ export class TaskManagementOperation extends BaseOperation {
             defaultTimerCategoryIndex = 0
         } = options;
 
-        if (partnerId) this.taskMgmtApiClient.setPartnerId(partnerId);
+        if (partnerId) {
+            this.taskMgmtApiClient.setPartnerId(partnerId);
+            this.mainApiClient.setPartnerId(partnerId);
+        }
 
         const milestoneMappings = this.loadFromCache<any[]>('./data/cache/milestone-mappings.json') || [];
         const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
