@@ -1364,20 +1364,20 @@ export class TaskManagementOperation extends BaseOperation {
                                         user_hourly_salaries: [],
                                         sectionsDetail: updatePayload.fields.map((f: string, idx: number) => ({
                                             id: f, type: f, order: idx + 1,
-                                        dropMeta: { destination: { droppableId: 'all-sections', index: idx }, type: 'SECTION' },
-                                        value:
-                                            f === 'description' ? updatePayload.description :
-                                                f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
-                                                    f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
-                                                        f === 'responsibles' ? assignees :
-                                                            f === 'watchers' ? watchers : ''
-                                    })),
-                                    checklistSections: [],
+                                            dropMeta: { destination: { droppableId: 'all-sections', index: idx }, type: 'SECTION' },
+                                            value:
+                                                f === 'description' ? updatePayload.description :
+                                                    f === 'task_type' && updatePayload.task_type_id ? updatePayload.task_type_id :
+                                                        f === 'urgency' && updatePayload.priority_id ? updatePayload.priority_id :
+                                                            f === 'responsibles' ? assignees :
+                                                                f === 'watchers' ? watchers : ''
+                                        })),
+                                        checklistSections: [],
                                         positionIndex: { destinationIndex: 0, sourceIndex: 0 },
-                                    source_status_id: target.id,
+                                        source_status_id: target.id,
                                         assignee_ids: assigneeIds,
                                         watcher_ids: watcherIds
-                                };
+                                    };
                                     if (completedAt) statusUpdate.completed_at = completedAt;
 
                                     await this.taskMgmtApiClient.executeRequest('PUT', `/api/tasks/${taskId}`, statusUpdate);
