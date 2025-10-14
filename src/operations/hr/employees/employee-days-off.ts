@@ -84,6 +84,13 @@ export class EmployeeDaysOffOperation {
     // Add some randomness based on employee ID to ensure different dates for each employee
     const employeeSeed = employee.id % 1000;
 
+    // Calculate the start of current week (Monday)
+    const currentWeekStart = new Date(today);
+    const dayOfWeek = today.getDay();
+    const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // If Sunday (0), go back 6 days, else go back to Monday
+    currentWeekStart.setDate(today.getDate() - daysToMonday);
+    currentWeekStart.setHours(0, 0, 0, 0);
+
     // Calculate valid date range for this employee
     // Start from contract start date or beginning of current year (whichever is later)
     const contractStartDate = employee.started_at
@@ -94,18 +101,26 @@ export class EmployeeDaysOffOperation {
       ? contractStartDate
       : new Date(today.getFullYear(), 0, 1);
 
-    // End date is today (no future dates)
-    const validEndDate = today;
+    // End date is the day before current week starts (exclude current week)
+    const validEndDate = new Date(currentWeekStart);
+    validEndDate.setDate(currentWeekStart.getDate() - 1);
 
-    // If contract started in the future, skip this employee
+    // If contract started in the future or no valid date range, skip this employee
     if (validStartDate > validEndDate) {
-      console.log(`  Skipping: contract starts in the future`);
+      console.log(`  Skipping: contract starts in the future or no valid dates before current week`);
       return 0;
     }
 
     // Track total vacation days used (max 24)
     let totalVacationDays = 0;
     const maxVacationDays = 24;
+
+    // Only use "Vacation" type - find it from vacationTypes
+    const vacationType = vacationTypes.find(type => type.name === 'Vacation');
+    if (!vacationType) {
+      console.log(`  Skipping: "Vacation" type not found`);
+      return 0;
+    }
 
     // Generate 8-12 vacation periods (more varied)
     const vacationPeriods = this.randomInt(8, 12, employeeSeed);
@@ -119,7 +134,7 @@ export class EmployeeDaysOffOperation {
         maxVacationDays - totalVacationDays
       );
 
-      // Random start date between contract start and today
+      // Random start date between contract start and valid end date (before current week)
       const startDate = this.randomDate(validStartDate, validEndDate, employeeSeed + i);
       const startDateStr = this.formatDate(startDate);
 
@@ -142,9 +157,7 @@ export class EmployeeDaysOffOperation {
         usedDates.add(this.formatDate(d));
       }
 
-      // Pick a random vacation type
-      const vacationType = vacationTypes[this.randomInt(0, vacationTypes.length - 1, employeeSeed + i)];
-
+      // Only add "Vacation" type days-off
       daysOff.push({
         date_from: startDateStr,
         date_to: this.formatDate(endDate),
@@ -157,62 +170,6 @@ export class EmployeeDaysOffOperation {
 
       totalVacationDays += daysLength;
       i++; // Only increment if we successfully added
-    }
-
-    // Add 2-4 sick days
-    if (sickDayTypes.length > 0) {
-      const sickDayCount = this.randomInt(2, 4, employeeSeed + 50);
-      attempts = 0;
-
-      for (let i = 0; i < sickDayCount && attempts < sickDayCount * 3; attempts++) {
-        const sickDate = this.randomDate(validStartDate, validEndDate, employeeSeed + 100 + i);
-        const sickDateStr = this.formatDate(sickDate);
-
-        // Skip if date already used
-        if (usedDates.has(sickDateStr)) continue;
-
-        usedDates.add(sickDateStr);
-
-        const sickType = sickDayTypes[this.randomInt(0, sickDayTypes.length - 1, employeeSeed + 150 + i)];
-
-        daysOff.push({
-          date_from: sickDateStr,
-          date_to: sickDateStr,
-          is_half_day: false,
-          type_id: sickType.id,
-          employee_id: employee.id,
-          override: false,
-          has_half_day_holidays: false,
-        });
-        i++;
-      }
-    }
-
-    // Add 2-4 half days
-    const halfDayCount = this.randomInt(2, 4, employeeSeed + 75);
-    attempts = 0;
-
-    for (let i = 0; i < halfDayCount && attempts < halfDayCount * 3; attempts++) {
-      const halfDayDate = this.randomDate(validStartDate, validEndDate, employeeSeed + 200 + i);
-      const halfDayDateStr = this.formatDate(halfDayDate);
-
-      // Skip if date already used
-      if (usedDates.has(halfDayDateStr)) continue;
-
-      usedDates.add(halfDayDateStr);
-
-      const vacationType = vacationTypes[this.randomInt(0, vacationTypes.length - 1, employeeSeed + 250 + i)];
-
-      daysOff.push({
-        date_from: halfDayDateStr,
-        date_to: halfDayDateStr,
-        is_half_day: true,
-        type_id: vacationType.id,
-        employee_id: employee.id,
-        override: false,
-        has_half_day_holidays: false,
-      });
-      i++;
     }
 
     // Create all days-off (skip if already exists)
