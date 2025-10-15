@@ -698,11 +698,11 @@ export class TaskManagementOperation extends BaseOperation {
         try {
             const boards = await this.fetchBoardsWithRetry({
                 expectedMilestoneCount: milestoneMappings.length,
-                readinessRatio: 0.9,
-                retries: 6,
-                baseDelayMs: 900,
-                jitterMs: 250,
-                maxPages: 8,
+                readinessRatio: 1.0, // Wait for ALL milestone boards
+                retries: 10, // Increased retries
+                baseDelayMs: 1500, // Longer base delay
+                jitterMs: 500,
+                maxPages: 10,
             });
 
             const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
@@ -717,35 +717,60 @@ export class TaskManagementOperation extends BaseOperation {
 
             // Map boards with duplicate/project-title rules
             const mappedMilestones = new Set<string>();
+            const boardsToDelete: number[] = [];
 
+            // First pass: identify boards to map and boards to delete
             for (const board of uniqueBoards) {
                 const title = board.title || board.name;
                 const normTitle = this.normalizeTitle(title);
 
+                // Try to find matching milestone by external_id or title
                 const matchingMilestone =
                     milestoneMappings.find(m => (m.task_id ?? '').toString() === (board.external_id ?? '').toString())
-                    || milestoneMappings.find(m => this.normalizeTitle(title) === this.normalizeTitle(m.milestone_title));
+                    || milestoneMappings.find(m => {
+                        const mTitle = this.normalizeTitle(m.milestone_title);
+                        // Check if board title contains milestone title (handles prefixes like "3. ", "4. ", etc.)
+                        return normTitle.includes(mTitle) || mTitle.includes(normTitle);
+                    });
 
                 if (!matchingMilestone) {
-                    console.log(`  ⊗ could not match milestone for board "${title}" (id=${board.id}), skipping`);
+                    // Board doesn't match any milestone - check if it's just a project name
+                    const isProjectNameOnly = projectMappings.some(p => {
+                        const projTitleNorm = this.normalizeTitle(p.title);
+                        const projShortNorm = this.normalizeTitle(p.short_title);
+                        // Exact match or title is just project name (possibly with number prefix)
+                        return normTitle === projTitleNorm || normTitle === projShortNorm;
+                    });
+
+                    if (isProjectNameOnly) {
+                        console.log(`  ⊗ board "${title}" (id=${board.id}) is project name only → marking for deletion`);
+                        boardsToDelete.push(board.id);
+                    } else {
+                        console.log(`  ⊗ could not match milestone for board "${title}" (id=${board.id}), skipping`);
+                    }
                     continue;
                 }
 
-                // Delete board if it looks like project name
+                // Check if board title is ONLY the project name (no milestone info)
                 const proj = projectMappings.find(p => p.short_title === matchingMilestone.project_short_title);
-                const projTitleNorm = this.normalizeTitle(proj?.title);
-                const projShortNorm = this.normalizeTitle(proj?.short_title);
-                if (proj && (normTitle === projTitleNorm || normTitle === projShortNorm)) {
-                    console.log(`  ⊗ board "${title}" (id=${board.id}) looks like project name → deleting`);
-                    await this.deleteBoard(board.id);
-                    continue;
+                if (proj) {
+                    const projTitleNorm = this.normalizeTitle(proj.title);
+                    const projShortNorm = this.normalizeTitle(proj.short_title);
+                    const milestoneNorm = this.normalizeTitle(matchingMilestone.milestone_title);
+
+                    // If title matches project name but doesn't contain milestone info, delete it
+                    if ((normTitle === projTitleNorm || normTitle === projShortNorm) && !normTitle.includes(milestoneNorm)) {
+                        console.log(`  ⊗ board "${title}" (id=${board.id}) looks like project name → marking for deletion`);
+                        boardsToDelete.push(board.id);
+                        continue;
+                    }
                 }
 
-                // Keep first board per milestone, delete the rest
+                // Keep first board per milestone, delete duplicates
                 const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
                 if (mappedMilestones.has(milestoneKey)) {
-                    console.log(`  ⊗ duplicate for milestone "${matchingMilestone.milestone_title}" → deleting board id=${board.id}`);
-                    await this.deleteBoard(board.id);
+                    console.log(`  ⊗ duplicate for milestone "${matchingMilestone.milestone_title}" → marking board id=${board.id} for deletion`);
+                    boardsToDelete.push(board.id);
                     continue;
                 }
 
@@ -761,8 +786,14 @@ export class TaskManagementOperation extends BaseOperation {
                 });
 
                 mappedMilestones.add(milestoneKey);
-                console.log(`  mapped board: "${title}" (id=${board.id})`);
+                console.log(`  ✓ mapped board: "${title}" (id=${board.id})`);
                 totalBoards++;
+            }
+
+            // Second pass: delete unwanted boards
+            console.log(`\nDeleting ${boardsToDelete.length} unwanted boards...`);
+            for (const boardId of boardsToDelete) {
+                await this.deleteBoard(boardId);
             }
 
             console.log(`\nWaiting 1500ms for boards to be fully ready...\n`);
