@@ -23,8 +23,13 @@ export interface OccupationGroup {
   name_de?: string;
 }
 
+export interface Department {
+  name: string;
+  name_de?: string;
+}
+
 export interface Occupation {
-  group_name: string;
+  department_name: string;
   name: string;
   name_de?: string;
 }
@@ -214,10 +219,24 @@ export class CsvLoader {
     });
   }
 
+  static loadDepartments(filePath: string): Department[] {
+    return this.loadCsv(filePath, (record) => {
+      const department: Department = {
+        name: record.name,
+      };
+
+      if (record.name_de) {
+        department.name_de = record.name_de;
+      }
+
+      return department;
+    });
+  }
+
   static loadOccupations(filePath: string): Occupation[] {
     return this.loadCsv(filePath, (record) => {
       const occupation: Occupation = {
-        group_name: record.group_name,
+        department_name: record.department_name,
         name: record.name,
       };
 

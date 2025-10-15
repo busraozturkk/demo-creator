@@ -1,21 +1,32 @@
 import { ApiClient } from '../../../api-client';
-import { BaseOperation } from '../../utilities/base-operation';
 import { parse } from 'csv-parse/sync';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CACHE_PATHS } from '../../../utils/constants';
-import { EmployeeMapping, DepartmentMapping } from '../../../types';
+
+export interface DepartmentMapping {
+  name: string;
+  id: number;
+  leader_employee_id: number;
+}
 
 interface Department {
   name: string;
   leader_email_username: string;
 }
 
-export class DepartmentsOperation extends BaseOperation {
+interface EmployeeMapping {
+  email: string;
+  id: number;
+  first_name: string;
+  last_name: string;
+}
+
+export class DepartmentsOperation {
   private apiClient: ApiClient;
+  private cacheDir: string = './data/cache';
+  private cacheFile: string = 'department-mappings.json';
 
   constructor(apiClient: ApiClient) {
-    super();
     this.apiClient = apiClient;
   }
 
@@ -47,7 +58,7 @@ export class DepartmentsOperation extends BaseOperation {
 
         console.log(`  Leader: ${leader.first_name} ${leader.last_name} (ID: ${leader.id})`);
 
-        // Get organization ID from config or first API call
+        // Get organization ID
         const organizationId = await this.getOrganizationId();
 
         const response = await this.apiClient.executeRequest('POST', '/api/departments', {
@@ -71,7 +82,12 @@ export class DepartmentsOperation extends BaseOperation {
     console.log(`Completed! Created ${mappings.length} departments.`);
 
     if (mappings.length > 0) {
-      this.saveMappings(mappings);
+      const cachePath = path.join(this.cacheDir, this.cacheFile);
+      if (!fs.existsSync(this.cacheDir)) {
+        fs.mkdirSync(this.cacheDir, { recursive: true });
+      }
+      fs.writeFileSync(cachePath, JSON.stringify(mappings, null, 2));
+      console.log(`Saved department mappings to: ${cachePath}\n`);
     }
 
     return mappings;
@@ -94,9 +110,20 @@ export class DepartmentsOperation extends BaseOperation {
   }
 
   private async getOrganizationId(): Promise<number> {
-    // Get organization ID from current user or config
-    // For now, we'll extract it from the auth token or make a simple API call
-    // This is a placeholder - you might need to adjust based on your API
+    // Get organization ID from cached value or API call
+    const orgCachePath = path.join(this.cacheDir, 'organization-id.json');
+
+    if (fs.existsSync(orgCachePath)) {
+      try {
+        const content = fs.readFileSync(orgCachePath, 'utf-8');
+        const orgData = JSON.parse(content);
+        return orgData.organizationId || orgData;
+      } catch (error) {
+        // Continue to API call if cache read fails
+      }
+    }
+
+    // Fallback: Get from API
     const response = await this.apiClient.executeRequest('GET', '/api/employees?limit=1&per_page=1');
 
     if (response && response.data && response.data.length > 0) {
@@ -106,12 +133,19 @@ export class DepartmentsOperation extends BaseOperation {
     throw new Error('Could not determine organization ID');
   }
 
-  private saveMappings(mappings: DepartmentMapping[]): void {
-    this.saveToCache(CACHE_PATHS.DEPARTMENT_MAPPINGS, mappings);
-    console.log(`Saved department mappings to: ${CACHE_PATHS.DEPARTMENT_MAPPINGS}\n`);
-  }
-
   getMappings(): DepartmentMapping[] | null {
-    return this.loadFromCache<DepartmentMapping[]>(CACHE_PATHS.DEPARTMENT_MAPPINGS);
+    const cachePath = path.join(this.cacheDir, this.cacheFile);
+
+    if (!fs.existsSync(cachePath)) {
+      return null;
+    }
+
+    try {
+      const content = fs.readFileSync(cachePath, 'utf-8');
+      return JSON.parse(content);
+    } catch (error) {
+      console.error(`Failed to read department mappings: ${error}`);
+      return null;
+    }
   }
 }

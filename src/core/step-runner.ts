@@ -155,28 +155,23 @@ export async function runSingleStep(stepId: string, session: any) {
             break;
 
         case 'occupation-groups':
-            console.log('Creating occupation groups and storing mappings');
-            const occupationGroupsPath = `./data/${session.dataGroup}/occupation-groups.csv`;
-            if (fs.existsSync(occupationGroupsPath)) {
-                const { OccupationGroupsOperation } = await import('../operations/hr/hr-settings/occupation-groups');
-                const occupationGroupsOp = new OccupationGroupsOperation(session.apiClient, '3');
-                session.groupMappings = await occupationGroupsOp.createOccupationGroups(occupationGroupsPath);
-                console.log(`Created ${session.groupMappings?.length || 0} occupation group mappings`);
-            } else {
-                console.log('No occupation groups CSV found, skipping');
-            }
+            console.log('Occupation groups step removed - departments are now created in the departments step');
             break;
 
         case 'occupations':
-            console.log('Creating occupations and linking to occupation groups');
+            console.log('Creating occupations (roles) and linking to departments');
             const occupationsPath = `./data/${session.dataGroup}/occupations.csv`;
-            if (fs.existsSync(occupationsPath) && session.groupMappings?.length > 0) {
-                const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
-                const occupationsOp = new OccupationsOperation(session.apiClient, '3');
-                await occupationsOp.createOccupations(occupationsPath, session.groupMappings);
-                console.log('Occupations created successfully');
+            if (fs.existsSync(occupationsPath)) {
+                if (session.departmentMappings?.length > 0) {
+                    const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
+                    const occupationsOp = new OccupationsOperation(session.apiClient, '3');
+                    await occupationsOp.createOccupations(occupationsPath, session.departmentMappings);
+                    console.log('Occupations created successfully');
+                } else {
+                    console.log('No department mappings available. You must run the "departments" step first.');
+                }
             } else {
-                console.log('No occupations CSV found or no group mappings available, skipping');
+                console.log('No occupations CSV found, skipping');
             }
             break;
 
@@ -347,7 +342,7 @@ export async function runSingleStep(stepId: string, session: any) {
             break;
 
         case 'departments':
-            console.log('Creating departments');
+            console.log('Creating departments with leaders');
             const departmentsPath = `./data/${session.dataGroup}/departments.csv`;
             if (fs.existsSync(departmentsPath)) {
                 const employeeMappingsForDept = session.employeesOp?.getMappings();
@@ -360,6 +355,7 @@ export async function runSingleStep(stepId: string, session: any) {
                         session.emailDomain
                     );
                     console.log(`Departments created: ${session.departmentMappings?.length || 0}`);
+                    console.log('Note: These departments can now be used for occupation/role linking');
                 } else {
                     console.log('No employee mappings available, skipping');
                 }

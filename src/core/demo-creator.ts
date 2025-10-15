@@ -164,30 +164,12 @@ export async function runDemoCreation(
             await locationIdsOp.fetchAndCacheLocationIds();
         }
 
-        let groupMappings: any[] = [];
-
         // Qualification Groups
         const qualificationGroupsPath = `./data/${dataGroup}/qualification-groups.csv`;
         if (fs.existsSync(qualificationGroupsPath)) {
             const { QualificationGroupsOperation } = await import('../operations/hr/hr-settings/qualification-groups');
             const qualificationGroupsOp = new QualificationGroupsOperation(apiClient, '3');
             await qualificationGroupsOp.createQualificationGroups(qualificationGroupsPath);
-        }
-
-        // Occupation Groups
-        const occupationGroupsPath = `./data/${dataGroup}/occupation-groups.csv`;
-        if (fs.existsSync(occupationGroupsPath)) {
-            const { OccupationGroupsOperation } = await import('../operations/hr/hr-settings/occupation-groups');
-            const occupationGroupsOp = new OccupationGroupsOperation(apiClient, '3');
-            groupMappings = await occupationGroupsOp.createOccupationGroups(occupationGroupsPath);
-        }
-
-        // Occupations
-        const occupationsPath = `./data/${dataGroup}/occupations.csv`;
-        if (fs.existsSync(occupationsPath) && groupMappings.length > 0) {
-            const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
-            const occupationsOp = new OccupationsOperation(apiClient, '3');
-            await occupationsOp.createOccupations(occupationsPath, groupMappings);
         }
 
         // Titles
@@ -360,6 +342,21 @@ export async function runDemoCreation(
                             emailDomain
                         );
                         socket.emit('log', { type: 'success', message: `✓ Departments created: ${departmentMappings?.length || 0}\n` });
+
+                        // Occupations (Roles) - link to departments
+                        const occupationsPath = `./data/${dataGroup}/occupations.csv`;
+                        if (fs.existsSync(occupationsPath) && departmentMappings.length > 0) {
+                            socket.emit('log', { type: 'info', message: '\n=== Creating Occupations (Roles) ===' });
+                            try {
+                                const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
+                                const occupationsOp = new OccupationsOperation(apiClient, '3');
+                                await occupationsOp.createOccupations(occupationsPath, departmentMappings);
+                                socket.emit('log', { type: 'success', message: 'Occupations (roles) created and linked to departments\n' });
+                            } catch (error: any) {
+                                socket.emit('log', { type: 'error', message: `Occupations creation failed: ${error.message}` });
+                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                            }
+                        }
 
                         // Teams
                         const teamsPath = `./data/${dataGroup}/teams.csv`;

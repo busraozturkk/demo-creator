@@ -1,13 +1,13 @@
 import { ApiClient } from '../../../api-client';
 import { CsvLoader, Occupation } from '../../../utils/csv-loader';
-import { OccupationGroupMapping } from './occupation-groups';
+import { DepartmentMapping } from './departments';
 import * as fs from 'fs';
 import * as path from 'path';
 
 export interface OccupationMapping {
   name: string;
   id: number;
-  group_id: number;
+  department_id: number;
 }
 
 export class OccupationsOperation {
@@ -23,7 +23,7 @@ export class OccupationsOperation {
 
   async createOccupations(
     csvPath: string,
-    groupMappings: OccupationGroupMapping[]
+    departmentMappings: DepartmentMapping[]
   ): Promise<OccupationMapping[]> {
     console.log(`Loading occupations (roles) from: ${csvPath}`);
     const occupations = CsvLoader.loadOccupations(csvPath);
@@ -31,20 +31,20 @@ export class OccupationsOperation {
     console.log(`Found ${occupations.length} occupations to create\n`);
 
     // Create a map for quick lookup
-    const groupMap = new Map<string, number>();
-    groupMappings.forEach((mapping) => {
-      groupMap.set(mapping.name, mapping.id);
+    const departmentMap = new Map<string, number>();
+    departmentMappings.forEach((mapping) => {
+      departmentMap.set(mapping.name, mapping.id);
     });
 
     const mappings: OccupationMapping[] = [];
 
     for (let i = 0; i < occupations.length; i++) {
       const occupation = occupations[i];
-      const groupId = groupMap.get(occupation.group_name);
+      const departmentId = departmentMap.get(occupation.department_name);
 
-      if (!groupId) {
+      if (!departmentId) {
         console.log(
-          `[${i + 1}/${occupations.length}] Skipping: ${occupation.name} - Group "${occupation.group_name}" not found\n`
+          `[${i + 1}/${occupations.length}] Skipping: ${occupation.name} - Department "${occupation.department_name}" not found\n`
         );
         continue;
       }
@@ -53,12 +53,12 @@ export class OccupationsOperation {
         ? `${occupation.name} (${occupation.name_de})`
         : occupation.name;
       console.log(
-        `[${i + 1}/${occupations.length}] Creating: ${displayName} in group "${occupation.group_name}" (ID: ${groupId})`
+        `[${i + 1}/${occupations.length}] Creating: ${displayName} in department "${occupation.department_name}" (ID: ${departmentId})`
       );
 
       try {
         const value: any = {
-          group_id: groupId,
+          department_id: departmentId,
           name: occupation.name,
         };
 
@@ -78,16 +78,16 @@ export class OccupationsOperation {
 
         // Extract ID from POST response
         // The response contains all occupations in data.value array
-        // Find the one we just created by name and group_id
+        // Find the one we just created by name and department_id
         if (response.data?.value && Array.isArray(response.data.value)) {
           const createdOccupation = response.data.value.find(
-            (o: any) => o.name === occupation.name && o.group_id === groupId
+            (o: any) => o.name === occupation.name && o.department_id === departmentId
           );
           if (createdOccupation?.id) {
             mappings.push({
               name: occupation.name,
               id: createdOccupation.id,
-              group_id: groupId,
+              department_id: departmentId,
             });
             console.log(`Created successfully (ID: ${createdOccupation.id})\n`);
           } else {
