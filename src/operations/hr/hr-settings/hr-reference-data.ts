@@ -16,7 +16,7 @@ interface Title {
 interface Occupation {
   id: number;
   name: string;
-  group_id: number;
+  department_id: number;
 }
 
 interface ContractType {
@@ -102,7 +102,7 @@ export class HrReferenceDataOperation {
       const refData = this.referenceDataOp.getCachedData();
       if (refData) {
         titles = refData.titles.map(t => ({ id: t.id, name: t.name }));
-        occupations = refData.occupations.map(o => ({ id: o.id, name: o.name, group_id: o.group_id }));
+        occupations = refData.occupations.map(o => ({ id: o.id, name: o.name, department_id: o.department_id }));
         console.log(`Using cached titles (${titles.length}) and occupations (${occupations.length}) from reference data`);
       } else {
         console.warn('Reference data not cached. Titles and occupations will be empty.');

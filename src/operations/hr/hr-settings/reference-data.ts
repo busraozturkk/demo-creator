@@ -18,7 +18,7 @@ interface OccupationMapping {
   id: number;
   name: string;
   name_de?: string;
-  group_id: number;
+  department_id: number;
 }
 
 interface ReferenceData {

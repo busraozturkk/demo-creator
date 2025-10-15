@@ -317,7 +317,6 @@ export async function runSingleStep(stepId: string, session: any) {
                 console.log('No avatar mappings or directory found, skipping');
             }
             break;
-
         case 'salary':
             console.log('Processing salary and contributions');
             const employeeMappings = session.employeesOp?.getMappings();

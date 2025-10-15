@@ -46,9 +46,9 @@ export class CleanDefaultsFromModuleOperation {
   private async deleteDefaultOccupations(occupations: DefaultItem[]): Promise<void> {
     console.log('Deleting default occupations');
 
-    // Find defaults: occupations with group_id: null or very early creation time
+    // Find defaults: occupations with department_id: null or very early creation time
     const defaults = occupations.filter(occ =>
-      occ.group_id === null || occ.group_id === undefined
+      occ.department_id === null || occ.department_id === undefined
     );
 
     console.log(`Found ${defaults.length} default occupations to delete\n`);
