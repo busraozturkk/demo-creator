@@ -225,11 +225,6 @@ export async function runDemoCreation(
             const ownerEmployeeOp = new OwnerEmployeeOperation(apiClient, hrApiClient, authService);
             await ownerEmployeeOp.createOwnerEmployee();
             socket.emit('log', { type: 'success', message: 'Owner employee created\n' });
-
-            // Update owner employee details
-            socket.emit('log', { type: 'info', message: 'Updating owner employee details' });
-            await ownerEmployeeOp.updateOwnerEmployeeDetails(hrReferenceDataOp);
-            socket.emit('log', { type: 'success', message: 'Owner employee setup completed\n' });
         } catch (error: any) {
             socket.emit('log', { type: 'error', message: `Owner employee creation failed: ${error.message}` });
             console.error('Owner employee creation error:', error);
@@ -257,23 +252,7 @@ export async function runDemoCreation(
         }
 
         if (employeeMappings) {
-            const employeesOp = new (await import('../operations/hr/employees/employees')).EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
-
-            // Employee Details
-            socket.emit('log', { type: 'info', message: '\n=== Updating Employee Details ===' });
             const employeeDetailsPath = `./data/${dataGroup}/employee-details.csv`;
-            if (fs.existsSync(employeeDetailsPath)) {
-                try {
-                    await employeesOp.updateEmployeeDetails(employeeDetailsPath, emailDomain);
-                    socket.emit('log', { type: 'success', message: 'Employee details updated\n' });
-                } catch (error: any) {
-                    socket.emit('log', { type: 'error', message: `Employee details update failed: ${error.message}` });
-                    console.error('Employee details error:', error);
-                    socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
-                }
-            } else {
-                socket.emit('log', { type: 'warning', message: `Employee details file not found\n` });
-            }
 
             // Update owner employee contract first
             socket.emit('log', { type: 'info', message: '\n=== Updating Owner Employee Contract ===' });
@@ -352,6 +331,42 @@ export async function runDemoCreation(
                                 const occupationsOp = new OccupationsOperation(apiClient, '3');
                                 await occupationsOp.createOccupations(occupationsPath, departmentMappings);
                                 socket.emit('log', { type: 'success', message: 'Occupations (roles) created and linked to departments\n' });
+
+                                // Refresh reference data to pick up new occupations with department_id
+                                socket.emit('log', { type: 'info', message: 'Refreshing reference data with new occupations' });
+                                await referenceDataOp.fetchAndCache();
+                                await hrReferenceDataOp.fetchAndCache();
+                                socket.emit('log', { type: 'success', message: 'Reference data refreshed\n' });
+
+                                // Now update owner employee details with the refreshed occupation data
+                                socket.emit('log', { type: 'info', message: '\n=== Updating Owner Employee Details ===' });
+                                try {
+                                    const { OwnerEmployeeOperation } = await import('../operations/hr/employees/owner-employee');
+                                    const ownerEmployeeOp = new OwnerEmployeeOperation(apiClient, hrApiClient, authService);
+                                    await ownerEmployeeOp.updateOwnerEmployeeDetails(hrReferenceDataOp);
+                                    socket.emit('log', { type: 'success', message: 'Owner employee details updated\n' });
+                                } catch (error: any) {
+                                    socket.emit('log', { type: 'error', message: `Owner employee details update failed: ${error.message}` });
+                                    console.error('Owner employee details error:', error);
+                                    socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                }
+
+                                // Now update employee details with the refreshed occupation data
+                                if (fs.existsSync(employeeDetailsPath)) {
+                                    socket.emit('log', { type: 'info', message: '\n=== Updating Employee Details ===' });
+                                    try {
+                                        const { EmployeesOperation } = await import('../operations/hr/employees/employees');
+                                        const employeesOp = new EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
+                                        await employeesOp.updateEmployeeDetails(employeeDetailsPath, emailDomain);
+                                        socket.emit('log', { type: 'success', message: 'Employee details updated\n' });
+                                    } catch (error: any) {
+                                        socket.emit('log', { type: 'error', message: `Employee details update failed: ${error.message}` });
+                                        console.error('Employee details error:', error);
+                                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                    }
+                                } else {
+                                    socket.emit('log', { type: 'warning', message: `Employee details file not found\n` });
+                                }
                             } catch (error: any) {
                                 socket.emit('log', { type: 'error', message: `Occupations creation failed: ${error.message}` });
                                 socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
