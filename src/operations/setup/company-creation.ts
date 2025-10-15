@@ -8,6 +8,9 @@ export class CompanyCreationOperation {
     private readonly apiUrl: string;
 
     constructor() {
+        // Force reload environment variables
+        require('dotenv').config();
+
         const token = process.env.COMPANY_CREATION_TOKEN;
 
         if (!token) {
@@ -17,12 +20,6 @@ export class CompanyCreationOperation {
                 'See DEPLOYMENT.md for instructions on how to get a new token.'
             );
         }
-
-        // Debug: log token details
-        console.log('Raw token length:', token.length);
-        console.log('First 20 chars:', JSON.stringify(token.substring(0, 20)));
-        console.log('Token starts with "Bearer "?', token.startsWith('Bearer '));
-        console.log('Token char codes (first 10):', Array.from(token.substring(0, 10)).map(c => c.charCodeAt(0)));
 
         this.token = token;
         this.apiUrl = process.env.COMPANY_CREATION_API_URL ||
@@ -43,8 +40,6 @@ export class CompanyCreationOperation {
             console.log('Request data:', JSON.stringify(requestData, null, 2));
 
             const authHeader = this.token.startsWith('Bearer ') ? this.token : `Bearer ${this.token}`;
-            console.log('Authorization header (first 50 chars):', authHeader.substring(0, 50) + '...');
-            console.log('Token starts with Bearer?', this.token.startsWith('Bearer '));
 
             const response = await axios.post(
                 this.apiUrl,
