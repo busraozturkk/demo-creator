@@ -36,6 +36,10 @@ export class CompanyCreationOperation {
 
             console.log('Request data:', JSON.stringify(requestData, null, 2));
 
+            const authHeader = this.token.startsWith('Bearer ') ? this.token : `Bearer ${this.token}`;
+            console.log('Authorization header (first 50 chars):', authHeader.substring(0, 50) + '...');
+            console.log('Token starts with Bearer?', this.token.startsWith('Bearer '));
+
             const response = await axios.post(
                 this.apiUrl,
                 requestData,
@@ -43,7 +47,7 @@ export class CompanyCreationOperation {
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                         'Accept-Language': 'en-US,en;q=0.9',
-                        'Authorization': this.token.startsWith('Bearer ') ? this.token : `Bearer ${this.token}`,
+                        'Authorization': authHeader,
                         'Content-Type': 'application/json',
                         'Origin': 'https://clusterix.io',
                         'Referer': 'https://clusterix.io/',
