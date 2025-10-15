@@ -28,13 +28,24 @@ export class OccupationsOperation {
     console.log(`Loading occupations (roles) from: ${csvPath}`);
     const occupations = CsvLoader.loadOccupations(csvPath);
 
-    console.log(`Found ${occupations.length} occupations to create\n`);
+    console.log(`Found ${occupations.length} occupations to create`);
+
+    // Debug: Log first occupation to see what we're reading
+    if (occupations.length > 0) {
+      console.log('DEBUG - First occupation:', JSON.stringify(occupations[0]));
+    }
+    console.log('');
 
     // Create a map for quick lookup
     const departmentMap = new Map<string, number>();
     departmentMappings.forEach((mapping) => {
       departmentMap.set(mapping.name, mapping.id);
     });
+
+    // Debug: Log department mappings
+    console.log('DEBUG - Department mappings received:', JSON.stringify(departmentMappings));
+    console.log('DEBUG - Department map keys:', Array.from(departmentMap.keys()));
+    console.log('');
 
     const mappings: OccupationMapping[] = [];
 
