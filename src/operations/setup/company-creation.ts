@@ -8,8 +8,8 @@ export class CompanyCreationOperation {
     private readonly apiUrl: string;
 
     constructor() {
-        // Force reload environment variables
-        require('dotenv').config();
+        // Force reload environment variables with override
+        require('dotenv').config({ override: true });
 
         const token = process.env.COMPANY_CREATION_TOKEN;
 
@@ -21,9 +21,57 @@ export class CompanyCreationOperation {
             );
         }
 
+        // Check if token is expired
+        this.checkTokenExpiration(token);
+
         this.token = token;
         this.apiUrl = process.env.COMPANY_CREATION_API_URL ||
                      'https://company-searcher-api.innoscripta.com/api/company-information/create-company';
+    }
+
+    private checkTokenExpiration(token: string): void {
+        try {
+            // Extract JWT payload (remove 'Bearer ' if present)
+            const jwtToken = token.replace(/^Bearer\s+/i, '');
+            const parts = jwtToken.split('.');
+
+            if (parts.length !== 3) {
+                console.warn('⚠️  Invalid JWT token format');
+                return;
+            }
+
+            // Decode payload
+            const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+
+            if (payload.exp) {
+                const expiresAt = new Date(payload.exp * 1000);
+                const now = new Date();
+                const daysUntilExpiry = Math.floor((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+                if (now > expiresAt) {
+                    console.error('❌ COMPANY_CREATION_TOKEN has EXPIRED!');
+                    console.error(`   Expired on: ${expiresAt.toISOString()}`);
+                    console.error('   Please update the token in .env file.');
+                    console.error('   See DEPLOYMENT.md for instructions.');
+                    throw new Error(
+                        `COMPANY_CREATION_TOKEN expired on ${expiresAt.toLocaleDateString()}. ` +
+                        'Please update the token in .env file. See DEPLOYMENT.md for instructions.'
+                    );
+                } else if (daysUntilExpiry <= 2) {
+                    console.warn('⚠️  WARNING: COMPANY_CREATION_TOKEN will expire soon!');
+                    console.warn(`   Expires on: ${expiresAt.toISOString()}`);
+                    console.warn(`   Days remaining: ${daysUntilExpiry}`);
+                    console.warn('   Please update the token soon. See DEPLOYMENT.md for instructions.');
+                } else {
+                    console.log(`✓ Token is valid. Expires on: ${expiresAt.toISOString()} (${daysUntilExpiry} days remaining)`);
+                }
+            }
+        } catch (error: any) {
+            if (error.message?.includes('expired')) {
+                throw error; // Re-throw expiration errors
+            }
+            console.warn('⚠️  Could not check token expiration:', error.message);
+        }
     }
 
     async createCompany(companyName: string): Promise<number> {

@@ -65,13 +65,31 @@ Authorization token expired. Please update the token.
 3. Go to Network tab
 4. Navigate to any company-related page or make a company search
 5. Look for API requests to `company-searcher-api.innoscripta.com`
-6. Find the request and copy the `Authorization` header value (starts with `Bearer `)
-7. Remove `Bearer ` prefix and copy only the JWT token
-8. Update `.env` file:
+6. Find the request and copy the `Authorization` header value (the full value including `Bearer `)
+7. Update `.env` file with quotes:
    ```bash
-   COMPANY_CREATION_TOKEN=eyJ0eXAiOiJKV1QiLCJhbGc...
+   COMPANY_CREATION_TOKEN="Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
    ```
-9. Restart the application
+   **IMPORTANT:**
+   - Include the full `Bearer` prefix
+   - Wrap the entire value in double quotes
+   - Don't add any extra spaces or newlines
+
+8. If deploying to production:
+   ```bash
+   # Update production .env file
+   scp .env ubuntu@production-server:~/demo-creator/.env
+
+   # Restart PM2
+   ssh ubuntu@production-server "cd demo-creator && pm2 restart all"
+   ```
+
+9. If running locally, restart the application:
+   ```bash
+   pm2 restart demo-creator
+   # or
+   npm run dev
+   ```
 
 **Alternative method using cURL:**
 

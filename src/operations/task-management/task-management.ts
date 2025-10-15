@@ -1604,7 +1604,11 @@ export class TaskManagementOperation extends BaseOperation {
             const milestoneId = await this.resolvePctMilestoneId(ms, projectMappings, board, partnerId);
             if (!milestoneId) continue;
 
-            for (const d of msDays) {
+            // Only add timers for past and today, not future dates
+            const today = new Date().toISOString().slice(0, 10);
+            const pastDays = msDays.filter(d => d <= today);
+
+            for (const d of pastDays) {
                 const arr = dayToMilestoneIds.get(d) || [];
                 arr.push(milestoneId);
                 dayToMilestoneIds.set(d, arr);
@@ -1728,9 +1732,15 @@ export class TaskManagementOperation extends BaseOperation {
                         const hoursToDistribute = totalHoursPerEmployee ? totalHoursPerEmployee : (pmAmount * 173.333333);
                         if (hoursToDistribute <= 0) continue;
 
-                        const dailyHours = hoursToDistribute / milestoneDays.length;
+                        // Only add timers for past and today, not future dates
+                        const today = new Date().toISOString().slice(0, 10);
+                        const pastDays = milestoneDays.filter(day => day <= today);
 
-                        for (const dayISO of milestoneDays) {
+                        if (pastDays.length === 0) continue;
+
+                        const dailyHours = hoursToDistribute / pastDays.length;
+
+                        for (const dayISO of pastDays) {
                             jobs.push({ dayISO, userId, msId: milestoneId, hours: dailyHours });
                         }
                     } catch (userErr: any) {
