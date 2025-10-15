@@ -41,6 +41,10 @@ export class CompanyCreationOperation {
 
             const authHeader = this.token.startsWith('Bearer ') ? this.token : `Bearer ${this.token}`;
 
+            // Debug: Log actual token being used
+            console.log('Using token (first 100 chars):', authHeader.substring(0, 100));
+            console.log('Token length:', authHeader.length);
+
             const response = await axios.post(
                 this.apiUrl,
                 requestData,
