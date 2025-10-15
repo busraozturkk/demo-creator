@@ -18,6 +18,12 @@ export class CompanyCreationOperation {
             );
         }
 
+        // Debug: log token details
+        console.log('Raw token length:', token.length);
+        console.log('First 20 chars:', JSON.stringify(token.substring(0, 20)));
+        console.log('Token starts with "Bearer "?', token.startsWith('Bearer '));
+        console.log('Token char codes (first 10):', Array.from(token.substring(0, 10)).map(c => c.charCodeAt(0)));
+
         this.token = token;
         this.apiUrl = process.env.COMPANY_CREATION_API_URL ||
                      'https://company-searcher-api.innoscripta.com/api/company-information/create-company';
