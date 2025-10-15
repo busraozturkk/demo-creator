@@ -650,7 +650,7 @@ export class TaskManagementOperation extends BaseOperation {
         }
 
         // pctTask yerine milestone aktivitelerini de serbest bırakmak istiyorsan ekle: 'pctMilestone'
-        const activityTypesForSFF = ['task', 'timerCategory', 'pctTask', 'pctMilestone'];
+        const activityTypesForSFF = ['task', 'timerCategory', 'pctTask'];
         let created = 0, errors = 0;
 
         for (const role of roleMappings) {
@@ -706,6 +706,9 @@ export class TaskManagementOperation extends BaseOperation {
             });
 
             const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+
+            // Debug: Log all milestone board IDs
+            console.log(`DEBUG - All milestone board IDs: ${milestoneBoards.map((b: any) => `${b.id}:${b.title || b.name}`).join(', ')}\n`);
 
             // Deduplicate by id
             const uniqueBoards = Array.from(new Map(milestoneBoards.map((b: any) => [b.id, b])).values());
