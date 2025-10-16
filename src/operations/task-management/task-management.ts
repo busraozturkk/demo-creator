@@ -1237,64 +1237,79 @@ export class TaskManagementOperation extends BaseOperation {
         const boardTodoStatus = new Map<number, number>();
         const boardStatusCache = new Map<number, any[]>(); // Cache all statuses per board
 
-        const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
-        this.boardMappings = cachedBoards;
-        console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
+        // MANDATORY WAIT: Give boards enough time to be fully created and indexed
+        console.log(`\n=== MANDATORY WAIT: Giving boards time to be created ===\n`);
+        console.log(`Waiting 30 seconds for all ${milestoneMappings.length} milestone boards to be fully ready...\n`);
+        await this.sleep(30000);
+        console.log(`Wait complete. Now fetching boards...\n`);
 
-        // If cache is empty or has too few boards, try fetching fresh boards
-        if (this.boardMappings.length < milestoneMappings.length * 0.8) {
-            console.log(`Cache seems incomplete (${this.boardMappings.length} vs expected ~${milestoneMappings.length}). Fetching fresh boards...\n`);
-            try {
-                const boards = await this.fetchBoardsWithRetry({
-                    expectedMilestoneCount: milestoneMappings.length,
-                    readinessRatio: 0.95,
-                    retries: 8,
-                    baseDelayMs: 2000,
-                    jitterMs: 500,
-                    maxPages: 10,
-                });
+        try {
+            const boards = await this.fetchBoardsWithRetry({
+                expectedMilestoneCount: milestoneMappings.length,
+                readinessRatio: 0.95,
+                retries: 12,
+                baseDelayMs: 2500,
+                jitterMs: 500,
+                maxPages: 10,
+            });
 
-                const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
-                console.log(`Fetched ${boards.length} total boards, ${milestoneBoards.length} milestone boards\n`);
+            const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+            console.log(`Fetched ${boards.length} total boards, ${milestoneBoards.length} milestone boards\n`);
 
-                // Re-map boards
-                this.boardMappings = [];
-                const mappedMilestones = new Set<string>();
+            // Re-map boards
+            this.boardMappings = [];
+            const mappedMilestones = new Set<string>();
 
-                for (const board of milestoneBoards) {
-                    const title = board.title || board.name;
-                    const normTitle = this.normalizeTitle(title);
+            for (const board of milestoneBoards) {
+                const title = board.title || board.name;
+                const normTitle = this.normalizeTitle(title);
 
-                    const matchingMilestone =
-                        milestoneMappings.find(m => (m.task_id ?? '').toString() === (board.external_id ?? '').toString())
-                        || milestoneMappings.find(m => {
-                            const mTitle = this.normalizeTitle(m.milestone_title);
-                            return normTitle.includes(mTitle) || mTitle.includes(normTitle);
-                        });
-
-                    if (!matchingMilestone) continue;
-
-                    const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
-                    if (mappedMilestones.has(milestoneKey)) continue;
-
-                    this.boardMappings.push({
-                        id: board.id,
-                        folder_id: board.folder_id,
-                        project_short_title: matchingMilestone.project_short_title,
-                        milestone_title: matchingMilestone.milestone_title,
-                        name: title,
-                        external_id: board.external_id,
-                        external_type: board.external_type,
-                        type: board.type
+                const matchingMilestone =
+                    milestoneMappings.find(m => (m.task_id ?? '').toString() === (board.external_id ?? '').toString())
+                    || milestoneMappings.find(m => {
+                        const mTitle = this.normalizeTitle(m.milestone_title);
+                        return normTitle.includes(mTitle) || mTitle.includes(normTitle);
                     });
 
-                    mappedMilestones.add(milestoneKey);
+                if (!matchingMilestone) {
+                    console.log(`  ⊗ No matching milestone for board "${title}" (id=${board.id}, external_id=${board.external_id})`);
+                    continue;
                 }
 
-                console.log(`Re-mapped ${this.boardMappings.length} boards from fresh fetch\n`);
-                this.saveBoardMappings();
-            } catch (err: any) {
-                console.log(`Failed to fetch fresh boards: ${err.message}. Using cached boards anyway.\n`);
+                const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
+                if (mappedMilestones.has(milestoneKey)) {
+                    console.log(`  ⊗ Duplicate board for milestone "${matchingMilestone.milestone_title}", skipping id=${board.id}`);
+                    continue;
+                }
+
+                this.boardMappings.push({
+                    id: board.id,
+                    folder_id: board.folder_id,
+                    project_short_title: matchingMilestone.project_short_title,
+                    milestone_title: matchingMilestone.milestone_title,
+                    name: title,
+                    external_id: board.external_id,
+                    external_type: board.external_type,
+                    type: board.type
+                });
+
+                mappedMilestones.add(milestoneKey);
+                console.log(`  ✓ Mapped board "${title}" (id=${board.id}) to milestone "${matchingMilestone.milestone_title}"`);
+            }
+
+            console.log(`\nSuccessfully mapped ${this.boardMappings.length} boards from fresh fetch\n`);
+            this.saveBoardMappings();
+        } catch (err: any) {
+            console.log(`Failed to fetch fresh boards: ${err.message}\n`);
+            console.log(`Attempting to load from cache as fallback...\n`);
+
+            const cachedBoards = this.loadFromCache<BoardMapping[]>('./data/cache/task-board-mappings.json') || [];
+            this.boardMappings = cachedBoards;
+            console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
+
+            if (this.boardMappings.length === 0) {
+                console.log(`ERROR: No boards available (neither fresh nor cached). Cannot create tasks.\n`);
+                return;
             }
         }
 
@@ -1392,14 +1407,24 @@ export class TaskManagementOperation extends BaseOperation {
                 for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
                     const t = GENERIC_TASKS[taskIdx];
                     try {
+                        console.log(`    [Task ${taskIdx + 1}/${GENERIC_TASKS.length}] Creating "${t.title}"...`);
                         const createdAt = this.randomDateInPeriod(ms.started_at, ms.finished_at);
                         const deadline  = this.randomDateInPeriod(createdAt, ms.finished_at);
 
+                        const createPayload = {
+                            title: t.title,
+                            position: totalTasks,
+                            board_id: board.id,
+                            status_id: statusId!
+                        };
+                        console.log(`    [Task] POST payload: ${JSON.stringify(createPayload)}`);
+
                         const createRes: any = await this.taskMgmtApiClient.executeRequest(
                             'POST', '/api/tasks',
-                            { title: t.title, position: totalTasks, board_id: board.id, status_id: statusId! }
+                            createPayload
                         );
                         const taskId = createRes?.data?.id || createRes?.id;
+                        console.log(`    [Task] Created with ID: ${taskId}`);
 
                         try {
                             const updatePayload: any = {
@@ -1495,8 +1520,10 @@ export class TaskManagementOperation extends BaseOperation {
                         }
 
                         totalTasks++;
+                        console.log(`    [Task] Successfully created task "${t.title}" (total: ${totalTasks})`);
                     } catch (createErr: any) {
-                        console.log(`    failed to create task "${t.title}": ${createErr.message}`);
+                        console.log(`    ERROR: Failed to create task "${t.title}": ${createErr.message}`);
+                        console.log(`    ERROR details: ${JSON.stringify(createErr)}`);
                         errors++;
                     }
                 }
