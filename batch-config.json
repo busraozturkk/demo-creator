@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Demo 1",
+    "email": "demo1@example.com",
+    "password": "demo1pass",
+    "organizationName": "Demo Organization 1",
+    "language": "en",
+    "csvPath": "./data/sff-data-en"
+  },
+  {
+    "name": "Demo 2",
+    "email": "demo2@example.com",
+    "password": "demo2pass",
+    "organizationName": "Demo Organization 2",
+    "language": "de",
+    "csvPath": "./data/sff-data-de"
+  },
+  {
+    "name": "Demo 3",
+    "email": "demo3@example.com",
+    "password": "demo3pass",
+    "organizationName": "Demo Organization 3",
+    "language": "en",
+    "csvPath": "./data/sff-data-en"
+  }
+]

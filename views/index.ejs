@@ -20,22 +20,28 @@
     <div class="app-header">
         <h1>DEMO CREATOR</h1>
         <div class="header-border"></div>
+        <div class="mode-tabs">
+            <button class="mode-tab active" id="singleModeTab">Single Demo</button>
+            <button class="mode-tab" id="batchModeTab">Batch Mode</button>
+        </div>
     </div>
 
-    <div class="help-text">
-        This tool will automatically create a new Clusterix account for you!
-        <br><br>
-        <strong>Requirements:</strong>
-        <ul style="margin: 5px 0; padding-left: 20px;">
-            <li>Use a <strong>@yopmail.com</strong> email address (for automatic activation)</li>
-            <li>Choose a unique Company Name</li>
-            <li>Choose a unique Email Domain</li>
-            <li>The account will be automatically registered and activated</li>
-        </ul>
-        <strong>Note:</strong> Do not run this tool twice with the same data. Always use a new email, company name and email domain.
-    </div>
+    <!-- Single Mode Content -->
+    <div id="singleModeContent">
+        <div class="help-text">
+            This tool will automatically create a new Clusterix account for you!
+            <br><br>
+            <strong>Requirements:</strong>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>Use a <strong>@yopmail.com</strong> email address (for automatic activation)</li>
+                <li>Choose a unique Company Name</li>
+                <li>Choose a unique Email Domain</li>
+                <li>The account will be automatically registered and activated</li>
+            </ul>
+            <strong>Note:</strong> Do not run this tool twice with the same data. Always use a new email, company name and email domain.
+        </div>
 
-    <form class="form-container" id="demoForm">
+        <form class="form-container" id="demoForm">
         <div class="form-section">
             <div class="form-section-title">Company Information</div>
 
@@ -225,6 +231,135 @@
 
         <div id="validationErrors" class="validation-errors-container"></div>
     </form>
+    </div>
+
+    <!-- Batch Mode Content -->
+    <div id="batchModeContent" style="display: none;">
+        <div class="help-text">
+            Create multiple demo accounts sequentially! Add as many demos as you need and run them all at once.
+            <br><br>
+            <strong>How it works:</strong>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>Add demos one by one using the form below</li>
+                <li>Each demo will be created sequentially (one after another)</li>
+                <li>If one demo fails, the rest will continue</li>
+                <li>You'll see progress for each demo in real-time</li>
+            </ul>
+        </div>
+
+        <div class="batch-demos-list" id="batchDemosList">
+            <div class="batch-list-header">
+                <h3>Demo Queue (<span id="batchCount">0</span>)</h3>
+                <button type="button" id="clearAllBatch" class="btn-secondary" style="display: none;">Clear All</button>
+            </div>
+            <div id="batchItems" class="batch-items">
+                <div class="empty-batch-message">No demos added yet. Use the form below to add your first demo.</div>
+            </div>
+        </div>
+
+        <form class="form-container" id="batchForm">
+            <div class="form-section">
+                <div class="form-section-title">Add Demo to Queue</div>
+
+                <div class="form-box">
+                    <label class="form-label">Demo Name</label>
+                    <input type="text" id="batchDemoName" class="form-input" placeholder="e.g., Demo 1">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" id="batchCompanyName" class="form-input" placeholder="Company Name">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Email (Yopmail required)</label>
+                    <input type="email" id="batchEmail" class="form-input" placeholder="username@yopmail.com">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="batchPassword" class="form-input" placeholder="••••••••">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Email Domain</label>
+                    <input type="text" id="batchEmailDomain" class="form-input" placeholder="company-demo.com">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Data</label>
+                    <div class="custom-select">
+                        <div class="select-selected form-input" id="batchDataGroupSelect" style="color: #6b7280;">
+                            Please select data
+                        </div>
+                        <div class="select-items dropdown-menu" id="batchDataGroupItems">
+                            <% dataGroups.forEach((group) => { %>
+                                <div data-value="<%= group.value %>">
+                                    <%= group.label %>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                    <input type="hidden" id="batchDataGroup" value="">
+                </div>
+
+                <div class="form-box" id="batchProjectSelectionBox" style="display: none;">
+                    <label class="form-label">Select Projects</label>
+                    <div class="project-selection-container">
+                        <div class="project-select-all">
+                            <label>
+                                <input type="checkbox" id="batchSelectAllProjects">
+                                <span>Select All</span>
+                            </label>
+                        </div>
+                        <div class="project-list" id="batchProjectList">
+                            <div class="loading-projects">Loading projects...</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="batchSelectedProjects" value="">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Environment</label>
+                    <div class="custom-select">
+                        <div class="select-selected form-input" id="batchEnvironmentSelect" style="color: #6b7280;">
+                            Please select environment
+                        </div>
+                        <div class="select-items dropdown-menu" id="batchEnvironmentItems">
+                            <div data-value="testing">Testing</div>
+                            <div data-value="production">Production</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="batchEnvironment" value="">
+                </div>
+
+                <div class="form-box">
+                    <label class="form-label">Include Work Packages?</label>
+                    <div class="mode-toggle">
+                        <input type="radio" id="batchWorkPackagesYes" name="batchWorkPackages" value="yes" checked>
+                        <label for="batchWorkPackagesYes" class="mode-option">Yes</label>
+                        <input type="radio" id="batchWorkPackagesNo" name="batchWorkPackages" value="no">
+                        <label for="batchWorkPackagesNo" class="mode-option">No</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="addToBatchBtn" class="btn-secondary">
+                <span class="button-text"><i class="fa-solid fa-plus"></i> ADD TO QUEUE</span>
+            </button>
+        </form>
+
+        <button type="button" id="runBatchBtn" class="btn-primary" style="display: none; margin-top: 20px;">
+            <span class="button-text"><i class="fa-solid fa-play"></i> RUN ALL DEMOS (<span id="runBatchCount">0</span>)</span>
+        </button>
+
+        <div id="batchProgressContainer" class="batch-progress-container" style="display: none;">
+            <div class="batch-progress-header">
+                <h3>Batch Progress (<span id="batchProgressCurrent">0</span>/<span id="batchProgressTotal">0</span>)</h3>
+            </div>
+            <div id="batchProgressItems" class="batch-progress-items"></div>
+        </div>
+    </div>
 
     <div id="stepByStepContainer" class="step-by-step-container" style="display: none;">
         <div class="steps-panel">
@@ -274,5 +409,6 @@
 </div>
 
 <script src="/js/app.js"></script>
+<script src="/js/batch-mode.js"></script>
 </body>
 </html>

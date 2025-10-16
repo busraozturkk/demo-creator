@@ -649,7 +649,6 @@ export class TaskManagementOperation extends BaseOperation {
             return;
         }
 
-        // pctTask yerine milestone aktivitelerini de serbest bırakmak istiyorsan ekle: 'pctMilestone'
         const activityTypesForSFF = ['task', 'timerCategory', 'pctTask'];
         let created = 0, errors = 0;
 
@@ -1299,6 +1298,21 @@ export class TaskManagementOperation extends BaseOperation {
 
             console.log(`\nSuccessfully mapped ${this.boardMappings.length} boards from fresh fetch\n`);
             this.saveBoardMappings();
+
+            // CRITICAL: Ensure statuses exist on all boards before creating tasks
+            console.log(`\n=== Ensuring Statuses on All Boards ===\n`);
+            for (let i = 0; i < this.boardMappings.length; i++) {
+                const bm = this.boardMappings[i];
+                console.log(`[${i + 1}/${this.boardMappings.length}] Ensuring statuses for board "${bm.name}" (ID: ${bm.id})`);
+                try {
+                    await this.ensureThreeStatuses(bm.id);
+                    console.log(`  ✓ Statuses ensured for board ${bm.id}`);
+                } catch (stErr: any) {
+                    console.log(`  ! Failed to ensure statuses for board ${bm.id}: ${stErr.message}`);
+                }
+            }
+            console.log(`\n=== Status Ensuring Complete ===\n`);
+
         } catch (err: any) {
             console.log(`Failed to fetch fresh boards: ${err.message}\n`);
             console.log(`Attempting to load from cache as fallback...\n`);
@@ -1311,6 +1325,20 @@ export class TaskManagementOperation extends BaseOperation {
                 console.log(`ERROR: No boards available (neither fresh nor cached). Cannot create tasks.\n`);
                 return;
             }
+
+            // CRITICAL: Ensure statuses exist even when using cached boards
+            console.log(`\n=== Ensuring Statuses on Cached Boards ===\n`);
+            for (let i = 0; i < this.boardMappings.length; i++) {
+                const bm = this.boardMappings[i];
+                console.log(`[${i + 1}/${this.boardMappings.length}] Ensuring statuses for board "${bm.name}" (ID: ${bm.id})`);
+                try {
+                    await this.ensureThreeStatuses(bm.id);
+                    console.log(`  ✓ Statuses ensured for board ${bm.id}`);
+                } catch (stErr: any) {
+                    console.log(`  ! Failed to ensure statuses for board ${bm.id}: ${stErr.message}`);
+                }
+            }
+            console.log(`\n=== Status Ensuring Complete ===\n`);
         }
 
         for (let i = 0; i < milestoneMappings.length; i++) {

@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc && find dist -name '*.js' -type f -exec terser {} --compress --mangle -o {} \\;",
     "dev": "tsx src/ui-server.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "batch": "tsx src/batch-runner.ts"
   },
   "keywords": [
     "demo",

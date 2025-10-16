@@ -322,7 +322,6 @@ export class TimersOperation {
     this.mainApiClient.setPartnerId(partnerId);
 
     let totalTimersCreated = 0;
-    let errors = 0;
 
     // Helper: Get business days between two dates
     const getBusinessDays = (startISO: string, endISO: string): string[] => {
@@ -354,37 +353,57 @@ export class TimersOperation {
         }
         console.log(`  Business days: ${milestoneDays.length}`);
 
-        // Fetch PM assignments for this milestone - only for owner user
+        // Fetch PM assignments for this milestone - MANDATORY with retry
         let ownerPmAllocation: any = null;
-        try {
-          const response: any = await this.mainApiClient.executeRequest(
-            'GET',
-            '/pct/api/user-task-year-pms',
-            {
-              'filter[task_id]': ms.task_id?.toString() ?? '',
-              'filter[user_id]': ownerUserId.toString(),
-              'per_page': '0'
+        const pmMaxRetries = 15;
+        const pmRetryDelay = 2500; // 2.5 seconds
+
+        for (let attempt = 1; attempt <= pmMaxRetries; attempt++) {
+          try {
+            console.log(`  [Attempt ${attempt}/${pmMaxRetries}] Fetching PM allocations...`);
+            const response: any = await this.mainApiClient.executeRequest(
+              'GET',
+              '/pct/api/user-task-year-pms',
+              {
+                'filter[task_id]': ms.task_id?.toString() ?? '',
+                'filter[user_id]': ownerUserId.toString(),
+                'per_page': '0'
+              }
+            );
+            const userPmAllocations = response?.data || response || [];
+            ownerPmAllocation = Array.isArray(userPmAllocations) && userPmAllocations.length > 0
+              ? userPmAllocations[0]
+              : null;
+
+            if (ownerPmAllocation) {
+              console.log(`  ✓ PM allocation found on attempt ${attempt}`);
+              break;
             }
-          );
-          const userPmAllocations = response?.data || response || [];
-          ownerPmAllocation = Array.isArray(userPmAllocations) && userPmAllocations.length > 0
-            ? userPmAllocations[0]
-            : null;
-        } catch (err: any) {
-          console.log(`  ⊗ Could not fetch PM allocations: ${err?.message || err}`);
-          continue;
+
+            if (attempt < pmMaxRetries) {
+              console.log(`  ⊗ No PM allocation found yet, waiting ${pmRetryDelay}ms before retry...`);
+              await this.sleep(pmRetryDelay);
+            } else {
+              throw new Error(`CRITICAL: No PM allocation found for owner user after ${pmMaxRetries} attempts`);
+            }
+          } catch (err: any) {
+            if (attempt < pmMaxRetries) {
+              console.log(`  ⊗ PM fetch failed: ${err?.message || err}, retrying in ${pmRetryDelay}ms...`);
+              await this.sleep(pmRetryDelay);
+            } else {
+              throw new Error(`CRITICAL: Failed to fetch PM allocations after ${pmMaxRetries} attempts: ${err?.message || err}`);
+            }
+          }
         }
 
         if (!ownerPmAllocation) {
-          console.log(`  ⊗ No PM allocation found for owner user in this milestone`);
-          continue;
+          throw new Error(`CRITICAL: PM allocation fetch failed unexpectedly for milestone ${ms.milestone_title}`);
         }
 
         const pmAmount = ownerPmAllocation.amount || 0; // PM in decimal (e.g., 0.5 = 50%)
 
         if (pmAmount <= 0) {
-          console.log(`  ⊗ Owner has no PM allocated (PM: ${pmAmount})`);
-          continue;
+          throw new Error(`CRITICAL: Owner has no PM allocated (PM: ${pmAmount}) for milestone ${ms.milestone_title}`);
         }
 
         // Calculate total hours: PM * 173.33 hours/month (average work hours)
@@ -395,101 +414,108 @@ export class TimersOperation {
 
         console.log(`  Owner PM allocation: ${pmAmount.toFixed(2)} → ${totalHours.toFixed(0)}h total, ${hoursPerDay.toFixed(2)}h/day`);
 
-        // Resolve milestone ID from PCT tree
+        // Resolve milestone ID from PCT tree with MANDATORY retry
         const projectTitleForQuery = ms.project_title || ms.project_short_title;
         console.log(`  Querying PCT tree with: "${projectTitleForQuery}"`);
 
-        const milestones = await this.fetchPctTree(projectTitleForQuery);
+        let milestones: PctMilestone[] = [];
+        let matchedMilestone: PctMilestone | undefined;
 
-        if (milestones.length === 0) {
-          console.log(`  ⊗ No milestones found in PCT tree for project "${projectTitleForQuery}"`);
-          console.log(`  ⊗ Attempting fallback: using task_id ${ms.task_id} as PCT milestone ID`);
+        // MANDATORY: Retry until we get the milestones from PCT tree
+        const maxRetries = 20;
+        const retryDelay = 3000; // 3 seconds between retries
 
-          // Fallback: use task_id directly as PCT milestone ID
-          const pctMilestoneId = ms.task_id;
-          console.log(`  Using task_id as PCT Milestone ID: ${pctMilestoneId}`);
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          console.log(`  [Attempt ${attempt}/${maxRetries}] Fetching PCT tree...`);
 
-          // Create timers with this ID
-          for (const dayISO of milestoneDays) {
-            try {
-              await this.createTimerForDay({
-                dayISO,
-                hours: hoursPerDay,
-                userId: ownerUserId,
-                pctMilestoneId,
-                timerCategoryId: defaultTimerCategoryId,
-                timezone,
-              });
-              totalTimersCreated++;
-            } catch (err: any) {
-              console.log(`    ! Failed to create timer for ${dayISO}: ${err?.message || err}`);
-              errors++;
-            }
+          milestones = await this.fetchPctTree(projectTitleForQuery);
+
+          if (milestones.length > 0) {
+            console.log(`  ✓ Found ${milestones.length} milestones in PCT tree`);
+            break;
           }
-          continue;
+
+          if (attempt < maxRetries) {
+            console.log(`  ⊗ No milestones found yet, waiting ${retryDelay}ms before retry...`);
+            await this.sleep(retryDelay);
+          } else {
+            throw new Error(`CRITICAL: Failed to fetch PCT tree milestones after ${maxRetries} attempts for project "${projectTitleForQuery}"`);
+          }
         }
 
-        const matchedMilestone = milestones.find(m => m.title === ms.milestone_title || m.id === ms.task_id);
+        // MANDATORY: Match milestone by title with retry
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          matchedMilestone = milestones.find(m => m.title === ms.milestone_title);
+
+          if (matchedMilestone) {
+            console.log(`  ✓ Matched milestone "${ms.milestone_title}" on attempt ${attempt}`);
+            break;
+          }
+
+          if (attempt < maxRetries) {
+            console.log(`  ⊗ Could not match milestone "${ms.milestone_title}", available: ${milestones.map(m => m.title).join(', ')}`);
+            console.log(`  ⊗ Waiting ${retryDelay}ms and refetching PCT tree...`);
+            await this.sleep(retryDelay);
+            milestones = await this.fetchPctTree(projectTitleForQuery);
+          } else {
+            throw new Error(`CRITICAL: Failed to match milestone "${ms.milestone_title}" in PCT tree after ${maxRetries} attempts. Available: ${milestones.map(m => m.title).join(', ')}`);
+          }
+        }
 
         if (!matchedMilestone) {
-          console.log(`  ⊗ Could not match milestone "${ms.milestone_title}" in PCT tree`);
-          console.log(`  Available milestones: ${milestones.map(m => m.title).join(', ')}`);
-          console.log(`  ⊗ Attempting fallback: using task_id ${ms.task_id} as PCT milestone ID`);
-
-          // Fallback: use task_id directly
-          const pctMilestoneId = ms.task_id;
-          console.log(`  Using task_id as PCT Milestone ID: ${pctMilestoneId}`);
-
-          // Create timers with this ID
-          for (const dayISO of milestoneDays) {
-            try {
-              await this.createTimerForDay({
-                dayISO,
-                hours: hoursPerDay,
-                userId: ownerUserId,
-                pctMilestoneId,
-                timerCategoryId: defaultTimerCategoryId,
-                timezone,
-              });
-              totalTimersCreated++;
-            } catch (err: any) {
-              console.log(`    ! Failed to create timer for ${dayISO}: ${err?.message || err}`);
-              errors++;
-            }
-          }
-          continue;
+          throw new Error(`CRITICAL: Milestone matching failed unexpectedly for "${ms.milestone_title}"`);
         }
 
         const pctMilestoneId = matchedMilestone.id;
-        console.log(`  ✓ Matched PCT Milestone ID: ${pctMilestoneId}`);
+        console.log(`  ✓ Using PCT Milestone ID: ${pctMilestoneId} (from PCT tree)`);
 
-        // Create timer for each business day
+        // Create timer for each business day with MANDATORY retry
         for (const dayISO of milestoneDays) {
-          try {
-            await this.createTimerForDay({
-              dayISO,
-              hours: hoursPerDay,
-              userId: ownerUserId,
-              pctMilestoneId,
-              timerCategoryId: defaultTimerCategoryId,
-              timezone,
-            });
-            totalTimersCreated++;
-          } catch (err: any) {
-            console.log(`    ! Failed to create timer for ${dayISO}: ${err?.message || err}`);
-            errors++;
+          let timerCreated = false;
+          const timerMaxRetries = 10;
+          const timerRetryDelay = 2000; // 2 seconds
+
+          for (let attempt = 1; attempt <= timerMaxRetries; attempt++) {
+            try {
+              console.log(`    [${dayISO}] Attempt ${attempt}/${timerMaxRetries}: Creating timer...`);
+              await this.createTimerForDay({
+                dayISO,
+                hours: hoursPerDay,
+                userId: ownerUserId,
+                pctMilestoneId,
+                timerCategoryId: defaultTimerCategoryId,
+                timezone,
+              });
+              console.log(`    ✓ Timer created for ${dayISO}`);
+              totalTimersCreated++;
+              timerCreated = true;
+              break;
+            } catch (err: any) {
+              console.log(`    ⊗ Attempt ${attempt} failed: ${err?.message || err}`);
+              if (attempt < timerMaxRetries) {
+                console.log(`    Waiting ${timerRetryDelay}ms before retry...`);
+                await this.sleep(timerRetryDelay);
+              } else {
+                throw new Error(`CRITICAL: Failed to create timer for ${dayISO} after ${timerMaxRetries} attempts: ${err?.message || err}`);
+              }
+            }
+          }
+
+          if (!timerCreated) {
+            throw new Error(`CRITICAL: Timer creation failed unexpectedly for ${dayISO}`);
           }
         }
 
       } catch (msErr: any) {
-        console.log(`  ! Failed to process milestone: ${msErr?.message || msErr}`);
-        errors++;
+        console.error(`\n!!! CRITICAL ERROR processing milestone: ${msErr?.message || msErr}`);
+        console.error(`!!! Timer creation is MANDATORY - stopping execution\n`);
+        throw msErr; // Rethrow to stop execution
       }
     }
 
     console.log(`\n=== Timer Creation Summary ===`);
     console.log(`  Total timers created: ${totalTimersCreated}`);
-    console.log(`  Errors: ${errors}\n`);
+    console.log(`  Success: All timers created successfully!\n`);
   }
 
   /**
@@ -519,6 +545,13 @@ export class TimersOperation {
       console.error(`Failed to enable time tracking: ${error.message}\n`);
       throw error;
     }
+  }
+
+  /**
+   * Sleep utility for retry delays
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
