@@ -796,8 +796,8 @@ export class TaskManagementOperation extends BaseOperation {
                 await this.deleteBoard(boardId);
             }
 
-            console.log(`\nWaiting 1500ms for boards to be fully ready...\n`);
-            await this.sleep(1500);
+            console.log(`\nWaiting 10000ms for boards to be fully ready...\n`);
+            await this.sleep(10000);
 
             console.log('Now ensuring statuses (upsert) on boards...\n');
             for (const boardMapping of this.boardMappings) {
@@ -897,8 +897,8 @@ export class TaskManagementOperation extends BaseOperation {
                 totalBoards++;
             }
 
-            console.log(`\nWaiting 1200ms for boards to be fully ready...\n`);
-            await this.sleep(1200);
+            console.log(`\nWaiting 10000ms for boards to be fully ready...\n`);
+            await this.sleep(10000);
 
             console.log('Now ensuring statuses (upsert) on boards...\n');
             for (const boardMapping of this.boardMappings) {
@@ -1241,12 +1241,84 @@ export class TaskManagementOperation extends BaseOperation {
         this.boardMappings = cachedBoards;
         console.log(`Loaded ${this.boardMappings.length} board mappings from cache\n`);
 
+        // If cache is empty or has too few boards, try fetching fresh boards
+        if (this.boardMappings.length < milestoneMappings.length * 0.8) {
+            console.log(`Cache seems incomplete (${this.boardMappings.length} vs expected ~${milestoneMappings.length}). Fetching fresh boards...\n`);
+            try {
+                const boards = await this.fetchBoardsWithRetry({
+                    expectedMilestoneCount: milestoneMappings.length,
+                    readinessRatio: 0.95,
+                    retries: 8,
+                    baseDelayMs: 2000,
+                    jitterMs: 500,
+                    maxPages: 10,
+                });
+
+                const milestoneBoards = boards.filter((b: any) => (b.external_type || b.type) === 'Milestone');
+                console.log(`Fetched ${boards.length} total boards, ${milestoneBoards.length} milestone boards\n`);
+
+                // Re-map boards
+                this.boardMappings = [];
+                const mappedMilestones = new Set<string>();
+
+                for (const board of milestoneBoards) {
+                    const title = board.title || board.name;
+                    const normTitle = this.normalizeTitle(title);
+
+                    const matchingMilestone =
+                        milestoneMappings.find(m => (m.task_id ?? '').toString() === (board.external_id ?? '').toString())
+                        || milestoneMappings.find(m => {
+                            const mTitle = this.normalizeTitle(m.milestone_title);
+                            return normTitle.includes(mTitle) || mTitle.includes(normTitle);
+                        });
+
+                    if (!matchingMilestone) continue;
+
+                    const milestoneKey = `${matchingMilestone.project_short_title}::${matchingMilestone.milestone_title}`;
+                    if (mappedMilestones.has(milestoneKey)) continue;
+
+                    this.boardMappings.push({
+                        id: board.id,
+                        folder_id: board.folder_id,
+                        project_short_title: matchingMilestone.project_short_title,
+                        milestone_title: matchingMilestone.milestone_title,
+                        name: title,
+                        external_id: board.external_id,
+                        external_type: board.external_type,
+                        type: board.type
+                    });
+
+                    mappedMilestones.add(milestoneKey);
+                }
+
+                console.log(`Re-mapped ${this.boardMappings.length} boards from fresh fetch\n`);
+                this.saveBoardMappings();
+            } catch (err: any) {
+                console.log(`Failed to fetch fresh boards: ${err.message}. Using cached boards anyway.\n`);
+            }
+        }
+
         for (let i = 0; i < milestoneMappings.length; i++) {
             const ms = milestoneMappings[i];
 
             try {
                 console.log(`\n[Milestone ${i + 1}/${milestoneMappings.length}] Looking for board: project="${ms.project_short_title}", milestone="${ms.milestone_title}"`);
-                const board = this.boardMappings.find(b => b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title);
+
+                let board = this.boardMappings.find(b => b.project_short_title === ms.project_short_title && b.milestone_title === ms.milestone_title);
+
+                // Retry finding board with normalization
+                if (!board) {
+                    const normProjShort = this.normalizeTitle(ms.project_short_title);
+                    const normMilestone = this.normalizeTitle(ms.milestone_title);
+
+                    board = this.boardMappings.find(b =>
+                        this.normalizeTitle(b.project_short_title) === normProjShort &&
+                        (this.normalizeTitle(b.milestone_title) === normMilestone ||
+                         this.normalizeTitle(b.milestone_title).includes(normMilestone) ||
+                         normMilestone.includes(this.normalizeTitle(b.milestone_title)))
+                    );
+                }
+
                 if (!board) {
                     console.log(`  Warning: Board not found for ${ms.project_short_title} / ${ms.milestone_title}`);
                     console.log(`  Available boards: ${JSON.stringify(this.boardMappings.map(b => ({ id: b.id, project: b.project_short_title, milestone: b.milestone_title })))}`);
