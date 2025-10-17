@@ -1309,6 +1309,18 @@ export class TaskManagementOperation extends BaseOperation {
 
             console.log(`\nSuccessfully mapped ${this.boardMappings.length} boards from fresh fetch\n`);
             this.saveBoardMappings();
+
+            // Ensure statuses on newly mapped boards
+            console.log(`\nEnsuring statuses on ${this.boardMappings.length} newly mapped boards...\n`);
+            for (const boardMapping of this.boardMappings) {
+                try {
+                    console.log(`Processing Board: "${boardMapping.name}" (ID: ${boardMapping.id})`);
+                    await this.ensureThreeStatuses(boardMapping.id);
+                    console.log(`  ✓ statuses ensured for board ${boardMapping.id}`);
+                } catch (stErr: any) {
+                    console.log(`  ✗ failed to ensure statuses for board ${boardMapping.id}: ${stErr.message}`);
+                }
+            }
         } catch (err: any) {
             console.log(`Failed to fetch fresh boards: ${err.message}\n`);
             console.log(`Attempting to load from cache as fallback...\n`);
