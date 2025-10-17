@@ -1026,7 +1026,8 @@ export class TaskManagementOperation extends BaseOperation {
             try {
                 const board = this.boardMappings.find(b => b.project_short_title === wp.project_short_title && b.milestone_title === wp.milestone_title);
                 if (!board) {
-                    console.log(`  Warning: Board not found for ${wp.project_short_title} / ${wp.milestone_title} → ${wp.work_package_title}`);
+                    console.log(`  ✗ ERROR: Board not found for ${wp.project_short_title} / ${wp.milestone_title} → ${wp.work_package_title}`);
+                    console.log(`  Available boards: ${this.boardMappings.map(b => `${b.project_short_title}/${b.milestone_title}`).join(', ')}`);
                     continue;
                 }
 
@@ -1058,6 +1059,7 @@ export class TaskManagementOperation extends BaseOperation {
                 }
 
                 console.log(`  ${wp.project_short_title} → ${wp.milestone_title} → ${wp.work_package_title} (${wpTasks.length} tasks)`);
+                console.log(`  DEBUG: board_id=${board.id}, status_id=${statusId}, statuses_count=${statuses.length}`);
 
                 const assigned = empsByWP.get(wp.work_package_title) || [];
 
@@ -1066,11 +1068,16 @@ export class TaskManagementOperation extends BaseOperation {
                         const createdAt = this.randomDateInPeriod(wp.started_at, wp.finished_at);
                         const deadline  = this.randomDateInPeriod(createdAt, wp.finished_at);
 
+                        const createPayload = { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId! };
+                        console.log(`    Creating task: ${t.task_title}`);
+                        console.log(`    Payload: ${JSON.stringify(createPayload)}`);
+
                         const createRes: any = await this.taskMgmtApiClient.executeRequest(
                             'POST', '/api/tasks',
-                            { title: t.task_title, position: totalTasks, board_id: board.id, status_id: statusId! }
+                            createPayload
                         );
                         const taskId = createRes?.data?.id || createRes?.id;
+                        console.log(`    ✓ Task created with ID: ${taskId}`);
 
                         try {
                             const updatePayload: any = {
@@ -1170,7 +1177,10 @@ export class TaskManagementOperation extends BaseOperation {
 
                         totalTasks++;
                     } catch (createErr: any) {
-                        console.log(`    failed to create task "${t.task_title}": ${createErr.message}`);
+                        console.log(`    ✗ ERROR: Failed to create task "${t.task_title}"`);
+                        console.log(`    Error message: ${createErr?.message || createErr}`);
+                        console.log(`    Error details: ${JSON.stringify(createErr?.response?.data || createErr)}`);
+                        console.log(`    Board ID: ${board.id}, Status ID: ${statusId}`);
                         errors++;
                     }
                 }
