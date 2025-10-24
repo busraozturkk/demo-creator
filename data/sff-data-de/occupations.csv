@@ -1,8 +1,8 @@
 department_name,name
 Betrieb,Geschäftsanalyst
 Betrieb,Betriebsleiter
-Betrieb,Projektmanager
-Betrieb,Produktmanager
+Produkt,Projektmanager
+Produkt,Produktmanager
 Betrieb,Strategieberater
 Entwicklung,Software-Ingenieur
 Entwicklung,DevOps-Ingenieur
