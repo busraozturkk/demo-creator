@@ -177,13 +177,31 @@ export class EmployeeContractsOperation {
       throw new Error('Legal requirement mappings not cached. Run fetchAndCache first.');
     }
 
+    // Contract type mapping (English -> German system names)
+    const contractTypeMapping: { [key: string]: string } = {
+      'permanent full-time': 'Fest',
+      'permanent': 'Fest',
+      'full-time': 'Fest',
+      'part-time': 'Teilzeit',
+      'intern': 'Pflichtpraktikum',
+      'internship': 'Pflichtpraktikum',
+      'freelancer': 'Freelancer',
+      'mini job': 'Minijob',
+      'minijob': 'Minijob',
+      'working student': 'Werkstudent',
+      'werkstudent': 'Werkstudent',
+    };
+
     // Find contract type ID by name
+    const searchName = contract.contract_type_name.toLowerCase();
+    const mappedName = contractTypeMapping[searchName] || contract.contract_type_name;
+
     const contractType = hrData.contractTypes.find(
-      ct => ct.name.toLowerCase() === contract.contract_type_name.toLowerCase()
+      ct => ct.name.toLowerCase() === mappedName.toLowerCase()
     );
 
     if (!contractType) {
-      throw new Error(`Contract type not found: ${contract.contract_type_name}`);
+      throw new Error(`Contract type not found: ${contract.contract_type_name} (mapped to: ${mappedName})`);
     }
 
     // Find qualification group ID by name (use partial match for flexibility)
