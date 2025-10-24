@@ -1,7 +1,7 @@
 name,department_name,leader_email_username,member_email_usernames
-Backend Team,Engineering,david.jones,"emily.davis,robert.miller"
-Frontend Team,Engineering,emily.davis,"robert.miller"
-Design Team,Product,lisa.wilson,"william.moore,jennifer.taylor"
-Product Management Team,Product,william.moore,"jennifer.taylor"
-HR Team,Operations,thomas.anderson,"jessica.thomas"
-Finance Team,Operations,jessica.thomas,"christopher.jackson,amanda.white,daniel.harris"
+Backend Team,Engineering & Technology,david.jones,"emily.davis,robert.miller"
+Frontend Team,Engineering & Technology,emily.davis,"robert.miller"
+Design Team,Business & Operations,lisa.wilson,"william.moore,jennifer.taylor"
+Product Management Team,Business & Operations,william.moore,"jennifer.taylor"
+HR Team,Human Resources,thomas.anderson,"jessica.thomas"
+Finance Team,Finance & Accounting,jessica.thomas,"christopher.jackson,amanda.white,daniel.harris"
