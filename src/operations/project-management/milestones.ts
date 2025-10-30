@@ -195,8 +195,24 @@ export class MilestonesOperation {
   }
 
   /**
+   * Get the first day of the month for a given date
+   */
+  private getFirstDayOfMonth(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+  }
+
+  /**
+   * Get the last day of the month for a given date
+   */
+  private getLastDayOfMonth(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  }
+
+  /**
    * Set periods for milestones using project dates
    * Distributes project timeline across milestones evenly
+   * Start dates are set to the first day of the month
+   * End dates are set to the last day of the month
    */
   async setMilestonePeriods(
     milestoneMappings: MilestoneMapping[],
@@ -241,9 +257,13 @@ export class MilestonesOperation {
           const milestoneStart = new Date(projectStart.getTime() + (i * milestoneDuration));
           const milestoneEnd = new Date(projectStart.getTime() + ((i + 1) * milestoneDuration));
 
+          // Adjust to first day of month for start, last day of month for end
+          const adjustedStart = this.getFirstDayOfMonth(milestoneStart);
+          const adjustedEnd = this.getLastDayOfMonth(milestoneEnd);
+
           // Format dates as YYYY-MM-DD
-          const startedAt = milestoneStart.toISOString().split('T')[0];
-          const finishedAt = milestoneEnd.toISOString().split('T')[0];
+          const startedAt = adjustedStart.toISOString().split('T')[0];
+          const finishedAt = adjustedEnd.toISOString().split('T')[0];
 
           // Create task-interval
           const response: any = await this.apiClient.executeRequest(
