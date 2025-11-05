@@ -341,6 +341,9 @@ export class MilestonesOperation {
     let assigned = 0;
     let errors = 0;
 
+    // Prepare custom headers with partner-id
+    const customHeaders = { 'partner-id': organizationId.toString() };
+
     // Assign employees to milestones (distribute evenly)
     for (let i = 0; i < milestoneMappings.length; i++) {
       const milestone = milestoneMappings[i];
@@ -364,7 +367,8 @@ export class MilestonesOperation {
               task_id: milestone.task_id,
               user_id: ownerEmployee.user_id,
               partner_id: organizationId
-            }
+            },
+            customHeaders
           );
 
           console.log(`    ✓ [OWNER] ${ownerEmployee.first_name} ${ownerEmployee.last_name}: ${ownerPmAmount} PM (${year})`);
@@ -398,7 +402,8 @@ export class MilestonesOperation {
                 task_id: milestone.task_id,
                 user_id: employee.user_id,
                 partner_id: organizationId
-              }
+              },
+              customHeaders
             );
 
             console.log(`    ✓ ${employee.first_name} ${employee.last_name}: ${pmAmount} PM (${year})`);

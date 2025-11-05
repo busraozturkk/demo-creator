@@ -12,10 +12,10 @@ The `COMPANY_CREATION_TOKEN` is a JWT token required for creating companies via 
 The system now automatically checks token expiration:
 
 ### On Application Startup
-- ✅ Validates token is present
-- ✅ Checks if token is expired
-- ⚠️ Warns if token expires within 2 days
-- ✅ Shows expiration date and days remaining
+- Validates token is present
+- Checks if token is expired
+- Warns if token expires within 2 days
+- Shows expiration date and days remaining
 
 ### Daily Cron Job (Production)
 A cron job runs daily at 9 AM on the production server:
@@ -58,10 +58,10 @@ COMPANY_CREATION_TOKEN="Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
 ```
 
 **IMPORTANT:**
-- ✅ Include `Bearer ` prefix
-- ✅ Wrap in double quotes
-- ✅ No extra spaces or newlines
-- ✅ Copy the FULL token
+- Include `Bearer ` prefix
+- Wrap in double quotes
+- No extra spaces or newlines
+- Copy the FULL token
 
 ### Step 3: Deploy to Production
 
