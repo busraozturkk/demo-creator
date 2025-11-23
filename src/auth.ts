@@ -186,4 +186,53 @@ export class AuthService {
       throw new AuthError(`Failed to approve user consent: ${error}`);
     }
   }
+
+  async generatePartnerToken(partnerId: number, apiBaseUrl: string): Promise<string> {
+    if (!this.bearerToken) {
+      throw new AuthError('Not authenticated. Please login first.');
+    }
+
+    try {
+      console.log(`Generating partner token for partner ID: ${partnerId}`);
+
+      const response = await fetch(`${apiBaseUrl}/generate-token-for-partner`, {
+        method: 'POST',
+        headers: {
+          'accept': CONTENT_TYPES.JSON,
+          'accept-language': 'en',
+          'content-type': CONTENT_TYPES.JSON,
+          'authorization': `Bearer ${this.bearerToken}`,
+          'origin': DEFAULT_HEADERS.origin,
+          'referer': DEFAULT_HEADERS.referer,
+          'user-agent': DEFAULT_HEADERS.userAgent,
+        },
+        body: JSON.stringify({
+          partner_id: partnerId
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new AuthError(
+          `Partner token generation failed: ${response.status} - ${errorText}`,
+          response.status
+        );
+      }
+
+      const data = await response.json();
+      const partnerToken = data.data?.token || data.token;
+
+      if (!partnerToken) {
+        throw new AuthError('Partner token not found in response: ' + JSON.stringify(data));
+      }
+
+      console.log('✓ Partner token generated successfully');
+      return partnerToken;
+    } catch (error) {
+      if (error instanceof AuthError) {
+        throw error;
+      }
+      throw new AuthError(`Failed to generate partner token: ${error}`);
+    }
+  }
 }

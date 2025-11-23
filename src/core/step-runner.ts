@@ -301,8 +301,15 @@ export async function runSingleStep(stepId: string, session: any) {
 
         case 'avatars':
             console.log('Uploading employee profile pictures');
-            const avatarMappingsPath = `./data/${session.dataGroup}/avatar-mappings.csv`;
-            const avatarsDir = `./data/avatars/${session.dataGroup}`;
+
+            // Determine language from dataset (all datasets end with -en or -de)
+            const isGerman = session.dataGroup.endsWith('-de');
+            const languageSuffix = isGerman ? 'de' : 'en';
+
+            // Use shared avatar mappings based on language
+            const avatarMappingsPath = `./data/sff-data-${languageSuffix}/avatar-mappings.csv`;
+            const avatarsDir = `./data/avatars/sff-data-${languageSuffix}`;
+
             if (fs.existsSync(avatarMappingsPath) && fs.existsSync(avatarsDir)) {
                 const { EmployeeAvatarsOperation } = await import('../operations/hr/employees/employee-avatars');
                 const avatarsOp = new EmployeeAvatarsOperation(session.hrApiClient);
@@ -419,6 +426,24 @@ export async function runSingleStep(stepId: string, session: any) {
                 session.projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects, session.projectType);
                 session.projectsData = projectsOp.getProjectsData();
                 console.log(`Projects created: ${session.projectMappings?.length || 0}`);
+
+                // Move projects to appropriate statuses
+                if (session.projectMappings?.length > 0 && session.projectType) {
+                    console.log('\nMoving projects to workflow statuses...');
+                    try {
+                        const { ProjectStatusOperation } = await import('../operations/project-management/project-status');
+                        const projectStatusOp = new ProjectStatusOperation(session.apiClient, session.authService);
+                        await projectStatusOp.moveProjectsToStatuses(
+                            session.projectMappings,
+                            session.projectType,
+                            session.organizationId
+                        );
+                        console.log('✓ Projects moved to appropriate statuses');
+                    } catch (error: any) {
+                        console.error(`Project status update failed: ${error.message}`);
+                        console.log('Continuing with next step');
+                    }
+                }
             } else {
                 console.log('No project-management CSV found, skipping');
             }

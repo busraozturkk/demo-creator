@@ -429,6 +429,20 @@ export async function runDemoCreation(
                         const projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects, projectTypeId);
                         socket.emit('log', { type: 'success', message: `✓ Projects created: ${projectMappings?.length || 0}\n` });
 
+                        // Move projects to appropriate statuses
+                        if (projectMappings.length > 0 && projectTypeId) {
+                            socket.emit('log', { type: 'info', message: '\n=== Moving Projects to Workflow Statuses ===' });
+                            try {
+                                const { ProjectStatusOperation } = await import('../operations/project-management/project-status');
+                                const projectStatusOp = new ProjectStatusOperation(apiClient, authService);
+                                await projectStatusOp.moveProjectsToStatuses(projectMappings, projectTypeId, organizationId);
+                                socket.emit('log', { type: 'success', message: '✓ Projects moved to appropriate statuses\n' });
+                            } catch (error: any) {
+                                socket.emit('log', { type: 'error', message: `Project status update failed: ${error.message}` });
+                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                            }
+                        }
+
                         // Milestones
                         const milestonesPath = `./data/${dataGroup}/milestones.csv`;
                         if (projectMappings.length > 0 && fs.existsSync(milestonesPath)) {
@@ -744,8 +758,15 @@ export async function runDemoCreation(
 
             // Upload employee avatars as the LAST step (after all user assignments)
             socket.emit('log', { type: 'info', message: '\n=== Uploading Employee Avatars (Final Step) ===' });
-            const avatarMappingsPath = `./data/${dataGroup}/avatar-mappings.csv`;
-            const avatarsDir = `./data/avatars/${dataGroup}`;
+
+            // Determine language from dataset (all datasets end with -en or -de)
+            const isGerman = dataGroup.endsWith('-de');
+            const languageSuffix = isGerman ? 'de' : 'en';
+
+            // Use shared avatar mappings based on language
+            const avatarMappingsPath = `./data/sff-data-${languageSuffix}/avatar-mappings.csv`;
+            const avatarsDir = `./data/avatars/sff-data-${languageSuffix}`;
+
             if (fs.existsSync(avatarMappingsPath) && fs.existsSync(avatarsDir) && employeeMappings) {
                 try {
                     const { EmployeeAvatarsOperation } = await import('../operations/hr/employees/employee-avatars');
