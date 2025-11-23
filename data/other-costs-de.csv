@@ -1,0 +1,17 @@
+title,purpose_id,type_id,detail_title
+Cloud-Infrastrukturdienste,3,2,AWS-Server-Hosting
+Cloud-Infrastrukturdienste,3,2,Datenbankverwaltung
+Cloud-Infrastrukturdienste,3,2,CDN-Dienste
+Softwarelizenzen & Tools,3,2,Entwicklungstools
+Softwarelizenzen & Tools,3,2,Projektmanagement-Software
+Softwarelizenzen & Tools,3,2,Analyseplattform
+Beratung & Consulting,3,2,Technische Beratung
+Beratung & Consulting,3,2,Geschäftsanalyse
+Schulung & Weiterbildung,3,2,Mitarbeiterschulungsprogramme
+Schulung & Weiterbildung,3,2,Zertifizierungskurse
+Büro & Ausstattung,3,2,Hardware & Geräte
+Büro & Ausstattung,3,2,Büromaterial
+Marketing & Kommunikation,3,2,Marketingkampagnen
+Marketing & Kommunikation,3,2,Kommunikationstools
+Sicherheit & Compliance,3,2,Sicherheitsaudits
+Sicherheit & Compliance,3,2,Compliance-Zertifizierungen

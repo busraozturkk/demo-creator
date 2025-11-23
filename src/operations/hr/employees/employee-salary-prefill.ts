@@ -75,6 +75,14 @@ export class EmployeeSalaryPrefillOperation {
 
             try {
                 const salaryRecords = await this.prefillSalary(employee.id);
+
+                // If no records were created, likely already exists (owner employee)
+                if (!salaryRecords || salaryRecords.length === 0) {
+                    console.log(`Skipping: Salary records already exist or prefill returned empty\n`);
+                    successCount++;
+                    continue;
+                }
+
                 console.log(`Created ${salaryRecords.length} salary record(s)\n`);
 
                 // Update each salary record with actual amounts
@@ -83,9 +91,15 @@ export class EmployeeSalaryPrefillOperation {
                 }
 
                 successCount++;
-            } catch (error) {
-                console.error(`Error: Failed to prefill salary: ${error}\n`);
-                failedCount++;
+            } catch (error: any) {
+                // 500 error likely means salary records already exist (owner employee)
+                if (error.message && error.message.includes('500')) {
+                    console.log(`Skipping: Salary records already exist (500 error)\n`);
+                    successCount++;
+                } else {
+                    console.error(`Error: Failed to prefill salary: ${error}\n`);
+                    failedCount++;
+                }
             }
         }
 
