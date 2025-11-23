@@ -649,27 +649,30 @@ export class TaskManagementOperation extends BaseOperation {
             return;
         }
 
-        // pctTask yerine milestone aktivitelerini de serbest bırakmak istiyorsan ekle: 'pctMilestone'
-        const activityTypesForSFF = ['task', 'timerCategory', 'pctTask'];
-        let created = 0, errors = 0;
+        // Activity types to allow for all roles
+        const allowedActivityTypes = ['pctProject', 'task', 'timerCategory'];
 
-        for (const role of roleMappings) {
-            try {
-                console.log(`  creating restriction for role: ${role.title} (id: ${role.id})`);
-                await this.taskMgmtApiClient.executeRequest(
-                    'POST',
-                    '/api/activity-type-restrictions',
-                    { role_id: role.id, allowed_activity_types: activityTypesForSFF }
-                );
-                console.log(`    added activity types: ${activityTypesForSFF.join(', ')}`);
-                created++;
-            } catch (error: any) {
-                console.log(`    failed to create restriction for role ${role.title}: ${error.message}`);
-                errors++;
-            }
+        try {
+            // Extract all role IDs
+            const roleIds = roleMappings.map(r => parseInt(r.id));
+
+            console.log(`Creating restrictions for ${roleIds.length} roles...`);
+            console.log(`Allowed activity types: ${allowedActivityTypes.join(', ')}`);
+
+            // Send single request with all role IDs
+            await this.taskMgmtApiClient.executeRequest(
+                'POST',
+                '/api/activity-type-restrictions',
+                {
+                    role_ids: roleIds,
+                    allowed_activity_types: allowedActivityTypes
+                }
+            );
+
+            console.log(`✓ Successfully created activity type restrictions for all roles\n`);
+        } catch (error: any) {
+            console.error(`✗ Failed to create activity type restrictions: ${error.message}\n`);
         }
-
-        console.log(`\n=== Activity Type Restrictions Summary ===\n  - Restrictions created: ${created}\n  - Errors: ${errors}\n`);
     }
 
     // --------------------------------------------------------------------------
