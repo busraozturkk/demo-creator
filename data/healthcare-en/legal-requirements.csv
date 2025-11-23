@@ -1,0 +1,4 @@
+title,country_id,working_days,working_days_max_hours,non_working_days_max_hours,min_rest_hours,strict_level,breaks,default_weekly_working_hours,office_open_time,office_close_time
+Germany Legal Requirements,332,"0,1,2,3,4",8,4,1,medium,"[{""min_working_hours"":9,""break_minutes"":45,""break_min_minutes"":15}]",40,09:00:00,18:00:00
+USA Legal Requirements,485,"0,1,2,3,4",8,4,1,medium,"[{""min_working_hours"":8,""break_minutes"":30,""break_min_minutes"":15}]",40,09:00:00,17:00:00
+UK Legal Requirements,484,"0,1,2,3,4",8,4,1,medium,"[{""min_working_hours"":6,""break_minutes"":30,""break_min_minutes"":20}]",40,09:00:00,17:30:00

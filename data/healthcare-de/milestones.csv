@@ -1,0 +1,59 @@
+project_short_title,milestone_title
+EHR Platform,Bewertung der regulatorischen Compliance
+EHR Platform,Datenmodelldesign & Standardausrichtung
+EHR Platform,Kernplattformentwicklung
+EHR Platform,Integration klinischer Arbeitsabläufe
+EHR Platform,Interoperabilitätstests
+EHR Platform,Sicherheits- & Datenschutzaudit
+EHR Platform,Pilot-Krankenhauseinführung
+EHR Platform,Vollständiger Rollout & Schulung
+Drug Discovery,Literaturrecherche & Datenerfassung
+Drug Discovery,Molekulare Datenbankeinrichtung
+Drug Discovery,Machine-Learning-Modelltraining
+Drug Discovery,Automatisierung des Compound-Screenings
+Drug Discovery,Lead-Optimierung
+Drug Discovery,Präklinische Validierung
+Drug Discovery,Patentanmeldung & Dokumentation
+Telemedicine,Plattform-Architekturdesign
+Telemedicine,Videokonsultationssystem
+Telemedicine,Wearable-Device-Integration
+Telemedicine,Elektronisches Rezeptmodul
+Telemedicine,Datensicherheitsimplementierung
+Telemedicine,Anbieterschulungsprogramm
+Telemedicine,Patientenonboarding
+Telemedicine,Behördliche Genehmigung
+Clinical Trials,Studienprotokoll-Managementsystem
+Clinical Trials,Patienten-Matching-Algorithmus
+Clinical Trials,Elektronische Datenerfassung
+Clinical Trials,Berichterstattung unerwünschter Ereignisse
+Clinical Trials,Regulatorische Einreichungstools
+Clinical Trials,Multi-Site-Integration
+Clinical Trials,Datenanalyse-Dashboard
+Genomics,Sequenzierungsdaten-Pipeline
+Genomics,Varianten-Annotationssystem
+Genomics,Pharmakogenomik-Datenbank
+Genomics,Klinische Entscheidungsunterstützung
+Genomics,Genetische Beratungsschnittstelle
+Genomics,Datenschutz- & Einwilligungsmanagement
+Genomics,Forschungskooperationsportal
+Medical Imaging,DICOM-Integration
+Medical Imaging,Bildvorverarbeitungs-Pipeline
+Medical Imaging,Deep-Learning-Modelltraining
+Medical Imaging,Radiologen-Workflow-Integration
+Medical Imaging,Diagnostische Genauigkeitsvalidierung
+Medical Imaging,FDA-Zulassungsverfahren
+Medical Imaging,Klinische Einführung
+Pharmacy Auto,Robotisches Ausgabesystem
+Pharmacy Auto,Bestandsverwaltung
+Pharmacy Auto,Rezeptverifizierung
+Pharmacy Auto,Etikettendruck & Verpackung
+Pharmacy Auto,Qualitätskontrollprüfungen
+Pharmacy Auto,Mitarbeiterschulung
+Pharmacy Auto,Go-Live-Support
+Patient Portal,User-Experience-Design
+Patient Portal,Terminplanung
+Patient Portal,Laborergebnis-Integration
+Patient Portal,Gesundheitsmetriken-Tracking
+Patient Portal,Medikamentenerinnerungen
+Patient Portal,Sichere Nachrichtenübermittlung
+Patient Portal,Mobile-App-Entwicklung

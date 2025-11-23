@@ -1,0 +1,16 @@
+first_name,last_name,gender,started_at,email_username,require_working_email
+Lukas,Müller,male,2024-01-15,lukas.mueller,false
+Emma,Schmidt,female,2024-01-20,emma.schmidt,false
+Leon,Schneider,male,2024-02-01,leon.schneider,false
+Mia,Fischer,female,2024-02-10,mia.fischer,false
+Felix,Weber,male,2024-02-15,felix.weber,false
+Hannah,Meyer,female,2024-03-01,hannah.meyer,false
+Jonas,Wagner,male,2024-03-05,jonas.wagner,false
+Lena,Becker,female,2024-03-10,lena.becker,false
+Paul,Schulz,male,2024-03-15,paul.schulz,false
+Laura,Hoffmann,female,2024-03-20,laura.hoffmann,false
+Maximilian,Koch,male,2024-04-01,maximilian.koch,false
+Sophia,Bauer,female,2024-04-05,sophia.bauer,false
+Noah,Richter,male,2024-04-10,noah.richter,false
+Marie,Klein,female,2024-04-15,marie.klein,false
+Benjamin,Wolf,male,2024-04-20,benjamin.wolf,false

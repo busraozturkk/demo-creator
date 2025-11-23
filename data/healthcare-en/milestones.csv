@@ -1,0 +1,59 @@
+project_short_title,milestone_title
+EHR Platform,Regulatory Compliance Assessment
+EHR Platform,Data Model Design & Standards Alignment
+EHR Platform,Core Platform Development
+EHR Platform,Clinical Workflow Integration
+EHR Platform,Interoperability Testing
+EHR Platform,Security & Privacy Audit
+EHR Platform,Pilot Hospital Deployment
+EHR Platform,Full Rollout & Training
+Drug Discovery,Literature Review & Data Collection
+Drug Discovery,Molecular Database Setup
+Drug Discovery,Machine Learning Model Training
+Drug Discovery,Compound Screening Automation
+Drug Discovery,Lead Optimization
+Drug Discovery,Preclinical Validation
+Drug Discovery,Patent Filing & Documentation
+Telemedicine,Platform Architecture Design
+Telemedicine,Video Consultation System
+Telemedicine,Wearable Device Integration
+Telemedicine,Electronic Prescription Module
+Telemedicine,Data Security Implementation
+Telemedicine,Provider Training Program
+Telemedicine,Patient Onboarding
+Telemedicine,Regulatory Approval
+Clinical Trials,Trial Protocol Management System
+Clinical Trials,Patient Matching Algorithm
+Clinical Trials,Electronic Data Capture
+Clinical Trials,Adverse Event Reporting
+Clinical Trials,Regulatory Submission Tools
+Clinical Trials,Multi-Site Integration
+Clinical Trials,Data Analytics Dashboard
+Genomics,Sequencing Data Pipeline
+Genomics,Variant Annotation System
+Genomics,Pharmacogenomics Database
+Genomics,Clinical Decision Support
+Genomics,Genetic Counseling Interface
+Genomics,Privacy & Consent Management
+Genomics,Research Collaboration Portal
+Medical Imaging,DICOM Integration
+Medical Imaging,Image Preprocessing Pipeline
+Medical Imaging,Deep Learning Model Training
+Medical Imaging,Radiologist Workflow Integration
+Medical Imaging,Diagnostic Accuracy Validation
+Medical Imaging,FDA Clearance Process
+Medical Imaging,Clinical Deployment
+Pharmacy Auto,Robotic Dispensing System
+Pharmacy Auto,Inventory Management
+Pharmacy Auto,Prescription Verification
+Pharmacy Auto,Label Printing & Packaging
+Pharmacy Auto,Quality Control Checks
+Pharmacy Auto,Staff Training
+Pharmacy Auto,Go-Live Support
+Patient Portal,User Experience Design
+Patient Portal,Appointment Scheduling
+Patient Portal,Lab Results Integration
+Patient Portal,Health Metrics Tracking
+Patient Portal,Medication Reminders
+Patient Portal,Secure Messaging
+Patient Portal,Mobile App Development

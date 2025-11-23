@@ -1,0 +1,4 @@
+is_main,name,country_id,state_id,city_id,postcode,street,building,phone,website,email,lat,lon,can_have_half_day,is_vacation_restart_disabled
+true,Germany Headquarters,332,1388,2706,10115,Unter den Linden,1,+49301234567,https://germany-headquarters.com,germany@company.com,52.5200,13.4050,false,true
+false,USA Office,485,4784,125663,10001,Fifth Avenue,350,+12125551234,https://usa-office.com,usa@company.com,40.7128,-74.0060,false,true
+false,UK Office,484,4583,115403,SW1A 1AA,Baker Street,221B,+442071234567,https://uk-office.com,uk@company.com,51.5074,-0.1278,false,true

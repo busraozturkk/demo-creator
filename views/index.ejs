@@ -117,10 +117,13 @@
                     Please select data
                 </div>
                 <div class="select-items dropdown-menu" id="dataGroupItems">
-                    <% dataGroups.forEach((group, index) => { %>
-                        <div data-value="<%= group.value %>">
-                            <%= group.label %>
-                        </div>
+                    <% Object.keys(groupedData).forEach((groupName) => { %>
+                        <div class="select-group-label"><%= groupName %></div>
+                        <% groupedData[groupName].forEach((item) => { %>
+                            <div data-value="<%= item.value %>" class="select-group-item">
+                                <%= item.label %>
+                            </div>
+                        <% }); %>
                     <% }); %>
                 </div>
             </div>

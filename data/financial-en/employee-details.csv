@@ -1,0 +1,16 @@
+email_username,title_name,gender_name,birthdate,citizenship_country_id,birth_place,iban,office_name,work_type,work_location,contractual_partner_id,rnd_global_percentage,occupation_name,personnel_number,working_days,vacation_day_number_type,is_shareholder
+james.smith,,Male,1990-05-15,484,London,GB73WEST12345698765400,Germany Headquarters,1,Germany,,,Operations Manager,7661,"0,1,2,3,4",per_year,false
+emma.johnson,,Female,1992-08-22,484,Manchester,GB46WEST12345698765401,Germany Headquarters,1,Germany,,,Software Engineer,4687,"0,1,2,3,4",per_year,false
+michael.williams,,Male,1988-03-10,485,New York,GB24WEST12345698765409,USA Office,1,USA,,,Product Manager,8065,"0,1,2,3,4",per_year,false
+sarah.brown,,Female,1991-07-18,484,Birmingham,GB19WEST12345698765402,Germany Headquarters,1,Germany,,,HR Manager,7064,"0,1,2,3,4",per_year,false
+david.jones,,Male,1989-11-25,484,Liverpool,GB89WEST12345698765403,Germany Headquarters,1,Germany,,50,Software Engineer,6120,"0,1,2,3,4",per_year,false
+emily.davis,,Female,1993-04-12,484,Leeds,GB62WEST12345698765404,Germany Headquarters,1,Germany,,,Software Engineer,9211,"0,1,2,3,4",per_year,false
+robert.miller,,Male,1987-09-30,485,Los Angeles,GB94WEST12345698765410,USA Office,1,USA,,,DevOps Engineer,4800,"0,1,2,3,4",per_year,false
+lisa.wilson,,Female,1994-02-14,484,Sheffield,GB35WEST12345698765405,Germany Headquarters,1,Germany,,,Brand Manager,6737,"0,1,2,3,4",per_year,false
+william.moore,,Male,1986-06-08,485,Chicago,GB67WEST12345698765411,USA Office,1,USA,,50,Product Manager,7983,"0,1,2,3,4",per_year,false
+jennifer.taylor,,Female,1995-12-03,484,Bristol,GB08WEST12345698765406,Germany Headquarters,1,Germany,,,Marketing Specialist,6189,"0,1,2,3,4",per_year,false
+thomas.anderson,,Male,1990-10-20,485,Houston,GB40WEST12345698765412,USA Office,1,USA,,,HR Manager,3939,"0,1,2,3,4",per_year,false
+jessica.thomas,,Female,1992-03-16,484,Newcastle,GB78WEST12345698765407,Germany Headquarters,1,Germany,,,HR Business Partner,6455,"0,1,2,3,4",per_year,false
+christopher.jackson,,Male,1988-08-28,485,Phoenix,GB13WEST12345698765413,USA Office,1,USA,,50,Financial Analyst,4702,"0,1,2,3,4",per_year,false
+amanda.white,,Female,1993-01-11,484,Nottingham,GB51WEST12345698765408,Germany Headquarters,1,Germany,,,Accountant,8678,"0,1,2,3,4",per_year,false
+daniel.harris,,Male,1989-05-07,485,Philadelphia,GB83WEST12345698765414,USA Office,1,USA,,,Controller,9592,"0,1,2,3,4",per_year,false

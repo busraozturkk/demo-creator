@@ -126,6 +126,12 @@ function initDropdown(selectId, itemsId, inputId) {
     for (let i = 0; i < items.length; i++) {
         items[i].addEventListener('click', function(e) {
             if (isCreating) return; // locked: do nothing
+
+            // Skip if this is a group label
+            if (this.classList.contains('select-group-label')) {
+                return;
+            }
+
             e.stopPropagation();
 
             // Remove previous selection

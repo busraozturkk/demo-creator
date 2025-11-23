@@ -1,0 +1,7 @@
+name,department_name,leader_email_username,member_email_usernames
+Backend-Team,Entwicklung,felix.weber,"hannah.meyer,jonas.wagner"
+Frontend-Team,Entwicklung,hannah.meyer,"jonas.wagner"
+Design-Team,Produkt,lena.becker,"paul.schulz,laura.hoffmann"
+Produktmanagement-Team,Produkt,paul.schulz,"laura.hoffmann"
+HR-Team,Betrieb,maximilian.koch,"sophia.bauer"
+Finanz-Team,Betrieb,sophia.bauer,"noah.richter,marie.klein,benjamin.wolf"

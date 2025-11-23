@@ -1,0 +1,16 @@
+email_username,title_name,gender_name,birthdate,citizenship_country_id,birth_place,iban,office_name,work_type,work_location,contractual_partner_id,rnd_global_percentage,occupation_name,personnel_number,working_days,vacation_day_number_type,is_shareholder
+lukas.mueller,,Male,1990-05-15,332,Berlin,DE89370400440532013000,Deutschland Hauptsitz,1,Deutschland,,50,Betriebsleiter,3592,"0,1,2,3,4",per_year,false
+emma.schmidt,,Female,1992-08-22,332,München,DE62370400440532013001,Deutschland Hauptsitz,1,Deutschland,,,Software-Ingenieur,6881,"0,1,2,3,4",per_year,false
+leon.schneider,,Male,1988-03-10,332,Hamburg,DE35370400440532013002,Deutschland Hauptsitz,1,Deutschland,,,Produktmanager,5324,"0,1,2,3,4",per_year,false
+mia.fischer,,Female,1991-07-18,332,Köln,DE08370400440532013003,Deutschland Hauptsitz,1,Deutschland,,,Personalleiter,9821,"0,1,2,3,4",per_year,false
+felix.weber,,Male,1989-11-25,332,Frankfurt,DE78370400440532013004,Deutschland Hauptsitz,1,Deutschland,,50,Software-Ingenieur,5711,"0,1,2,3,4",per_year,false
+hannah.meyer,,Female,1993-04-12,332,Stuttgart,DE51370400440532013005,Deutschland Hauptsitz,1,Deutschland,,,Software-Ingenieur,6817,"0,1,2,3,4",per_year,false
+jonas.wagner,,Male,1987-09-30,332,Düsseldorf,DE24370400440532013006,Deutschland Hauptsitz,1,Deutschland,,,DevOps-Ingenieur,9324,"0,1,2,3,4",per_year,false
+lena.becker,,Female,1994-02-14,332,Dortmund,DE94370400440532013007,Deutschland Hauptsitz,1,Deutschland,,,Markenmanager,5662,"0,1,2,3,4",per_year,false
+paul.schulz,,Male,1986-06-08,332,Essen,DE67370400440532013008,Deutschland Hauptsitz,1,Deutschland,,50,Produktmanager,5465,"0,1,2,3,4",per_year,false
+laura.hoffmann,,Female,1995-12-03,332,Leipzig,DE40370400440532013009,Deutschland Hauptsitz,1,Deutschland,,,Marketing-Spezialist,6651,"0,1,2,3,4",per_year,false
+maximilian.koch,,Male,1990-10-20,332,Bremen,DE13370400440532013010,Deutschland Hauptsitz,1,Deutschland,,,Personalleiter,7667,"0,1,2,3,4",per_year,false
+sophia.bauer,,Female,1992-03-16,332,Dresden,DE83370400440532013011,Deutschland Hauptsitz,1,Deutschland,,,HR Business Partner,7451,"0,1,2,3,4",per_year,false
+noah.richter,,Male,1988-08-28,332,Hannover,DE56370400440532013012,Deutschland Hauptsitz,1,Deutschland,,50,Finanzanalyst,8292,"0,1,2,3,4",per_year,false
+marie.klein,,Female,1993-01-11,332,Nürnberg,DE29370400440532013013,Deutschland Hauptsitz,1,Deutschland,,,Buchhalter,4182,"0,1,2,3,4",per_year,false
+benjamin.wolf,,Male,1989-05-07,332,Duisburg,DE02370400440532013014,Deutschland Hauptsitz,1,Deutschland,,,Controller,7371,"0,1,2,3,4",per_year,false

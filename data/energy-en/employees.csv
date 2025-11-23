@@ -1,0 +1,16 @@
+first_name,last_name,gender,started_at,email_username,require_working_email
+James,Smith,male,2024-01-15,james.smith,true
+Emma,Johnson,female,2024-01-20,emma.johnson,true
+Michael,Williams,male,2024-02-01,michael.williams,true
+Sarah,Brown,female,2024-02-10,sarah.brown,true
+David,Jones,male,2024-02-15,david.jones,true
+Emily,Davis,female,2024-03-01,emily.davis,true
+Robert,Miller,male,2024-03-05,robert.miller,true
+Lisa,Wilson,female,2024-03-10,lisa.wilson,true
+William,Moore,male,2024-03-15,william.moore,true
+Jennifer,Taylor,female,2024-03-20,jennifer.taylor,true
+Thomas,Anderson,male,2024-04-01,thomas.anderson,true
+Jessica,Thomas,female,2024-04-05,jessica.thomas,true
+Christopher,Jackson,male,2024-04-10,christopher.jackson,true
+Amanda,White,female,2024-04-15,amanda.white,true
+Daniel,Harris,male,2024-04-20,daniel.harris,true

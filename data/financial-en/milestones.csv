@@ -1,0 +1,62 @@
+project_short_title,milestone_title
+Core Banking,Current System Assessment
+Core Banking,Architecture Design & Planning
+Core Banking,Data Migration Strategy
+Core Banking,Account Management Module
+Core Banking,Transaction Processing Engine
+Core Banking,Integration Layer Development
+Core Banking,Regulatory Compliance Validation
+Core Banking,Parallel Run & Cutover
+Fraud Detection,Pattern Analysis & Rule Definition
+Fraud Detection,Historical Data Analysis
+Fraud Detection,Machine Learning Model Training
+Fraud Detection,Real-time Processing Pipeline
+Fraud Detection,Alert Management System
+Fraud Detection,Case Investigation Tools
+Fraud Detection,Performance Tuning
+Fraud Detection,Continuous Model Improvement
+Digital Wallet,User Experience Design
+Digital Wallet,Payment Gateway Integration
+Digital Wallet,Tokenization & Security
+Digital Wallet,P2P Transfer Features
+Digital Wallet,QR Code Payment
+Digital Wallet,Loyalty & Rewards Program
+Digital Wallet,Beta Testing
+Digital Wallet,Public Launch
+Robo Advisory,Investment Strategy Framework
+Robo Advisory,Portfolio Optimization Algorithms
+Robo Advisory,Risk Profiling System
+Robo Advisory,Automated Rebalancing
+Robo Advisory,Tax-Loss Harvesting
+Robo Advisory,Client Dashboard
+Robo Advisory,Regulatory Approvals
+Robo Advisory,Client Acquisition Campaign
+Blockchain Pay,Blockchain Protocol Selection
+Blockchain Pay,Smart Contract Development
+Blockchain Pay,Foreign Exchange Integration
+Blockchain Pay,KYC/AML Compliance
+Blockchain Pay,Settlement Mechanism
+Blockchain Pay,Bank Partner Integration
+Blockchain Pay,Pilot Transactions
+Blockchain Pay,Full Network Launch
+Risk Analytics,Data Aggregation Framework
+Risk Analytics,Credit Risk Models
+Risk Analytics,Market Risk Calculations
+Risk Analytics,Operational Risk Assessment
+Risk Analytics,Stress Testing Scenarios
+Risk Analytics,Regulatory Reporting Automation
+Risk Analytics,Executive Dashboard
+Trade Finance,Document Digitization
+Trade Finance,Letter of Credit Workflow
+Trade Finance,Invoice Financing Module
+Trade Finance,Supply Chain Visibility
+Trade Finance,Smart Contract Automation
+Trade Finance,Bank Network Integration
+Trade Finance,Platform Testing
+Open Banking,API Security Framework
+Open Banking,Authentication & Authorization
+Open Banking,Account Information APIs
+Open Banking,Payment Initiation APIs
+Open Banking,Developer Portal
+Open Banking,Third-Party Partner Onboarding
+Open Banking,Monitoring & Analytics

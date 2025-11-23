@@ -440,6 +440,42 @@ body {
     transform: scaleY(1);
 }
 
+/* Dropdown Group Labels */
+.dropdown-menu .select-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-primary);
+    background: var(--bg-secondary);
+    padding: 8px 16px;
+    margin-top: 4px;
+    cursor: default;
+    border-top: 1px solid var(--border-color);
+    pointer-events: none;
+}
+
+.dropdown-menu .select-group-label:first-child {
+    margin-top: 0;
+    border-top: none;
+}
+
+.dropdown-menu .select-group-label::before {
+    display: none;
+}
+
+.dropdown-menu .select-group-item {
+    padding-left: 24px;
+}
+
+.dropdown-menu .select-group-item:hover {
+    padding-left: 28px;
+}
+
+.dropdown-menu .select-group-item.selected {
+    padding-left: 28px;
+}
+
 /* Help Text */
 .help-text {
     background: var(--bg-secondary);

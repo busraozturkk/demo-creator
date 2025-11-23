@@ -17,14 +17,39 @@ router.get('/', (req, res) => {
         .filter(file => fs.statSync(path.join(dataDir, file)).isDirectory())
         .filter(dir => !dir.startsWith('.') && dir !== 'avatars' && dir !== 'cache');
 
-    // Map directory names to display labels
-    const dataGroups = dataDirs.map(dir => {
-        if (dir === 'sff-data-en') return { value: 'sff-data-en', label: 'English SFF Data' };
-        if (dir === 'sff-data-de') return { value: 'sff-data-de', label: 'German SFF Data' };
-        return { value: dir, label: dir };
+    // Map directory names to display labels with grouping
+    const dataMapping: { [key: string]: { label: string; group: string } } = {
+        'manufacturing-en': { label: 'Manufacturing & Product Development', group: 'SFF English' },
+        'healthcare-en': { label: 'Healthcare & Pharmaceuticals', group: 'SFF English' },
+        'financial-en': { label: 'Financial Services', group: 'SFF English' },
+        'consulting-en': { label: 'Services & Consulting', group: 'SFF English' },
+        'energy-en': { label: 'Energy & Utilities', group: 'SFF English' },
+        'government-en': { label: 'Government & Public Sector', group: 'SFF English' },
+        'construction-en': { label: 'Construction & Infrastructure', group: 'SFF English' },
+        'media-en': { label: 'Media & Telecommunications', group: 'SFF English' },
+        'manufacturing-de': { label: 'Fertigung & Produktentwicklung', group: 'SFF Deutsch' },
+        'healthcare-de': { label: 'Gesundheitswesen & Pharmazeutika', group: 'SFF Deutsch' },
+        'financial-de': { label: 'Finanzdienstleistungen', group: 'SFF Deutsch' },
+        'consulting-de': { label: 'Dienstleistungen & Beratung', group: 'SFF Deutsch' },
+        'energy-de': { label: 'Energie & Versorgung', group: 'SFF Deutsch' },
+        'government-de': { label: 'Verwaltung & Öffentlicher Sektor', group: 'SFF Deutsch' },
+        'construction-de': { label: 'Bau & Infrastruktur', group: 'SFF Deutsch' },
+        'media-de': { label: 'Medien & Telekommunikation', group: 'SFF Deutsch' },
+    };
+
+    // Group data by language
+    const groupedData: { [key: string]: Array<{ value: string; label: string }> } = {};
+    dataDirs.forEach(dir => {
+        if (dataMapping[dir]) {
+            const { label, group } = dataMapping[dir];
+            if (!groupedData[group]) {
+                groupedData[group] = [];
+            }
+            groupedData[group].push({ value: dir, label });
+        }
     });
 
-    res.render('index', { dataGroups, hasGroups: dataGroups.length > 0 });
+    res.render('index', { groupedData, hasGroups: Object.keys(groupedData).length > 0 });
 });
 
 /**

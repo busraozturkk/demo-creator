@@ -1,0 +1,60 @@
+project_short_title,milestone_title
+Smart Factory,Anforderungserhebung & Prozessanalyse
+Smart Factory,Digital-Twin-Architekturdesign
+Smart Factory,Sensorintegration & Datenerfassung
+Smart Factory,Machine-Learning-Modellentwicklung
+Smart Factory,Automatisierungssystemintegration
+Smart Factory,Testen & Validierung
+Smart Factory,Produktionseinführung
+Smart Factory,Schulung & Dokumentation
+EV Platform,Batterietechnologieforschung
+EV Platform,Antriebsstrangdesign & Engineering
+EV Platform,Fahrgestellentwicklung
+EV Platform,Integrationstests
+EV Platform,Sicherheitszertifizierung
+EV Platform,Produktionslinienaufbau
+EV Platform,Pilot-Produktionslauf
+EV Platform,Vollständiger Fertigungsstart
+Quality AI,Bilddatensatzerfassung
+Quality AI,Training des Fehlerklassifizierungsmodells
+Quality AI,Kamerasystemintegration
+Quality AI,Echtzeit-Verarbeitungsoptimierung
+Quality AI,Produktionslinienintegration
+Quality AI,Leistungsvalidierung
+Quality AI,Einrichtung kontinuierlicher Verbesserung
+Supply Chain,Datenintegration & Bereinigung
+Supply Chain,Entwicklung des Nachfrageprognosemodells
+Supply Chain,Bestandsoptimierungsalgorithmus
+Supply Chain,Lieferantennetzwerkintegration
+Supply Chain,Risikobewertungsmodul
+Supply Chain,Dashboard & Berichterstattung
+Supply Chain,Pilot-Rollout
+Supply Chain,Globale Einführung
+Robotics Line,Sicherheitsbewertung & Normüberprüfung
+Robotics Line,Roboterauswahl & Beschaffung
+Robotics Line,Endeffektor-Design
+Robotics Line,Programmierung & Simulation
+Robotics Line,Montagelinienintegration
+Robotics Line,Mitarbeiterschulungsprogramme
+Robotics Line,Leistungsüberwachung
+IoT Sensors,Sensornetzwerk-Design
+IoT Sensors,Gateway-Infrastrukturaufbau
+IoT Sensors,Datenpipeline-Entwicklung
+IoT Sensors,Prädiktive Analyse-Engine
+IoT Sensors,Alarm- & Benachrichtigungssystem
+IoT Sensors,Mobile-App-Entwicklung
+IoT Sensors,Vollständige Einführung
+3D Printing,Materialforschung & Testing
+3D Printing,Druckerkalibrierung & Optimierung
+3D Printing,Design-Software-Integration
+3D Printing,Qualitätskontrollverfahren
+3D Printing,Produktionsworkflow-Einrichtung
+3D Printing,Mitarbeiterschulung
+3D Printing,Pilotprojekte
+Product PLM,Bewertung des aktuellen Systems
+Product PLM,PLM-Plattformauswahl
+Product PLM,Datenmigrationsstrategie
+Product PLM,Anpassung & Konfiguration
+Product PLM,Integration mit CAD/CAM-Systemen
+Product PLM,User Acceptance Testing
+Product PLM,Rollout & Change Management

@@ -1,0 +1,62 @@
+project_short_title,milestone_title
+Core Banking,Bewertung des aktuellen Systems
+Core Banking,Architekturdesign & Planung
+Core Banking,Datenmigrationsstrategie
+Core Banking,Kontoverwaltungsmodul
+Core Banking,Transaktionsverarbeitungs-Engine
+Core Banking,Entwicklung der Integrationsschicht
+Core Banking,Validierung der regulatorischen Compliance
+Core Banking,Parallelbetrieb & Cutover
+Fraud Detection,Musteranalyse & Regeldefinition
+Fraud Detection,Historische Datenanalyse
+Fraud Detection,Machine-Learning-Modelltraining
+Fraud Detection,Echtzeit-Verarbeitungs-Pipeline
+Fraud Detection,Alarmmanagementsystem
+Fraud Detection,Falluntersuchungstools
+Fraud Detection,Leistungsoptimierung
+Fraud Detection,Kontinuierliche Modellverbesserung
+Digital Wallet,User-Experience-Design
+Digital Wallet,Zahlungsgateway-Integration
+Digital Wallet,Tokenisierung & Sicherheit
+Digital Wallet,P2P-Übertragungsfunktionen
+Digital Wallet,QR-Code-Zahlung
+Digital Wallet,Treue- & Prämienprogramm
+Digital Wallet,Beta-Testing
+Digital Wallet,Öffentlicher Start
+Robo Advisory,Anlagestrategie-Framework
+Robo Advisory,Portfolio-Optimierungsalgorithmen
+Robo Advisory,Risikoprofilierungssystem
+Robo Advisory,Automatisiertes Rebalancing
+Robo Advisory,Tax-Loss Harvesting
+Robo Advisory,Kunden-Dashboard
+Robo Advisory,Regulatorische Genehmigungen
+Robo Advisory,Kundenakquisitionskampagne
+Blockchain Pay,Blockchain-Protokollauswahl
+Blockchain Pay,Smart-Contract-Entwicklung
+Blockchain Pay,Devisenintegration
+Blockchain Pay,KYC/AML-Compliance
+Blockchain Pay,Settlement-Mechanismus
+Blockchain Pay,Bankpartnerintegration
+Blockchain Pay,Pilot-Transaktionen
+Blockchain Pay,Vollständiger Netzwerkstart
+Risk Analytics,Datenaggregations-Framework
+Risk Analytics,Kreditrisikomodelle
+Risk Analytics,Marktrisiko-Berechnungen
+Risk Analytics,Bewertung operationeller Risiken
+Risk Analytics,Stresstestszenarien
+Risk Analytics,Automatisierung der regulatorischen Berichterstattung
+Risk Analytics,Executive Dashboard
+Trade Finance,Dokumentendigitalisierung
+Trade Finance,Akkreditiv-Workflow
+Trade Finance,Rechnungsfinanzierungsmodul
+Trade Finance,Supply-Chain-Transparenz
+Trade Finance,Smart-Contract-Automatisierung
+Trade Finance,Banknetzwerkintegration
+Trade Finance,Plattformtests
+Open Banking,API-Sicherheits-Framework
+Open Banking,Authentifizierung & Autorisierung
+Open Banking,Kontoinformations-APIs
+Open Banking,Zahlungsinitiierungs-APIs
+Open Banking,Entwicklerportal
+Open Banking,Drittanbieter-Partner-Onboarding
+Open Banking,Überwachung & Analyse
