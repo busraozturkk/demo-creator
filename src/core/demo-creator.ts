@@ -465,10 +465,6 @@ export async function runDemoCreation(
                                         await milestonesOp.setMilestonePeriods(milestoneMappings, projectMappings);
                                         socket.emit('log', { type: 'success', message: '✓ Periods set for milestones\n' });
 
-                                        // Assign employees to milestones (include owner user)
-                                        await milestonesOp.assignEmployeesToMilestones(milestoneMappings, organizationId, authService.getUserId());
-                                        socket.emit('log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
-
                                         // Re-save milestone mappings with updated period info
                                         const cacheDirPath = './data/cache';
                                         const cacheFilePath = `${cacheDirPath}/milestone-mappings.json`;
@@ -648,6 +644,16 @@ export async function runDemoCreation(
                                                 const msPmAssignmentOp = new MilestonePmAssignmentOperation(apiClient);
                                                 await msPmAssignmentOp.assignPmToMilestones(projectMappingsForAssignment, organizationId);
                                                 socket.emit('log', { type: 'success', message: 'Milestone PM assignments completed\n' });
+
+                                                // Assign employees to milestones (now that PM assignments exist)
+                                                socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Milestones ===' });
+                                                try {
+                                                    const milestoneMappingsForAssignment = JSON.parse(fs.readFileSync('./data/cache/milestone-mappings.json', 'utf-8'));
+                                                    await milestonesOp.assignEmployeesToMilestones(milestoneMappingsForAssignment, organizationId, authService.getUserId());
+                                                    socket.emit('log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
+                                                } catch (error: any) {
+                                                    socket.emit('log', { type: 'error', message: `Milestone employee assignment failed: ${error.message}\n` });
+                                                }
 
                                                 // Task Management (always setup structure)
                                                 socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });

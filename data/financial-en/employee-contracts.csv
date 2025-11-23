@@ -1,16 +1,16 @@
 email_username,started_at,end_at,legal_requirement_country_id,contract_type_name,probation_ended_at,vacation_restart_date,weekly_hours,qualification_group_name,annual_days_off,flexible_days,flexible_days_per_week,is_current,rnd_description,is_shareholder
-james.smith,2024-04-15,2026-12-31,484,Permanent Full-time,2024-06-15,,40,Group A: University degree,24,,,true,Research on financial control systems and regulatory compliance frameworks,false
-emma.johnson,2024-04-20,2026-12-31,484,Permanent Full-time,2024-06-20,,40,Group A: University degree,24,,,true,Research on business process optimization and data analytics methodologies,false
-michael.williams,2024-04-10,2026-12-31,485,Permanent Full-time,2024-06-10,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
-sarah.brown,2024-04-18,2026-12-31,484,Permanent Full-time,2024-06-18,,40,Group A: University degree,24,,,true,Research on business process optimization and data analytics methodologies,false
-david.jones,2024-04-25,2026-12-31,484,Permanent Full-time,2024-06-25,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
-emily.davis,2024-05-01,2026-12-31,484,Permanent Full-time,2024-07-01,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
-robert.miller,2024-04-30,2026-12-31,485,Permanent Full-time,2024-06-30,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
-lisa.wilson,2024-05-05,2026-12-31,484,Permanent Full-time,2024-07-05,,40,Group C: Other,24,,,true,Research on sales optimization methodologies and customer engagement strategies,false
-william.moore,2024-04-08,2026-12-31,485,Permanent Full-time,2024-06-08,,40,Group C: Other,24,,,true,Research on sales optimization methodologies and customer engagement strategies,false
-jennifer.taylor,2024-05-10,2026-12-31,484,Permanent Full-time,2024-07-10,,40,Group C: Other,24,,,true,Research and development of marketing automation tools and campaign optimization,false
-thomas.anderson,2024-04-22,2026-12-31,485,Permanent Full-time,2024-06-22,,40,Group C: Other,24,,,true,Research and development of marketing automation tools and campaign optimization,false
-jessica.thomas,2024-05-15,2026-12-31,484,Permanent Full-time,2024-07-15,,40,Group C: Other,24,,,true,Research on agile methodologies and project optimization frameworks,false
-christopher.jackson,2024-04-12,2026-12-31,485,Permanent Full-time,2024-06-12,,40,Group C: Other,24,,,true,Research on agile methodologies and project optimization frameworks,false
-amanda.white,2024-05-20,2026-12-31,484,Permanent Full-time,2024-07-20,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
-daniel.harris,2024-04-28,2026-12-31,485,Permanent Full-time,2024-06-28,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
+james.smith,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group A: University degree,24,,,true,Research on financial control systems and regulatory compliance frameworks,false
+emma.johnson,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group A: University degree,24,,,true,Research on business process optimization and data analytics methodologies,false
+michael.williams,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
+sarah.brown,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group A: University degree,24,,,true,Research on business process optimization and data analytics methodologies,false
+david.jones,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
+emily.davis,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
+robert.miller,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
+lisa.wilson,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on sales optimization methodologies and customer engagement strategies,false
+william.moore,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on sales optimization methodologies and customer engagement strategies,false
+jennifer.taylor,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research and development of marketing automation tools and campaign optimization,false
+thomas.anderson,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research and development of marketing automation tools and campaign optimization,false
+jessica.thomas,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on agile methodologies and project optimization frameworks,false
+christopher.jackson,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on agile methodologies and project optimization frameworks,false
+amanda.white,2023-12-01,2028-01-31,484,Permanent Full-time,2024-02-01,,40,Group B: Technicians,24,,,true,Research and development of innovative software solutions and system architectures,false
+daniel.harris,2023-12-01,2028-01-31,485,Permanent Full-time,2024-02-01,,40,Group C: Other,24,,,true,Research on HR transformation strategies and workforce analytics frameworks,false
