@@ -1197,6 +1197,115 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`\n\n=== Task Creation Summary ===\n  - Tasks created: ${totalTasks}\n  - Errors: ${errors}\n`);
     }
 
+    /**
+     * Select unique tasks for a milestone based on project and milestone
+     * Each project+milestone combination gets a different set of tasks
+     */
+    private selectTasksForMilestone(
+        allTasks: Array<{ title: string; description: string; type: string }>,
+        milestoneIndex: number,
+        totalMilestones: number,
+        projectShortTitle?: string,
+        milestoneTitle?: string
+    ): Array<{ title: string; description: string; type: string }> {
+        // Create a seed from project + milestone for consistent but varied randomization
+        const seed = this.hashString((projectShortTitle || '') + (milestoneTitle || '') + milestoneIndex);
+
+        // Use seeded random for reproducible but unique results per project/milestone
+        const seededRandom = this.seededRandom(seed);
+
+        // Number of tasks: 3-6 tasks per milestone (varied by seed)
+        const numTasks = 3 + Math.floor(seededRandom() * 4); // 3, 4, 5, or 6 tasks
+
+        // Calculate milestone position for task type preference
+        const position = totalMilestones > 1 ? milestoneIndex / (totalMilestones - 1) : 0.5;
+
+        // Create weighted task pool based on position
+        let taskPool: Array<{ task: typeof allTasks[0]; weight: number }> = [];
+
+        for (const task of allTasks) {
+            let weight = 1.0; // Base weight
+            const taskLower = task.title.toLowerCase();
+
+            // Increase weight for position-appropriate tasks
+            if (position < 0.33) {
+                // EARLY: Prefer research, planning, design
+                if (taskLower.includes('research') || taskLower.includes('requirement') ||
+                    taskLower.includes('design') || taskLower.includes('architecture') ||
+                    taskLower.includes('recherche') || taskLower.includes('anforderung')) {
+                    weight = 3.0;
+                }
+            } else if (position < 0.66) {
+                // MIDDLE: Prefer implementation, testing
+                if (taskLower.includes('implementation') || taskLower.includes('phase') ||
+                    taskLower.includes('testing') || taskLower.includes('quality') ||
+                    taskLower.includes('implementierung') || taskLower.includes('test')) {
+                    weight = 3.0;
+                }
+            } else {
+                // LATE: Prefer optimization, deployment, documentation
+                if (taskLower.includes('optimization') || taskLower.includes('performance') ||
+                    taskLower.includes('documentation') || taskLower.includes('review') ||
+                    taskLower.includes('deployment') || taskLower.includes('optimierung')) {
+                    weight = 3.0;
+                }
+            }
+
+            taskPool.push({ task, weight });
+        }
+
+        // Weighted random selection
+        const selectedTasks: typeof allTasks = [];
+        const availablePool = [...taskPool];
+
+        for (let i = 0; i < numTasks && availablePool.length > 0; i++) {
+            // Calculate total weight
+            const totalWeight = availablePool.reduce((sum, item) => sum + item.weight, 0);
+
+            // Random weighted selection
+            let random = seededRandom() * totalWeight;
+            let selectedIndex = 0;
+
+            for (let j = 0; j < availablePool.length; j++) {
+                random -= availablePool[j].weight;
+                if (random <= 0) {
+                    selectedIndex = j;
+                    break;
+                }
+            }
+
+            // Add selected task and remove from pool
+            selectedTasks.push(availablePool[selectedIndex].task);
+            availablePool.splice(selectedIndex, 1);
+        }
+
+        return selectedTasks;
+    }
+
+    /**
+     * Simple hash function for string to number
+     */
+    private hashString(str: string): number {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return Math.abs(hash);
+    }
+
+    /**
+     * Seeded random number generator for reproducible randomness
+     */
+    private seededRandom(seed: number): () => number {
+        let state = seed;
+        return () => {
+            state = (state * 9301 + 49297) % 233280;
+            return state / 233280;
+        };
+    }
+
     async createTasksForMilestones(csvPath?: string, projectMappings?: ProjectMapping[], partnerId?: string): Promise<void> {
         console.log('\n=== Creating Tasks for Milestones (No Work Packages) ===\n');
 
@@ -1429,8 +1538,18 @@ export class TaskManagementOperation extends BaseOperation {
                 }));
                 const assigneeIdsFromMs = assigneeUserIds;
 
-                for (let taskIdx = 0; taskIdx < GENERIC_TASKS.length; taskIdx++) {
-                    const t = GENERIC_TASKS[taskIdx];
+                // Generate unique tasks for THIS milestone based on project + milestone combination
+                const milestoneTasks = this.selectTasksForMilestone(
+                    GENERIC_TASKS,
+                    i,
+                    milestoneMappings.length,
+                    ms.project_short_title,
+                    ms.milestone_title
+                );
+                console.log(`  Selected ${milestoneTasks.length} unique tasks for "${ms.project_short_title} - ${ms.milestone_title}"`);
+
+                for (let taskIdx = 0; taskIdx < milestoneTasks.length; taskIdx++) {
+                    const t = milestoneTasks[taskIdx];
                     try {
                         console.log(`    [Task ${taskIdx + 1}/${GENERIC_TASKS.length}] Creating "${t.title}"...`);
                         const createdAt = this.randomDateInPeriod(ms.started_at, ms.finished_at);

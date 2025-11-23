@@ -385,8 +385,8 @@ export class MilestonesOperation {
             'POST',
             `/pct/api/tasks/${milestone.task_id}/users/${ownerEmployee.user_id}/attach`,
             {
-              taskId: milestone.task_id,
-              userId: ownerEmployee.user_id,
+              task_id: milestone.task_id,
+              user_id: ownerEmployee.user_id,
               attach: true
             },
             customHeaders
@@ -441,8 +441,8 @@ export class MilestonesOperation {
               'POST',
               `/pct/api/tasks/${milestone.task_id}/users/${employee.user_id}/attach`,
               {
-                taskId: milestone.task_id,
-                userId: employee.user_id,
+                task_id: milestone.task_id,
+                user_id: employee.user_id,
                 attach: true
               },
               customHeaders
