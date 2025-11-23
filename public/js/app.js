@@ -85,6 +85,7 @@ const STEPS = [
  * Initialize custom dropdowns
  */
 function initCustomDropdown() {
+    initDropdown('projectTypeSelect', 'projectTypeItems', 'projectType');
     initDropdown('dataGroupSelect', 'dataGroupItems', 'dataGroup');
     initDropdown('environmentSelect', 'environmentItems', 'environment');
 }
@@ -342,6 +343,7 @@ async function runStep(stepId) {
                     companyName: document.getElementById('companyName').value.trim(),
                     email: document.getElementById('email').value.trim(),
                     password: document.getElementById('password').value.trim(),
+                    projectType: document.getElementById('projectType').value,
                     dataGroup: document.getElementById('dataGroup').value,
                     emailDomain: document.getElementById('emailDomain').value.trim(),
                     environment: document.getElementById('environment').value || 'testing',
@@ -584,6 +586,7 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
                 companyName,
                 email,
                 password,
+                projectType: document.getElementById('projectType').value,
                 dataGroup,
                 emailDomain,
                 environment,

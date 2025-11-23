@@ -145,37 +145,43 @@ export class MilestonePmAssignmentOperation extends BaseOperation {
 
       const totalOverlapMonths = msOverlaps.reduce((sum, ms) => sum + ms.overlapMonths, 0);
 
-      // Distribute PM with randomness to milestones
+      // Distribute PM evenly to milestones with slight randomness
       console.log(`  Distributing PM to milestones:\n`);
 
-      let remainingPm = projectYear.totalPm;
       const customHeaders = organizationId ? { 'partner-id': organizationId.toString() } : undefined;
+
+      // First pass: calculate ideal distribution with randomness
+      const pmDistribution: number[] = [];
+      let totalAllocated = 0;
 
       for (let i = 0; i < msOverlaps.length; i++) {
         const ms = msOverlaps[i];
+        // Calculate base proportion
+        const proportion = ms.overlapMonths / totalOverlapMonths;
+
+        // Add slight randomness (85-115% of proportional share) for more even distribution
+        const randomFactor = 0.85 + Math.random() * 0.3;
+        let assignedPm = projectYear.totalPm * proportion * randomFactor;
+
+        // Ensure minimum allocation
+        assignedPm = Math.max(0.5, assignedPm);
+
+        pmDistribution.push(assignedPm);
+        totalAllocated += assignedPm;
+      }
+
+      // Second pass: normalize to match total PM exactly
+      const scaleFactor = projectYear.totalPm / totalAllocated;
+      for (let i = 0; i < pmDistribution.length; i++) {
+        pmDistribution[i] = pmDistribution[i] * scaleFactor;
+      }
+
+      // Third pass: assign PM to milestones
+      for (let i = 0; i < msOverlaps.length; i++) {
+        const ms = msOverlaps[i];
         try {
-          // Calculate base proportion
-          const proportion = ms.overlapMonths / totalOverlapMonths;
-
-          // Add randomness (70-130% of proportional share)
-          const randomFactor = 0.7 + Math.random() * 0.6;
-          let assignedPm = projectYear.totalPm * proportion * randomFactor;
-
-          // For last milestone, assign all remaining PM
-          if (i === msOverlaps.length - 1) {
-            assignedPm = remainingPm;
-          } else {
-            // Ensure we don't exceed milestone duration capacity
-            const maxPmForDuration = ms.overlapMonths; // Max 1 PM per month
-            assignedPm = Math.min(assignedPm, maxPmForDuration, remainingPm);
-          }
-
-          // Ensure minimum allocation
-          assignedPm = Math.max(0.1, assignedPm);
-          remainingPm -= assignedPm;
-
           // Round to 2 decimal places
-          const roundedPm = Math.round(assignedPm * 100) / 100;
+          const roundedPm = Math.round(pmDistribution[i] * 100) / 100;
 
           // Create task-year-pm record for this milestone
           const response: any = await this.apiClient.executeRequest(
@@ -203,7 +209,7 @@ export class MilestonePmAssignmentOperation extends BaseOperation {
             milestone_title: ms.milestone_title
           });
 
-          console.log(`    - ${ms.milestone_title}: ${roundedPm.toFixed(2)} PM (${ms.overlapMonths.toFixed(1)}mo, remaining: ${remainingPm.toFixed(2)} PM)`);
+          console.log(`    - ${ms.milestone_title}: ${roundedPm.toFixed(2)} PM (${ms.overlapMonths.toFixed(1)}mo overlap)`);
           totalAssignments++;
         } catch (error: any) {
           console.error(`    ✗ Failed to assign PM to ${ms.milestone_title}: ${error.message}`);

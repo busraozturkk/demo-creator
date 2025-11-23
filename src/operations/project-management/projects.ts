@@ -31,7 +31,7 @@ export class ProjectsOperation {
     this.pctApiClient = pctApiClient;
   }
 
-  async createProjects(csvPath: string, maxCount?: number, selectedTitles?: string[]): Promise<ProjectMapping[]> {
+  async createProjects(csvPath: string, maxCount?: number, selectedTitles?: string[], projectTypeId?: number): Promise<ProjectMapping[]> {
     console.log(`Loading projects from: ${csvPath}`);
     this.projects = this.loadProjects(csvPath);
 
@@ -62,7 +62,7 @@ export class ProjectsOperation {
 
       try {
         const response = await this.apiClient.executeRequest('POST', '/api/projects', {
-          type_id: project.type_id,
+          type_id: projectTypeId || project.type_id,
           short_title: project.short_title,
           title: project.title,
           started_at: project.started_at,

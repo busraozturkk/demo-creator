@@ -300,8 +300,7 @@ export class MilestonesOperation {
 
   /**
    * Assign employees to milestones with PM allocations
-   * Distributes employees across milestones for R&D tracking
-   * Owner user is assigned to EVERY milestone
+   * Distributes employees proportionally based on milestone PM allocation
    */
   async assignEmployeesToMilestones(
     milestoneMappings: MilestoneMapping[],
@@ -317,7 +316,24 @@ export class MilestonesOperation {
       return;
     }
 
+    // Load task-year-pm assignments to see how much PM each milestone has
+    const taskYearPmPath = './data/cache/task-year-pm-assignments.json';
+    if (!fs.existsSync(taskYearPmPath)) {
+      console.log('  ✗ Task-year PM assignments not found. Skipping employee assignments.\n');
+      return;
+    }
+
     const employeeMappings = JSON.parse(fs.readFileSync(employeeMappingsPath, 'utf-8'));
+    const taskYearPmAssignments = JSON.parse(fs.readFileSync(taskYearPmPath, 'utf-8'));
+
+    // Create a map of task_id -> PM amount
+    const milestonePmMap = new Map<number, { pm: number; year: number }>();
+    for (const assignment of taskYearPmAssignments) {
+      milestonePmMap.set(assignment.task_id, {
+        pm: assignment.amount,
+        year: assignment.year
+      });
+    }
 
     // Separate owner and project employees
     const ownerEmployee = ownerUserId
@@ -344,74 +360,83 @@ export class MilestonesOperation {
     // Prepare custom headers with partner-id
     const customHeaders = { 'partner-id': organizationId.toString() };
 
-    // Assign employees to milestones (distribute evenly)
+    // Assign employees to milestones based on PM allocation
     for (let i = 0; i < milestoneMappings.length; i++) {
       const milestone = milestoneMappings[i];
+      const pmAllocation = milestonePmMap.get(milestone.task_id);
 
-      // Get year from milestone period
-      const year = milestone.started_at ? new Date(milestone.started_at).getFullYear() : 2024;
+      if (!pmAllocation) {
+        console.log(`\n  Milestone: ${milestone.milestone_title} - No PM allocated, skipping`);
+        continue;
+      }
 
-      console.log(`\n  Milestone: ${milestone.milestone_title} (Task ID: ${milestone.task_id})`);
+      const milestonePm = pmAllocation.pm;
+      const year = pmAllocation.year;
 
-      // ALWAYS assign owner to every milestone first
-      if (ownerEmployee?.user_id) {
-        const ownerPmAmount = 2; // Owner gets 2 PM per milestone
+      console.log(`\n  Milestone: ${milestone.milestone_title} (Task ID: ${milestone.task_id}, ${milestonePm.toFixed(2)} PM)`);
+
+      // Calculate how many employees to assign based on PM
+      // Rule: 1 employee per 2 PM (rounded up), minimum 2 employees
+      const numEmployeesToAssign = Math.max(2, Math.ceil(milestonePm / 2));
+
+      // Calculate PM per employee
+      const pmPerEmployee = milestonePm / numEmployeesToAssign;
+
+      console.log(`  Assigning ${numEmployeesToAssign} employees (${pmPerEmployee.toFixed(2)} PM each)...`);
+
+      // Assign employees
+      for (let j = 0; j < numEmployeesToAssign; j++) {
+        let employee;
+        let pmAmount;
+
+        // First employee is always the owner if available
+        if (j === 0 && ownerEmployee?.user_id) {
+          employee = ownerEmployee;
+          pmAmount = Math.round(pmPerEmployee * 100) / 100;
+        } else {
+          // Select project employee (cycle through available employees)
+          const projectIndex = j === 0 ? i : (i + j - 1);
+          const employeeIndex = projectIndex % projectEmployees.length;
+          employee = projectEmployees[employeeIndex];
+          pmAmount = Math.round(pmPerEmployee * 100) / 100;
+        }
+
+        if (!employee?.user_id) continue;
+
         try {
+          // Step 1: Attach employee to milestone task
+          await this.apiClient.executeRequest(
+            'POST',
+            `/pct/api/tasks/${milestone.task_id}/users/${employee.user_id}/attach`,
+            {
+              taskId: milestone.task_id,
+              userId: employee.user_id,
+              attach: true
+            },
+            customHeaders
+          );
+
+          // Step 2: Assign PM to employee for this milestone
           await this.apiClient.executeRequest(
             'POST',
             '/pct/api/user-task-year-pms',
             {
               unit: 'pm',
               year: year,
-              amount: ownerPmAmount,
+              amount: pmAmount,
               task_id: milestone.task_id,
-              user_id: ownerEmployee.user_id,
+              user_id: employee.user_id,
               partner_id: organizationId
             },
             customHeaders
           );
 
-          console.log(`    ✓ [OWNER] ${ownerEmployee.first_name} ${ownerEmployee.last_name}: ${ownerPmAmount} PM (${year})`);
+          const roleLabel = (j === 0 && employee.user_id === ownerEmployee?.user_id) ? '[OWNER]' : '';
+          console.log(`    ✓ ${roleLabel} ${employee.first_name} ${employee.last_name}: ${pmAmount} PM (${year})`);
           assigned++;
         } catch (error: any) {
-          console.log(`    ✗ Failed to assign owner ${ownerEmployee.first_name} ${ownerEmployee.last_name}: ${error.message}`);
+          console.log(`    ✗ Failed to assign ${employee.first_name} ${employee.last_name}: ${error.message}`);
           errors++;
-        }
-      }
-
-      // Then assign 2-3 project employees per milestone (cycling through available employees)
-      if (projectEmployees.length > 0) {
-        const employeesPerMilestone = 2 + (i % 2); // Alternates between 2 and 3
-        console.log(`  Assigning ${employeesPerMilestone} additional project employees...`);
-
-        for (let j = 0; j < employeesPerMilestone; j++) {
-          const employeeIndex = (i * 2 + j) % projectEmployees.length;
-          const employee = projectEmployees[employeeIndex];
-
-          // Assign 2 PMs per employee
-          const pmAmount = 2;
-
-          try {
-            await this.apiClient.executeRequest(
-              'POST',
-              '/pct/api/user-task-year-pms',
-              {
-                unit: 'pm',
-                year: year,
-                amount: pmAmount,
-                task_id: milestone.task_id,
-                user_id: employee.user_id,
-                partner_id: organizationId
-              },
-              customHeaders
-            );
-
-            console.log(`    ✓ ${employee.first_name} ${employee.last_name}: ${pmAmount} PM (${year})`);
-            assigned++;
-          } catch (error: any) {
-            console.log(`    ✗ Failed to assign ${employee.first_name} ${employee.last_name}: ${error.message}`);
-            errors++;
-          }
         }
       }
     }

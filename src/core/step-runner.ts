@@ -416,7 +416,7 @@ export async function runSingleStep(stepId: string, session: any) {
                 const { ProjectsOperation } = await import('../operations/project-management/projects');
                 const projectsOp = new ProjectsOperation(session.imsCustomersApiClient, session.apiClient);
                 const selectedProjects = session.selectedProjects || [];
-                session.projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects);
+                session.projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects, session.projectType);
                 session.projectsData = projectsOp.getProjectsData();
                 console.log(`Projects created: ${session.projectMappings?.length || 0}`);
             } else {

@@ -104,6 +104,29 @@
                 <input type="text" id="emailDomain" class="form-input" placeholder="company-demo.com" autocomplete="off">
             </div>
 
+            <div class="form-box" id="projectTypeBox">
+                <label class="form-label">
+                    Project Type
+                    <div class="tooltip-wrapper">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">Select the R&D tax incentive program type. This determines the project type created in Clusterix.</span>
+                    </div>
+                </label>
+                <div class="custom-select">
+                    <div class="select-selected form-input" id="projectTypeSelect" style="color: #6b7280;">
+                        Please select project type
+                    </div>
+                    <div class="select-items dropdown-menu" id="projectTypeItems">
+                        <div data-value="29">SFF (German)</div>
+                        <div data-value="46">WBSO (Dutch)</div>
+                        <div data-value="119">Forschungsprämie (Austrian)</div>
+                        <div data-value="120">HMRC R&D Tax Relief (UK)</div>
+                        <div data-value="171">IRC41 (US)</div>
+                    </div>
+                </div>
+                <input type="hidden" id="projectType" value="">
+            </div>
+
             <div class="form-box" id="dataGroupBox">
             <label class="form-label">
                 Data

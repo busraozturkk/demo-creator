@@ -16,7 +16,8 @@ export async function runDemoCreation(
     environment: string = 'testing',
     companyName?: string,
     selectedProjects: string[] = [],
-    includeWorkPackages: boolean = true
+    includeWorkPackages: boolean = true,
+    projectTypeId?: number
 ) {
     // Override console for this execution
     overrideConsole(socket);
@@ -425,7 +426,7 @@ export async function runDemoCreation(
                     try {
                         const { ProjectsOperation } = await import('../operations/project-management/projects');
                         const projectsOp = new ProjectsOperation(imsCustomersApiClient, apiClient);
-                        const projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects);
+                        const projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects, projectTypeId);
                         socket.emit('log', { type: 'success', message: `✓ Projects created: ${projectMappings?.length || 0}\n` });
 
                         // Milestones

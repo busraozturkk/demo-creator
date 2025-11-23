@@ -19,22 +19,22 @@ router.get('/', (req, res) => {
 
     // Map directory names to display labels with grouping
     const dataMapping: { [key: string]: { label: string; group: string } } = {
-        'manufacturing-en': { label: 'Manufacturing & Product Development', group: 'SFF English' },
-        'healthcare-en': { label: 'Healthcare & Pharmaceuticals', group: 'SFF English' },
-        'financial-en': { label: 'Financial Services', group: 'SFF English' },
-        'consulting-en': { label: 'Services & Consulting', group: 'SFF English' },
-        'energy-en': { label: 'Energy & Utilities', group: 'SFF English' },
-        'government-en': { label: 'Government & Public Sector', group: 'SFF English' },
-        'construction-en': { label: 'Construction & Infrastructure', group: 'SFF English' },
-        'media-en': { label: 'Media & Telecommunications', group: 'SFF English' },
-        'manufacturing-de': { label: 'Fertigung & Produktentwicklung', group: 'SFF Deutsch' },
-        'healthcare-de': { label: 'Gesundheitswesen & Pharmazeutika', group: 'SFF Deutsch' },
-        'financial-de': { label: 'Finanzdienstleistungen', group: 'SFF Deutsch' },
-        'consulting-de': { label: 'Dienstleistungen & Beratung', group: 'SFF Deutsch' },
-        'energy-de': { label: 'Energie & Versorgung', group: 'SFF Deutsch' },
-        'government-de': { label: 'Verwaltung & Öffentlicher Sektor', group: 'SFF Deutsch' },
-        'construction-de': { label: 'Bau & Infrastruktur', group: 'SFF Deutsch' },
-        'media-de': { label: 'Medien & Telekommunikation', group: 'SFF Deutsch' },
+        'manufacturing-en': { label: 'Manufacturing & Product Development', group: 'English' },
+        'healthcare-en': { label: 'Healthcare & Pharmaceuticals', group: 'English' },
+        'financial-en': { label: 'Financial Services', group: 'English' },
+        'consulting-en': { label: 'Services & Consulting', group: 'English' },
+        'energy-en': { label: 'Energy & Utilities', group: 'English' },
+        'government-en': { label: 'Government & Public Sector', group: 'English' },
+        'construction-en': { label: 'Construction & Infrastructure', group: 'English' },
+        'media-en': { label: 'Media & Telecommunications', group: 'English' },
+        'manufacturing-de': { label: 'Fertigung & Produktentwicklung', group: 'Deutsch' },
+        'healthcare-de': { label: 'Gesundheitswesen & Pharmazeutika', group: 'Deutsch' },
+        'financial-de': { label: 'Finanzdienstleistungen', group: 'Deutsch' },
+        'consulting-de': { label: 'Dienstleistungen & Beratung', group: 'Deutsch' },
+        'energy-de': { label: 'Energie & Versorgung', group: 'Deutsch' },
+        'government-de': { label: 'Verwaltung & Öffentlicher Sektor', group: 'Deutsch' },
+        'construction-de': { label: 'Bau & Infrastruktur', group: 'Deutsch' },
+        'media-de': { label: 'Medien & Telekommunikation', group: 'Deutsch' },
     };
 
     // Group data by language
@@ -91,7 +91,7 @@ router.get('/api/projects/:dataGroup', (req, res) => {
  * Now uses Bull queue for reliable job processing
  */
 router.post('/api/create-demo', async (req, res) => {
-    const { dataGroup, emailDomain, email, password, environment, companyName, selectedProjects, includeWorkPackages } = req.body;
+    const { dataGroup, emailDomain, email, password, environment, companyName, selectedProjects, includeWorkPackages, projectType } = req.body;
     const socketId = req.body.socketId;
 
     const socket = io.sockets.sockets.get(socketId);
@@ -112,6 +112,7 @@ router.post('/api/create-demo', async (req, res) => {
             companyName,
             selectedProjects: selectedProjects || [],
             includeWorkPackages: includeWorkPackages !== false,
+            projectType: projectType ? parseInt(projectType) : undefined,
             mode: 'bulk',
             socketId,
         });
@@ -154,6 +155,7 @@ router.post('/api/run-step', async (req, res) => {
         if (sessionData.companyName) session.companyName = sessionData.companyName;
         if (sessionData.selectedProjects !== undefined) session.selectedProjects = sessionData.selectedProjects;
         if (sessionData.includeWorkPackages !== undefined) session.includeWorkPackages = sessionData.includeWorkPackages;
+        if (sessionData.projectType !== undefined) session.projectType = parseInt(sessionData.projectType);
 
         // Override console for this step
         if (socket) {

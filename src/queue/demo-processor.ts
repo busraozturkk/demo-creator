@@ -50,7 +50,8 @@ demoQueue.process(async (job: Job<DemoJobData>) => {
         environment,
         job.data.companyName || '',
         job.data.selectedProjects || [],
-        job.data.includeWorkPackages !== false
+        job.data.includeWorkPackages !== false,
+        job.data.projectType
       );
 
     } else {

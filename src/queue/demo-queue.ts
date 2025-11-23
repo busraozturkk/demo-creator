@@ -46,6 +46,7 @@ export interface DemoJobData {
   companyName?: string;
   selectedProjects?: string[];
   includeWorkPackages?: boolean;
+  projectType?: number;
   socketId?: string; // For real-time updates
 }
 
