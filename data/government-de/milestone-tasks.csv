@@ -1,0 +1,253 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Digital Govt,Dienstleistungsinventar & Priorisierung,Dienstleistungskatalog-Erstellung,Inventarisierung aller Behördendienstleistungen über Abteilungen hinweg,Task
+Digital Govt,Dienstleistungsinventar & Priorisierung,Bewertung der digitalen Bereitschaft,Bewertung der Digitalisierungsmöglichkeiten für jede Dienstleistung,Task
+Digital Govt,Dienstleistungsinventar & Priorisierung,Bürgerbedarfsanalyse,Analyse der Nutzungsvolumen und Bürgernachfrage für Dienstleistungen,Task
+Digital Govt,Dienstleistungsinventar & Priorisierung,Priorisierungs-Framework,Priorisierung von Dienstleistungen mittels Impact-Effort-Matrix,Documentation
+Digital Govt,Nutzerforschung & Journey Mapping,Entwicklung von Bürger-Personas,Entwicklung von Personas für verschiedene Bürgersegmente,Task
+Digital Govt,Nutzerforschung & Journey Mapping,Journey-Mapping-Workshops,Durchführung von Service-Journey-Mapping mit Stakeholdern,Task
+Digital Govt,Nutzerforschung & Journey Mapping,Pain-Point-Analyse,Identifizierung von Reibungspunkten und Verbesserungsmöglichkeiten,Task
+Digital Govt,Nutzerforschung & Journey Mapping,Journey-Maps-Dokumentation,Erstellung visueller Journey-Maps für prioritäre Dienstleistungen,Documentation
+Digital Govt,Digitale Identitäts-Framework,Identitätssicherheitsstufen,Definition von Identitätssicherheitsstufen und Authentifizierungsmethoden,Documentation
+Digital Govt,Digitale Identitäts-Framework,Auswahl des Identitätsanbieters,Auswahl einer föderierten Identitätsanbieterlösung,Task
+Digital Govt,Digitale Identitäts-Framework,eID-Integration,Integration mit nationaler elektronischer ID-Infrastruktur,Task
+Digital Govt,Digitale Identitäts-Framework,Datenschutz-Folgenabschätzung,Durchführung der Datenschutz-Folgenabschätzung für Identitätssystem,Documentation
+Digital Govt,Kernplattformentwicklung,Plattform-Architekturdesign,Design einer Microservices-basierten Plattform für digitale Dienstleistungen,Task
+Digital Govt,Kernplattformentwicklung,Entwicklung gemeinsamer Komponenten,Entwicklung gemeinsamer Komponenten für Formulare, Zahlungen und Benachrichtigungen,Task
+Digital Govt,Kernplattformentwicklung,API-Gateway-Implementierung,Implementierung eines API-Gateways für Dienstleistungsintegration,Task
+Digital Govt,Kernplattformentwicklung,Design-System-Entwicklung,Entwicklung eines Behörden-Design-Systems und UI-Komponenten,Task
+Digital Govt,Dienstleistungsmigration Phase 1,Dienstleistungsdigitalisierung,Digitalisierung prioritärer Dienstleistungen einschließlich Lizenzen und Genehmigungen,Task
+Digital Govt,Dienstleistungsmigration Phase 1,Backend-Integration,Integration digitaler Dienstleistungen mit Legacy-Backend-Systemen,Task
+Digital Govt,Dienstleistungsmigration Phase 1,Benutzerakzeptanztests,Durchführung von UAT mit Bürgern und Behördenmitarbeitern,Task
+Digital Govt,Dienstleistungsmigration Phase 1,Soft-Launch,Start der Dienstleistungen für begrenzte Benutzergruppe vor vollständigem Rollout,Task
+Digital Govt,Mobile-App-Launch,Mobile-App-Entwicklung,Entwicklung einer mobilen Anwendung für Bürgerdienstleistungen,Feature
+Digital Govt,Mobile-App-Launch,Push-Benachrichtigungsdienst,Implementierung von Push-Benachrichtigungen für Dienstleistungsstatus,Feature
+Digital Govt,Mobile-App-Launch,Offline-Funktionalität,Ermöglichung von Offline-Formularausfüllung und -übermittlung,Feature
+Digital Govt,Mobile-App-Launch,App-Store-Veröffentlichung,Veröffentlichung der App im iOS App Store und Google Play,Task
+Digital Govt,Barrierefreiheits-Compliance,WCAG 2.1 AA-Konformität,Sicherstellung dass alle Dienstleistungen WCAG 2.1 Level AA-Standards erfüllen,Task
+Digital Govt,Barrierefreiheits-Compliance,Screenreader-Tests,Testen von Dienstleistungen mit Screenreader-Hilfstechnologie,Task
+Digital Govt,Barrierefreiheits-Compliance,Tastaturnavigation,Sicherstellung vollständiger Tastaturnavigationsunterstützung,Task
+Digital Govt,Barrierefreiheits-Compliance,Barrierefreiheits-Audit-Bericht,Dokumentation der Barrierefreiheits-Compliance und Nachbesserung,Documentation
+Digital Govt,Vollständiger Dienstleistungskatalog,Digitalisierung verbleibender Dienstleistungen,Abschluss der Digitalisierung aller verbleibenden Dienstleistungen,Task
+Digital Govt,Vollständiger Dienstleistungskatalog,Abteilungsübergreifende Integration,Integration von Dienstleistungen über mehrere Abteilungen hinweg,Task
+Digital Govt,Vollständiger Dienstleistungskatalog,Bürger-Feedback-System,Implementierung eines Bewertungs- und Feedback-Mechanismus für Dienstleistungen,Feature
+Digital Govt,Vollständiger Dienstleistungskatalog,Kontinuierlicher Verbesserungsprozess,Etablierung eines Prozesses für kontinuierliche Dienstleistungsverbesserung,Task
+Tax System,Anforderungsanalyse,Stakeholder-Anforderungserhebung,Erhebung von Anforderungen der Steuerbehörden-Stakeholder,Task
+Tax System,Anforderungsanalyse,Geschäftsprozess-Mapping,Mapping aktueller Steuererhebungs- und Prüfungsprozesse,Task
+Tax System,Anforderungsanalyse,Gap-Analyse,Identifizierung von Lücken zwischen aktuellen und gewünschten Fähigkeiten,Task
+Tax System,Anforderungsanalyse,Anforderungsspezifikation,Dokumentation funktionaler und technischer Anforderungen,Documentation
+Tax System,Digitalisierung des Steuerrechts,Steuerrechtsanalyse,Analyse von Steuergesetzen und Berechnungsmethoden,Task
+Tax System,Digitalisierung des Steuerrechts,Geschäftsregeldefinition,Übersetzung von Steuergesetzen in System-Geschäftsregeln,Documentation
+Tax System,Digitalisierung des Steuerrechts,Steuerberechnungs-Engine,Entwicklung einer konfigurierbaren Steuerberechnungs-Engine,Task
+Tax System,Digitalisierung des Steuerrechts,Regeltests & Validierung,Validierung von Steuerberechnungen anhand von Testszenarien,Task
+Tax System,Steuerzahlerportal-Design,Portal-UX-Design,Design eines intuitiven Steuerzahler-Selbstbedienungsportals,Task
+Tax System,Steuerzahlerportal-Design,Registrierung & Profilverwaltung,Aufbau von Steuerzahlerregistrierung und Profilverwaltung,Task
+Tax System,Steuerzahlerportal-Design,Steuerrechner-Tools,Bereitstellung interaktiver Steuerschätzungsrechner,Feature
+Tax System,Steuerzahlerportal-Design,Sichere Nachrichtenübermittlung,Implementierung sicherer Nachrichtenübermittlung mit Steuerbehörde,Feature
+Tax System,E-Filing-Systementwicklung,Digitale Formular-Engine,Aufbau einer dynamischen Steuerformular-Rendering-Engine,Task
+Tax System,E-Filing-Systementwicklung,Vorausfüllung & Auto-Fill,Implementierung von Formularvorausfüllung aus vorherigen Erklärungen,Feature
+Tax System,E-Filing-Systementwicklung,Anhang-Upload,Ermöglichung sicheren Dokumenten-Uploads und Virenscans,Task
+Tax System,E-Filing-Systementwicklung,Elektronische Signatur,Implementierung qualifizierter elektronischer Signaturfunktion,Feature
+Tax System,Zahlungsgateway-Integration,Zahlungsmethoden-Unterstützung,Unterstützung von Kredit-/Debitkarten, Banküberweisungen und E-Wallets,Feature
+Tax System,Zahlungsgateway-Integration,Zahlungsgateway-Zertifizierung,Erlangung der PCI DSS-Compliance-Zertifizierung,Task
+Tax System,Zahlungsgateway-Integration,Ratenzahlungsplan-Verwaltung,Ermöglichung von Ratenzahlungsplänen für Steuerzahler,Feature
+Tax System,Zahlungsgateway-Integration,Quittungsgenerierung,Generierung und Zustellung digitaler Zahlungsquittungen,Task
+Tax System,Prüfungs- & Compliance-Modul,Risikobasierte Auswahl,Implementierung von Risikobewertung für Prüfungsfallauswahl,Feature
+Tax System,Prüfungs- & Compliance-Modul,Prüfungsfall-Management,Aufbau eines Prüfungsworkflow- und Fallmanagementsystems,Task
+Tax System,Prüfungs- & Compliance-Modul,Dokumentenanforderung & Antwort,Ermöglichung digitalen Prüfungsdokumentenaustauschs,Task
+Tax System,Prüfungs- & Compliance-Modul,Veranlagungs- & Einspruchsverfahren,Digitalisierung von Steuerveranlagungs- und Einspruchsverfahren,Task
+Tax System,Datenanalyse & Betrugserkennung,Data-Warehouse-Aufbau,Aufbau eines Steuerdaten-Warehouses für Analysen,Task
+Tax System,Datenanalyse & Betrugserkennung,Einnahmenprognosemodelle,Entwicklung prädiktiver Einnahmenprognosemodelle,Task
+Tax System,Datenanalyse & Betrugserkennung,Betrugserkennung-Regeln,Implementierung von Anomalieerkennung und Betrugsindikatoren,Feature
+Tax System,Datenanalyse & Betrugserkennung,Drittanbieter-Datenintegration,Integration von Arbeitgeberberichterstattung und Finanzinstitutsdaten,Task
+Tax System,Pilottests & Rollout,Pilotbenutzergruppen-Auswahl,Auswahl diverser Steuerzahlergruppen für Pilottests,Task
+Tax System,Pilottests & Rollout,Pilot-Start & Überwachung,Start des Piloten und Überwachung der Systemleistung,Task
+Tax System,Pilottests & Rollout,Problemlösung,Identifizierung und Lösung von Pilottest-Problemen,Bug
+Tax System,Pilottests & Rollout,Phasenweiser Produktions-Rollout,Durchführung eines phasenweisen Rollouts für alle Steuerzahler,Task
+Smart City,IoT-Infrastrukturplanung,IoT-Architekturdesign,Design einer stadtweiten IoT-Sensornetzwerk-Architektur,Task
+Smart City,IoT-Infrastrukturplanung,Kommunikationsnetzwerk-Design,Design von LoRaWAN oder zellulärer IoT-Konnektivität,Task
+Smart City,IoT-Infrastrukturplanung,Datenplattform-Architektur,Design einer zentralen IoT-Datenplattform und Analytik,Task
+Smart City,IoT-Infrastrukturplanung,Cybersicherheits-Framework,Definition von IoT-Sicherheitsrichtlinien und -kontrollen,Documentation
+Smart City,Verkehrsmanagementsystem,Verkehrssensor-Einführung,Installation von Kreuzungskameras und Induktionsschleifen,Task
+Smart City,Verkehrsmanagementsystem,Adaptive Signalsteuerung,Implementierung adaptiver Verkehrssignaloptimierung,Feature
+Smart City,Verkehrsmanagementsystem,Vorfallserkennung,Einsatz automatisierter Verkehrsvorfallserkennung,Feature
+Smart City,Verkehrsmanagementsystem,Verkehrskontrollzentrum,Aufbau einer zentralisierten Verkehrsüberwachungs- und Kontrollzentrale,Task
+Smart City,Umweltüberwachung,Luftqualitätssensornetzwerk,Einsatz von PM2.5- und NO2-Luftqualitätssensoren,Task
+Smart City,Umweltüberwachung,Lärmüberwachungsstationen,Installation von Lärmpegelüberwachung an wichtigen Standorten,Task
+Smart City,Umweltüberwachung,Wetterstationsnetzwerk,Einsatz meteorologischer Überwachungsstationen,Task
+Smart City,Umweltüberwachung,Umweltdatenportal,Veröffentlichung von Echtzeit-Umweltdaten öffentlich,Feature
+Smart City,Integration öffentlicher Verkehrsmittel,Echtzeit-Fahrzeugverfolgung,Installation von GPS-Tracking auf allen Transitfahrzeugen,Task
+Smart City,Integration öffentlicher Verkehrsmittel,Transit-App-Entwicklung,Entwicklung einer Echtzeit-Transitinformations-App,Feature
+Smart City,Integration öffentlicher Verkehrsmittel,Elektronische Fahrkartenausstellung,Implementierung kontaktloser Smartcard-Transitzahlung,Feature
+Smart City,Integration öffentlicher Verkehrsmittel,Multimodale Reiseplanung,Aufbau eines integrierten Reiseplaners über alle Verkehrsmittel,Feature
+Smart City,Bürgerengagement-App,Stadtdienste-App,Entwicklung einer Bürgerdienstleistungs-Super-App,Feature
+Smart City,Bürgerengagement-App,Problemmeldung,Ermöglichung für Bürger Schlaglöcher und Dienstleistungsprobleme zu melden,Feature
+Smart City,Bürgerengagement-App,Serviceanfragen-Tracking,Bereitstellung von Transparenz über Anfragenstatus und Lösung,Task
+Smart City,Bürgerengagement-App,Bürgerbeteiligungstools,Einbeziehung von Umfragen und Community-Engagement-Funktionen,Feature
+Smart City,Energiemanagement,Intelligente Straßenbeleuchtung,Einsatz adaptiver LED-Straßenbeleuchtung mit Dimmfunktion,Feature
+Smart City,Energiemanagement,Gebäudeautomatisierung der Kommune,Implementierung von BMS in Behördengebäuden,Task
+Smart City,Energiemanagement,Integration erneuerbarer Energien,Integration von Solar- und Batteriespeichern in Einrichtungen,Task
+Smart City,Energiemanagement,Energie-Dashboard,Aufbau eines stadtweiten Energieüberwachungs-Dashboards,Task
+Smart City,Abfallmanagement-Optimierung,Intelligente Abfallbehälter,Einsatz von Füllstandssensoren in öffentlichen Abfallbehältern,Task
+Smart City,Abfallmanagement-Optimierung,Routenoptimierung,Optimierung von Abfallsammelrouten mittels AI,Feature
+Smart City,Abfallmanagement-Optimierung,Fuhrparkverwaltung,Verfolgung und Verwaltung der Abfallsammelflotte,Task
+Smart City,Abfallmanagement-Optimierung,Recycling-Analytik,Analyse von Recyclingraten und Kontamination,Task
+Smart City,Integration öffentlicher Sicherheit,Videoüberwachungsnetzwerk,Erweiterung des städtischen CCTV-Netzwerks mit Analytik,Task
+Smart City,Integration öffentlicher Sicherheit,Notfallreaktion-Integration,Integration mit 911-Leitstelle und Reaktionssystemen,Task
+Smart City,Integration öffentlicher Sicherheit,Schussdetektierung,Einsatz akustischer Schussdetektierungssensoren,Feature
+Smart City,Integration öffentlicher Sicherheit,Öffentliche Sicherheits-Dashboard,Aufbau eines Echtzeit-Situationsbewusstseins-Dashboards,Task
+Emergency Sys,Bewertung des aktuellen Systems,Systemfähigkeiten-Review,Dokumentation aktueller 911- und Leitstellensystem-Fähigkeiten,Task
+Emergency Sys,Bewertung des aktuellen Systems,Interoperabilitätsbewertung,Bewertung aktueller Lücken in Multi-Agency-Koordination,Task
+Emergency Sys,Bewertung des aktuellen Systems,Technologieveralterung,Identifizierung von Legacy-Systemen die Modernisierung benötigen,Task
+Emergency Sys,Bewertung des aktuellen Systems,Bedarfsbewertungsbericht,Dokumentation von Anforderungen für nächste Generation System,Documentation
+Emergency Sys,Einheitliche Kommunikationsplattform,NG911-Implementierung,Implementierung IP-basierter Next Generation 911-Infrastruktur,Task
+Emergency Sys,Einheitliche Kommunikationsplattform,Text & Video 911,Ermöglichung von Textnachrichten- und Video-911-Rufannahme,Feature
+Emergency Sys,Einheitliche Kommunikationsplattform,Automatische Standortidentifikation,Verbesserung der ALI-Genauigkeit für drahtlose und VoIP-Anrufe,Feature
+Emergency Sys,Einheitliche Kommunikationsplattform,Anrufaufzeichnung & Qualitätsmanagement,Implementierung umfassender Anrufaufzeichnung und QA,Task
+Emergency Sys,Entsendungsoptimierung,Computer-Aided-Dispatch-Upgrade,Implementierung eines modernen CAD-Systems mit Kartierung,Task
+Emergency Sys,Entsendungsoptimierung,Empfehlungs-Engine,Aufbau AI-gestützter Einheitsempfehlungsalgorithmen,Feature
+Emergency Sys,Entsendungsoptimierung,Nächstgelegene-Einheit-Entsendung,Implementierung GPS-basierter nächstgelegener verfügbarer Einheitsentsendung,Feature
+Emergency Sys,Entsendungsoptimierung,Anrufpriorität & Warteschlange,Optimierung von Anruftriage- und Warteschlangenalgorithmen,Task
+Emergency Sys,Ressourcenmanagement,Einheitsstatus-Tracking,Echtzeit-Verfolgung aller Notfalleinheitenstatus,Task
+Emergency Sys,Ressourcenmanagement,Fahrzeug- & Ausrüstungsverwaltung,Verwaltung von Flotte und Ausrüstungsinventar,Task
+Emergency Sys,Ressourcenmanagement,Personalplanung,Optimierung von Schichtplanung und Überstundenverwaltung,Task
+Emergency Sys,Ressourcenmanagement,Gegenseitige-Hilfe-Koordination,Erleichterung von Multi-Jurisdiktions-Hilfeanforderungen,Task
+Emergency Sys,Multi-Agency-Koordination,Interagency-Datenaustausch,Ermöglichung sicheren Datenaustauschs zwischen Behörden,Task
+Emergency Sys,Multi-Agency-Koordination,Einheitliches Vorfallmanagement,Implementierung NIMS-konformen Vorfallmanagements,Task
+Emergency Sys,Multi-Agency-Koordination,Behördenübergreifende Funkintegration,Integration von P25-Funksystemen über Behörden hinweg,Task
+Emergency Sys,Multi-Agency-Koordination,Gemeinsame Übungsübungen,Durchführung von Multi-Agency-Schulungen und Übungen,Task
+Emergency Sys,Mobile Kommandozentrale,Mobile Datenterminals,Einsatz robuster MDTs in Notfallfahrzeugen,Task
+Emergency Sys,Mobile Kommandozentrale,Mobile Anwendung,Entwicklung einer Einsatzkraft-App für Vorfallsinformationen,Feature
+Emergency Sys,Mobile Kommandozentrale,Offline-Funktionalität,Ermöglichung von Offline-Betrieb mit Auto-Sync,Feature
+Emergency Sys,Mobile Kommandozentrale,Elektronische Patientenversorgungsberichterstattung,Implementierung von ePCR für Rettungsdienst-Dokumentation,Feature
+Emergency Sys,Training & Simulation,Schulungscurriculum-Entwicklung,Entwicklung umfassenden Systemschulungs-Curriculums,Documentation
+Emergency Sys,Training & Simulation,Simulationsumgebung,Aufbau realistischer Schulungssimulationsumgebung,Task
+Emergency Sys,Training & Simulation,Leitstellen-Schulung,Schulung von 911-Anrufannehmern und Leitstellendisponenten,Task
+Emergency Sys,Training & Simulation,Einsatzkräfte-Schulung,Schulung von Ersthelfern auf mobilen Systemen,Task
+Emergency Sys,Live-Einführung,Parallelbetrieb,Betrieb neues System parallel mit Legacy-System,Task
+Emergency Sys,Live-Einführung,Cutover-Durchführung,Durchführung kontrollierter Umstellung auf neues System,Task
+Emergency Sys,Live-Einführung,Hypercare-Support,Bereitstellung intensiver Post-Launch-Unterstützung,Task
+Emergency Sys,Live-Einführung,Leistungsüberwachung,Überwachung von Systemleistung und Anrufbearbeitungsmetriken,Task
+Public Health,Krankheitsüberwachungssystem,Syndromische Überwachung,Implementierung von Echtzeit-syndromischen Überwachungs-Feeds,Feature
+Public Health,Krankheitsüberwachungssystem,Meldepflichtiges Krankheitsregister,Aufbau eines meldepflichtigen Krankheitsfall-Meldesystems,Task
+Public Health,Krankheitsüberwachungssystem,Gesundheitsdienstleister-Integration,Integration mit Krankenhaus- und Klinik-EHR-Systemen,Task
+Public Health,Krankheitsüberwachungssystem,Überwachungs-Dashboard,Entwicklung eines Krankheitsüberwachungs-Monitoring-Dashboards,Task
+Public Health,Laborinformationssystem,LIS-System-Implementierung,Implementierung eines modernen Laborinformationssystems,Task
+Public Health,Laborinformationssystem,Probenverfolgung,Implementierung Barcode-basierter Probenverfolgung,Feature
+Public Health,Laborinformationssystem,Testergebnis-Berichterstattung,Automatisierung der Testergebnis-Berichterstattung an Anbieter und Gesundheitsamt,Task
+Public Health,Laborinformationssystem,Qualitätskontroll-Management,Implementierung von Labor-QA/QC-Verfahren und Dokumentation,Task
+Public Health,Ausbruchserkennungsalgorithmen,Baseline-Modellierung,Modellierung historischer Krankheits-Baseline und Saisonalität,Task
+Public Health,Ausbruchserkennungsalgorithmen,Anomalieerkennung,Implementierung statistischer Ausbruchserkennungsalgorithmen,Feature
+Public Health,Ausbruchserkennungsalgorithmen,Räumliche Cluster-Analyse,Erkennung geografischer Krankheitscluster mittels räumlicher Statistik,Feature
+Public Health,Ausbruchserkennungsalgorithmen,Frühwarnwarnungen,Konfiguration automatisierter Ausbruchswarnungsbenachrichtigungen,Task
+Public Health,Kontaktverfolgungsplattform,Falluntersuchungsmodul,Aufbau digitaler Falluntersuchungs- und Interviewtools,Task
+Public Health,Kontaktverfolgungsplattform,Kontakt-Ermittlung,Entwicklung von Kontaktidentifikation und Expositionsbewertung,Task
+Public Health,Kontaktverfolgungsplattform,Kontaktbenachrichtigung,Implementierung sicheres Kontaktbenachrichtigungssystem,Feature
+Public Health,Kontaktverfolgungsplattform,Quarantäne-Überwachung,Verfolgung von Quarantäne-Compliance und täglichen Check-ins,Task
+Public Health,Impfmanagement,Immunisierungsregister,Aufbau eines umfassenden Immunisierungsinformationssystems,Task
+Public Health,Impfmanagement,Impfstoff-Bestandsverwaltung,Verfolgung von Impfstoffbestand und Kühlkettenüberwachung,Task
+Public Health,Impfmanagement,Terminplanung,Implementierung eines Massen-Impfungstermin-Systems,Feature
+Public Health,Impfmanagement,Digitale Impfausweise,Ausstellung digitaler Impfzertifikate und -bescheinigungen,Feature
+Public Health,Gesundheitsdaten-Warehouse,Datenintegrations-Architektur,Integration von Daten aus Überwachung, Laboren und Personenstandsregistern,Task
+Public Health,Gesundheitsdaten-Warehouse,Master Person Index,Implementierung MPI für Patientenidentitätsabgleich,Task
+Public Health,Gesundheitsdaten-Warehouse,Datenqualität & Governance,Etablierung von Datenqualitätsregeln und Verwaltung,Task
+Public Health,Gesundheitsdaten-Warehouse,Analyseumgebung,Bereitstellung sicherer Analysearbeitsumgebung für Epidemiologen,Task
+Public Health,Öffentliches Dashboard,Öffentliches Dashboard,Aufbau öffentlichen COVID-19- oder Krankheitsüberwachungs-Dashboards,Feature
+Public Health,Öffentliches Dashboard,Datenvisualisierung,Erstellung intuitiver Diagramme und Karten für öffentlichen Konsum,Task
+Public Health,Öffentliches Dashboard,Mobile Optimierung,Optimierung des Dashboards für Mobilgerätezugriff,Task
+Public Health,Öffentliches Dashboard,Automatisierte tägliche Updates,Automatisierung täglicher Datenaktualisierung und Veröffentlichung,Task
+Public Health,Internationale Berichterstattung,WHO-Berichterstattungsintegration,Implementierung der WHO International Health Regulations-Berichterstattung,Task
+Public Health,Internationale Berichterstattung,Datenstandardisierung,Mapping von Daten zu internationalen Standards wie ICD-10,Task
+Public Health,Internationale Berichterstattung,Automatisierte Berichtsgenerierung,Generierung automatisierter Berichte an WHO und CDC,Task
+Public Health,Internationale Berichterstattung,Berichterstattungs-Dokumentation,Dokumentation von Berichterstattungsmethoden und Datenqualität,Documentation
+E-Voting,Sicherheitsarchitektur-Design,Bedrohungsmodellierung,Durchführung umfassender Wahlsicherheits-Bedrohungsmodellierung,Task
+E-Voting,Sicherheitsarchitektur-Design,Sicherheitsanforderungen,Definition von Sicherheitsanforderungen und Kontrollen,Documentation
+E-Voting,Sicherheitsarchitektur-Design,End-to-End-Verifizierbarkeit,Design einer Architektur mit End-to-End-verifizierbarer Abstimmung,Task
+E-Voting,Sicherheitsarchitektur-Design,Sicherheitsarchitektur-Dokument,Dokumentation des mehrschichtigen Sicherheitsarchitektur-Ansatzes,Documentation
+E-Voting,Blockchain-Fundament,Blockchain-Plattformauswahl,Evaluierung und Auswahl einer Permissioned-Blockchain-Plattform,Task
+E-Voting,Blockchain-Fundament,Konsensmechanismus-Design,Design eines Byzantine Fault Tolerant-Konsenses für Abstimmung,Task
+E-Voting,Blockchain-Fundament,Smart-Contract-Entwicklung,Entwicklung von Abstimmungs-Smart-Contracts mit formaler Verifikation,Task
+E-Voting,Blockchain-Fundament,Blockchain-Netzwerk-Einführung,Einsatz und Konfiguration des Blockchain-Abstimmungsnetzwerks,Task
+E-Voting,Wählerauthentifizierungssystem,Wählerregister-Integration,Integration mit autoritativer Wählerregistrierungsdatenbank,Task
+E-Voting,Wählerauthentifizierungssystem,Multi-Faktor-Authentifizierung,Implementierung starker Multi-Faktor-Wählerauthentifizierung,Feature
+E-Voting,Wählerauthentifizierungssystem,Biometrische Verifizierung,Integration von Gesichtserkennung oder Fingerabdruckverifizierung,Feature
+E-Voting,Wählerauthentifizierungssystem,Credential-Ausstellung,Ausstellung kryptografischer Abstimmungs-Credentials an wahlberechtigte Wähler,Task
+E-Voting,Stimmzetteldesign & Schnittstelle,Stimmzettel-Definitionssprache,Implementierung flexiblen Stimmzettel-Markups und Definition,Task
+E-Voting,Stimmzetteldesign & Schnittstelle,Benutzeroberflächen-Design,Design barrierefreier und intuitiver Abstimmungsschnittstelle,Task
+E-Voting,Stimmzetteldesign & Schnittstelle,Barrierefreiheits-Features,Sicherstellung der Einhaltung von Abstimmungsbarrierefreiheitsanforderungen,Task
+E-Voting,Stimmzetteldesign & Schnittstelle,Mehrsprachige Unterstützung,Unterstützung von Stimmzettelpräsentation in mehreren Sprachen,Feature
+E-Voting,Stimmenverschlüsselung & Speicherung,End-to-End-Verschlüsselung,Implementierung von Verschlüsselung vom Wählergerät bis zur Auszählung,Task
+E-Voting,Stimmenverschlüsselung & Speicherung,Homomorphe Verschlüsselung,Ermöglichung verschlüsselter Stimmenaggregation ohne Entschlüsselung,Feature
+E-Voting,Stimmenverschlüsselung & Speicherung,Stimmenspeicherungsprotokoll,Speicherung verschlüsselter Stimmen auf unveränderlicher Blockchain,Task
+E-Voting,Stimmenverschlüsselung & Speicherung,Anonymisierung & Datenschutz,Sicherstellung von Stimmgeheimnis und Unlinkability zur Wähleridentität,Task
+E-Voting,Audit-Trail & Verifizierung,Wählerverifizierbarer Beleg,Generierung verschlüsselter Belege für Wähler zur Stimmverifizierung,Feature
+E-Voting,Audit-Trail & Verifizierung,Unabhängige Verifizierung,Ermöglichung unabhängiger Verifizierung von Wahlergebnissen,Feature
+E-Voting,Audit-Trail & Verifizierung,Audit-Log-Verwaltung,Pflege umfassender manipulationssicherer Audit-Logs,Task
+E-Voting,Audit-Trail & Verifizierung,Risk-Limiting-Audit-Unterstützung,Unterstützung statistischer Risk-Limiting-Audit-Verfahren,Task
+E-Voting,Pilotwahl,Pilotwahl-Planung,Planung einer Low-Stakes-Pilotwahl mit kontrolliertem Umfang,Task
+E-Voting,Pilotwahl,Wählerbildungskampagne,Aufklärung von Pilotwählern über E-Voting-Prozess,Task
+E-Voting,Pilotwahl,Pilotwahl-Durchführung,Durchführung der Pilotwahl mit Überwachung,Task
+E-Voting,Pilotwahl,Pilotbewertungsbericht,Bewertung der Pilotergebnisse und Identifizierung von Verbesserungen,Documentation
+E-Voting,Zertifizierung & Genehmigung,Sicherheits-Audit,Durchführung unabhängigen Sicherheits-Audits und Penetrationstests,Task
+E-Voting,Zertifizierung & Genehmigung,Zertifizierungstests,Abschluss der Wahlsystem-Zertifizierungstests,Task
+E-Voting,Zertifizierung & Genehmigung,Rechtliche & behördliche Genehmigung,Erlangung notwendiger rechtlicher und behördlicher Genehmigungen,Documentation
+E-Voting,Zertifizierung & Genehmigung,Öffentlicher Transparenzbericht,Veröffentlichung eines Transparenzberichts über Systemsicherheit,Documentation
+Border Ctrl,Biometrische Systemauswahl,Biometrische Modalitätsbewertung,Bewertung von Fingerabdruck-, Gesichtserkennung und Iris-Scanning,Task
+Border Ctrl,Biometrische Systemauswahl,Genauigkeits- & Leistungstests,Test biometrischer Genauigkeit über demografische Gruppen hinweg,Task
+Border Ctrl,Biometrische Systemauswahl,Lieferantenauswahl,Auswahl biometrischer Systemlieferanten durch Beschaffung,Task
+Border Ctrl,Biometrische Systemauswahl,Datenschutz-Folgenabschätzung,Bewertung der Datenschutzauswirkungen biometrischer Erfassung,Documentation
+Border Ctrl,Datenbankinfrastruktur,Biometrische Datenbankdesign,Design skalierbarer biometrischer Matching-Datenbank,Task
+Border Ctrl,Datenbankinfrastruktur,Reisenden-Verlaufsdatenbank,Aufbau umfassender Reisenden-Grenzüberschreitungshistorie-Datenbank,Task
+Border Ctrl,Datenbankinfrastruktur,Watchlist-Integration,Integration mit Terrorismus- und Kriminal-Watchlists,Task
+Border Ctrl,Datenbankinfrastruktur,Datenverschlüsselung & Sicherheit,Implementierung von Verschlüsselung und Zugriffskontrollen für sensible Daten,Task
+Border Ctrl,Gesichtserkennungsintegration,Gesichtserkennungskameras,Einsatz hochauflösender Gesichtserkennungskameras,Task
+Border Ctrl,Gesichtserkennungsintegration,Live-Gesichtsabgleich,Implementierung von Echtzeit-1:1-Gesichtsbiometrie-Abgleich,Feature
+Border Ctrl,Gesichtserkennungsintegration,Fotoqualitätsbewertung,Bewertung der Fotoqualität und erneute Aufnahme bei Bedarf,Task
+Border Ctrl,Gesichtserkennungsintegration,Gesichtserkennungs-Genauigkeitsabstimmung,Abstimmung von Matching-Schwellenwerten für optimale Genauigkeit,Task
+Border Ctrl,Automatisierte Grenztore,E-Gate-Hardware-Installation,Installation automatisierter Grenzkontroll-E-Gates,Task
+Border Ctrl,Automatisierte Grenztore,Dokumentenleser-Integration,Integration optischer und RFID-Passleser,Task
+Border Ctrl,Automatisierte Grenztore,Selbstbedienungs-Benutzeroberfläche,Design intuitiver Selbstbedienungs-Reisendenschnittstelle,Task
+Border Ctrl,Automatisierte Grenztore,Ausnahmebehandlungs-Workflow,Definition von Verfahren für Gate-Ablehnungen und Weiterleitung,Documentation
+Border Ctrl,Risikobewertungs-Engine,Risikobasiertes Screening,Implementierung risikobasierter Passagier-Screening-Algorithmen,Feature
+Border Ctrl,Risikobewertungs-Engine,Advance-Passenger-Information,Integration von API-Daten von Fluggesellschaften für Pre-Screening,Task
+Border Ctrl,Risikobewertungs-Engine,Verhaltensanalyse,Einbeziehung verhaltensbezogener Risikoindikatoren in Screening,Task
+Border Ctrl,Risikobewertungs-Engine,Risiko-Score-Validierung,Validierung der Risikomodellgenauigkeit und Bias-Tests,Task
+Border Ctrl,Mobile Inspektionseinheiten,Mobile-Gerätebeschaffung,Beschaffung robuster Tablets für mobile Beamte,Task
+Border Ctrl,Mobile Inspektionseinheiten,Mobile-Anwendungsentwicklung,Entwicklung mobiler Inspektionsbeamten-Anwendung,Feature
+Border Ctrl,Mobile Inspektionseinheiten,Offline-Funktionalität,Ermöglichung von Offline-Betrieb an abgelegenen Grenzstandorten,Feature
+Border Ctrl,Mobile Inspektionseinheiten,Kennzeichenerkennung,Integration mobiler ALPR für Fahrzeug-Screening,Feature
+Border Ctrl,Schulungsprogramm,Operator-Schulungscurriculum,Entwicklung umfassenden Operator-Schulungsprogramms,Documentation
+Border Ctrl,Schulungsprogramm,Systemschulungsdurchführung,Schulung von Grenzkontrollbeamten auf neuen Systemen,Task
+Border Ctrl,Schulungsprogramm,Szenariobasierte Übungen,Durchführung szenariobasierter Schulungsübungen,Task
+Border Ctrl,Schulungsprogramm,Zertifizierungstests,Durchführung von Operator-Kompetenzzertifizierung,Task
+Border Ctrl,Flughafen-Einführung,Flughafen-Standortvorbereitung,Vorbereitung von Installationsstandorten an internationalen Terminals,Task
+Border Ctrl,Flughafen-Einführung,Systeminstallation,Installation von E-Gates und biometrischen Systemen an Flughäfen,Task
+Border Ctrl,Flughafen-Einführung,Integrationstests,Test der Integration mit Flughafen- und Fluggesellschaftssystemen,Task
+Border Ctrl,Flughafen-Einführung,Phasenweiser Flughafen-Rollout,Rollout zu Flughäfen in Phasen beginnend mit verkehrsreichsten,Task
+Open Data,Datenkatalog-Entwicklung,Datenbestand-Inventar,Inventarisierung von Behördendatensätzen über alle Behörden hinweg,Task
+Open Data,Datenkatalog-Entwicklung,Metadaten-Standards,Definition von Metadatenstandards für Datensatz-Dokumentation,Documentation
+Open Data,Datenkatalog-Entwicklung,Katalogplattform-Auswahl,Auswahl und Implementierung einer Open-Data-Katalogplattform,Task
+Open Data,Datenkatalog-Entwicklung,Datensatzregistrierung,Registrierung und Dokumentation von Datensätzen im Katalog,Task
+Open Data,API-Framework,API-Design-Standards,Definition von RESTful-API-Design-Standards und Richtlinien,Documentation
+Open Data,API-Framework,API-Gateway-Einführung,Einsatz eines API-Gateways für Rate-Limiting und Sicherheit,Task
+Open Data,API-Framework,Datensatz-APIs,Bereitstellung prioritärer Datensätze über gut dokumentierte APIs,Feature
+Open Data,API-Framework,API-Entwicklerportal,Aufbau eines Entwicklerportals mit API-Dokumentation,Task
+Open Data,Datenqualitätsbewertung,Datenqualitäts-Profiling,Profiling der Datenqualität über Behördendatensätze hinweg,Task
+Open Data,Datenqualitätsbewertung,Qualitätsbewertung,Bewertung von Datensätzen auf Vollständigkeit, Genauigkeit und Aktualität,Task
+Open Data,Datenqualitätsbewertung,Datenbereinigung,Bereinigung und Verbesserung der Datenqualität für Veröffentlichung,Task
+Open Data,Datenqualitätsbewertung,Qualitätsmetadaten,Veröffentlichung von Datenqualitätsmetadaten mit Datensätzen,Documentation
+Open Data,Anonymisierung & Datenschutz,Datenschutzrisikobewertung,Bewertung von Re-Identifikationsrisiken in Datensätzen,Task
+Open Data,Anonymisierung & Datenschutz,De-Identifikationstechniken,Anwendung von k-Anonymität und differentieller Datenschutztechniken,Task
+Open Data,Anonymisierung & Datenschutz,Datenschutz-Review-Prozess,Etablierung eines Datenschutz-Review-Prozesses für Datensatzfreigaben,Documentation
+Open Data,Anonymisierung & Datenschutz,Anonymisierungstools,Entwicklung automatisierter Anonymisierungstools und Skripte,Task
+Open Data,Visualisierungstools,Datenvisualisierungs-Plattform,Implementierung von Datenvisualisierungs- und Erkundungstools,Task
+Open Data,Visualisierungstools,Interaktive Dashboards,Aufbau vorkonfigurierter Dashboards für gängige Datensätze,Feature
+Open Data,Visualisierungstools,Einbettungs-Code-Generierung,Ermöglichung der Einbettung von Diagrammen in externe Websites,Feature
+Open Data,Visualisierungstools,Mobiler Daten-Browser,Optimierung des Daten-Browsings für Mobilgeräte,Task
+Open Data,Entwickler-Community,Entwickler-Engagement,Engagement der Entwickler-Community durch Hackathons,Task
+Open Data,Entwickler-Community,API-Support-Forum,Start eines Entwickler-Support-Forums und Dokumentation,Task
+Open Data,Entwickler-Community,App-Showcase,Präsentation von Anwendungen die mit Open Data erstellt wurden,Feature
+Open Data,Entwickler-Community,Partnerschaftsprogramm,Etablierung von Partnerschaften mit Civic-Tech-Organisationen,Task
+Open Data,Öffentliche Startkampagne,Open-Data-Policy,Veröffentlichung formaler Open-Data-Policy und Prinzipien,Documentation
+Open Data,Öffentliche Startkampagne,Portal-Launch-Event,Ausrichtung öffentliches Launch-Event und Medienarbeit,Task
+Open Data,Öffentliche Startkampagne,Bürgerengagement,Durchführung von Bürgerengagement zur Identifizierung prioritärer Datensätze,Task
+Open Data,Öffentliche Startkampagne,Nutzungsanalyse,Implementierung von Analysen zur Verfolgung von Datensatz-Downloads und API-Nutzung,Task

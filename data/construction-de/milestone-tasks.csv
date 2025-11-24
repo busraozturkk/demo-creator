@@ -1,0 +1,265 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+High Speed Rail,Machbarkeitsstudie & Streckenplanung,Korridorausrichtungsanalyse,Analyse mehrerer Streckenkorridore für optimale Ausrichtung,Task
+High Speed Rail,Machbarkeitsstudie & Streckenplanung,Fahrgastaufkommensmodellierung,Entwicklung von Fahrgastprognosen und Umsatzprojektionen,Task
+High Speed Rail,Machbarkeitsstudie & Streckenplanung,Kosten-Nutzen-Analysebericht,Erstellung eines umfassenden wirtschaftlichen Machbarkeitsberichts,Documentation
+High Speed Rail,Machbarkeitsstudie & Streckenplanung,Stakeholder-Konsultationstreffen,Durchführung öffentlicher Anhörungen und Stakeholder-Engagement-Sitzungen,Task
+High Speed Rail,Umweltverträglichkeitsprüfung,Ökologische Basiserhebung,Dokumentation vorhandener Flora und Fauna entlang der geplanten Strecke,Task
+High Speed Rail,Umweltverträglichkeitsprüfung,Lärm- & Vibrations-Auswirkungsstudie,Bewertung potenzieller Lärmauswirkungen auf Wohngebiete,Task
+High Speed Rail,Umweltverträglichkeitsprüfung,Design von Minderungsmaßnahmen,Entwicklung von Umweltschutz- und Minderungsstrategien,Task
+High Speed Rail,Umweltverträglichkeitsprüfung,UVP-Berichtseinreichung,Einreichung der Umweltverträglichkeitsprüfung bei Regulierungsbehörden,Documentation
+High Speed Rail,Grundstückserwerb & Genehmigungen,Immobilienbewertung & Vermessung,Durchführung katastermäßiger Vermessungen und Immobilienbewertungen,Task
+High Speed Rail,Grundstückserwerb & Genehmigungen,Verhandlungen mit Grundstückseigentümern,Verhandlung von Entschädigungsvereinbarungen mit Grundstückseigentümern,Task
+High Speed Rail,Grundstückserwerb & Genehmigungen,Eisenbahnbaugenehmigungen,Einholung der Eisenbahnbaugenehmigung vom Verkehrsministerium,Task
+High Speed Rail,Grundstückserwerb & Genehmigungen,Wegerecht-Dokumentation,Erstellung und Einreichung rechtlicher Wegerecht-Dokumentation,Documentation
+High Speed Rail,Geotechnische Untersuchung,Bohrprogramm,Durchführung von Tiefbohrungen in 500m-Intervallen,Task
+High Speed Rail,Geotechnische Untersuchung,Bodentragfähigkeitstests,Durchführung von Labortests an Bodenproben,Task
+High Speed Rail,Geotechnische Untersuchung,Bewertung der Bodenstabilität,Bewertung von Hangstabilität und seismischen Überlegungen,Task
+High Speed Rail,Geotechnische Untersuchung,Erstellung geotechnischer Bericht,Zusammenstellung von Fundamentdesign-Empfehlungsberichten,Documentation
+High Speed Rail,Streckendesign & Engineering,Geometrische Designstandards,Anwendung geometrischer Hochgeschwindigkeitsbahn-Designkriterien,Task
+High Speed Rail,Streckendesign & Engineering,Krümmungs- & Überhöhungsberechnungen,Berechnung optimaler Gleiskrümmung und Querneigungswinkel,Task
+High Speed Rail,Streckendesign & Engineering,Gleisplattendesign,Design eines durchgehend geschweißten Schienensystems,Task
+High Speed Rail,Streckendesign & Engineering,Engineering-Zeichnungspaket,Erstellung von Bauzeichnungen und technischen Spezifikationen,Documentation
+High Speed Rail,Fundament & Erdarbeiten,Standorträumung & Rodung,Räumung der Vegetation und Vorbereitung des Baukorridors,Task
+High Speed Rail,Fundament & Erdarbeiten,Aushub- & Aufschüttungsarbeiten,Durchführung von Massenerdbewegungen für Böschungen,Task
+High Speed Rail,Fundament & Erdarbeiten,Verdichtungsqualitätskontrolle,Durchführung von Dichtetests und Verdichtungsverifizierung,Task
+High Speed Rail,Fundament & Erdarbeiten,Entwässerungssysteminstallation,Installation von Durchlässen und unterirdischen Entwässerungssystemen,Task
+High Speed Rail,Gleisverlegung & Schotterbettung,Schotterschichtvorbereitung,Installation und Verdichtung der Steinschotterfundamentschicht,Task
+High Speed Rail,Gleisverlegung & Schotterbettung,Schienenpaneelinstallation,Installation durchgehend geschweißter Schienenpaneele,Task
+High Speed Rail,Gleisverlegung & Schotterbettung,Gleisgeometrie-Ausrichtung,Durchführung präziser Ausrichtung und Nivellierung des Gleises,Task
+High Speed Rail,Gleisverlegung & Schotterbettung,Thermit-Schienenschweißung,Durchführung aluminothermischer Schweißung von Schienenfugen,Task
+High Speed Rail,Bahnhofsbau,Bahnhofsfundamentarbeiten,Bau von Tiefpfahlfundamenten für Bahnhofsstrukturen,Task
+High Speed Rail,Bahnhofsbau,Bahnsteig- & Vordacherrichtung,Bau von Fahrgastbahnsteigen und Schutzvordächern,Task
+High Speed Rail,Bahnhofsbau,Bahnhofs-MEP-Systeme,Installation mechanischer, elektrischer und sanitärer Systeme,Task
+High Speed Rail,Bahnhofsbau,Installation von Barrierefreiheitsmerkmalen,Installation von Aufzügen, Rampen und taktilen Pflasterungen,Feature
+High Speed Rail,Elektrifizierung & Signalgebung,Oberleitung-Fahrleitungssystem,Installation eines 25kV-Oberleitungs-Kontaktdrahtsystems,Task
+High Speed Rail,Elektrifizierung & Signalgebung,Einrichtung von Traktionsunterstationen,Inbetriebnahme elektrischer Unterstationen entlang der Strecke,Task
+High Speed Rail,Elektrifizierung & Signalgebung,ETCS Level 2 Signalisierung,Installation des European Train Control System,Feature
+High Speed Rail,Elektrifizierung & Signalgebung,Telekommunikations- & SCADA-Integration,Integration von Telekommunikations- und Kontrollsystemen,Task
+High Speed Rail,Testen & Inbetriebnahme,Dynamisches Testen von Rollmaterial,Durchführung dynamischer Hochgeschwindigkeitszug-Testfahrten,Task
+High Speed Rail,Testen & Inbetriebnahme,Fahrleitung-Interaktionstests,Test der Stromabnehmer-Fahrleitung-Interaktion bei Geschwindigkeit,Task
+High Speed Rail,Testen & Inbetriebnahme,Verifizierung von Notfallsystemen,Verifizierung von Notbremsung- und Evakuierungssystemen,Task
+High Speed Rail,Testen & Inbetriebnahme,Betriebszertifikat-Antrag,Einreichung der Zertifizierungsdokumentation bei der Eisenbahnbehörde,Documentation
+Smart Building,Gebäudesystem-Audit,HVAC-Leistungsbewertung,Audit der Effizienz des bestehenden Heiz- und Kühlsystems,Task
+Smart Building,Gebäudesystem-Audit,Elektrische Lastanalyse,Analyse von Stromverbrauchsmustern und Kapazität,Task
+Smart Building,Gebäudesystem-Audit,Gebäudehülleninspektion,Bewertung von Isolierungs- und Luftinfiltrationsthemen,Task
+Smart Building,Gebäudesystem-Audit,System-Auditbericht,Dokumentation des aktuellen Zustands und Verbesserungsmöglichkeiten,Documentation
+Smart Building,IoT-Sensor-Deployment,Sensorspezifikation & Beschaffung,Auswahl und Beschaffung von Temperatur-, Belegungs- und Luftqualitätssensoren,Task
+Smart Building,IoT-Sensor-Deployment,Drahtlosnetzwerk-Installation,Bereitstellung von LoRaWAN- oder BACnet/IP-Sensornetzwerk,Task
+Smart Building,IoT-Sensor-Deployment,Sensormontage & Inbetriebnahme,Installation von Sensoren an strategischen Standorten im gesamten Gebäude,Task
+Smart Building,IoT-Sensor-Deployment,Kalibrierung & Basistests,Kalibrierung von Sensoren und Festlegung von Basismessungen,Task
+Smart Building,HVAC-Automatisierung,Upgrade des Gebäudemanagementsystems,Installation moderner BMS-Controller und DDC-Panels,Task
+Smart Building,HVAC-Automatisierung,Variable Luftvolumensteuerung,Implementierung der VAV-Box-Automatisierung für Zonensteuerung,Task
+Smart Building,HVAC-Automatisierung,Bedarfsgesteuerte Lüftung,Programmierung CO2-basierter Lüftungsoptimierung,Feature
+Smart Building,HVAC-Automatisierung,Economizer-Integration,Konfiguration von Außenluft-Economizer-Automatisierungssequenzen,Task
+Smart Building,Lichtsteuerungssystem,Installation von Anwesenheitssensoren,Installation von PIR-Anwesenheitssensoren in allen Zonen,Task
+Smart Building,Lichtsteuerungssystem,Tageslichtnutzungssteuerung,Implementierung photoelektrischer Dimmung in Fensternähe,Feature
+Smart Building,Lichtsteuerungssystem,Beleuchtungsszenenprogrammierung,Programmierung von Beleuchtungsszenen für verschiedene Anwendungsfälle,Task
+Smart Building,Lichtsteuerungssystem,LED-Retrofit-Koordination,Koordination des LED-Lampenaustauschs mit Steuerungen,Task
+Smart Building,Energiemanagement-Plattform,Datenaggregationsschicht,Integration aller Gebäudesysteme in eine einheitliche Plattform,Task
+Smart Building,Energiemanagement-Plattform,Entwicklung von Analyse-Dashboards,Aufbau von Echtzeit-Energieüberwachungs-Dashboards,Feature
+Smart Building,Energiemanagement-Plattform,Anomalie-Erkennungsregeln,Konfiguration automatisierter Fehlererkennungsalgorithmen,Task
+Smart Building,Energiemanagement-Plattform,Berichts- & Compliance-Modul,Einrichtung von Versorgungsberichten und LEED-Compliance-Tracking,Documentation
+Smart Building,Sicherheit & Zugangskontrolle,Kartenleser-Austausch,Austausch alter Lesegeräte durch mobilfähigen Zugang,Task
+Smart Building,Sicherheit & Zugangskontrolle,Besucherverwaltungssystem,Implementierung eines digitalen Besucher-Check-in-Kiosksystems,Feature
+Smart Building,Sicherheit & Zugangskontrolle,Videoüberwachungsintegration,Integration von IP-Kameras mit Zugangskontrollereignissen,Task
+Smart Building,Sicherheit & Zugangskontrolle,Einbruchserkennungsprogrammierung,Konfiguration von Einbruchserkennungszonen außerhalb der Geschäftszeiten,Task
+Smart Building,Integration & Testing,Systemintegrationstests,Test der Intersystem-Kommunikation und Datenflüsse,Task
+Smart Building,Integration & Testing,Verifizierung der Steuersequenzen,Verifizierung der korrekten Funktion automatisierter Steuersequenzen,Task
+Smart Building,Integration & Testing,Leistungs-Benchmarking,Messung der Energieeinsparungen gegenüber Basisverbrauch,Task
+Smart Building,Integration & Testing,Behebung von Steuerlogikfehlern,Behebung von Steuersequenzfehlern, die beim Testen identifiziert wurden,Bug
+Smart Building,Mieter-Schulung & Übergabe,Schulung der Gebäudebetreiber,Schulung des Facility-Teams im Betrieb neuer Systeme,Task
+Smart Building,Mieter-Schulung & Übergabe,Entwicklung von Mieter-Benutzerleitfäden,Erstellung von Benutzerleitfäden für Mieter-Komfortsteuerungen,Documentation
+Smart Building,Mieter-Schulung & Übergabe,Helpdesk-Einrichtung,Einrichtung von Supportverfahren für Systemprobleme,Task
+Smart Building,Mieter-Schulung & Übergabe,As-Built-Dokumentationspaket,Zusammenstellung endgültiger Bestandszeichnungen und O&M-Handbücher,Documentation
+Bridge Infra,Standortvermessung & geotechnische Studie,Bathymetrische Vermessung,Durchführung einer Unterwasser-Topographievermessung des Flussbetts,Task
+Bridge Infra,Standortvermessung & geotechnische Studie,Marine geotechnische Bohrungen,Durchführung von Bohrungen von maritimer Plattform aus,Task
+Bridge Infra,Standortvermessung & geotechnische Studie,Seismische Gefährdungsbewertung,Analyse seismischer Designparameter für Brückenstandort,Task
+Bridge Infra,Standortvermessung & geotechnische Studie,Geotechnischer Untersuchungsbericht,Erstellung von Fundamentdesign-Empfehlungen,Documentation
+Bridge Infra,Fundamentdesign,Lastanalyse & Modellierung,Entwicklung eines Strukturanalysemodells für Eigen- und Verkehrslasten,Task
+Bridge Infra,Fundamentdesign,Tiefgründungsdimensionierung,Design von Bohrschacht- oder Pfahlfundamentabmessungen,Task
+Bridge Infra,Fundamentdesign,Kolkschutz-Design,Design von Steinschüttung oder Senkkastenschutzmaßnahmen,Task
+Bridge Infra,Fundamentdesign,Fundamentdesignzeichnungen,Erstellung detaillierter Fundamentbauzeichnungen,Documentation
+Bridge Infra,Pfeilerbau,Fangedamm-Installation,Installation temporärer Fangedämme für trockenen Pfeilerbau,Task
+Bridge Infra,Pfeilerbau,Bewehrungskorb-Montage,Fertigung und Installation von Bewehrungskörben für Pfeiler,Task
+Bridge Infra,Pfeilerbau,Betoneinbringung,Einbringen hochfesten Betons für Pfeilerbau,Task
+Bridge Infra,Pfeilerbau,Pfeilerform-Entfernung & Oberflächenbearbeitung,Abstreifen der Schalung und Anbringen architektonischer Oberfläche,Task
+Bridge Infra,Kabelfertigung,Hochfeste Drahtproduktion,Herstellung verzinkten hochfesten Stahldrahts,Task
+Bridge Infra,Kabelfertigung,Litzenpressen & Ummantelung,Pressen von Litzen und Anbringen von Korrosionsschutz,Task
+Bridge Infra,Kabelfertigung,Werksakzeptanzprüfung,Durchführung von Zugfestigkeits- und Ermüdungstests,Task
+Bridge Infra,Kabelfertigung,Kabellieferlogistik,Koordination des Transports von Kabelrollen zur Baustelle,Task
+Bridge Infra,Turmerrichtung,Turmfundamentbau,Bau von Verankerungs- und Turmsockelfundamenten,Task
+Bridge Infra,Turmerrichtung,Pylon-Kletterschalung,Installation von Kletterformarbeitsystemen für Turmbau,Task
+Bridge Infra,Turmerrichtung,Sattelinstallation,Installation von Kabelsätteln an Turmspitzen,Task
+Bridge Infra,Turmerrichtung,Turmvertikalitätsverifizierung,Vermessung und Verifizierung der Turmlotrechtheit innerhalb Toleranz,Task
+Bridge Infra,Deckeninstallation,Fertigteil-Segmentfertigung,Gießen von Betondeckensegmenten im Betonwerk,Task
+Bridge Infra,Deckeninstallation,Freivorbaumethode,Installation von Deckensegmenten mittels Freivorbautechnik,Task
+Bridge Infra,Deckeninstallation,Nachspannvorgänge,Spannen longitudinaler Spannglieder für Deckenkontinuität,Task
+Bridge Infra,Deckeninstallation,Deckenbelag & Abdichtung,Aufbringen von Verschleißschicht und Membranbabdichtung,Task
+Bridge Infra,Belastungstest,Statischer Belastungstest-Aufbau,Positionierung von Lastwagen für maximale Spannungskonfiguration,Task
+Bridge Infra,Belastungstest,Durchbiegungsüberwachung,Messung von Deckendurchbiegungen unter Lastbedingungen,Task
+Bridge Infra,Belastungstest,Dynamischer Belastungstest,Durchführung dynamischer Reaktionsprüfungen bei Fahrzeugpassage,Task
+Bridge Infra,Belastungstest,Belastungstest-Zertifizierung,Dokumentation der Einhaltung von Designlastanforderungen,Documentation
+Bridge Infra,Eröffnungszeremonie,Endabnahme & Abnahme,Abschluss behördlicher Inspektion und Erlangung des Zertifikats,Task
+Bridge Infra,Eröffnungszeremonie,Verkehrsmanagementplanung,Entwicklung von Verkehrsübergangs- und Umleitungsaufhebungsplan,Task
+Bridge Infra,Eröffnungszeremonie,Einweihungszeremonie-Koordination,Koordination der Eröffnungszeremonie und Medienberichterstattung,Task
+Bridge Infra,Eröffnungszeremonie,Übergabe an Betriebsteam,Übertragung der Brückenwartungsverantwortung an Eigentümer,Documentation
+Airport Expand,Masterplanung & Design,Luftverkehrsnachfrageprognose,Projektion von Passagier- und Flugzeugbewegungswachstum,Task
+Airport Expand,Masterplanung & Design,Terminal-Kapazitätsanalyse,Bewertung des Bedarfs an Spitzenstunden-Passagierabfertigung,Task
+Airport Expand,Masterplanung & Design,Airside-Layout-Optimierung,Design von Rollweg- und Vorfeldkonfiguration,Task
+Airport Expand,Masterplanung & Design,Masterplan-Dokumentation,Erstellung umfassender Flughafenentwicklungspläne,Documentation
+Airport Expand,Startbahnverlängerung,Startbahnsicherheitsbereich-Erweiterung,Räumung und Planierung von Startbahnsicherheitsbereich-Erweiterungen,Task
+Airport Expand,Startbahnverlängerung,Flächendesign & Bau,Bau von Stahlbeton-Startbahnbelag,Task
+Airport Expand,Startbahnverlängerung,Präzisionsanflugbeleuchtung,Installation von Kategorie II/III Präzisionsanflugbeleuchtungssystem,Task
+Airport Expand,Startbahnverlängerung,Startbahnmarkierung & Beschilderung,Aufbringen ICAO-konformer Markierungen und Installation von Leitbeschilderung,Task
+Airport Expand,Terminalgebäudestruktur,Stahlrahmenerrichtung,Errichten des Strukturstahlrahmens für Terminalgebäude,Task
+Airport Expand,Terminalgebäudestruktur,Vorhangfassadeninstallation,Installation von Glasvorhangfassadensystem,Task
+Airport Expand,Terminalgebäudestruktur,Dachmembran & Abdichtung,Installation von TPO-Dachmembran und Dichtungsdetails,Task
+Airport Expand,Terminalgebäudestruktur,Feuerschutzaufbringung,Aufbringen von gesprühtem Feuerschutz auf Konstruktionsstahl,Task
+Airport Expand,Concourse-Bau,Fluggastbrücken,Installation von Ladebrücken an Flugzeugtoren,Feature
+Airport Expand,Concourse-Bau,Gate-Warteraum-Ausbau,Fertigstellung von Innenausbau und Bestuhlung in Gatebereichen,Task
+Airport Expand,Concourse-Bau,Concourse-Versorgungsinstallation,Verlegung mechanischer, elektrischer und sanitärer Systeme,Task
+Airport Expand,Concourse-Bau,Wegweisungs-Beschilderungsprogramm,Design und Installation von Richtungsbeschilderungssystem,Task
+Airport Expand,Gepäckabfertigungssystem,Förderanlageninstallation,Installation von Hochgeschwindigkeits-Kippschalenförderern,Task
+Airport Expand,Gepäckabfertigungssystem,Frühgepäck-Lagersystem,Implementierung automatisierten Frühgepäck-Lagerkarussells,Feature
+Airport Expand,Gepäckabfertigungssystem,RFID-Gepäckverfolgung,Bereitstellung von IATA Resolution 753 Gepäckverfolgungssystem,Feature
+Airport Expand,Gepäckabfertigungssystem,Sortierlogik-Programmierung,Programmierung von PLC-Steuerungen für Gepäckroutinglogik,Task
+Airport Expand,Einwanderung & Sicherheit,E-Gate-Installation,Installation automatisierter Passkontroll-E-Gates,Feature
+Airport Expand,Einwanderung & Sicherheit,Sicherheitskontrollpunkt-Design,Layout optimaler Konfiguration für Screening-Spuren,Task
+Airport Expand,Einwanderung & Sicherheit,CT-Gepäckscanner-Bereitstellung,Installation von Computertomographie-Kontrollpunktscannern,Task
+Airport Expand,Einwanderung & Sicherheit,CBP-Vorabfertigungseinrichtung,Bau von US-Zollvorabfertigungseinrichtung,Task
+Airport Expand,Einzelhandels- & F&B-Ausbau,Einzelhandelseinheiten-Mieterkoordination,Koordination von Mieterdesign und Bauzeitplänen,Task
+Airport Expand,Einzelhandels- & F&B-Ausbau,Großkücheninstallation,Installation gewerblicher Küchenausstattung für Restaurants,Task
+Airport Expand,Einzelhandels- & F&B-Ausbau,Duty-Free-Shop-Ausbau,Fertigstellung von Luxus-Einzelhandel-Duty-Free-Shop-Oberflächen,Task
+Airport Expand,Einzelhandels- & F&B-Ausbau,Point-of-Sale-Systemintegration,Integration von Einzelhandels-POS mit Flughafen-Umsatzsystemen,Task
+Airport Expand,Flughafensystemintegration,FIDS-Anzeigeretzwerk,Installation von Fluginformations-Anzeigesystem-Bildschirmen,Task
+Airport Expand,Flughafensystemintegration,Common Use Terminal Equipment,Bereitstellung von CUTE/CUPPS-Airline-Check-in-Systemen,Feature
+Airport Expand,Flughafensystemintegration,Gebäudemanagementsystem,Integration von HVAC, Beleuchtung und Sicherheit in BMS,Task
+Airport Expand,Flughafensystemintegration,Airport Operational Database,Konfiguration von AODB für Flug- und Ressourcenmanagement,Task
+Airport Expand,Betriebsbereitschaft,Betriebsbereitschaftstests,Durchführung von Passagierfluss-Simulationsübungen in voller Größe,Task
+Airport Expand,Betriebsbereitschaft,Mitarbeiterschulungsprogramme,Schulung von Flughafen- und Airline-Personal auf neue Einrichtungen,Task
+Airport Expand,Betriebsbereitschaft,Notevakuierungsübung,Durchführung vollständiger Terminalevakuierungsübung,Task
+Airport Expand,Betriebsbereitschaft,Flughafen-Eröffnungszertifikat,Erlangung des Flugplatz-Betriebszertifikats von CAA,Documentation
+Metro System,Streckenplanung & Genehmigung,Fahrgastaufkommensstudie & Modellierung,Entwicklung von Metro-Fahrgastaufkommensprognosen,Task
+Metro System,Streckenplanung & Genehmigung,Bahnhofsstandortanalyse,Optimierung von Bahnhofsstandorten für Einzugsgebiete,Task
+Metro System,Streckenplanung & Genehmigung,Transit-orientierter Entwicklungsplan,Koordination der Flächennutzungsplanung mit Metro-Ausrichtung,Task
+Metro System,Streckenplanung & Genehmigung,Umweltfreigabe,Erlangung der Umweltgenehmigung für Metro-Korridor,Documentation
+Metro System,Tunnelbohrmaschinen-Setup,TBM-Spezifikation & Beschaffung,Beschaffung einer Erddruckausgleichs-Tunnelbohrmaschine,Task
+Metro System,Tunnelbohrmaschinen-Setup,Startschachtbau,Bau von TBM-Start- und Abrufschächten,Task
+Metro System,Tunnelbohrmaschinen-Setup,TBM-Montage & Testen,Montage und Funktionstesten der TBM unterirdisch,Task
+Metro System,Tunnelbohrmaschinen-Setup,Bodenbehandlungsarbeiten,Durchführung von Bodenverbesserung und Verpressung falls erforderlich,Task
+Metro System,Tunnelausgrabung,TBM-Bohrbetrieb,Betrieb der TBM für Tunnelvortrieb mit Segmentinstallation,Task
+Metro System,Tunnelausgrabung,Fertigteil-Segmenterrichtung,Installation von Stahlbeton-Tunnelauskleidungssegmenten,Task
+Metro System,Tunnelausgrabung,Bodensetzungsüberwachung,Überwachung der Oberflächensetzung während Tunnelbauarbeiten,Task
+Metro System,Tunnelausgrabung,Verpressung & Abdichtung,Einspritzen von Kontaktverpressung hinter Segmenten zur Abdichtung,Task
+Metro System,Bahnhofsbau,Bahnhofskasten-Ausgrabung,Durchführung von Top-down- oder Cut-and-cover-Bahnhofsausgrabung,Task
+Metro System,Bahnhofsbau,Bahnsteigkantentüren,Installation automatischer Bahnsteigkantentürsysteme,Feature
+Metro System,Bahnhofsbau,Bahnhofsarchitektonische Oberflächen,Aufbringen von Fliesen-, Stein- und Wandoberflächen auf Bahnhofsinterieur,Task
+Metro System,Bahnhofsbau,Rolltreppe & Aufzuginstallation,Installation vertikaler Zirkulationsanlagen zu Bahnsteigen,Task
+Metro System,Gleisinstallation,Gleisbettvorbereitung,Vorbereitung von Betongleisbett oder Installation direkter Fixierungsbefestigungen,Task
+Metro System,Gleisinstallation,Schieneverlegung & Schweißung,Installation durchgehend geschweißter Schienenstrecke,Task
+Metro System,Gleisinstallation,Stromschienen-Installation,Installation eines 750V DC Stromschienenversorgungssystems,Task
+Metro System,Gleisinstallation,Gleisgeometriemessung,Vermessung und Verifizierung von Gleisausrichtung und Profil,Task
+Metro System,Strom- & Signalsysteme,Traktionsstrom-Unterstationen,Bau und Inbetriebnahme von Gleichrichter-Unterstationen,Task
+Metro System,Strom- & Signalsysteme,SCADA-Systemintegration,Implementierung von Überwachungs- und Datenerfassungssystem,Task
+Metro System,Strom- & Signalsysteme,Communications-Based Train Control,Installation von CBTC automatischem Zugschutzsystem,Feature
+Metro System,Strom- & Signalsysteme,Telekommunikations-Backbone,Bereitstellung von Glasfaser- und Funkkommunikationsnetzwerken,Task
+Metro System,Rollmaterial-Beschaffung,Zugspezifikationsentwicklung,Definition technischer Spezifikationen und Anforderungen für Metrowagen,Documentation
+Metro System,Rollmaterial-Beschaffung,Herstellerauswahl & Vertrag,Vergabe von Rollmateriallieferungs- und Wartungsvertrag,Task
+Metro System,Rollmaterial-Beschaffung,Werksakzeptanzprüfung,Beobachtung von Zugtests in Herstelleranlage,Task
+Metro System,Rollmaterial-Beschaffung,Zuglieferung & Inbetriebnahme,Empfang und Inbetriebnahme von Zügen im Depot,Task
+Metro System,Probebetrieb,Integrierte Systemtests,Test aller Systeme unter simulierten Betriebsbedingungen,Task
+Metro System,Probebetrieb,Fahrerschulungsprogramm,Schulung von Metro-Betreibern auf neuem Rollmaterial und Strecke,Task
+Metro System,Probebetrieb,Probefahrtzeitraum,Betrieb von Probedienst zur Zuverlässigkeitsdemonstration,Task
+Metro System,Probebetrieb,Sicherheitszertifizierung,Erlangung unabhängiger Sicherheitsbewertung und Zertifizierung,Documentation
+BIM Platform,BIM-Standards-Definition,Definition von Informationsanforderungen,Definition der Informationsanforderungen des Arbeitgebers (EIR),Documentation
+BIM Platform,BIM-Standards-Definition,BIM-Ausführungsplan-Vorlage,Entwicklung standardisierter BEP-Vorlage für Projekte,Documentation
+BIM Platform,BIM-Standards-Definition,Level-of-Detail-Spezifikation,Definition von LOD 100-500 Anforderungen für Modellelemente,Documentation
+BIM Platform,BIM-Standards-Definition,Common Data Environment Setup,Festlegung von CDE-Protokollen und Ordnerstrukturstandards,Task
+BIM Platform,3D-Modellierungstools-Integration,Revit & Navisworks Integration,Konfiguration von Autodesk-Plattform-Integrationsworkflows,Task
+BIM Platform,3D-Modellierungstools-Integration,Civil 3D Connector Setup,Integration von Tiefbau-Designsoftware,Task
+BIM Platform,3D-Modellierungstools-Integration,IFC-Import/Export-Validierung,Test von Industry Foundation Classes Datenaustausch,Task
+BIM Platform,3D-Modellierungstools-Integration,Parametrische Familienbibliothek,Entwicklung standardisierter BIM-Komponentenbibliothek,Task
+BIM Platform,Cloud-Infrastruktur-Setup,Cloud-Architekturdesign,Design skalierbarer Mehrmandanten-Cloud-Infrastruktur,Task
+BIM Platform,Cloud-Infrastruktur-Setup,Datenbank- & Speicher-Bereitstellung,Einrichtung von PostgreSQL-Datenbank und Objektspeicher,Task
+BIM Platform,Cloud-Infrastruktur-Setup,Sicherheit & Zugriffskontrollen,Implementierung rollenbasierter Zugriffskontrolle und Verschlüsselung,Task
+BIM Platform,Cloud-Infrastruktur-Setup,Backup & Disaster Recovery,Konfiguration automatisierter Backup- und Wiederherstellungsverfahren,Task
+BIM Platform,Kollaborationsportal,Modell-Viewer-Webanwendung,Entwicklung WebGL-basierter 3D-Modell-Viewer,Feature
+BIM Platform,Kollaborationsportal,Problem-Tracking & BCF-Integration,Implementierung von BIM Collaboration Format Problem-Management,Feature
+BIM Platform,Kollaborationsportal,Versionskontrollsystem,Aufbau von Modellversionierung und Änderungsverfolgung,Task
+BIM Platform,Kollaborationsportal,Mobile App für Baustellenzugriff,Entwicklung von iOS/Android-App für Feldmodellzugriff,Feature
+BIM Platform,Clash-Detection-System,Automatisierte Clash-Rules-Engine,Konfiguration geometrischer und Workflow-Clash-Erkennungsregeln,Task
+BIM Platform,Clash-Detection-System,Multi-Disziplin-Koordination,Einrichtung von MEP-Struktur-Architektur-Clash-Workflows,Task
+BIM Platform,Clash-Detection-System,Clash-Report-Generierung,Automatisierung der Clash-Report-Generierung und -Verteilung,Task
+BIM Platform,Clash-Detection-System,Behebung kritischer Strukturclashes,Behebung hochpriorisierer struktureller Konflikte im Modell,Bug
+BIM Platform,Kostenschätzungsmodul,5D BIM Mengenermittlung,Verknüpfung von Modellelementen mit Kostendatenbank für automatisierte QTO,Feature
+BIM Platform,Kostenschätzungsmodul,Kostendatenbankintegration,Integration von RS Means oder regionalen Kostendatenbanken,Task
+BIM Platform,Kostenschätzungsmodul,Analyse von Änderungsauswirkungen,Verfolgung von Kostenauswirkungen von Designänderungen,Feature
+BIM Platform,Kostenschätzungsmodul,Value-Engineering-Dashboard,Aufbau von Kostenoptimierungs-Analysetools,Task
+BIM Platform,4D-Zeitplanintegration,Zeitplan-zu-Modell-Verknüpfung,Verknüpfung von Primavera/MSP-Zeitplan mit BIM-Modellelementen,Task
+BIM Platform,4D-Zeitplanintegration,Bausequenz-Animation,Generierung von 4D-Bausequenz-Visualisierungen,Feature
+BIM Platform,4D-Zeitplanintegration,Baustellenlogistikplanung,Modellierung temporärer Einrichtungen und Lagerbereiche,Task
+BIM Platform,4D-Zeitplanintegration,Zeitplangesteuerte Ressourcenanalyse,Analyse von Ausrüstungs- und Arbeitskräfteanforderungen im Zeitverlauf,Task
+BIM Platform,Schulung & Adoption,BIM-Koordinator-Zertifizierung,Durchführung von BIM-Koordinator-Schulung und Zertifizierungsprogramm,Task
+BIM Platform,Schulung & Adoption,Projektteam-Onboarding,Durchführung projektspezifischer BIM-Onboarding-Sitzungen,Task
+BIM Platform,Schulung & Adoption,Benutzerdokumentationsportal,Erstellung umfassender Benutzerleitfäden und Video-Tutorials,Documentation
+BIM Platform,Schulung & Adoption,Helpdesk & Support-Einrichtung,Einrichtung von BIM-Support-Ticketing und Eskalationsprozess,Task
+Tunnel Project,Geologische Untersuchung,Desktop-Geologiestudie,Überprüfung vorhandener geologischer Karten und historischer Daten,Task
+Tunnel Project,Geologische Untersuchung,Geophysikalische Untersuchungsmethoden,Durchführung seismischer Refraktions- und Widerstandsuntersuchungen,Task
+Tunnel Project,Geologische Untersuchung,Explorationsbohrprogramm,Durchführung von Untersuchungsbohrungen entlang Tunnelausrichtung,Task
+Tunnel Project,Geologische Untersuchung,Gebirgsmassen-Klassifizierung,Klassifizierung von Gestein mittels Q-System und RMR-Methodik,Task
+Tunnel Project,TBM-Beschaffung & Setup,TBM-Technische Spezifikation,Definition von TBM-Spezifikationen basierend auf Bodenbedingungen,Documentation
+Tunnel Project,TBM-Beschaffung & Setup,Herstellerauswahl,Bewertung und Auswahl von TBM-Hersteller durch Ausschreibung,Task
+Tunnel Project,TBM-Beschaffung & Setup,Werksakzeptanzprüfung,Beobachtung von TBM-Montage und -Tests im Werk,Task
+Tunnel Project,TBM-Beschaffung & Setup,Standortmontage & Inbetriebnahme,Montage von TBM-Komponenten in Startkammer,Task
+Tunnel Project,Belüftungssystem-Design,Belüftungslastberechnungen,Berechnung von Frischluftrequirements und Rauchabsaugung,Task
+Tunnel Project,Belüftungssystem-Design,Jet-Fan-Dimensionierung & Layout,Design von Längsbelüftungs-Jet-Fan-System,Task
+Tunnel Project,Belüftungssystem-Design,Notbelüftungsszenarien,Modellierung von Brand- und Notbelüftungsstrategien,Task
+Tunnel Project,Belüftungssystem-Design,CFD-Luftstromsimulation,Durchführung von Computational-Fluid-Dynamics-Analyse,Task
+Tunnel Project,Ausgrabungsphase 1,TBM-Tunnelbohrung,Vortrieb der TBM durch ersten geologischen Abschnitt,Task
+Tunnel Project,Ausgrabungsphase 1,Segmentring-Installation,Installation von Fertigbeton-Auskleidungssegmenten hinter TBM,Task
+Tunnel Project,Ausgrabungsphase 1,Abraum-Entfernung & Entsorgung,Transport ausgehobenen Materials über Förderer zur Oberfläche,Task
+Tunnel Project,Ausgrabungsphase 1,Sondierbohrung & Bodenbehandlung,Durchführung von Vorausbohrungen und Vorverpressung nach Bedarf,Task
+Tunnel Project,Stützstruktur-Installation,Felsanker-Installation,Installation systematischer Felsanker-Bodenstützung,Task
+Tunnel Project,Stützstruktur-Installation,Stahlrippe & Spritzbeton-Stützung,Aufbringung von Spritzbeton und Installation von Stahlrippen in schwachen Zonen,Task
+Tunnel Project,Stützstruktur-Installation,Konvergenzüberwachung,Überwachung der Tunnelverformung mit Extensometern,Task
+Tunnel Project,Stützstruktur-Installation,Endbetonauskleidung,Bau ortbetonierter Endbetonauskleidung,Task
+Tunnel Project,Entwässerung & Abdichtung,Entwässerungsrohr-Installation,Installation von Längsentwässerungssammelsystem,Task
+Tunnel Project,Entwässerung & Abdichtung,Abdichtungsmembran,Aufbringung von PVC- oder HDPE-Abdichtungsmembran,Task
+Tunnel Project,Entwässerung & Abdichtung,Grundwasserpumpsystem,Installation permanenter Entwässerungs- und Pumpstationen,Task
+Tunnel Project,Entwässerung & Abdichtung,Sohlbeton-Einbringung,Einbringen von Sohlplatte mit integrierten Entwässerungskanälen,Task
+Tunnel Project,Endverkleidung,Endauskleidungs-Schalung,Installation fahrender Schalung für Ortbeton-Auskleidung,Task
+Tunnel Project,Endverkleidung,Bewehrung & Betoneinbringung,Platzierung von Bewehrung und Einbringen von Endbetonauskleidung,Task
+Tunnel Project,Endverkleidung,Oberflächenbearbeitung,Aufbringen architektonischer Oberfläche oder Schutzbeschichtung,Task
+Tunnel Project,Endverkleidung,Dehnfugen-Installation,Installation von Bewegungsfugen in festgelegten Intervallen,Task
+Tunnel Project,Sicherheitssysteme & Testen,Branderkennungssystem,Installation linearer Wärmedetektoren und Rauchsensoren,Task
+Tunnel Project,Sicherheitssysteme & Testen,Notbeleuchtung & Beschilderung,Installation von Notfluchtbeleuchtung und Wegweisung,Task
+Tunnel Project,Sicherheitssysteme & Testen,Rauchabzugstests,Inbetriebnahme und Testen von Notbelüftungssystemen,Task
+Tunnel Project,Sicherheitssysteme & Testen,Vollmaßstabs-Evakuierungsübung,Durchführung von Notevakuierungsübung mit Behörden,Task
+Modular Housing,Fabrikeinrichtung & Automatisierung,Produktionsstätten-Layout,Design des modularen Fertigungsstätten-Grundrisses,Task
+Modular Housing,Fabrikeinrichtung & Automatisierung,Automatisierte Rahmenausrüstung,Installation automatisierter Wandpaneel-Rahmenstationen,Task
+Modular Housing,Fabrikeinrichtung & Automatisierung,Brückenkran-System,Installation von Portalkränen für Modulbewegung,Task
+Modular Housing,Fabrikeinrichtung & Automatisierung,Materialhandhabungs-Förderer,Einrichtung automatisierter Materiallieferungsförderer,Task
+Modular Housing,Moduldesign & Prototyping,Architektonisches Moduldesign,Design standardisierter Modulkonfigurationen und Grundrisse,Task
+Modular Housing,Moduldesign & Prototyping,Strukturelle Engineering-Analyse,Durchführung struktureller Analyse für Stapel- und Transportlasten,Task
+Modular Housing,Moduldesign & Prototyping,Vollmaßstabs-Prototypenbau,Bau und Test eines Vollmaßstabs-Prototypmoduls,Task
+Modular Housing,Moduldesign & Prototyping,Bauvorschriften-Compliance-Überprüfung,Verifizierung der Einhaltung von Wohnbauvorschriften,Documentation
+Modular Housing,Optimierung des Fertigungsprozesses,Produktionslinienausgleich,Optimierung von Arbeitsstationszykluszeiten und -fluss,Task
+Modular Housing,Optimierung des Fertigungsprozesses,Lean-Manufacturing-Implementierung,Anwendung von 5S- und kontinuierlichen Verbesserungsmethodiken,Task
+Modular Housing,Optimierung des Fertigungsprozesses,Montagevorrichtungs-Design,Design von Präzisionsvorrichtungen für konsistente Modulbestückung,Task
+Modular Housing,Optimierung des Fertigungsprozesses,Reduzierung von Montagefehlern,Behebung von Qualitätsproblemen, die Nacharbeit in Produktion verursachen,Bug
+Modular Housing,Qualitätskontrollsystem,Inspektionsprüfpunkt-Protokoll,Definition von Haltepunkten und Inspektionskriterien,Documentation
+Modular Housing,Qualitätskontrollsystem,Maßtoleranzen-Verifizierung,Implementierung von Lasermessung und Verifizierung,Task
+Modular Housing,Qualitätskontrollsystem,MEP-Systemtests,Test aller mechanischen, elektrischen und sanitären Rohinstallationen,Task
+Modular Housing,Qualitätskontrollsystem,Wetterdichtheitstests,Durchführung von Blower-Door- und Wasserdurchdringungstests,Task
+Modular Housing,Logistik & Transport,Modul-Transport-Engineering,Design von Transportrahmen und Hebevorrichtungen,Task
+Modular Housing,Logistik & Transport,Begleit- & Routenplanung,Planung von Schwertransportrouten und Einholung von Genehmigungen,Task
+Modular Housing,Logistik & Transport,Lade- & Sicherungsverfahren,Entwicklung sicherer Lade- und Verzurrverfahren,Documentation
+Modular Housing,Logistik & Transport,Liefertermin-Koordination,Koordination von Just-in-Time-Modullieferung zu Baustellen,Task
+Modular Housing,Standortmontage,Standortfundamentvorbereitung,Vorbereitung ebener Fundamente und Ankerpunkte,Task
+Modular Housing,Standortmontage,Kranhebung & Platzierung,Heben und Positionieren von Modulen mit Mobilkran,Task
+Modular Housing,Standortmontage,Inter-Modul-Verbindung,Verbindung angrenzender Module mit Strukturbolzen,Task
+Modular Housing,Standortmontage,Wetterdichtungs-Installation,Abdichtung von Modulfugen und Aufbringung von Außenverkleidung,Task
+Modular Housing,Fertigstellung & Inbetriebnahme,Innenausbau-Installation,Fertigstellung von Trockenbauoberflächen und Abschlussschreinerei,Task
+Modular Housing,Fertigstellung & Inbetriebnahme,Finale MEP-Verbindungen,Verbindung von Versorgungsleitungen zwischen Modulen und zu Standortdiensten,Task
+Modular Housing,Fertigstellung & Inbetriebnahme,Endabnahme & Testen,Durchführung abschließender Bauinspektor-Begehung,Task
+Modular Housing,Fertigstellung & Inbetriebnahme,Hausbesitzer-Dokumentationspaket,Erstellung von Garantie- und Wartungsdokumentation,Documentation

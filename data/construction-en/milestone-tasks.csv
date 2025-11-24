@@ -1,0 +1,265 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+High Speed Rail,Feasibility Study & Route Planning,Corridor Alignment Analysis,Analyze multiple route corridors for optimal alignment,Task
+High Speed Rail,Feasibility Study & Route Planning,Ridership Demand Modeling,Develop ridership forecasts and revenue projections,Task
+High Speed Rail,Feasibility Study & Route Planning,Cost-Benefit Analysis Report,Prepare comprehensive economic feasibility report,Documentation
+High Speed Rail,Feasibility Study & Route Planning,Stakeholder Consultation Meetings,Conduct public hearings and stakeholder engagement sessions,Task
+High Speed Rail,Environmental Impact Assessment,Ecological Baseline Survey,Document existing flora and fauna along proposed route,Task
+High Speed Rail,Environmental Impact Assessment,Noise & Vibration Impact Study,Assess potential noise impacts on residential areas,Task
+High Speed Rail,Environmental Impact Assessment,Mitigation Measures Design,Design environmental protection and mitigation strategies,Task
+High Speed Rail,Environmental Impact Assessment,EIA Report Submission,Submit environmental impact assessment to regulatory authorities,Documentation
+High Speed Rail,Land Acquisition & Permits,Property Valuation & Survey,Conduct cadastral surveys and property valuations,Task
+High Speed Rail,Land Acquisition & Permits,Negotiation with Landowners,Negotiate compensation agreements with property owners,Task
+High Speed Rail,Land Acquisition & Permits,Railway Authorization Permits,Obtain railway construction authorization from transport ministry,Task
+High Speed Rail,Land Acquisition & Permits,Right-of-Way Documentation,Prepare and file legal right-of-way documentation,Documentation
+High Speed Rail,Geotechnical Investigation,Borehole Drilling Program,Execute deep borehole drilling at 500m intervals,Task
+High Speed Rail,Geotechnical Investigation,Soil Bearing Capacity Tests,Conduct laboratory testing of soil samples,Task
+High Speed Rail,Geotechnical Investigation,Ground Stability Assessment,Assess slope stability and seismic considerations,Task
+High Speed Rail,Geotechnical Investigation,Geotechnical Report Preparation,Compile foundation design recommendations report,Documentation
+High Speed Rail,Track Design & Engineering,Geometric Design Standards,Apply high-speed rail geometric design criteria,Task
+High Speed Rail,Track Design & Engineering,Curvature & Superelevation Calculations,Calculate optimal track curvature and banking angles,Task
+High Speed Rail,Track Design & Engineering,Track Slab Design,Design continuous welded rail track slab system,Task
+High Speed Rail,Track Design & Engineering,Engineering Drawings Package,Produce construction drawings and technical specifications,Documentation
+High Speed Rail,Foundation & Earthworks,Site Clearing & Grubbing,Clear vegetation and prepare construction corridor,Task
+High Speed Rail,Foundation & Earthworks,Cut & Fill Earthworks,Execute mass earthwork operations for embankments,Task
+High Speed Rail,Foundation & Earthworks,Compaction Quality Control,Conduct density testing and compaction verification,Task
+High Speed Rail,Foundation & Earthworks,Drainage System Installation,Install culverts and subsurface drainage systems,Task
+High Speed Rail,Track Laying & Ballasting,Ballast Layer Preparation,Install and compact stone ballast foundation layer,Task
+High Speed Rail,Track Laying & Ballasting,Rail Panel Installation,Install continuous welded rail panels,Task
+High Speed Rail,Track Laying & Ballasting,Track Geometry Alignment,Perform precision alignment and leveling of track,Task
+High Speed Rail,Track Laying & Ballasting,Thermit Rail Welding,Execute aluminothermic welding of rail joints,Task
+High Speed Rail,Station Construction,Station Foundation Works,Construct deep pile foundations for station structures,Task
+High Speed Rail,Station Construction,Platform & Canopy Erection,Build passenger platforms and protective canopies,Task
+High Speed Rail,Station Construction,Station MEP Systems,Install mechanical, electrical and plumbing systems,Task
+High Speed Rail,Station Construction,Accessibility Features Installation,Install elevators, ramps and tactile paving,Feature
+High Speed Rail,Electrification & Signaling,Overhead Catenary System,Install 25kV overhead contact wire system,Task
+High Speed Rail,Electrification & Signaling,Traction Substation Setup,Commission electrical substations along route,Task
+High Speed Rail,Electrification & Signaling,ETCS Level 2 Signaling,Install European Train Control System signaling,Feature
+High Speed Rail,Electrification & Signaling,Telecoms & SCADA Integration,Integrate telecommunications and control systems,Task
+High Speed Rail,Testing & Commissioning,Rolling Stock Dynamic Testing,Conduct high-speed train dynamic testing runs,Task
+High Speed Rail,Testing & Commissioning,Catenary Interaction Tests,Test pantograph-catenary interaction at speed,Task
+High Speed Rail,Testing & Commissioning,Emergency Systems Verification,Verify emergency braking and evacuation systems,Task
+High Speed Rail,Testing & Commissioning,Operating Certificate Application,Submit certification documentation to rail authority,Documentation
+Smart Building,Building Systems Audit,HVAC Performance Assessment,Audit existing heating and cooling system efficiency,Task
+Smart Building,Building Systems Audit,Electrical Load Analysis,Analyze power consumption patterns and capacity,Task
+Smart Building,Building Systems Audit,Building Envelope Inspection,Assess insulation and air infiltration issues,Task
+Smart Building,Building Systems Audit,Systems Audit Report,Document current state and improvement opportunities,Documentation
+Smart Building,IoT Sensor Deployment,Sensor Specification & Procurement,Select and procure temperature, occupancy and air quality sensors,Task
+Smart Building,IoT Sensor Deployment,Wireless Network Installation,Deploy LoRaWAN or BACnet/IP sensor network,Task
+Smart Building,IoT Sensor Deployment,Sensor Mounting & Commissioning,Install sensors at strategic locations throughout building,Task
+Smart Building,IoT Sensor Deployment,Calibration & Baseline Testing,Calibrate sensors and establish baseline readings,Task
+Smart Building,HVAC Automation,Building Management System Upgrade,Install modern BMS controller and DDC panels,Task
+Smart Building,HVAC Automation,Variable Air Volume Controls,Implement VAV box automation for zone control,Task
+Smart Building,HVAC Automation,Demand-Controlled Ventilation,Program CO2-based ventilation optimization,Feature
+Smart Building,HVAC Automation,Economizer Integration,Configure outdoor air economizer automation sequences,Task
+Smart Building,Lighting Control System,Occupancy Sensor Installation,Install PIR occupancy sensors in all zones,Task
+Smart Building,Lighting Control System,Daylight Harvesting Controls,Implement photoelectric dimming near windows,Feature
+Smart Building,Lighting Control System,Lighting Scene Programming,Program lighting scenes for different use cases,Task
+Smart Building,Lighting Control System,LED Retrofit Coordination,Coordinate LED lamp replacement with controls,Task
+Smart Building,Energy Management Platform,Data Aggregation Layer,Integrate all building systems into unified platform,Task
+Smart Building,Energy Management Platform,Analytics Dashboard Development,Build real-time energy monitoring dashboards,Feature
+Smart Building,Energy Management Platform,Anomaly Detection Rules,Configure automated fault detection algorithms,Task
+Smart Building,Energy Management Platform,Reporting & Compliance Module,Setup utility reporting and LEED compliance tracking,Documentation
+Smart Building,Security & Access Control,Card Reader Replacement,Replace legacy readers with mobile-enabled access,Task
+Smart Building,Security & Access Control,Visitor Management System,Implement digital visitor check-in kiosk system,Feature
+Smart Building,Security & Access Control,Video Surveillance Integration,Integrate IP cameras with access control events,Task
+Smart Building,Security & Access Control,Intrusion Detection Programming,Configure after-hours intrusion detection zones,Task
+Smart Building,Integration & Testing,System Integration Testing,Test inter-system communication and data flows,Task
+Smart Building,Integration & Testing,Control Sequence Verification,Verify automated control sequences perform correctly,Task
+Smart Building,Integration & Testing,Performance Benchmarking,Measure energy savings against baseline consumption,Task
+Smart Building,Integration & Testing,Fix Control Logic Errors,Resolve control sequence bugs identified in testing,Bug
+Smart Building,Tenant Training & Handover,Building Operator Training,Train facilities team on new systems operation,Task
+Smart Building,Tenant Training & Handover,Tenant User Guide Development,Create user guides for tenant comfort controls,Documentation
+Smart Building,Tenant Training & Handover,Help Desk Setup,Establish support procedures for system issues,Task
+Smart Building,Tenant Training & Handover,As-Built Documentation Package,Compile final as-built drawings and O&M manuals,Documentation
+Bridge Infra,Site Survey & Geotechnical Study,Bathymetric Survey,Conduct underwater topographic survey of riverbed,Task
+Bridge Infra,Site Survey & Geotechnical Study,Marine Geotechnical Drilling,Execute borehole drilling from marine platform,Task
+Bridge Infra,Site Survey & Geotechnical Study,Seismic Hazard Assessment,Analyze seismic design parameters for bridge location,Task
+Bridge Infra,Site Survey & Geotechnical Study,Geotechnical Investigation Report,Prepare foundation design recommendations,Documentation
+Bridge Infra,Foundation Design,Load Analysis & Modeling,Develop structural analysis model for dead and live loads,Task
+Bridge Infra,Foundation Design,Deep Foundation Sizing,Design drilled shaft or pile foundation dimensions,Task
+Bridge Infra,Foundation Design,Scour Protection Design,Design rock riprap or caisson scour countermeasures,Task
+Bridge Infra,Foundation Design,Foundation Design Drawings,Produce detailed foundation construction drawings,Documentation
+Bridge Infra,Pier Construction,Cofferdam Installation,Install temporary cofferdam for dry pier construction,Task
+Bridge Infra,Pier Construction,Reinforcement Cage Assembly,Fabricate and install rebar cages for piers,Task
+Bridge Infra,Pier Construction,Concrete Placement,Pour high-strength concrete for pier construction,Task
+Bridge Infra,Pier Construction,Pier Form Removal & Finishing,Strip formwork and apply architectural finish,Task
+Bridge Infra,Cable Manufacturing,High-Strength Wire Production,Manufacture galvanized high-tensile steel wire,Task
+Bridge Infra,Cable Manufacturing,Strand Compacting & Sheathing,Compact strands and apply corrosion protection,Task
+Bridge Infra,Cable Manufacturing,Factory Acceptance Testing,Conduct tensile strength and fatigue testing,Task
+Bridge Infra,Cable Manufacturing,Cable Delivery Logistics,Coordinate transportation of cable reels to site,Task
+Bridge Infra,Tower Erection,Tower Foundation Construction,Construct anchorage and tower base foundations,Task
+Bridge Infra,Tower Erection,Pylon Climbing Formwork,Install jumpform system for tower construction,Task
+Bridge Infra,Tower Erection,Saddle Installation,Install cable saddles at tower tops,Task
+Bridge Infra,Tower Erection,Tower Verticality Verification,Survey and verify tower plumbness within tolerance,Task
+Bridge Infra,Deck Installation,Precast Segment Fabrication,Cast concrete deck segments at batching plant,Task
+Bridge Infra,Deck Installation,Balanced Cantilever Method,Install deck segments using balanced cantilever technique,Task
+Bridge Infra,Deck Installation,Post-Tensioning Operations,Tension longitudinal tendons for deck continuity,Task
+Bridge Infra,Deck Installation,Deck Surfacing & Waterproofing,Apply wearing surface and membrane waterproofing,Task
+Bridge Infra,Load Testing,Static Load Test Setup,Position load trucks for maximum stress configuration,Task
+Bridge Infra,Load Testing,Deflection Monitoring,Measure deck deflections under load conditions,Task
+Bridge Infra,Load Testing,Dynamic Load Testing,Conduct vehicle passage dynamic response testing,Task
+Bridge Infra,Load Testing,Load Test Certification,Document compliance with design load requirements,Documentation
+Bridge Infra,Opening Ceremony,Final Inspection & Acceptance,Complete regulatory inspection and obtain certificate,Task
+Bridge Infra,Opening Ceremony,Traffic Management Planning,Develop traffic transition and detour removal plan,Task
+Bridge Infra,Opening Ceremony,Inauguration Event Coordination,Coordinate ribbon-cutting ceremony and media coverage,Task
+Bridge Infra,Opening Ceremony,Handover to Operations Team,Transfer bridge maintenance responsibility to owner,Documentation
+Airport Expand,Master Planning & Design,Aviation Demand Forecast,Project passenger and aircraft movement growth,Task
+Airport Expand,Master Planning & Design,Terminal Capacity Analysis,Assess peak hour passenger processing capacity needs,Task
+Airport Expand,Master Planning & Design,Airside Layout Optimization,Design taxiway and apron configuration,Task
+Airport Expand,Master Planning & Design,Master Plan Documentation,Produce comprehensive airport development plan,Documentation
+Airport Expand,Runway Extension,Runway Safety Area Expansion,Clear and grade runway safety area extensions,Task
+Airport Expand,Runway Extension,Pavement Design & Construction,Construct reinforced concrete runway pavement,Task
+Airport Expand,Runway Extension,Precision Approach Lighting,Install Category II/III precision approach lighting system,Task
+Airport Expand,Runway Extension,Runway Marking & Signage,Apply ICAO-compliant markings and install guidance signs,Task
+Airport Expand,Terminal Building Structure,Steel Frame Erection,Erect structural steel frame for terminal building,Task
+Airport Expand,Terminal Building Structure,Curtain Wall Installation,Install glass curtain wall facade system,Task
+Airport Expand,Terminal Building Structure,Roof Membrane & Waterproofing,Install TPO roofing membrane and flashing details,Task
+Airport Expand,Terminal Building Structure,Fireproofing Application,Apply spray-applied fireproofing to structural steel,Task
+Airport Expand,Concourse Construction,Passenger Boarding Bridges,Install loading bridges at aircraft gates,Feature
+Airport Expand,Concourse Construction,Gate Hold Room Fit-out,Complete interior finishes and seating in gate areas,Task
+Airport Expand,Concourse Construction,Concourse Utilities Installation,Route mechanical, electrical and plumbing systems,Task
+Airport Expand,Concourse Construction,Wayfinding Signage Program,Design and install directional signage system,Task
+Airport Expand,Baggage Handling System,Conveyor System Installation,Install high-speed tilt-tray sortation conveyors,Task
+Airport Expand,Baggage Handling System,Early Bag Storage System,Implement automated early bag storage carousel,Feature
+Airport Expand,Baggage Handling System,RFID Bag Tracking,Deploy IATA Resolution 753 bag tracking system,Feature
+Airport Expand,Baggage Handling System,Sortation Logic Programming,Program PLC controls for bag routing logic,Task
+Airport Expand,Immigration & Security,E-Gate Installation,Install automated passport control e-gates,Feature
+Airport Expand,Immigration & Security,Security Checkpoint Design,Layout optimal configuration for screening lanes,Task
+Airport Expand,Immigration & Security,CT Baggage Scanner Deployment,Install computed tomography checkpoint scanners,Task
+Airport Expand,Immigration & Security,CBP Preclearance Facility,Construct US Customs pre-clearance facility,Task
+Airport Expand,Retail & F&B Fit-out,Retail Unit Tenant Coordination,Coordinate tenant design and construction schedules,Task
+Airport Expand,Retail & F&B Fit-out,Commercial Kitchen Installation,Install commercial kitchen equipment for restaurants,Task
+Airport Expand,Retail & F&B Fit-out,Duty-Free Shop Buildout,Complete luxury retail duty-free shop finishes,Task
+Airport Expand,Retail & F&B Fit-out,Point-of-Sale System Integration,Integrate retail POS with airport revenue systems,Task
+Airport Expand,Airport Systems Integration,FIDS Display Network,Install flight information display system screens,Task
+Airport Expand,Airport Systems Integration,Common Use Terminal Equipment,Deploy CUTE/CUPPS airline check-in systems,Feature
+Airport Expand,Airport Systems Integration,Building Management System,Integrate HVAC, lighting and security into BMS,Task
+Airport Expand,Airport Systems Integration,Airport Operational Database,Configure AODB for flight and resource management,Task
+Airport Expand,Operational Readiness,Operational Readiness Testing,Conduct full-scale passenger flow simulation exercises,Task
+Airport Expand,Operational Readiness,Staff Training Programs,Train airport and airline staff on new facilities,Task
+Airport Expand,Operational Readiness,Emergency Evacuation Drill,Execute full terminal evacuation exercise,Task
+Airport Expand,Operational Readiness,Airport Opening Certificate,Obtain aerodrome operating certificate from CAA,Documentation
+Metro System,Route Planning & Approval,Ridership Study & Modeling,Develop metro ridership demand forecasts,Task
+Metro System,Route Planning & Approval,Station Location Analysis,Optimize station locations for catchment areas,Task
+Metro System,Route Planning & Approval,Transit-Oriented Development Plan,Coordinate land use planning with metro alignment,Task
+Metro System,Route Planning & Approval,Environmental Clearance,Obtain environmental approval for metro corridor,Documentation
+Metro System,Tunneling Boring Machine Setup,TBM Specification & Procurement,Procure earth pressure balance tunnel boring machine,Task
+Metro System,Tunneling Boring Machine Setup,Launch Shaft Construction,Construct TBM launch and retrieval shafts,Task
+Metro System,Tunneling Boring Machine Setup,TBM Assembly & Testing,Assemble and function-test TBM underground,Task
+Metro System,Tunneling Boring Machine Setup,Ground Treatment Works,Execute ground improvement and grouting if required,Task
+Metro System,Tunnel Excavation,TBM Boring Operations,Operate TBM for tunnel advancement with segment installation,Task
+Metro System,Tunnel Excavation,Precast Segment Erection,Install reinforced concrete tunnel lining segments,Task
+Metro System,Tunnel Excavation,Ground Settlement Monitoring,Monitor surface settlement during tunneling operations,Task
+Metro System,Tunnel Excavation,Grouting & Waterproofing,Inject contact grouting behind segments for waterproofing,Task
+Metro System,Station Construction,Station Box Excavation,Execute top-down or cut-and-cover station excavation,Task
+Metro System,Station Construction,Platform Edge Screen Doors,Install automatic platform screen door system,Feature
+Metro System,Station Construction,Station Architectural Finishes,Apply tile, stone and wall finishes to station interiors,Task
+Metro System,Station Construction,Escalator & Elevator Installation,Install vertical circulation equipment to platforms,Task
+Metro System,Track Installation,Track Bed Preparation,Prepare concrete trackbed or install direct fixation fasteners,Task
+Metro System,Track Installation,Rail Laying & Welding,Install continuous welded rail track,Task
+Metro System,Track Installation,Third Rail Installation,Install 750V DC third rail power supply system,Task
+Metro System,Track Installation,Track Geometry Measurement,Survey and verify track alignment and profile,Task
+Metro System,Power & Signaling Systems,Traction Power Substations,Construct and commission rectifier substations,Task
+Metro System,Power & Signaling Systems,SCADA System Integration,Implement supervisory control and data acquisition,Task
+Metro System,Power & Signaling Systems,Communications-Based Train Control,Install CBTC automatic train protection system,Feature
+Metro System,Power & Signaling Systems,Telecommunications Backbone,Deploy fiber optic and radio communication networks,Task
+Metro System,Rolling Stock Procurement,Train Specification Development,Define metro car technical specifications and requirements,Documentation
+Metro System,Rolling Stock Procurement,Manufacturer Selection & Contract,Award rolling stock supply and maintenance contract,Task
+Metro System,Rolling Stock Procurement,Factory Acceptance Testing,Witness train testing at manufacturer facility,Task
+Metro System,Rolling Stock Procurement,Train Delivery & Commissioning,Receive and commission trains at depot,Task
+Metro System,Trial Operations,Integrated System Testing,Test all systems under simulated operations,Task
+Metro System,Trial Operations,Driver Training Program,Train metro operators on new rolling stock and route,Task
+Metro System,Trial Operations,Trial Running Period,Operate trial service for reliability demonstration,Task
+Metro System,Trial Operations,Safety Certification,Obtain independent safety assessment and certification,Documentation
+BIM Platform,BIM Standards Definition,Information Requirements Definition,Define employer's information requirements (EIR),Documentation
+BIM Platform,BIM Standards Definition,BIM Execution Plan Template,Develop standardized BEP template for projects,Documentation
+BIM Platform,BIM Standards Definition,Level of Detail Specification,Define LOD 100-500 requirements for model elements,Documentation
+BIM Platform,BIM Standards Definition,Common Data Environment Setup,Establish CDE protocols and folder structure standards,Task
+BIM Platform,3D Modeling Tools Integration,Revit & Navisworks Integration,Configure Autodesk platform integration workflows,Task
+BIM Platform,3D Modeling Tools Integration,Civil 3D Connector Setup,Integrate civil engineering design software,Task
+BIM Platform,3D Modeling Tools Integration,IFC Import/Export Validation,Test Industry Foundation Classes data exchange,Task
+BIM Platform,3D Modeling Tools Integration,Parametric Family Library,Develop standardized BIM component library,Task
+BIM Platform,Cloud Infrastructure Setup,Cloud Architecture Design,Design scalable multi-tenant cloud infrastructure,Task
+BIM Platform,Cloud Infrastructure Setup,Database & Storage Provisioning,Setup PostgreSQL database and object storage,Task
+BIM Platform,Cloud Infrastructure Setup,Security & Access Controls,Implement role-based access control and encryption,Task
+BIM Platform,Cloud Infrastructure Setup,Backup & Disaster Recovery,Configure automated backup and recovery procedures,Task
+BIM Platform,Collaboration Portal,Model Viewer Web Application,Develop WebGL-based 3D model viewer,Feature
+BIM Platform,Collaboration Portal,Issue Tracking & BCF Integration,Implement BIM Collaboration Format issue management,Feature
+BIM Platform,Collaboration Portal,Version Control System,Build model versioning and change tracking,Task
+BIM Platform,Collaboration Portal,Mobile App for Site Access,Develop iOS/Android app for field model access,Feature
+BIM Platform,Clash Detection System,Automated Clash Rules Engine,Configure geometric and workflow clash detection rules,Task
+BIM Platform,Clash Detection System,Multi-Discipline Coordination,Setup MEP-structure-architecture clash workflows,Task
+BIM Platform,Clash Detection System,Clash Report Generation,Automate clash report generation and distribution,Task
+BIM Platform,Clash Detection System,Resolve Critical Structural Clashes,Fix high-priority structural conflicts in model,Bug
+BIM Platform,Cost Estimation Module,5D BIM Quantity Takeoff,Link model elements to cost database for automated QTO,Feature
+BIM Platform,Cost Estimation Module,Cost Database Integration,Integrate RS Means or regional cost databases,Task
+BIM Platform,Cost Estimation Module,Change Order Impact Analysis,Track cost impacts of design changes,Feature
+BIM Platform,Cost Estimation Module,Value Engineering Dashboard,Build cost optimization analysis tools,Task
+BIM Platform,4D Scheduling Integration,Schedule-to-Model Linking,Link Primavera/MSP schedule to BIM model elements,Task
+BIM Platform,4D Scheduling Integration,Construction Sequencing Animation,Generate 4D construction sequence visualizations,Feature
+BIM Platform,4D Scheduling Integration,Site Logistics Planning,Model temporary facilities and staging areas,Task
+BIM Platform,4D Scheduling Integration,Schedule-Driven Resource Analysis,Analyze equipment and labor requirements over time,Task
+BIM Platform,Training & Adoption,BIM Coordinator Certification,Deliver BIM coordinator training and certification program,Task
+BIM Platform,Training & Adoption,Project Team Onboarding,Conduct project-specific BIM onboarding sessions,Task
+BIM Platform,Training & Adoption,User Documentation Portal,Create comprehensive user guides and video tutorials,Documentation
+BIM Platform,Training & Adoption,Helpdesk & Support Setup,Establish BIM support ticketing and escalation process,Task
+Tunnel Project,Geological Survey,Desktop Geological Study,Review existing geological maps and historical data,Task
+Tunnel Project,Geological Survey,Geophysical Survey Methods,Conduct seismic refraction and resistivity surveys,Task
+Tunnel Project,Geological Survey,Exploratory Drilling Program,Execute investigation boreholes along tunnel alignment,Task
+Tunnel Project,Geological Survey,Rock Mass Classification,Classify rock using Q-system and RMR methodology,Task
+Tunnel Project,TBM Procurement & Setup,TBM Technical Specification,Define TBM specifications based on ground conditions,Documentation
+Tunnel Project,TBM Procurement & Setup,Manufacturer Selection,Evaluate and select TBM manufacturer through tender,Task
+Tunnel Project,TBM Procurement & Setup,Factory Acceptance Testing,Witness TBM assembly and testing at factory,Task
+Tunnel Project,TBM Procurement & Setup,Site Assembly & Commissioning,Assemble TBM components in launch chamber,Task
+Tunnel Project,Ventilation System Design,Ventilation Load Calculations,Calculate fresh air requirements and smoke extraction,Task
+Tunnel Project,Ventilation System Design,Jet Fan Sizing & Layout,Design longitudinal ventilation jet fan system,Task
+Tunnel Project,Ventilation System Design,Emergency Ventilation Scenarios,Model fire and emergency ventilation strategies,Task
+Tunnel Project,Ventilation System Design,CFD Airflow Simulation,Perform computational fluid dynamics analysis,Task
+Tunnel Project,Excavation Phase 1,TBM Tunnel Boring,Advance TBM through first geological section,Task
+Tunnel Project,Excavation Phase 1,Segment Ring Installation,Install precast concrete lining segments behind TBM,Task
+Tunnel Project,Excavation Phase 1,Muck Removal & Disposal,Transport excavated material via conveyor to surface,Task
+Tunnel Project,Excavation Phase 1,Probe Drilling & Ground Treatment,Execute forward probing and pre-grouting as needed,Task
+Tunnel Project,Support Structure Installation,Rock Bolt Installation,Install systematic rock bolt ground support,Task
+Tunnel Project,Support Structure Installation,Steel Rib & Shotcrete Support,Apply shotcrete and install steel ribs in weak zones,Task
+Tunnel Project,Support Structure Installation,Convergence Monitoring,Monitor tunnel deformation with extensometers,Task
+Tunnel Project,Support Structure Installation,Final Concrete Lining,Construct cast-in-place final concrete lining,Task
+Tunnel Project,Drainage & Waterproofing,Drainage Pipe Installation,Install longitudinal drainage collection system,Task
+Tunnel Project,Drainage & Waterproofing,Waterproofing Membrane,Apply PVC or HDPE waterproofing membrane,Task
+Tunnel Project,Drainage & Waterproofing,Groundwater Pumping System,Install permanent dewatering and pumping stations,Task
+Tunnel Project,Drainage & Waterproofing,Invert Concrete Placement,Pour invert slab with integrated drainage channels,Task
+Tunnel Project,Final Lining,Final Lining Formwork,Install traveling formwork for cast-in-place lining,Task
+Tunnel Project,Final Lining,Reinforcement & Concrete Pour,Place rebar and pour final concrete lining,Task
+Tunnel Project,Final Lining,Surface Finishing,Apply architectural finish or protective coating,Task
+Tunnel Project,Final Lining,Expansion Joint Installation,Install movement joints at specified intervals,Task
+Tunnel Project,Safety Systems & Testing,Fire Detection System,Install linear heat detection and smoke sensors,Task
+Tunnel Project,Safety Systems & Testing,Emergency Lighting & Signage,Install emergency egress lighting and wayfinding,Task
+Tunnel Project,Safety Systems & Testing,Smoke Extraction Testing,Commission and test emergency ventilation systems,Task
+Tunnel Project,Safety Systems & Testing,Full-Scale Evacuation Drill,Conduct emergency evacuation exercise with authorities,Task
+Modular Housing,Factory Setup & Automation,Production Facility Layout,Design modular manufacturing facility floor plan,Task
+Modular Housing,Factory Setup & Automation,Automated Framing Equipment,Install automated wall panel framing stations,Task
+Modular Housing,Factory Setup & Automation,Overhead Crane System,Install gantry cranes for module movement,Task
+Modular Housing,Factory Setup & Automation,Material Handling Conveyors,Setup automated material delivery conveyors,Task
+Modular Housing,Module Design & Prototyping,Architectural Module Design,Design standardized module configurations and floor plans,Task
+Modular Housing,Module Design & Prototyping,Structural Engineering Analysis,Perform structural analysis for stacking and transport loads,Task
+Modular Housing,Module Design & Prototyping,Full-Scale Prototype Build,Construct and test full-scale prototype module,Task
+Modular Housing,Module Design & Prototyping,Building Code Compliance Review,Verify compliance with residential building codes,Documentation
+Modular Housing,Manufacturing Process Optimization,Production Line Balancing,Optimize workstation cycle times and flow,Task
+Modular Housing,Manufacturing Process Optimization,Lean Manufacturing Implementation,Apply 5S and continuous improvement methodologies,Task
+Modular Housing,Manufacturing Process Optimization,Assembly Jig Design,Design precision jigs for consistent module assembly,Task
+Modular Housing,Manufacturing Process Optimization,Reduce Assembly Defects,Address quality issues causing rework in production,Bug
+Modular Housing,Quality Control System,Inspection Checkpoint Protocol,Define hold points and inspection criteria,Documentation
+Modular Housing,Quality Control System,Dimensional Tolerance Verification,Implement laser measurement and verification,Task
+Modular Housing,Quality Control System,MEP Systems Testing,Test all mechanical, electrical and plumbing rough-ins,Task
+Modular Housing,Quality Control System,Weather-Tightness Testing,Conduct blower door and water penetration tests,Task
+Modular Housing,Logistics & Transportation,Module Transport Engineering,Design transport frames and lifting attachments,Task
+Modular Housing,Logistics & Transportation,Escort & Route Planning,Plan wide load transport routes and obtain permits,Task
+Modular Housing,Logistics & Transportation,Loading & Securing Procedures,Develop safe loading and tie-down procedures,Documentation
+Modular Housing,Logistics & Transportation,Delivery Scheduling Coordination,Coordinate just-in-time module delivery to sites,Task
+Modular Housing,Site Assembly,Site Foundation Preparation,Prepare level foundation and anchor points,Task
+Modular Housing,Site Assembly,Crane Lifting & Placement,Lift and position modules using mobile crane,Task
+Modular Housing,Site Assembly,Inter-Module Connection,Connect adjacent modules with structural bolts,Task
+Modular Housing,Site Assembly,Weather Seal Installation,Seal module joints and apply exterior cladding,Task
+Modular Housing,Finishing & Commissioning,Interior Finish Installation,Complete drywall finishing and trim carpentry,Task
+Modular Housing,Finishing & Commissioning,Final MEP Connections,Connect utilities between modules and to site services,Task
+Modular Housing,Finishing & Commissioning,Final Inspection & Testing,Complete building inspector final walkthrough,Task
+Modular Housing,Finishing & Commissioning,Homeowner Documentation Package,Prepare warranty and maintenance documentation,Documentation

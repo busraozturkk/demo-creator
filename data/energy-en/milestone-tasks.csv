@@ -1,0 +1,237 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Smart Grid,Grid Infrastructure Assessment,Network Topology Analysis,Map existing grid topology and substation locations,Task
+Smart Grid,Grid Infrastructure Assessment,Load Flow Study,Conduct power flow analysis and capacity assessment,Task
+Smart Grid,Grid Infrastructure Assessment,Asset Condition Assessment,Evaluate age and condition of grid assets,Task
+Smart Grid,Grid Infrastructure Assessment,Infrastructure Assessment Report,Document current state findings and recommendations,Documentation
+Smart Grid,Smart Meter Procurement,Technical Specification Development,Define AMI meter functional and technical requirements,Documentation
+Smart Grid,Smart Meter Procurement,Vendor RFP Process,Issue RFP and evaluate smart meter vendor proposals,Task
+Smart Grid,Smart Meter Procurement,Meter Type Testing,Conduct laboratory and field testing of candidate meters,Task
+Smart Grid,Smart Meter Procurement,Procurement Contract Award,Negotiate and award smart meter supply contract,Task
+Smart Grid,Communication Network Design,Communication Technology Selection,Select mesh RF, cellular or PLC communication technology,Task
+Smart Grid,Communication Network Design,Network Coverage Planning,Design communication network coverage and backhaul,Task
+Smart Grid,Communication Network Design,Cybersecurity Architecture,Design security controls for AMI network,Task
+Smart Grid,Communication Network Design,Network Design Documentation,Produce communication network design specifications,Documentation
+Smart Grid,Data Management Platform,MDMS Platform Selection,Select and procure meter data management system,Task
+Smart Grid,Data Management Platform,Data Architecture Design,Design data warehouse and analytics architecture,Task
+Smart Grid,Data Management Platform,Integration Architecture,Design integration with billing and OMS systems,Task
+Smart Grid,Data Management Platform,Platform Installation & Configuration,Install and configure MDMS software platform,Task
+Smart Grid,Advanced Analytics & Forecasting,Historical Data Preparation,Prepare training datasets from historical consumption,Task
+Smart Grid,Advanced Analytics & Forecasting,Load Forecasting Models,Develop machine learning load forecasting models,Feature
+Smart Grid,Advanced Analytics & Forecasting,Anomaly Detection Algorithms,Implement consumption anomaly and theft detection,Feature
+Smart Grid,Advanced Analytics & Forecasting,Demand Response Optimization,Build DR event optimization algorithms,Task
+Smart Grid,Meter Deployment Phase 1,Meter Exchange Logistics,Plan meter exchange logistics and workforce scheduling,Task
+Smart Grid,Meter Deployment Phase 1,Field Crew Training,Train installation crews on meter installation procedures,Task
+Smart Grid,Meter Deployment Phase 1,Residential Meter Installation,Install smart meters at residential premises,Task
+Smart Grid,Meter Deployment Phase 1,Meter Commissioning & Testing,Commission meters and verify communication connectivity,Task
+Smart Grid,Customer Portal Launch,Customer Portal Development,Develop web and mobile customer engagement portal,Feature
+Smart Grid,Customer Portal Launch,Real-Time Usage Display,Implement near real-time energy usage visualization,Feature
+Smart Grid,Customer Portal Launch,Rate Comparison Tools,Build rate plan comparison and recommendation tools,Task
+Smart Grid,Customer Portal Launch,Customer Communication Campaign,Launch customer awareness and education campaign,Task
+Smart Grid,Full Network Integration,Outage Management Integration,Integrate AMI with outage management system,Task
+Smart Grid,Full Network Integration,Distribution Automation,Implement automated switching and fault location,Feature
+Smart Grid,Full Network Integration,Voltage Optimization,Deploy conservation voltage reduction controls,Task
+Smart Grid,Full Network Integration,Grid Reliability Testing,Conduct end-to-end system reliability testing,Task
+Wind Farm,Environmental Impact Assessment,Avian & Bat Impact Study,Conduct bird and bat population impact assessment,Task
+Wind Farm,Environmental Impact Assessment,Noise Impact Modeling,Model operational noise impacts on nearby residences,Task
+Wind Farm,Environmental Impact Assessment,Visual Impact Analysis,Prepare photomontages and viewshed analysis,Task
+Wind Farm,Environmental Impact Assessment,EIA Report & Submission,Compile and submit environmental impact assessment,Documentation
+Wind Farm,Site Selection & Permits,Wind Resource Assessment,Analyze meteorological data and energy production potential,Task
+Wind Farm,Site Selection & Permits,Land Lease Negotiations,Negotiate land lease agreements with landowners,Task
+Wind Farm,Site Selection & Permits,Grid Interconnection Application,Submit interconnection request to transmission operator,Task
+Wind Farm,Site Selection & Permits,Development Permit Acquisition,Obtain zoning and construction permits,Task
+Wind Farm,Turbine Procurement,Turbine Technology Selection,Select turbine model based on site wind characteristics,Task
+Wind Farm,Turbine Procurement,Power Purchase Agreement,Negotiate PPA with utility or corporate offtaker,Task
+Wind Farm,Turbine Procurement,Turbine Supply Contract,Award turbine supply and warranty contract,Task
+Wind Farm,Turbine Procurement,Long Lead Equipment Orders,Place orders for transformers and switchgear,Task
+Wind Farm,Foundation Engineering,Geotechnical Investigation,Conduct soil boring and foundation design analysis,Task
+Wind Farm,Foundation Engineering,Foundation Design,Design reinforced concrete turbine foundations,Task
+Wind Farm,Foundation Engineering,Foundation Excavation,Excavate and prepare turbine foundation sites,Task
+Wind Farm,Foundation Engineering,Concrete Foundation Placement,Pour reinforced concrete turbine foundations,Task
+Wind Farm,Installation & Commissioning,Access Road Construction,Construct crane paths and turbine access roads,Task
+Wind Farm,Installation & Commissioning,Tower Erection,Assemble and erect wind turbine towers,Task
+Wind Farm,Installation & Commissioning,Nacelle & Rotor Installation,Install nacelle and rotor assemblies using heavy-lift crane,Task
+Wind Farm,Installation & Commissioning,Turbine Commissioning,Commission and test individual turbine systems,Task
+Wind Farm,Grid Connection,Collection System Construction,Install underground collection system cables,Task
+Wind Farm,Grid Connection,Substation Construction,Construct project substation and control building,Task
+Wind Farm,Grid Connection,Transmission Line Interconnection,Connect project to utility transmission system,Task
+Wind Farm,Grid Connection,Interconnection Testing,Conduct grid code compliance and protection testing,Task
+Wind Farm,Performance Optimization,SCADA System Configuration,Configure turbine SCADA monitoring and control,Task
+Wind Farm,Performance Optimization,Performance Ratio Analysis,Analyze actual vs expected energy production,Task
+Wind Farm,Performance Optimization,Curtailment Optimization,Optimize turbine operation during curtailment events,Task
+Wind Farm,Performance Optimization,Operations & Maintenance Setup,Establish O&M procedures and spare parts inventory,Documentation
+Solar Park,Land Acquisition & Permitting,Site Selection Analysis,Evaluate solar irradiance, topography and grid proximity,Task
+Solar Park,Land Acquisition & Permitting,Land Purchase or Lease,Secure land rights through purchase or long-term lease,Task
+Solar Park,Land Acquisition & Permitting,Zoning & Building Permits,Obtain local zoning approval and building permits,Task
+Solar Park,Land Acquisition & Permitting,Environmental Clearance,Complete environmental review and permitting,Task
+Solar Park,Solar Panel Procurement,Module Technology Selection,Select monocrystalline or bifacial module technology,Task
+Solar Park,Solar Panel Procurement,Module Quality Testing,Conduct factory acceptance testing of sample modules,Task
+Solar Park,Solar Panel Procurement,Module Supply Agreement,Award multi-year module supply contract,Task
+Solar Park,Solar Panel Procurement,Logistics & Import Coordination,Coordinate international shipping and customs clearance,Task
+Solar Park,Inverter & BOS Design,Inverter Sizing & Selection,Design DC:AC ratio and select central or string inverters,Task
+Solar Park,Inverter & BOS Design,Tracker System Design,Design single-axis tracker configuration and row spacing,Task
+Solar Park,Inverter & BOS Design,Electrical Design,Design medium voltage collection and protection systems,Task
+Solar Park,Inverter & BOS Design,Balance of System Procurement,Procure racking, cables and electrical equipment,Task
+Solar Park,Construction & Installation,Site Preparation & Grading,Clear vegetation and grade site to design elevations,Task
+Solar Park,Construction & Installation,Tracker Installation,Install tracker posts and torque tubes,Task
+Solar Park,Construction & Installation,Module Mounting,Mount solar modules on tracker structures,Task
+Solar Park,Construction & Installation,Electrical Installation,Install DC and AC electrical systems and inverters,Task
+Solar Park,Battery Storage Integration,Battery Technology Selection,Select lithium-ion battery chemistry and configuration,Task
+Solar Park,Battery Storage Integration,Battery System Procurement,Procure battery containers and energy management system,Task
+Solar Park,Battery Storage Integration,Battery Installation,Install battery containers and electrical connections,Task
+Solar Park,Battery Storage Integration,Energy Management System Config,Configure dispatch algorithms and grid services,Task
+Solar Park,Grid Interconnection,Substation Construction,Build project substation and switchgear,Task
+Solar Park,Grid Interconnection,Transmission Upgrades,Complete utility-required transmission system upgrades,Task
+Solar Park,Grid Interconnection,Interconnection Agreement,Execute interconnection agreement with utility,Documentation
+Solar Park,Grid Interconnection,Parallel Operation Testing,Conduct interconnection and parallel operation testing,Task
+Solar Park,Commissioning & Testing,String Testing & IV Curve Tracing,Test module strings and verify electrical characteristics,Task
+Solar Park,Commissioning & Testing,Inverter Commissioning,Commission and test inverter systems,Task
+Solar Park,Commissioning & Testing,Performance Ratio Testing,Measure initial system performance ratio,Task
+Solar Park,Commissioning & Testing,Warranty Activation,Activate equipment warranties and register assets,Documentation
+Grid Battery,Technology Selection,Battery Technology Assessment,Evaluate lithium-ion vs flow battery technologies,Task
+Grid Battery,Technology Selection,Use Case Definition,Define primary use case: arbitrage, frequency regulation or capacity,Task
+Grid Battery,Technology Selection,Economic Analysis,Model revenue streams and project economics,Task
+Grid Battery,Technology Selection,Technology Selection Report,Document technology selection rationale,Documentation
+Grid Battery,Site Preparation,Site Acquisition,Acquire or lease site near transmission substation,Task
+Grid Battery,Site Preparation,Geotechnical Investigation,Conduct soil testing and foundation design,Task
+Grid Battery,Site Preparation,Site Civil Works,Execute grading, drainage and foundation work,Task
+Grid Battery,Site Preparation,Security Fencing & Access,Install perimeter security and access control,Task
+Grid Battery,Battery Installation,Battery Container Delivery,Deliver and position battery containers on foundations,Task
+Grid Battery,Battery Installation,Battery Rack Installation,Install battery racks and modules in containers,Task
+Grid Battery,Battery Installation,Thermal Management System,Install HVAC systems for battery temperature control,Task
+Grid Battery,Battery Installation,DC Electrical Connections,Wire battery strings and DC bus connections,Task
+Grid Battery,Power Conversion System,Inverter Installation,Install bi-directional inverters and transformers,Task
+Grid Battery,Power Conversion System,Medium Voltage Switchgear,Install MV switchgear and protection relays,Task
+Grid Battery,Power Conversion System,Grid Interconnection,Connect system to utility transmission or distribution,Task
+Grid Battery,Power Conversion System,AC System Commissioning,Commission and test AC electrical systems,Task
+Grid Battery,Control & Monitoring System,Energy Management System,Install and configure battery energy management system,Task
+Grid Battery,Control & Monitoring System,SCADA Integration,Integrate with utility SCADA and market systems,Task
+Grid Battery,Control & Monitoring System,Remote Monitoring Setup,Configure remote monitoring and diagnostics,Task
+Grid Battery,Control & Monitoring System,Dispatch Algorithm Programming,Program optimal dispatch and bidding algorithms,Task
+Grid Battery,Safety & Fire Suppression,Fire Detection System,Install smoke and thermal detection systems,Task
+Grid Battery,Safety & Fire Suppression,Fire Suppression Installation,Install NFPA 855 compliant fire suppression system,Task
+Grid Battery,Safety & Fire Suppression,Emergency Shutdown System,Implement rapid shutdown and isolation systems,Feature
+Grid Battery,Safety & Fire Suppression,Safety Procedures Documentation,Develop emergency response and safety procedures,Documentation
+Grid Battery,Performance Testing,Capacity Testing,Conduct full charge/discharge capacity verification,Task
+Grid Battery,Performance Testing,Efficiency Testing,Measure round-trip AC-AC efficiency,Task
+Grid Battery,Performance Testing,Response Time Testing,Verify frequency response and ramp rate performance,Task
+Grid Battery,Performance Testing,Commissioning Report,Document performance test results and acceptance,Documentation
+Demand Response,Customer Segmentation,Customer Data Analysis,Analyze load profiles and segment customers,Task
+Demand Response,Customer Segmentation,Segmentation Model Development,Develop customer segmentation using clustering algorithms,Task
+Demand Response,Customer Segmentation,DR Potential Assessment,Estimate demand reduction potential by segment,Task
+Demand Response,Customer Segmentation,Target Segment Selection,Select priority customer segments for DR programs,Task
+Demand Response,Pricing Model Design,Rate Structure Analysis,Analyze existing rate structures and reform options,Task
+Demand Response,Pricing Model Design,Time-of-Use Rate Design,Design TOU or dynamic pricing rate structures,Task
+Demand Response,Pricing Model Design,Incentive Structure,Design event-based incentive payments,Task
+Demand Response,Pricing Model Design,Rate Filing & Approval,Prepare and file tariff with regulatory commission,Documentation
+Demand Response,IoT Device Integration,Smart Thermostat Program,Launch smart thermostat bring-your-own-device program,Feature
+Demand Response,IoT Device Integration,Device API Integration,Integrate with Nest, Ecobee and Honeywell APIs,Task
+Demand Response,IoT Device Integration,Direct Load Control Switches,Install utility-controlled switches on water heaters and HVAC,Task
+Demand Response,IoT Device Integration,Device Commissioning,Commission and test two-way device communication,Task
+Demand Response,Machine Learning Models,Load Forecasting Model,Develop short-term load forecasting models,Task
+Demand Response,Machine Learning Models,Customer Baseline Calculation,Implement baseline load calculation algorithms,Task
+Demand Response,Machine Learning Models,Event Optimization,Build event timing and notification optimization models,Task
+Demand Response,Machine Learning Models,Settlement & Measurement,Develop M&V algorithms for performance settlement,Task
+Demand Response,Customer App Development,Mobile App Design,Design customer-facing mobile application,Task
+Demand Response,Customer App Development,Real-Time Notifications,Implement push notifications for DR events,Feature
+Demand Response,Customer App Development,Gamification Features,Build engagement gamification and rewards,Feature
+Demand Response,Customer App Development,App Beta Testing,Conduct user acceptance testing with customer panel,Task
+Demand Response,Pilot Program,Pilot Customer Recruitment,Recruit customers for pilot program,Task
+Demand Response,Pilot Program,Pilot Program Execution,Execute pilot DR events and measure response,Task
+Demand Response,Pilot Program,Customer Feedback Collection,Gather customer feedback through surveys,Task
+Demand Response,Pilot Program,Pilot Results Analysis,Analyze pilot performance and economics,Task
+Demand Response,Incentive Management,Incentive Payment Processing,Automate incentive calculation and payment processing,Task
+Demand Response,Incentive Management,Performance Tracking,Track customer participation and performance,Task
+Demand Response,Incentive Management,Bill Credit Application,Apply DR credits to customer utility bills,Task
+Demand Response,Incentive Management,Fix Payment Calculation Errors,Resolve incentive calculation bugs in production,Bug
+Demand Response,Full Market Launch,Marketing Campaign Launch,Execute mass market customer acquisition campaign,Task
+Demand Response,Full Market Launch,Enrollment Processing,Process customer enrollments and device registrations,Task
+Demand Response,Full Market Launch,Call Center Training,Train call center representatives on DR programs,Task
+Demand Response,Full Market Launch,Program Evaluation,Conduct impact evaluation and regulatory reporting,Documentation
+Carbon Track,Emissions Baseline Assessment,Organizational Boundary Definition,Define operational and equity share reporting boundaries,Documentation
+Carbon Track,Emissions Baseline Assessment,Scope 1 & 2 Inventory,Calculate direct and purchased electricity emissions,Task
+Carbon Track,Emissions Baseline Assessment,Scope 3 Screening,Screen and prioritize material Scope 3 categories,Task
+Carbon Track,Emissions Baseline Assessment,Baseline Year Selection,Select and justify baseline year for reduction targets,Documentation
+Carbon Track,Data Collection Framework,Emission Source Identification,Identify and catalog all emission sources,Task
+Carbon Track,Data Collection Framework,Data Collection Templates,Develop standardized data collection templates,Documentation
+Carbon Track,Data Collection Framework,Data Management System,Implement carbon accounting software platform,Task
+Carbon Track,Data Collection Framework,Automated Data Integration,Integrate utility bills and fuel purchase data feeds,Task
+Carbon Track,Calculation Methodology,Emission Factor Selection,Select appropriate GHG Protocol emission factors,Documentation
+Carbon Track,Calculation Methodology,Calculation Procedures,Document calculation methodologies for each source,Documentation
+Carbon Track,Calculation Methodology,Quality Assurance Procedures,Develop QA/QC procedures for inventory quality,Documentation
+Carbon Track,Calculation Methodology,Uncertainty Assessment,Quantify data quality and calculation uncertainty,Task
+Carbon Track,Reporting Dashboard,Dashboard Design,Design executive and operational carbon dashboards,Task
+Carbon Track,Reporting Dashboard,KPI Visualization,Build carbon intensity and reduction tracking metrics,Feature
+Carbon Track,Reporting Dashboard,Trend Analysis & Forecasting,Implement emissions trend analysis and forecasting,Task
+Carbon Track,Reporting Dashboard,Automated Report Generation,Configure automated monthly and annual reports,Task
+Carbon Track,Third-Party Verification,Verification Scope Definition,Define verification scope and materiality thresholds,Documentation
+Carbon Track,Third-Party Verification,Evidence Package Preparation,Compile supporting evidence and documentation,Task
+Carbon Track,Third-Party Verification,Verifier Engagement,Engage ISO 14064 accredited verification body,Task
+Carbon Track,Third-Party Verification,Verification Statement,Obtain limited or reasonable assurance statement,Documentation
+Carbon Track,Regulatory Compliance,Regulatory Requirements Analysis,Analyze applicable GHG reporting regulations,Task
+Carbon Track,Regulatory Compliance,Compliance Calendar,Develop regulatory reporting deadline calendar,Documentation
+Carbon Track,Regulatory Compliance,Regulatory Submissions,Submit required regulatory GHG reports,Task
+Carbon Track,Regulatory Compliance,CDP & TCFD Reporting,Prepare voluntary CDP and TCFD disclosures,Documentation
+Carbon Track,Offset Management,Offset Strategy Development,Develop carbon offset procurement strategy,Documentation
+Carbon Track,Offset Management,Offset Project Evaluation,Evaluate and select high-quality offset projects,Task
+Carbon Track,Offset Management,Offset Purchase Agreements,Negotiate and execute offset purchase agreements,Task
+Carbon Track,Offset Management,Offset Registry Management,Manage offset retirement in voluntary registries,Task
+Nuclear Mod,Safety Systems Audit,Safety System Documentation Review,Review existing safety system design documentation,Documentation
+Nuclear Mod,Safety Systems Audit,Walkdown & Inspection,Conduct comprehensive plant walkdown and inspection,Task
+Nuclear Mod,Safety Systems Audit,Aging Assessment,Assess component aging and obsolescence issues,Task
+Nuclear Mod,Safety Systems Audit,Safety Audit Report,Document findings and modernization recommendations,Documentation
+Nuclear Mod,Regulatory Approval Process,License Amendment Application,Prepare and submit 10 CFR 50.59 evaluation,Documentation
+Nuclear Mod,Regulatory Approval Process,Safety Analysis Report Update,Update final safety analysis report chapters,Documentation
+Nuclear Mod,Regulatory Approval Process,NRC Review Coordination,Coordinate NRC staff review and RAI responses,Task
+Nuclear Mod,Regulatory Approval Process,License Amendment Issuance,Obtain NRC approval and license amendment,Task
+Nuclear Mod,Control Room Upgrade,Human Factors Engineering Study,Conduct human factors engineering analysis,Task
+Nuclear Mod,Control Room Upgrade,Digital Control System Design,Design microprocessor-based control system,Task
+Nuclear Mod,Control Room Upgrade,Control Panel Fabrication,Fabricate new digital control panels,Task
+Nuclear Mod,Control Room Upgrade,Control Room Installation,Install new control boards during outage,Task
+Nuclear Mod,Reactor Instrumentation,Instrumentation & Control Design,Design digital I&C system replacement,Task
+Nuclear Mod,Reactor Instrumentation,Instrument Procurement,Procure safety-qualified digital instruments,Task
+Nuclear Mod,Reactor Instrumentation,Factory Acceptance Testing,Conduct FAT of safety-critical instruments,Task
+Nuclear Mod,Reactor Instrumentation,Field Installation & Termination,Install instruments during refueling outage,Task
+Nuclear Mod,Emergency Systems Enhancement,Emergency Diesel Generator Upgrade,Modernize EDG control and monitoring systems,Task
+Nuclear Mod,Emergency Systems Enhancement,Spent Fuel Pool Instrumentation,Install enhanced SFP level instrumentation,Feature
+Nuclear Mod,Emergency Systems Enhancement,FLEX Equipment Procurement,Procure portable emergency response equipment,Task
+Nuclear Mod,Emergency Systems Enhancement,Emergency Procedure Updates,Update emergency operating procedures,Documentation
+Nuclear Mod,Staff Training & Certification,Training Program Development,Develop training materials for new systems,Documentation
+Nuclear Mod,Staff Training & Certification,Simulator Modifications,Modify control room simulator for new I&C,Task
+Nuclear Mod,Staff Training & Certification,Operator Requalification Training,Conduct operator requalification on new systems,Task
+Nuclear Mod,Staff Training & Certification,NRC Operator Exam,Administer operator license exam for modifications,Task
+Nuclear Mod,Testing & Validation,Pre-Operational Testing,Execute pre-operational test procedures,Task
+Nuclear Mod,Testing & Validation,Integrated System Validation,Conduct integrated system functional testing,Task
+Nuclear Mod,Testing & Validation,Setpoint Verification,Verify safety system actuation setpoints,Task
+Nuclear Mod,Testing & Validation,Test Results Documentation,Document test results and acceptance criteria,Documentation
+Nuclear Mod,Operational Handover,Post-Modification Testing,Complete post-modification testing program,Task
+Nuclear Mod,Operational Handover,Operational Readiness Review,Conduct management and NRC readiness reviews,Task
+Nuclear Mod,Operational Handover,Return to Service Authorization,Obtain authorization to return unit to service,Documentation
+Nuclear Mod,Operational Handover,Lessons Learned Documentation,Document implementation lessons learned,Documentation
+EV Charging,Network Planning & Site Selection,Market Analysis,Analyze EV adoption trends and charging demand,Task
+EV Charging,Network Planning & Site Selection,Site Selection Criteria,Define site selection criteria and scoring model,Documentation
+EV Charging,Network Planning & Site Selection,Geographic Site Analysis,Identify optimal charging site locations using GIS,Task
+EV Charging,Network Planning & Site Selection,Host Site Partnerships,Negotiate site agreements with retail and commercial partners,Task
+EV Charging,Charger Procurement,Charger Specification,Define Level 2 and DC fast charger requirements,Documentation
+EV Charging,Charger Procurement,Vendor Evaluation,Evaluate ChargePoint, EVgo and Electrify America options,Task
+EV Charging,Charger Procurement,Charger Purchase Agreement,Award charger supply contract,Task
+EV Charging,Charger Procurement,Warranty & Support Terms,Negotiate maintenance and warranty terms,Task
+EV Charging,Electrical Infrastructure,Utility Service Upgrade,Coordinate utility service upgrades for high-power charging,Task
+EV Charging,Electrical Infrastructure,Transformer & Panel Installation,Install step-down transformers and distribution panels,Task
+EV Charging,Electrical Infrastructure,Conduit & Wiring,Run electrical conduit and wiring to charger locations,Task
+EV Charging,Electrical Infrastructure,Load Management System,Install dynamic load management for demand control,Feature
+EV Charging,Installation & Commissioning,Site Preparation & Civil Works,Prepare concrete pads and trenching for chargers,Task
+EV Charging,Installation & Commissioning,Charger Mounting & Installation,Mount and install charging stations,Task
+EV Charging,Installation & Commissioning,Network Connectivity Setup,Configure cellular or WiFi network connectivity,Task
+EV Charging,Installation & Commissioning,Charger Commissioning & Testing,Commission chargers and conduct functionality testing,Task
+EV Charging,Payment System Integration,Payment Gateway Integration,Integrate credit card and mobile payment processing,Task
+EV Charging,Payment System Integration,Pricing Configuration,Configure time-of-use and session-based pricing,Task
+EV Charging,Payment System Integration,RFID Card System,Implement member RFID card authentication,Feature
+EV Charging,Payment System Integration,PCI Compliance Validation,Ensure PCI-DSS compliance for payment processing,Task
+EV Charging,Mobile App Development,App Design & Development,Develop iOS and Android mobile applications,Feature
+EV Charging,Mobile App Development,Station Locator & Availability,Implement real-time charger availability map,Feature
+EV Charging,Mobile App Development,Reservation System,Build charger reservation and scheduling feature,Feature
+EV Charging,Mobile App Development,Push Notifications,Implement charging status notifications,Task
+EV Charging,Marketing & Launch,Brand Development,Develop charging network brand identity,Task
+EV Charging,Marketing & Launch,Launch Marketing Campaign,Execute digital and outdoor advertising campaign,Task
+EV Charging,Marketing & Launch,Fleet Partnerships,Establish partnerships with fleet operators,Task
+EV Charging,Marketing & Launch,Incentive Programs,Launch promotional pricing and member incentives,Task

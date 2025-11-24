@@ -1,0 +1,237 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Smart Factory,Requirements Gathering & Process Analysis,Current State Process Mapping,Document existing manufacturing processes and workflows,Task
+Smart Factory,Requirements Gathering & Process Analysis,Stakeholder Interviews,Conduct interviews with operations and engineering teams,Task
+Smart Factory,Requirements Gathering & Process Analysis,Pain Point Identification,Identify bottlenecks and inefficiencies in current operations,Task
+Smart Factory,Requirements Gathering & Process Analysis,Requirements Documentation,Document functional and technical requirements,Documentation
+Smart Factory,Digital Twin Architecture Design,3D Factory Model Development,Create digital 3D model of factory layout,Task
+Smart Factory,Digital Twin Architecture Design,IoT Architecture Design,Design sensor network and data collection architecture,Task
+Smart Factory,Digital Twin Architecture Design,Simulation Engine Selection,Select discrete event simulation platform,Task
+Smart Factory,Digital Twin Architecture Design,Real-Time Data Integration,Design real-time data synchronization between physical and digital,Task
+Smart Factory,Sensor Integration & Data Collection,Sensor Selection & Procurement,Select temperature, vibration, pressure and vision sensors,Task
+Smart Factory,Sensor Integration & Data Collection,PLC & SCADA Integration,Integrate with existing PLC and SCADA systems,Task
+Smart Factory,Sensor Integration & Data Collection,Edge Computing Deployment,Deploy edge devices for local data processing,Task
+Smart Factory,Sensor Integration & Data Collection,Data Historian Implementation,Implement time-series database for sensor data,Task
+Smart Factory,Machine Learning Model Development,Feature Engineering,Engineer predictive features from sensor time-series data,Task
+Smart Factory,Machine Learning Model Development,Predictive Maintenance Models,Develop remaining useful life prediction models,Feature
+Smart Factory,Machine Learning Model Development,Quality Prediction Models,Build models to predict product quality defects,Feature
+Smart Factory,Machine Learning Model Development,Model Training & Validation,Train and validate models using historical data,Task
+Smart Factory,Automation System Integration,MES Integration,Integrate with manufacturing execution system,Task
+Smart Factory,Automation System Integration,ERP Integration,Connect to enterprise resource planning system,Task
+Smart Factory,Automation System Integration,Automated Workflow Orchestration,Implement automated production workflow triggers,Task
+Smart Factory,Automation System Integration,Fix Data Sync Issues,Resolve real-time data synchronization delays,Bug
+Smart Factory,Testing & Validation,Unit & Integration Testing,Conduct comprehensive system testing,Task
+Smart Factory,Testing & Validation,Simulation Validation,Validate digital twin simulation accuracy,Task
+Smart Factory,Testing & Validation,Performance Testing,Test system performance under production load,Task
+Smart Factory,Testing & Validation,User Acceptance Testing,Conduct UAT with operations personnel,Task
+Smart Factory,Production Deployment,Pilot Line Deployment,Deploy system on pilot production line,Task
+Smart Factory,Production Deployment,Production Rollout,Roll out to full production environment,Task
+Smart Factory,Production Deployment,Hypercare Support,Provide intensive post-go-live support,Task
+Smart Factory,Production Deployment,Performance Monitoring,Monitor system performance and ROI metrics,Task
+Smart Factory,Training & Documentation,Operator Training Program,Train production operators on new systems,Task
+Smart Factory,Training & Documentation,Engineer Training,Train engineers on digital twin and analytics tools,Task
+Smart Factory,Training & Documentation,System Administration Training,Train IT staff on system administration,Task
+Smart Factory,Training & Documentation,User Manual Development,Create comprehensive user documentation,Documentation
+EV Platform,Battery Technology Research,Lithium-Ion Chemistry Evaluation,Evaluate NMC, NCA and LFP battery chemistries,Task
+EV Platform,Battery Technology Research,Energy Density Analysis,Analyze energy density vs cost tradeoffs,Task
+EV Platform,Battery Technology Research,Thermal Management Design,Design battery thermal management system,Task
+EV Platform,Battery Technology Research,Battery Supplier Selection,Select and partner with battery cell manufacturer,Task
+EV Platform,Powertrain Design & Engineering,Electric Motor Design,Design high-efficiency permanent magnet motor,Task
+EV Platform,Powertrain Design & Engineering,Inverter & Power Electronics,Design power inverter and DC-DC converters,Task
+EV Platform,Powertrain Design & Engineering,Transmission Design,Design single or multi-speed EV transmission,Task
+EV Platform,Powertrain Design & Engineering,Regenerative Braking System,Implement regenerative braking energy recovery,Feature
+EV Platform,Chassis Development,Skateboard Platform Architecture,Design modular skateboard chassis platform,Task
+EV Platform,Chassis Development,Suspension System Design,Design independent suspension optimized for battery weight,Task
+EV Platform,Chassis Development,Crash Safety Engineering,Engineer crumple zones and battery protection,Task
+EV Platform,Chassis Development,Weight Reduction Program,Implement lightweight materials and design optimization,Task
+EV Platform,Integration Testing,Powertrain Dynamometer Testing,Conduct motor and powertrain dyno testing,Task
+EV Platform,Integration Testing,Vehicle Integration Build,Assemble complete alpha prototype vehicles,Task
+EV Platform,Integration Testing,System Integration Validation,Validate all systems integration and communication,Task
+EV Platform,Integration Testing,Fix Battery Management System Errors,Resolve BMS communication protocol issues,Bug
+EV Platform,Safety Certification,Crash Test Program,Conduct NCAP crash testing program,Task
+EV Platform,Safety Certification,Battery Safety Testing,Perform abuse testing per UN 38.3 standards,Task
+EV Platform,Safety Certification,Electrical Safety Compliance,Validate high voltage electrical safety systems,Task
+EV Platform,Safety Certification,Homologation Certification,Obtain type approval certification,Documentation
+EV Platform,Production Line Setup,Assembly Line Design,Design EV assembly line layout and processes,Task
+EV Platform,Production Line Setup,Equipment Procurement,Procure specialized EV assembly equipment,Task
+EV Platform,Production Line Setup,Line Installation & Commissioning,Install and commission production equipment,Task
+EV Platform,Production Line Setup,Process Validation,Validate manufacturing processes and quality,Task
+EV Platform,Pilot Production Run,Pre-Production Build,Manufacture pre-production validation vehicles,Task
+EV Platform,Pilot Production Run,Quality Control Validation,Validate quality control processes and acceptance criteria,Task
+EV Platform,Pilot Production Run,Process Optimization,Optimize cycle times and ergonomics,Task
+EV Platform,Pilot Production Run,Supplier Readiness,Validate supplier quality and delivery performance,Task
+EV Platform,Full-Scale Manufacturing Launch,Job 1 Ceremony,Launch full-scale production with first customer vehicle,Task
+EV Platform,Full-Scale Manufacturing Launch,Ramp Production Volume,Ramp production to target volume over 6 months,Task
+EV Platform,Full-Scale Manufacturing Launch,Quality Monitoring,Monitor production quality metrics and warranty data,Task
+EV Platform,Full-Scale Manufacturing Launch,Continuous Improvement,Implement kaizen and continuous improvement programs,Task
+Quality AI,Image Dataset Collection,Image Capture System Setup,Install high-resolution cameras on production lines,Task
+Quality AI,Image Dataset Collection,Dataset Collection,Collect thousands of product images including defects,Task
+Quality AI,Image Dataset Collection,Image Annotation,Annotate defects and quality issues in images,Task
+Quality AI,Image Dataset Collection,Dataset Augmentation,Augment dataset with rotations, crops and lighting variations,Task
+Quality AI,Defect Classification Model Training,CNN Architecture Selection,Select convolutional neural network architecture,Task
+Quality AI,Defect Classification Model Training,Transfer Learning Application,Apply transfer learning from ImageNet pretrained models,Task
+Quality AI,Defect Classification Model Training,Model Training,Train defect classification model on annotated dataset,Task
+Quality AI,Defect Classification Model Training,Hyperparameter Tuning,Optimize model hyperparameters for accuracy,Task
+Quality AI,Camera System Integration,Industrial Camera Installation,Install industrial-grade cameras at inspection points,Task
+Quality AI,Camera System Integration,Lighting System Design,Design consistent LED lighting for image quality,Task
+Quality AI,Camera System Integration,Trigger & Synchronization,Implement product presence triggering system,Task
+Quality AI,Camera System Integration,Image Preprocessing Pipeline,Build image preprocessing and enhancement pipeline,Task
+Quality AI,Real-time Processing Optimization,Model Optimization,Optimize model for inference speed using TensorRT,Task
+Quality AI,Real-time Processing Optimization,Edge Deployment,Deploy models on edge computing devices,Task
+Quality AI,Real-time Processing Optimization,Batch Processing,Implement batch inference for throughput optimization,Task
+Quality AI,Real-time Processing Optimization,Latency Reduction,Achieve sub-100ms inference latency requirement,Task
+Quality AI,Production Line Integration,PLC Integration,Integrate AI system with production line PLC,Task
+Quality AI,Production Line Integration,Reject Mechanism Control,Control automated reject mechanism for defects,Task
+Quality AI,Production Line Integration,Production Dashboard,Display real-time quality metrics on production floor,Feature
+Quality AI,Production Line Integration,MES Integration,Integrate quality data with manufacturing execution system,Task
+Quality AI,Performance Validation,Accuracy Benchmarking,Benchmark AI accuracy against human inspectors,Task
+Quality AI,Performance Validation,Sensitivity & Specificity Analysis,Measure false positive and false negative rates,Task
+Quality AI,Performance Validation,Production Pilot,Conduct pilot testing on production line,Task
+Quality AI,Performance Validation,Validation Report,Document validation results and business case,Documentation
+Quality AI,Continuous Improvement Setup,Model Retraining Pipeline,Implement automated model retraining workflow,Task
+Quality AI,Continuous Improvement Setup,Active Learning,Implement active learning for continuous improvement,Feature
+Quality AI,Continuous Improvement Setup,Performance Monitoring,Monitor model performance drift over time,Task
+Quality AI,Continuous Improvement Setup,Feedback Loop,Capture inspector feedback on AI predictions,Task
+Supply Chain,Data Integration & Cleansing,Data Source Inventory,Catalog all supply chain data sources,Task
+Supply Chain,Data Integration & Cleansing,ERP Data Integration,Extract supply chain data from ERP system,Task
+Supply Chain,Data Integration & Cleansing,Supplier Data Integration,Integrate supplier order and delivery data,Task
+Supply Chain,Data Integration & Cleansing,Data Quality Assessment,Profile and cleanse supply chain master data,Task
+Supply Chain,Demand Forecasting Model Development,Historical Demand Analysis,Analyze historical demand patterns and seasonality,Task
+Supply Chain,Demand Forecasting Model Development,Feature Engineering,Engineer predictive features including promotions and events,Task
+Supply Chain,Demand Forecasting Model Development,Time Series Forecasting,Develop ARIMA and Prophet forecasting models,Task
+Supply Chain,Demand Forecasting Model Development,Machine Learning Ensemble,Build ensemble model combining multiple algorithms,Feature
+Supply Chain,Inventory Optimization Algorithm,Safety Stock Calculation,Optimize safety stock levels by SKU and location,Task
+Supply Chain,Inventory Optimization Algorithm,Reorder Point Optimization,Calculate optimal reorder points and quantities,Task
+Supply Chain,Inventory Optimization Algorithm,Multi-Echelon Optimization,Optimize inventory across distribution network,Feature
+Supply Chain,Inventory Optimization Algorithm,Constraint Modeling,Model capacity and lead time constraints,Task
+Supply Chain,Supplier Network Integration,Supplier Portal Development,Build supplier collaboration portal,Feature
+Supply Chain,Supplier Network Integration,EDI Integration,Integrate EDI for purchase orders and ASNs,Task
+Supply Chain,Supplier Network Integration,Supplier Scorecarding,Implement supplier performance scorecards,Task
+Supply Chain,Supplier Network Integration,Collaborative Planning,Enable collaborative demand and supply planning,Task
+Supply Chain,Risk Assessment Module,Supply Chain Mapping,Map multi-tier supply chain network,Task
+Supply Chain,Risk Assessment Module,Risk Identification,Identify supply chain risk factors and scenarios,Task
+Supply Chain,Risk Assessment Module,Risk Scoring Model,Develop quantitative supply chain risk scoring,Feature
+Supply Chain,Risk Assessment Module,Early Warning System,Implement predictive risk alerts and notifications,Feature
+Supply Chain,Dashboard & Reporting,Executive Dashboard,Build supply chain KPI executive dashboard,Feature
+Supply Chain,Dashboard & Reporting,Operational Reports,Develop operational reports for planners,Task
+Supply Chain,Dashboard & Reporting,Exception Management,Highlight and prioritize supply chain exceptions,Feature
+Supply Chain,Dashboard & Reporting,Mobile Dashboard Access,Optimize dashboards for mobile device access,Task
+Supply Chain,Pilot Rollout,Pilot SKU Selection,Select pilot product categories for initial rollout,Task
+Supply Chain,Pilot Rollout,Pilot Site Deployment,Deploy system at pilot distribution center,Task
+Supply Chain,Pilot Rollout,Pilot Performance Measurement,Measure pilot performance against baseline,Task
+Supply Chain,Pilot Rollout,Lessons Learned,Document pilot insights and refinements,Documentation
+Supply Chain,Global Deployment,Regional Rollout Planning,Plan phased rollout to all regions,Task
+Supply Chain,Global Deployment,Change Management,Execute organizational change management program,Task
+Supply Chain,Global Deployment,Training & Enablement,Train supply chain planners and analysts globally,Task
+Supply Chain,Global Deployment,Post-Implementation Support,Provide ongoing support and optimization,Task
+Robotics Line,Safety Assessment & Standards Review,Robot Safety Standards Review,Review ISO 10218 and ANSI/RIA R15.06 standards,Documentation
+Robotics Line,Safety Assessment & Standards Review,Risk Assessment,Conduct comprehensive robot safety risk assessment,Task
+Robotics Line,Safety Assessment & Standards Review,Safety Requirements Definition,Define safety system requirements and safeguards,Documentation
+Robotics Line,Safety Assessment & Standards Review,Ergonomics Assessment,Assess human-robot collaboration ergonomics,Task
+Robotics Line,Robot Selection & Procurement,Application Analysis,Analyze assembly tasks and robot requirements,Task
+Robotics Line,Robot Selection & Procurement,Robot Vendor Evaluation,Evaluate industrial robot vendors and models,Task
+Robotics Line,Robot Selection & Procurement,Robot Procurement,Procure industrial robots and controllers,Task
+Robotics Line,Robot Selection & Procurement,Gripper & Tooling Selection,Select end-effectors and tooling,Task
+Robotics Line,End-Effector Design,Custom Gripper Design,Design custom end-effector for specific parts,Task
+Robotics Line,End-Effector Design,Vacuum & Pneumatic Systems,Design vacuum or pneumatic gripper systems,Task
+Robotics Line,End-Effector Design,Force/Torque Sensing,Integrate force-torque sensors for compliant assembly,Feature
+Robotics Line,End-Effector Design,Quick-Change Tooling,Implement automatic tool changer for flexibility,Feature
+Robotics Line,Programming & Simulation,Offline Programming,Program robot paths using offline programming software,Task
+Robotics Line,Programming & Simulation,Simulation & Validation,Simulate and validate robot motions in virtual environment,Task
+Robotics Line,Programming & Simulation,Collision Detection,Implement collision detection and avoidance,Task
+Robotics Line,Programming & Simulation,Cycle Time Optimization,Optimize robot trajectories for minimum cycle time,Task
+Robotics Line,Assembly Line Integration,Robot Cell Installation,Install robot cells on assembly line,Task
+Robotics Line,Assembly Line Integration,Part Presentation System,Design and install part feeders and fixtures,Task
+Robotics Line,Assembly Line Integration,Vision System Integration,Integrate vision guidance for part localization,Feature
+Robotics Line,Assembly Line Integration,PLC & Safety Integration,Integrate robots with line PLC and safety systems,Task
+Robotics Line,Worker Training Programs,Robot Safety Training,Train workers on robot safety and collaboration,Task
+Robotics Line,Worker Training Programs,Robot Operation Training,Train operators on robot programming and operation,Task
+Robotics Line,Worker Training Programs,Maintenance Training,Train maintenance technicians on robot maintenance,Task
+Robotics Line,Worker Training Programs,Emergency Procedures,Train staff on emergency stop and recovery procedures,Documentation
+Robotics Line,Performance Monitoring,Cycle Time Monitoring,Monitor robot cycle times and throughput,Task
+Robotics Line,Performance Monitoring,Uptime & Reliability,Track robot uptime and failure modes,Task
+Robotics Line,Performance Monitoring,Quality Metrics,Monitor assembly quality and defect rates,Task
+Robotics Line,Performance Monitoring,OEE Dashboard,Develop overall equipment effectiveness dashboard,Feature
+IoT Sensors,Sensor Network Design,Sensor Requirements Definition,Define sensor types, ranges and accuracy requirements,Documentation
+IoT Sensors,Sensor Network Design,Network Topology Design,Design mesh network topology and gateway placement,Task
+IoT Sensors,Sensor Network Design,Communication Protocol Selection,Select LoRaWAN, Zigbee or industrial wireless protocol,Task
+IoT Sensors,Sensor Network Design,Power & Battery Strategy,Design battery-powered or energy harvesting strategy,Task
+IoT Sensors,Gateway Infrastructure Setup,IoT Gateway Deployment,Install and configure IoT gateways,Task
+IoT Sensors,Gateway Infrastructure Setup,Network Configuration,Configure wireless network and security,Task
+IoT Sensors,Gateway Infrastructure Setup,Backhaul Connectivity,Setup cellular or ethernet backhaul connectivity,Task
+IoT Sensors,Gateway Infrastructure Setup,Edge Computing Setup,Deploy edge computing capability at gateways,Task
+IoT Sensors,Data Pipeline Development,MQTT Broker Deployment,Deploy MQTT message broker for IoT data,Task
+IoT Sensors,Data Pipeline Development,Stream Processing,Implement real-time stream processing with Kafka,Task
+IoT Sensors,Data Pipeline Development,Time-Series Database,Deploy InfluxDB or TimescaleDB for sensor data,Task
+IoT Sensors,Data Pipeline Development,Data Retention Policies,Define data aggregation and retention policies,Documentation
+IoT Sensors,Predictive Analytics Engine,Anomaly Detection Models,Develop statistical anomaly detection algorithms,Feature
+IoT Sensors,Predictive Analytics Engine,Predictive Maintenance Models,Build machine learning models for equipment failure prediction,Feature
+IoT Sensors,Predictive Analytics Engine,Root Cause Analysis,Implement correlation analysis for root cause identification,Task
+IoT Sensors,Predictive Analytics Engine,Remaining Useful Life Prediction,Predict equipment remaining useful life,Feature
+IoT Sensors,Alert & Notification System,Threshold-Based Alerting,Configure threshold-based alert rules,Task
+IoT Sensors,Alert & Notification System,ML-Based Alerting,Implement machine learning based intelligent alerting,Feature
+IoT Sensors,Alert & Notification System,Multi-Channel Notifications,Send alerts via email, SMS and push notifications,Task
+IoT Sensors,Alert & Notification System,Alert Escalation,Implement alert escalation and acknowledgment workflow,Task
+IoT Sensors,Mobile App Development,Mobile Dashboard App,Develop mobile app for real-time sensor monitoring,Feature
+IoT Sensors,Mobile App Development,Alert Management,Enable mobile alert viewing and acknowledgment,Task
+IoT Sensors,Mobile App Development,Historical Data Visualization,Visualize sensor trends and historical data,Feature
+IoT Sensors,Mobile App Development,Offline Mode Support,Support offline mode with sync when connected,Task
+IoT Sensors,Full Deployment,Sensor Installation,Install sensors across all manufacturing equipment,Task
+IoT Sensors,Full Deployment,Commissioning & Testing,Commission and test all sensor nodes,Task
+IoT Sensors,Full Deployment,Integration Validation,Validate end-to-end data flow and analytics,Task
+IoT Sensors,Full Deployment,Documentation & Handover,Document sensor locations and handover to operations,Documentation
+3D Printing,Material Research & Testing,Material Selection,Evaluate metal powders, polymers and composite materials,Task
+3D Printing,Material Research & Testing,Material Properties Testing,Conduct mechanical property testing of printed parts,Task
+3D Printing,Material Research & Testing,Process Parameter Optimization,Optimize print parameters for each material,Task
+3D Printing,Material Research & Testing,Material Qualification,Qualify materials for production applications,Documentation
+3D Printing,Printer Calibration & Optimization,Printer Baseline Calibration,Calibrate printer axes, lasers and deposition systems,Task
+3D Printing,Printer Calibration & Optimization,Print Quality Optimization,Optimize layer adhesion and surface finish,Task
+3D Printing,Printer Calibration & Optimization,Speed vs Quality Tradeoffs,Establish print profiles for different quality/speed needs,Task
+3D Printing,Printer Calibration & Optimization,Maintenance Procedures,Develop preventive maintenance procedures,Documentation
+3D Printing,Design Software Integration,CAD Software Integration,Integrate with SolidWorks, CATIA or NX,Task
+3D Printing,Design Software Integration,Topology Optimization,Implement generative design and topology optimization,Feature
+3D Printing,Design Software Integration,Design for Additive Manufacturing,Develop DFAM guidelines and tools,Documentation
+3D Printing,Design Software Integration,Slicing & Path Planning,Optimize slicing parameters and tool paths,Task
+3D Printing,Quality Control Procedures,In-Process Monitoring,Implement thermal imaging and defect detection,Feature
+3D Printing,Quality Control Procedures,Post-Process Inspection,Define dimensional and visual inspection procedures,Documentation
+3D Printing,Quality Control Procedures,NDT Testing,Implement non-destructive testing for critical parts,Task
+3D Printing,Quality Control Procedures,First Article Inspection,Conduct comprehensive first article inspection,Task
+3D Printing,Production Workflow Setup,Job Management System,Implement 3D printing job queue and scheduling,Task
+3D Printing,Production Workflow Setup,Material Inventory Management,Track powder and material inventory,Task
+3D Printing,Production Workflow Setup,Post-Processing Workflow,Define heat treatment and finishing workflows,Documentation
+3D Printing,Production Workflow Setup,Work Order Integration,Integrate with ERP work order system,Task
+3D Printing,Staff Training,Additive Manufacturing Theory,Train engineers on AM principles and applications,Task
+3D Printing,Staff Training,Printer Operation Training,Train operators on 3D printer operation,Task
+3D Printing,Staff Training,Safety Training,Train staff on metal powder handling and laser safety,Documentation
+3D Printing,Staff Training,Quality Control Training,Train QC inspectors on AM-specific inspection,Task
+3D Printing,Pilot Projects,Pilot Part Selection,Select pilot parts for additive manufacturing,Task
+3D Printing,Pilot Projects,Design Optimization,Redesign parts for additive manufacturing,Task
+3D Printing,Pilot Projects,Prototype & Validation,Print prototypes and validate performance,Task
+3D Printing,Pilot Projects,Production Qualification,Qualify parts for production use,Documentation
+Product PLM,Current System Assessment,PLM System Inventory,Document current PLM and engineering systems,Task
+Product PLM,Current System Assessment,User Needs Assessment,Assess engineering user requirements and pain points,Task
+Product PLM,Current System Assessment,Data Migration Assessment,Assess legacy data quality and migration complexity,Task
+Product PLM,Current System Assessment,Business Case Development,Develop business case for PLM implementation,Documentation
+Product PLM,PLM Platform Selection,Requirements Definition,Define functional and technical requirements,Documentation
+Product PLM,PLM Platform Selection,Vendor Evaluation,Evaluate Siemens Teamcenter, PTC Windchill and Dassault ENOVIA,Task
+Product PLM,PLM Platform Selection,Reference Customer Visits,Visit reference customers using shortlisted systems,Task
+Product PLM,PLM Platform Selection,Vendor Selection,Select PLM vendor and negotiate contract,Task
+Product PLM,Data Migration Strategy,Data Mapping,Map legacy data to PLM data model,Documentation
+Product PLM,Data Migration Strategy,Data Cleansing,Cleanse and standardize product data,Task
+Product PLM,Data Migration Strategy,Migration Tool Development,Develop automated data migration scripts,Task
+Product PLM,Data Migration Strategy,Migration Testing,Execute multiple migration dry runs and validation,Task
+Product PLM,Customization & Configuration,Workflow Configuration,Configure engineering change and release workflows,Task
+Product PLM,Customization & Configuration,Attribute & Metadata Configuration,Configure part attributes and metadata fields,Task
+Product PLM,Customization & Configuration,Lifecycle & Access Control,Configure product lifecycle states and access rules,Task
+Product PLM,Customization & Configuration,Custom Development,Develop custom extensions and integrations,Task
+Product PLM,Integration with CAD/CAM Systems,CAD Integration,Integrate with CATIA, NX or SolidWorks,Task
+Product PLM,Integration with CAD/CAM Systems,CAM Integration,Integrate with Mastercam or NX CAM,Task
+Product PLM,Integration with CAD/CAM Systems,Visualization Integration,Implement lightweight 3D visualization,Feature
+Product PLM,Integration with CAD/CAM Systems,Fix CAD Check-in Errors,Resolve errors in CAD file check-in process,Bug
+Product PLM,User Acceptance Testing,Test Case Development,Develop comprehensive UAT test cases,Documentation
+Product PLM,User Acceptance Testing,UAT Execution,Execute user acceptance testing with engineers,Task
+Product PLM,User Acceptance Testing,Issue Resolution,Resolve UAT defects and configuration issues,Bug
+Product PLM,User Acceptance Testing,UAT Sign-Off,Obtain business sign-off for production go-live,Documentation
+Product PLM,Rollout & Change Management,Training Program Development,Develop role-based PLM training curriculum,Documentation
+Product PLM,Rollout & Change Management,End-User Training,Train engineers and product managers on PLM,Task
+Product PLM,Rollout & Change Management,Change Communication,Execute change management communication plan,Task
+Product PLM,Rollout & Change Management,Production Go-Live,Execute production cutover and go-live,Task

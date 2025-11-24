@@ -1,0 +1,237 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Smart Factory,Anforderungserhebung & Prozessanalyse,Ist-Zustand-Prozess-Mapping,Dokumentation bestehender Fertigungsprozesse und Arbeitsabläufe,Task
+Smart Factory,Anforderungserhebung & Prozessanalyse,Stakeholder-Interviews,Durchführung von Interviews mit Betriebs- und Engineering-Teams,Task
+Smart Factory,Anforderungserhebung & Prozessanalyse,Pain-Point-Identifikation,Identifizierung von Engpässen und Ineffizienzen in aktuellen Operationen,Task
+Smart Factory,Anforderungserhebung & Prozessanalyse,Anforderungsdokumentation,Dokumentation funktionaler und technischer Anforderungen,Documentation
+Smart Factory,Digital-Twin-Architekturdesign,3D-Fabrikmodell-Entwicklung,Erstellung digitales 3D-Modell des Fabriklayouts,Task
+Smart Factory,Digital-Twin-Architekturdesign,IoT-Architekturdesign,Design von Sensornetzwerk- und Datenerfassungsarchitektur,Task
+Smart Factory,Digital-Twin-Architekturdesign,Simulationsengine-Auswahl,Auswahl diskrete Ereignissimulationsplattform,Task
+Smart Factory,Digital-Twin-Architekturdesign,Echtzeit-Datenintegration,Design von Echtzeit-Datensynchronisation zwischen physisch und digital,Task
+Smart Factory,Sensorintegration & Datenerfassung,Sensorauswahl & Beschaffung,Auswahl von Temperatur-, Vibrations-, Druck- und Vision-Sensoren,Task
+Smart Factory,Sensorintegration & Datenerfassung,PLC- & SCADA-Integration,Integration mit bestehenden PLC- und SCADA-Systemen,Task
+Smart Factory,Sensorintegration & Datenerfassung,Edge-Computing-Einführung,Einsatz von Edge-Geräten für lokale Datenverarbeitung,Task
+Smart Factory,Sensorintegration & Datenerfassung,Data-Historian-Implementierung,Implementierung Zeitreihen-Datenbank für Sensordaten,Task
+Smart Factory,Machine-Learning-Modellentwicklung,Feature-Engineering,Engineering prädiktiver Features aus Sensor-Zeitreihendaten,Task
+Smart Factory,Machine-Learning-Modellentwicklung,Predictive-Maintenance-Modelle,Entwicklung von Restnutzungsdauer-Vorhersagemodellen,Feature
+Smart Factory,Machine-Learning-Modellentwicklung,Qualitätsvorhersagemodelle,Aufbau von Modellen zur Vorhersage von Produktqualitätsdefekten,Feature
+Smart Factory,Machine-Learning-Modellentwicklung,Modelltraining & Validierung,Training und Validierung von Modellen anhand historischer Daten,Task
+Smart Factory,Automatisierungssystemintegration,MES-Integration,Integration mit Manufacturing Execution System,Task
+Smart Factory,Automatisierungssystemintegration,ERP-Integration,Anbindung an Enterprise Resource Planning-System,Task
+Smart Factory,Automatisierungssystemintegration,Automatisierte Workflow-Orchestrierung,Implementierung automatisierter Produktionsworkflow-Trigger,Task
+Smart Factory,Automatisierungssystemintegration,Behebung Datensynchronisationsprobleme,Lösung von Echtzeit-Datensynchronisationsverzögerungen,Bug
+Smart Factory,Testen & Validierung,Unit- & Integrationstests,Durchführung umfassender Systemtests,Task
+Smart Factory,Testen & Validierung,Simulationsvalidierung,Validierung der Digital-Twin-Simulationsgenauigkeit,Task
+Smart Factory,Testen & Validierung,Leistungstests,Test der Systemleistung unter Produktionslast,Task
+Smart Factory,Testen & Validierung,Benutzerakzeptanztests,Durchführung von UAT mit Betriebspersonal,Task
+Smart Factory,Produktionseinführung,Pilotlinien-Einführung,Einsatz des Systems auf Pilot-Produktionslinie,Task
+Smart Factory,Produktionseinführung,Produktions-Rollout,Rollout in vollständige Produktionsumgebung,Task
+Smart Factory,Produktionseinführung,Hypercare-Support,Bereitstellung intensiver Post-Go-Live-Unterstützung,Task
+Smart Factory,Produktionseinführung,Leistungsüberwachung,Überwachung von Systemleistung und ROI-Metriken,Task
+Smart Factory,Schulung & Dokumentation,Operator-Schulungsprogramm,Schulung von Produktionsoperatoren auf neuen Systemen,Task
+Smart Factory,Schulung & Dokumentation,Ingenieur-Schulung,Schulung von Ingenieuren auf Digital-Twin- und Analytik-Tools,Task
+Smart Factory,Schulung & Dokumentation,Systemadministrations-Schulung,Schulung von IT-Personal zur Systemadministration,Task
+Smart Factory,Schulung & Dokumentation,Benutzerhandbuch-Entwicklung,Erstellung umfassender Benutzerdokumentation,Documentation
+EV Platform,Batterietechnologieforschung,Lithium-Ionen-Chemie-Evaluierung,Evaluierung von NMC-, NCA- und LFP-Batteriechemien,Task
+EV Platform,Batterietechnologieforschung,Energiedichte-Analyse,Analyse von Energiedichte vs. Kosten-Abwägungen,Task
+EV Platform,Batterietechnologieforschung,Thermomanagement-Design,Design von Batterie-Thermomanagementsystem,Task
+EV Platform,Batterietechnologieforschung,Batterielieferanten-Auswahl,Auswahl und Partnerschaft mit Batteriezellenhersteller,Task
+EV Platform,Antriebsstrangdesign & Engineering,Elektromotor-Design,Design hocheffizienter Permanentmagnetmotor,Task
+EV Platform,Antriebsstrangdesign & Engineering,Wechselrichter & Leistungselektronik,Design von Leistungswechselrichter und DC-DC-Wandlern,Task
+EV Platform,Antriebsstrangdesign & Engineering,Getriebe-Design,Design von Eingang- oder Mehrganggetriebe für EV,Task
+EV Platform,Antriebsstrangdesign & Engineering,Rekuperatives Bremssystem,Implementierung rekuperativer Bremsenergierückgewinnung,Feature
+EV Platform,Fahrgestellentwicklung,Skateboard-Plattform-Architektur,Design modularer Skateboard-Fahrgestellplattform,Task
+EV Platform,Fahrgestellentwicklung,Aufhängungssystem-Design,Design unabhängiger Aufhängung optimiert für Batteriegewicht,Task
+EV Platform,Fahrgestellentwicklung,Crash-Sicherheits-Engineering,Engineering von Knautschzonen und Batterieschutz,Task
+EV Platform,Fahrgestellentwicklung,Gewichtsreduktionsprogramm,Implementierung leichter Materialien und Design-Optimierung,Task
+EV Platform,Integrationstests,Antriebsstrang-Dynamometer-Tests,Durchführung von Motor- und Antriebsstrang-Dyno-Tests,Task
+EV Platform,Integrationstests,Fahrzeugintegrations-Bau,Montage kompletter Alpha-Prototyp-Fahrzeuge,Task
+EV Platform,Integrationstests,Systemintegrationsvalidierung,Validierung aller Systemintegration und Kommunikation,Task
+EV Platform,Integrationstests,Behebung Batteriemanagementsystem-Fehler,Lösung von BMS-Kommunikationsprotokollproblemen,Bug
+EV Platform,Sicherheitszertifizierung,Crashtest-Programm,Durchführung NCAP-Crashtest-Programm,Task
+EV Platform,Sicherheitszertifizierung,Batteriesicherheitstests,Durchführung Missbrauchstests nach UN 38.3-Standards,Task
+EV Platform,Sicherheitszertifizierung,Elektrische Sicherheits-Compliance,Validierung von Hochspannungs-Elektrischer-Sicherheitssystemen,Task
+EV Platform,Sicherheitszertifizierung,Homologations-Zertifizierung,Erlangung Typgenehmigungszertifizierung,Documentation
+EV Platform,Produktionslinienaufbau,Montagelinien-Design,Design von EV-Montagelinien-Layout und Prozessen,Task
+EV Platform,Produktionslinienaufbau,Ausrüstungsbeschaffung,Beschaffung spezialisierter EV-Montageausrüstung,Task
+EV Platform,Produktionslinienaufbau,Linieninstallation & Inbetriebnahme,Installation und Inbetriebnahme von Produktionsausrüstung,Task
+EV Platform,Produktionslinienaufbau,Prozessvalidierung,Validierung von Fertigungsprozessen und Qualität,Task
+EV Platform,Pilot-Produktionslauf,Vorproduktions-Bau,Herstellung von Vorproduktions-Validierungsfahrzeugen,Task
+EV Platform,Pilot-Produktionslauf,Qualitätskontroll-Validierung,Validierung von Qualitätskontrollprozessen und Annahmekriterien,Task
+EV Platform,Pilot-Produktionslauf,Prozessoptimierung,Optimierung von Zykluszeiten und Ergonomie,Task
+EV Platform,Pilot-Produktionslauf,Lieferanten-Bereitschaft,Validierung von Lieferantenqualität und Lieferleistung,Task
+EV Platform,Vollständiger Fertigungsstart,Job-1-Zeremonie,Start der Vollproduktion mit erstem Kundenfahrzeug,Task
+EV Platform,Vollständiger Fertigungsstart,Produktionsvolumen-Hochlauf,Hochlauf der Produktion auf Zielvolumen über 6 Monate,Task
+EV Platform,Vollständiger Fertigungsstart,Qualitätsüberwachung,Überwachung von Produktionsqualitätsmetriken und Garantiedaten,Task
+EV Platform,Vollständiger Fertigungsstart,Kontinuierliche Verbesserung,Implementierung von Kaizen- und kontinuierlichen Verbesserungsprogrammen,Task
+Quality AI,Bilddatensatzerfassung,Bilderfassungssystem-Einrichtung,Installation hochauflösender Kameras auf Produktionslinien,Task
+Quality AI,Bilddatensatzerfassung,Datensatzerfassung,Erfassung Tausender Produktbilder einschließlich Defekten,Task
+Quality AI,Bilddatensatzerfassung,Bildannotation,Annotation von Defekten und Qualitätsproblemen in Bildern,Task
+Quality AI,Bilddatensatzerfassung,Datensatz-Augmentation,Augmentation des Datensatzes mit Rotationen, Crops und Beleuchtungsvariationen,Task
+Quality AI,Training des Fehlerklassifizierungsmodells,CNN-Architekturauswahl,Auswahl Convolutional Neural Network-Architektur,Task
+Quality AI,Training des Fehlerklassifizierungsmodells,Transfer-Learning-Anwendung,Anwendung von Transfer-Learning aus ImageNet-vortrainierten Modellen,Task
+Quality AI,Training des Fehlerklassifizierungsmodells,Modelltraining,Training Fehlerklassifizierungsmodell auf annotiertem Datensatz,Task
+Quality AI,Training des Fehlerklassifizierungsmodells,Hyperparameter-Tuning,Optimierung von Modell-Hyperparametern für Genauigkeit,Task
+Quality AI,Kamerasystemintegration,Industriekamera-Installation,Installation industrietauglicher Kameras an Inspektionspunkten,Task
+Quality AI,Kamerasystemintegration,Beleuchtungssystem-Design,Design konsistenter LED-Beleuchtung für Bildqualität,Task
+Quality AI,Kamerasystemintegration,Trigger & Synchronisation,Implementierung Produktpräsenz-Triggersystem,Task
+Quality AI,Kamerasystemintegration,Bildvorverarbeitungs-Pipeline,Aufbau Bildvorverarbeitungs- und Verbesserungs-Pipeline,Task
+Quality AI,Echtzeit-Verarbeitungsoptimierung,Modelloptimierung,Optimierung des Modells für Inferenzgeschwindigkeit mittels TensorRT,Task
+Quality AI,Echtzeit-Verarbeitungsoptimierung,Edge-Deployment,Einsatz von Modellen auf Edge-Computing-Geräten,Task
+Quality AI,Echtzeit-Verarbeitungsoptimierung,Batch-Verarbeitung,Implementierung Batch-Inferenz für Durchsatzoptimierung,Task
+Quality AI,Echtzeit-Verarbeitungsoptimierung,Latenzreduzierung,Erreichung von Sub-100ms-Inferenzlatenz-Anforderung,Task
+Quality AI,Produktionslinienintegration,PLC-Integration,Integration AI-System mit Produktionslinien-PLC,Task
+Quality AI,Produktionslinienintegration,Ausschuss-Mechanismus-Steuerung,Steuerung automatisierter Ausschuss-Mechanismus für Defekte,Task
+Quality AI,Produktionslinienintegration,Produktions-Dashboard,Anzeige von Echtzeit-Qualitätsmetriken auf Produktionshalle,Feature
+Quality AI,Produktionslinienintegration,MES-Integration,Integration von Qualitätsdaten mit Manufacturing Execution System,Task
+Quality AI,Leistungsvalidierung,Genauigkeits-Benchmarking,Benchmarking AI-Genauigkeit gegen menschliche Inspektoren,Task
+Quality AI,Leistungsvalidierung,Sensitivitäts- & Spezifitätsanalyse,Messung von False-Positive- und False-Negative-Raten,Task
+Quality AI,Leistungsvalidierung,Produktionspilot,Durchführung Pilottests auf Produktionslinie,Task
+Quality AI,Leistungsvalidierung,Validierungsbericht,Dokumentation von Validierungsergebnissen und Business-Case,Documentation
+Quality AI,Einrichtung kontinuierlicher Verbesserung,Modell-Retraining-Pipeline,Implementierung automatisierter Modell-Retraining-Workflow,Task
+Quality AI,Einrichtung kontinuierlicher Verbesserung,Active-Learning,Implementierung von Active-Learning für kontinuierliche Verbesserung,Feature
+Quality AI,Einrichtung kontinuierlicher Verbesserung,Leistungsüberwachung,Überwachung von Modellleistungs-Drift über Zeit,Task
+Quality AI,Einrichtung kontinuierlicher Verbesserung,Feedback-Schleife,Erfassung von Inspektoren-Feedback zu AI-Vorhersagen,Task
+Supply Chain,Datenintegration & Bereinigung,Datenquelleninventar,Katalogisierung aller Supply-Chain-Datenquellen,Task
+Supply Chain,Datenintegration & Bereinigung,ERP-Datenintegration,Extraktion von Supply-Chain-Daten aus ERP-System,Task
+Supply Chain,Datenintegration & Bereinigung,Lieferantendaten-Integration,Integration von Lieferantenauftrags- und Lieferdaten,Task
+Supply Chain,Datenintegration & Bereinigung,Datenqualitätsbewertung,Profiling und Bereinigung von Supply-Chain-Stammdaten,Task
+Supply Chain,Entwicklung des Nachfrageprognosemodells,Historische Nachfrageanalyse,Analyse historischer Nachfragemuster und Saisonalität,Task
+Supply Chain,Entwicklung des Nachfrageprognosemodells,Feature-Engineering,Engineering prädiktiver Features einschließlich Promotions und Events,Task
+Supply Chain,Entwicklung des Nachfrageprognosemodells,Zeitreihen-Prognose,Entwicklung von ARIMA- und Prophet-Prognosemodellen,Task
+Supply Chain,Entwicklung des Nachfrageprognosemodells,Machine-Learning-Ensemble,Aufbau Ensemble-Modell kombinierende multiple Algorithmen,Feature
+Supply Chain,Bestandsoptimierungsalgorithmus,Sicherheitsbestand-Berechnung,Optimierung von Sicherheitsbestandslevels nach SKU und Standort,Task
+Supply Chain,Bestandsoptimierungsalgorithmus,Nachbestellpunkt-Optimierung,Berechnung optimaler Nachbestellpunkte und Mengen,Task
+Supply Chain,Bestandsoptimierungsalgorithmus,Multi-Echelon-Optimierung,Optimierung des Bestands über Vertriebsnetzwerk hinweg,Feature
+Supply Chain,Bestandsoptimierungsalgorithmus,Constraint-Modellierung,Modellierung von Kapazitäts- und Vorlaufzeit-Constraints,Task
+Supply Chain,Lieferantennetzwerkintegration,Lieferantenportal-Entwicklung,Aufbau Lieferantenkooperationsportal,Feature
+Supply Chain,Lieferantennetzwerkintegration,EDI-Integration,Integration von EDI für Bestellungen und ASNs,Task
+Supply Chain,Lieferantennetzwerkintegration,Lieferanten-Scorecarding,Implementierung von Lieferantenleistungs-Scorecards,Task
+Supply Chain,Lieferantennetzwerkintegration,Kollaborative Planung,Ermöglichung kollaborativer Nachfrage- und Angebotsplanung,Task
+Supply Chain,Risikobewertungsmodul,Supply-Chain-Mapping,Mapping mehrstufiges Supply-Chain-Netzwerk,Task
+Supply Chain,Risikobewertungsmodul,Risikoidentifikation,Identifizierung von Supply-Chain-Risikofaktoren und Szenarien,Task
+Supply Chain,Risikobewertungsmodul,Risikobewertungsmodell,Entwicklung quantitativer Supply-Chain-Risikobewertung,Feature
+Supply Chain,Risikobewertungsmodul,Frühwarnsystem,Implementierung prädiktiver Risikoalarme und Benachrichtigungen,Feature
+Supply Chain,Dashboard & Berichterstattung,Führungskräfte-Dashboard,Aufbau Supply-Chain-KPI-Führungskräfte-Dashboard,Feature
+Supply Chain,Dashboard & Berichterstattung,Operative Berichte,Entwicklung operativer Berichte für Planer,Task
+Supply Chain,Dashboard & Berichterstattung,Ausnahmenmanagement,Hervorhebung und Priorisierung von Supply-Chain-Ausnahmen,Feature
+Supply Chain,Dashboard & Berichterstattung,Mobiler Dashboard-Zugriff,Optimierung von Dashboards für Mobilgerätezugriff,Task
+Supply Chain,Pilot-Rollout,Pilot-SKU-Auswahl,Auswahl von Pilot-Produktkategorien für ersten Rollout,Task
+Supply Chain,Pilot-Rollout,Pilotstandort-Einführung,Einsatz des Systems im Pilot-Vertriebszentrum,Task
+Supply Chain,Pilot-Rollout,Pilotleistungsmessung,Messung Pilotleistung gegen Baseline,Task
+Supply Chain,Pilot-Rollout,Lessons-Learned,Dokumentation von Pilot-Erkenntnissen und Verfeinerungen,Documentation
+Supply Chain,Globale Einführung,Regionaler Rollout-Planung,Planung phasenweiser Rollout in alle Regionen,Task
+Supply Chain,Globale Einführung,Change-Management,Durchführung organisatorisches Change-Management-Programm,Task
+Supply Chain,Globale Einführung,Schulung & Enablement,Schulung von Supply-Chain-Planern und Analysten global,Task
+Supply Chain,Globale Einführung,Post-Implementierungs-Support,Bereitstellung fortlaufender Unterstützung und Optimierung,Task
+Robotics Line,Sicherheitsbewertung & Normüberprüfung,Robotersicherheits-Normüberprüfung,Überprüfung von ISO 10218- und ANSI/RIA R15.06-Standards,Documentation
+Robotics Line,Sicherheitsbewertung & Normüberprüfung,Risikobewertung,Durchführung umfassender Robotersicherheits-Risikobewertung,Task
+Robotics Line,Sicherheitsbewertung & Normüberprüfung,Sicherheitsanforderungs-Definition,Definition von Sicherheitssystemanforderungen und Schutzmaßnahmen,Documentation
+Robotics Line,Sicherheitsbewertung & Normüberprüfung,Ergonomie-Bewertung,Bewertung von Mensch-Roboter-Kollaborations-Ergonomie,Task
+Robotics Line,Roboterauswahl & Beschaffung,Anwendungsanalyse,Analyse von Montageaufgaben und Roboter-Anforderungen,Task
+Robotics Line,Roboterauswahl & Beschaffung,Roboterlieferanten-Evaluierung,Evaluierung von Industrieroboter-Lieferanten und Modellen,Task
+Robotics Line,Roboterauswahl & Beschaffung,Roboterbeschaffung,Beschaffung von Industrierobotern und Steuerungen,Task
+Robotics Line,Roboterauswahl & Beschaffung,Greifer- & Werkzeugauswahl,Auswahl von Endeffektoren und Werkzeugen,Task
+Robotics Line,Endeffektor-Design,Kundenspezifisches Greifer-Design,Design kundenspezifischer Endeffektor für spezifische Teile,Task
+Robotics Line,Endeffektor-Design,Vakuum- & Pneumatiksysteme,Design von Vakuum- oder Pneumatik-Greifersystemen,Task
+Robotics Line,Endeffektor-Design,Kraft-/Drehmoment-Sensorik,Integration von Kraft-Drehmoment-Sensoren für nachgiebige Montage,Feature
+Robotics Line,Endeffektor-Design,Schnellwechsel-Werkzeug,Implementierung automatischer Werkzeugwechsler für Flexibilität,Feature
+Robotics Line,Programmierung & Simulation,Offline-Programmierung,Programmierung von Roboterpfaden mittels Offline-Programmierungssoftware,Task
+Robotics Line,Programmierung & Simulation,Simulation & Validierung,Simulation und Validierung von Roboterbewegungen in virtueller Umgebung,Task
+Robotics Line,Programmierung & Simulation,Kollisionserkennung,Implementierung von Kollisionserkennung und -vermeidung,Task
+Robotics Line,Programmierung & Simulation,Zykluszeit-Optimierung,Optimierung von Roboter-Trajektorien für minimale Zykluszeit,Task
+Robotics Line,Montagelinienintegration,Roboterzellen-Installation,Installation von Roboterzellen auf Montagelinie,Task
+Robotics Line,Montagelinienintegration,Teilezuführungssystem,Design und Installation von Teilezuführern und Vorrichtungen,Task
+Robotics Line,Montagelinienintegration,Vision-System-Integration,Integration von Vision-Führung für Teile-Lokalisierung,Feature
+Robotics Line,Montagelinienintegration,PLC- & Sicherheitsintegration,Integration von Robotern mit Linien-PLC und Sicherheitssystemen,Task
+Robotics Line,Mitarbeiterschulungsprogramme,Robotersicherheits-Schulung,Schulung von Arbeitern zu Robotersicherheit und Kollaboration,Task
+Robotics Line,Mitarbeiterschulungsprogramme,Roboterbedienungs-Schulung,Schulung von Operatoren zu Roboterprogrammierung und Bedienung,Task
+Robotics Line,Mitarbeiterschulungsprogramme,Wartungsschulung,Schulung von Wartungstechnikern zu Roboter-Wartung,Task
+Robotics Line,Mitarbeiterschulungsprogramme,Notfallverfahren,Schulung von Personal zu Not-Stopp und Wiederherstellungsverfahren,Documentation
+Robotics Line,Leistungsüberwachung,Zykluszeit-Überwachung,Überwachung von Roboter-Zykluszeiten und Durchsatz,Task
+Robotics Line,Leistungsüberwachung,Uptime & Zuverlässigkeit,Verfolgung von Roboter-Uptime und Ausfallmodi,Task
+Robotics Line,Leistungsüberwachung,Qualitätsmetriken,Überwachung von Montagequalität und Fehlerraten,Task
+Robotics Line,Leistungsüberwachung,OEE-Dashboard,Entwicklung Overall-Equipment-Effectiveness-Dashboard,Feature
+IoT Sensors,Sensornetzwerk-Design,Sensoranforderungs-Definition,Definition von Sensortypen, Bereichen und Genauigkeitsanforderungen,Documentation
+IoT Sensors,Sensornetzwerk-Design,Netzwerktopologie-Design,Design Mesh-Netzwerktopologie und Gateway-Platzierung,Task
+IoT Sensors,Sensornetzwerk-Design,Kommunikationsprotokoll-Auswahl,Auswahl von LoRaWAN, Zigbee oder industriellem Wireless-Protokoll,Task
+IoT Sensors,Sensornetzwerk-Design,Strom- & Batteriestrategie,Design batteriebetriebener oder Energy-Harvesting-Strategie,Task
+IoT Sensors,Gateway-Infrastrukturaufbau,IoT-Gateway-Einführung,Installation und Konfiguration von IoT-Gateways,Task
+IoT Sensors,Gateway-Infrastrukturaufbau,Netzwerkkonfiguration,Konfiguration von drahtlosem Netzwerk und Sicherheit,Task
+IoT Sensors,Gateway-Infrastrukturaufbau,Backhaul-Konnektivität,Einrichtung zellulärer oder Ethernet-Backhaul-Konnektivität,Task
+IoT Sensors,Gateway-Infrastrukturaufbau,Edge-Computing-Einrichtung,Einsatz Edge-Computing-Fähigkeit an Gateways,Task
+IoT Sensors,Datenpipeline-Entwicklung,MQTT-Broker-Einführung,Einsatz MQTT-Message-Broker für IoT-Daten,Task
+IoT Sensors,Datenpipeline-Entwicklung,Stream-Verarbeitung,Implementierung Echtzeit-Stream-Verarbeitung mit Kafka,Task
+IoT Sensors,Datenpipeline-Entwicklung,Zeitreihen-Datenbank,Einsatz von InfluxDB oder TimescaleDB für Sensordaten,Task
+IoT Sensors,Datenpipeline-Entwicklung,Datenaufbewahrungsrichtlinien,Definition von Datenaggregations- und Aufbewahrungsrichtlinien,Documentation
+IoT Sensors,Prädiktive Analyse-Engine,Anomalieerkennungsmodelle,Entwicklung statistischer Anomalieerkennungsalgorithmen,Feature
+IoT Sensors,Prädiktive Analyse-Engine,Predictive-Maintenance-Modelle,Aufbau Machine-Learning-Modelle für Anlagenausfallvorhersage,Feature
+IoT Sensors,Prädiktive Analyse-Engine,Ursachenanalyse,Implementierung Korrelationsanalyse für Ursachenidentifikation,Task
+IoT Sensors,Prädiktive Analyse-Engine,Restnutzungsdauer-Vorhersage,Vorhersage von Anlagen-Restnutzungsdauer,Feature
+IoT Sensors,Alarm- & Benachrichtigungssystem,Schwellenwert-basierte Alarmierung,Konfiguration schwellenwertbasierter Alarmregeln,Task
+IoT Sensors,Alarm- & Benachrichtigungssystem,ML-basierte Alarmierung,Implementierung Machine-Learning-basierter intelligenter Alarmierung,Feature
+IoT Sensors,Alarm- & Benachrichtigungssystem,Multi-Channel-Benachrichtigungen,Versand von Alarmen per E-Mail, SMS und Push-Benachrichtigungen,Task
+IoT Sensors,Alarm- & Benachrichtigungssystem,Alarm-Eskalation,Implementierung von Alarm-Eskalation und Bestätigungs-Workflow,Task
+IoT Sensors,Mobile-App-Entwicklung,Mobile-Dashboard-App,Entwicklung mobiler App für Echtzeit-Sensorüberwachung,Feature
+IoT Sensors,Mobile-App-Entwicklung,Alarm-Verwaltung,Ermöglichung mobiler Alarm-Anzeige und Bestätigung,Task
+IoT Sensors,Mobile-App-Entwicklung,Historische Datenvisualisierung,Visualisierung von Sensortrends und historischen Daten,Feature
+IoT Sensors,Mobile-App-Entwicklung,Offline-Modus-Unterstützung,Unterstützung von Offline-Modus mit Sync bei Verbindung,Task
+IoT Sensors,Vollständige Einführung,Sensorinstallation,Installation von Sensoren über alle Fertigungsanlagen,Task
+IoT Sensors,Vollständige Einführung,Inbetriebnahme & Tests,Inbetriebnahme und Test aller Sensorknoten,Task
+IoT Sensors,Vollständige Einführung,Integrationsvalidierung,Validierung End-to-End-Datenfluss und Analytik,Task
+IoT Sensors,Vollständige Einführung,Dokumentation & Übergabe,Dokumentation von Sensorstandorten und Übergabe an Betrieb,Documentation
+3D Printing,Materialforschung & Testing,Materialauswahl,Evaluierung von Metallpulvern, Polymeren und Verbundmaterialien,Task
+3D Printing,Materialforschung & Testing,Materialeigenschaften-Tests,Durchführung mechanischer Eigenschaftstests gedruckter Teile,Task
+3D Printing,Materialforschung & Testing,Prozessparameter-Optimierung,Optimierung von Druckparametern für jedes Material,Task
+3D Printing,Materialforschung & Testing,Materialqualifikation,Qualifikation von Materialien für Produktionsanwendungen,Documentation
+3D Printing,Druckerkalibrierung & Optimierung,Drucker-Baseline-Kalibrierung,Kalibrierung von Drucker-Achsen, Lasern und Abscheidungssystemen,Task
+3D Printing,Druckerkalibrierung & Optimierung,Druckqualitäts-Optimierung,Optimierung von Schichthaftung und Oberflächengüte,Task
+3D Printing,Druckerkalibrierung & Optimierung,Geschwindigkeit-vs-Qualität-Abwägungen,Etablierung von Druckprofilen für unterschiedliche Qualitäts-/Geschwindigkeitsbedarf,Task
+3D Printing,Druckerkalibrierung & Optimierung,Wartungsverfahren,Entwicklung präventiver Wartungsverfahren,Documentation
+3D Printing,Design-Software-Integration,CAD-Software-Integration,Integration mit SolidWorks, CATIA oder NX,Task
+3D Printing,Design-Software-Integration,Topologie-Optimierung,Implementierung generatives Design und Topologie-Optimierung,Feature
+3D Printing,Design-Software-Integration,Design-for-Additive-Manufacturing,Entwicklung DFAM-Richtlinien und Tools,Documentation
+3D Printing,Design-Software-Integration,Slicing & Pfadplanung,Optimierung von Slicing-Parametern und Werkzeugpfaden,Task
+3D Printing,Qualitätskontrollverfahren,In-Prozess-Überwachung,Implementierung von Wärmebildgebung und Fehlererkennung,Feature
+3D Printing,Qualitätskontrollverfahren,Nachbearbeitungs-Inspektion,Definition von Maß- und Sichtinspektionsverfahren,Documentation
+3D Printing,Qualitätskontrollverfahren,ZfP-Tests,Implementierung zerstörungsfreier Prüfung für kritische Teile,Task
+3D Printing,Qualitätskontrollverfahren,Erstmuster-Inspektion,Durchführung umfassender Erstmuster-Inspektion,Task
+3D Printing,Produktionsworkflow-Einrichtung,Auftrags-Managementsystem,Implementierung 3D-Druck-Auftragswarteschlange und Planung,Task
+3D Printing,Produktionsworkflow-Einrichtung,Materialbestandsverwaltung,Verfolgung von Pulver- und Materialbestand,Task
+3D Printing,Produktionsworkflow-Einrichtung,Nachbearbeitungs-Workflow,Definition von Wärmebehandlungs- und Finishing-Workflows,Documentation
+3D Printing,Produktionsworkflow-Einrichtung,Arbeitsauftrags-Integration,Integration mit ERP-Arbeitsauftragssystem,Task
+3D Printing,Mitarbeiterschulung,Additive-Manufacturing-Theorie,Schulung von Ingenieuren zu AM-Prinzipien und Anwendungen,Task
+3D Printing,Mitarbeiterschulung,Druckerbedienungs-Schulung,Schulung von Operatoren zur 3D-Drucker-Bedienung,Task
+3D Printing,Mitarbeiterschulung,Sicherheitsschulung,Schulung von Personal zu Metallpulver-Handhabung und Lasersicherheit,Documentation
+3D Printing,Mitarbeiterschulung,Qualitätskontroll-Schulung,Schulung von QC-Inspektoren zu AM-spezifischer Inspektion,Task
+3D Printing,Pilotprojekte,Pilotteile-Auswahl,Auswahl von Pilotteilen für additive Fertigung,Task
+3D Printing,Pilotprojekte,Design-Optimierung,Neudesign von Teilen für additive Fertigung,Task
+3D Printing,Pilotprojekte,Prototyp & Validierung,Druck von Prototypen und Validierung der Leistung,Task
+3D Printing,Pilotprojekte,Produktionsqualifikation,Qualifikation von Teilen für Produktionseinsatz,Documentation
+Product PLM,Bewertung des aktuellen Systems,PLM-System-Inventar,Dokumentation aktueller PLM- und Engineering-Systeme,Task
+Product PLM,Bewertung des aktuellen Systems,Benutzerbedarfs-Bewertung,Bewertung von Engineering-Benutzeranforderungen und Pain Points,Task
+Product PLM,Bewertung des aktuellen Systems,Datenmigrations-Bewertung,Bewertung von Legacy-Datenqualität und Migrationskomplexität,Task
+Product PLM,Bewertung des aktuellen Systems,Business-Case-Entwicklung,Entwicklung Business-Case für PLM-Implementierung,Documentation
+Product PLM,PLM-Plattformauswahl,Anforderungs-Definition,Definition funktionaler und technischer Anforderungen,Documentation
+Product PLM,PLM-Plattformauswahl,Lieferanten-Evaluierung,Evaluierung von Siemens Teamcenter, PTC Windchill und Dassault ENOVIA,Task
+Product PLM,PLM-Plattformauswahl,Referenzkunden-Besuche,Besuch von Referenzkunden die Shortlist-Systeme verwenden,Task
+Product PLM,PLM-Plattformauswahl,Lieferantenauswahl,Auswahl PLM-Lieferant und Vertragsverhandlung,Task
+Product PLM,Datenmigrationsstrategie,Daten-Mapping,Mapping von Legacy-Daten zu PLM-Datenmodell,Documentation
+Product PLM,Datenmigrationsstrategie,Datenbereinigung,Bereinigung und Standardisierung von Produktdaten,Task
+Product PLM,Datenmigrationsstrategie,Migrationstools-Entwicklung,Entwicklung automatisierter Datenmigrations-Skripte,Task
+Product PLM,Datenmigrationsstrategie,Migrationstests,Durchführung mehrerer Migrations-Testläufe und Validierung,Task
+Product PLM,Anpassung & Konfiguration,Workflow-Konfiguration,Konfiguration von Engineering-Change- und Release-Workflows,Task
+Product PLM,Anpassung & Konfiguration,Attribut- & Metadaten-Konfiguration,Konfiguration von Teile-Attributen und Metadatenfeldern,Task
+Product PLM,Anpassung & Konfiguration,Lebenszyklus- & Zugriffskontrolle,Konfiguration von Produktlebenszyklusstatus und Zugriffsregeln,Task
+Product PLM,Anpassung & Konfiguration,Kundenspezifische Entwicklung,Entwicklung kundenspezifischer Erweiterungen und Integrationen,Task
+Product PLM,Integration mit CAD/CAM-Systemen,CAD-Integration,Integration mit CATIA, NX oder SolidWorks,Task
+Product PLM,Integration mit CAD/CAM-Systemen,CAM-Integration,Integration mit Mastercam oder NX CAM,Task
+Product PLM,Integration mit CAD/CAM-Systemen,Visualisierungs-Integration,Implementierung leichtgewichtiger 3D-Visualisierung,Feature
+Product PLM,Integration mit CAD/CAM-Systemen,Behebung CAD-Check-in-Fehler,Lösung von Fehlern im CAD-Datei-Check-in-Prozess,Bug
+Product PLM,User Acceptance Testing,Testfall-Entwicklung,Entwicklung umfassender UAT-Testfälle,Documentation
+Product PLM,User Acceptance Testing,UAT-Durchführung,Durchführung Benutzerakzeptanztests mit Ingenieuren,Task
+Product PLM,User Acceptance Testing,Problemlösung,Lösung von UAT-Defekten und Konfigurationsproblemen,Bug
+Product PLM,User Acceptance Testing,UAT-Abnahme,Erlangung von Business-Abnahme für Produktions-Go-Live,Documentation
+Product PLM,Rollout & Change Management,Schulungsprogramm-Entwicklung,Entwicklung rollenbasiertes PLM-Schulungs-Curriculum,Documentation
+Product PLM,Rollout & Change Management,End-User-Schulung,Schulung von Ingenieuren und Produktmanagern zu PLM,Task
+Product PLM,Rollout & Change Management,Change-Kommunikation,Durchführung Change-Management-Kommunikationsplan,Task
+Product PLM,Rollout & Change Management,Produktions-Go-Live,Durchführung Produktionsumstellung und Go-Live,Task

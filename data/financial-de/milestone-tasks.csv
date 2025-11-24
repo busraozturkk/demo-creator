@@ -1,0 +1,245 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Core Banking,Bewertung des aktuellen Systems,Systeminventar & Abhängigkeits-Mapping,Dokumentation aller Core-Banking-Systemkomponenten und Schnittstellen,Task
+Core Banking,Bewertung des aktuellen Systems,Performance-Baseline-Analyse,Messung von Transaktionsdurchsatz und Antwortzeiten,Task
+Core Banking,Bewertung des aktuellen Systems,Technische-Schulden-Assessment,Bewertung von Legacy-Codequalität und Wartungslast,Task
+Core Banking,Bewertung des aktuellen Systems,Bewertungsbericht & Business Case,Dokumentation von Modernisierungsbegründung und Ansatz,Documentation
+Core Banking,Architekturdesign & Planung,Zielarchitektur-Design,Design microservices-basierter Cloud-Native-Architektur,Task
+Core Banking,Architekturdesign & Planung,API-Strategie-Definition,Definition von API-First-Strategie und Standards,Documentation
+Core Banking,Architekturdesign & Planung,Technologie-Stack-Auswahl,Auswahl von Programmiersprachen, Datenbanken und Cloud-Plattform,Task
+Core Banking,Architekturdesign & Planung,Nichtfunktionale Anforderungen,Definition von Skalierbarkeits-, Verfügbarkeits- und Leistungsanforderungen,Documentation
+Core Banking,Datenmigrationsstrategie,Datenqualitäts-Assessment,Profiling von Datenqualität über Legacy-Systeme hinweg,Task
+Core Banking,Datenmigrationsstrategie,Daten-Mapping & Transformationsregeln,Dokumentation von Quelle-zu-Ziel-Daten-Mapping und Transformationen,Documentation
+Core Banking,Datenmigrationsstrategie,Migrationsansatz-Auswahl,Auswahl von Big-Bang- vs. phasiertem Migrationsansatz,Task
+Core Banking,Datenmigrationsstrategie,Mock-Migrations-Testing,Durchführung mehrerer Mock-Migrationsläufe und Reconciliation,Task
+Core Banking,Kontoverwaltungsmodul,Kundenkonto-Services,Entwicklung von Kontoeröffnungs-, Wartungs- und Schließungs-APIs,Feature
+Core Banking,Kontoverwaltungsmodul,Produktkonfigurations-Engine,Aufbau flexibler Produkt- und Parameterkonfiguration,Feature
+Core Banking,Kontoverwaltungsmodul,Kontohierarchie-Management,Implementierung mehrstufiger Kontobeziehungen,Task
+Core Banking,Kontoverwaltungsmodul,Konto-Reconciliation,Entwicklung automatisierter Konto-Reconciliation-Prozesse,Task
+Core Banking,Transaktionsverarbeitungs-Engine,Echtzeit-Transaktionsverarbeitung,Aufbau hochleistungsfähiger Transaktionsverarbeitungs-Engine,Task
+Core Banking,Transaktionsverarbeitungs-Engine,Doppelte Buchführung,Implementierung doppelter Buchführung und GL-Buchung,Task
+Core Banking,Transaktionsverarbeitungs-Engine,Transaktionsautorisierungs-Regeln,Entwicklung konfigurierbarer Transaktionsautorisierungs-Framework,Task
+Core Banking,Transaktionsverarbeitungs-Engine,Transaktions-Rollback & Stornierung,Implementierung kompensierender Transaktionsmechanismen,Feature
+Core Banking,Entwicklung der Integrationsschicht,Enterprise Service Bus,Implementierung ESB für Systemintegrations-Orchestrierung,Task
+Core Banking,Entwicklung der Integrationsschicht,Zahlungsnetzwerk-Integration,Integration mit ACH-, Wire- und Kartenzahlungsnetzwerken,Task
+Core Banking,Entwicklung der Integrationsschicht,Drittanbieter-Banking-Integration,Aufbau von Integrationen mit Kreditauskunfteien und externen Systemen,Task
+Core Banking,Entwicklung der Integrationsschicht,Behebung Integration-Timeout-Probleme,Behebung von Timeout-Fehlern bei externen Service-Aufrufen,Bug
+Core Banking,Validierung der regulatorischen Compliance,Compliance-Anforderungen-Analyse,Analyse regulatorischer Anforderungen über Jurisdiktionen hinweg,Task
+Core Banking,Validierung der regulatorischen Compliance,AML-Transaktionsüberwachung,Implementierung von Anti-Geldwäsche-Überwachungsregeln,Feature
+Core Banking,Validierung der regulatorischen Compliance,Regulatorische-Berichterstattungs-Automatisierung,Aufbau automatisierter regulatorischer Berichtserstellung,Task
+Core Banking,Validierung der regulatorischen Compliance,Audit-Trail & Protokollierung,Implementierung umfassender Audit-Protokollierung und Aufbewahrung,Task
+Core Banking,Parallelbetrieb & Cutover,Parallelverarbeitungs-Setup,Konfiguration von Systemen für parallele Alt- und Neusystemverarbeitung,Task
+Core Banking,Parallelbetrieb & Cutover,Reconciliation-Dashboard,Aufbau von Echtzeit-Reconciliation-Überwachungs-Dashboard,Task
+Core Banking,Parallelbetrieb & Cutover,Cutover-Planung & Probe,Planung und Probe von Produktions-Cutover-Verfahren,Task
+Core Banking,Parallelbetrieb & Cutover,Produktions-Cutover-Durchführung,Durchführung Cutover zu neuem Core-Banking-System,Task
+Fraud Detection,Musteranalyse & Regeldefinition,Historische Betrugsfall-Analyse,Analyse historischer Betrugsfälle zur Identifizierung von Mustern,Task
+Fraud Detection,Musteranalyse & Regeldefinition,Regelbasierte Erkennungslogik,Definition von Geschäftsregeln für bekannte Betrugsmuster,Documentation
+Fraud Detection,Musteranalyse & Regeldefinition,Schwellenwert-Kalibrierung,Kalibrierung von Betrugserkennungsschwellenwerten zur Minimierung von False Positives,Task
+Fraud Detection,Musteranalyse & Regeldefinition,Regel-Testing & Validierung,Test von Erkennungsregeln gegen historische Daten,Task
+Fraud Detection,Historische Datenanalyse,Datenvorbereitung & Kennzeichnung,Vorbereitung und Kennzeichnung historischer Transaktionsdaten,Task
+Fraud Detection,Historische Datenanalyse,Feature-Engineering,Engineering prädiktiver Features aus Transaktionsattributen,Task
+Fraud Detection,Historische Datenanalyse,Explorative Datenanalyse,Analyse von Betrugsmustern und statistischen Verteilungen,Task
+Fraud Detection,Historische Datenanalyse,Betrugs-Typologie-Dokumentation,Dokumentation von Betrugsmodus-Operandi und Typologien,Documentation
+Fraud Detection,Machine-Learning-Modelltraining,Modellauswahl & Experimentierung,Experimentieren mit Random Forest, XGBoost und neuronalen Netzen,Task
+Fraud Detection,Machine-Learning-Modelltraining,Modelltraining & Tuning,Training von Modellen mit Hyperparameter-Optimierung,Task
+Fraud Detection,Machine-Learning-Modelltraining,Kreuzvalidierungs-Testing,Durchführung von K-Fold-Kreuzvalidierung und Backtesting,Task
+Fraud Detection,Machine-Learning-Modelltraining,Modell-Erklärbarkeitsanalyse,Implementierung von SHAP-Values für Modellinterpretierbarkeit,Task
+Fraud Detection,Echtzeit-Verarbeitungs-Pipeline,Streaming-Datenpipeline,Aufbau Kafka-basierter Echtzeit-Transaktionsaufnahme,Task
+Fraud Detection,Echtzeit-Verarbeitungs-Pipeline,Echtzeit-Scoring-Engine,Implementierung Sub-Sekunden-Betrugs-Scoring-Inference,Feature
+Fraud Detection,Echtzeit-Verarbeitungs-Pipeline,Transaktionsanreicherung,Anreicherung von Transaktionen mit Kunden- und Geräteattributen,Task
+Fraud Detection,Echtzeit-Verarbeitungs-Pipeline,Niedrig-Latenz-Optimierung,Optimierung Pipeline für 50ms P99-Latenz-Anforderung,Task
+Fraud Detection,Alarmmanagementsystem,Alarm-Warteschlangen-Management,Entwicklung priorisierter Betrugsalarm-Warteschlange für Ermittler,Feature
+Fraud Detection,Alarmmanagementsystem,Case-Management-Workflow,Aufbau von Fall-Ermittlungs- und Lösungsworkflow,Task
+Fraud Detection,Alarmmanagementsystem,False-Positive-Feedback-Schleife,Implementierung von Feedback-Mechanismus für Modell-Retraining,Task
+Fraud Detection,Alarmmanagementsystem,Alarm-Routing-Regeln,Konfiguration intelligenten Alarm-Routings zu Spezialteams,Task
+Fraud Detection,Falluntersuchungstools,Transaktionshistorie-Visualisierung,Aufbau visueller Transaktionsmuster-Analysetools,Feature
+Fraud Detection,Falluntersuchungstools,Netzwerk-Graph-Analyse,Implementierung graphbasierter Betrugsring-Erkennung,Feature
+Fraud Detection,Falluntersuchungstools,Ermittlungsnotizen & Beweise,Entwicklung von Fall-Dokumentations- und Beweismanagement,Task
+Fraud Detection,Falluntersuchungstools,Disposition- & Aktions-Tracking,Verfolgung von Fallergebnissen und Betrugs-Wiederherstellungs-Aktionen,Task
+Fraud Detection,Leistungsoptimierung,Modellleistungs-Überwachung,Überwachung von Precision, Recall und F1-Score im Zeitverlauf,Task
+Fraud Detection,Leistungsoptimierung,A/B-Testing-Framework,Implementierung von A/B-Testing für Modellvergleich,Task
+Fraud Detection,Leistungsoptimierung,False-Positive-Reduzierung,Tuning von Modellen zur Reduzierung der False-Positive-Rate,Task
+Fraud Detection,Leistungsoptimierung,Erkennungsraten-Verbesserung,Optimierung von Regeln zur Verbesserung der Betrugs-Erkennungsrate,Task
+Fraud Detection,Kontinuierliche Modellverbesserung,Retraining-Pipeline-Automatisierung,Automatisierung periodischen Modell-Retrainings mit neuen Daten,Task
+Fraud Detection,Kontinuierliche Modellverbesserung,Konzept-Drift-Erkennung,Überwachung und Erkennung von Änderungen in Betrugsmustern,Task
+Fraud Detection,Kontinuierliche Modellverbesserung,Neue-Betrugsvektoren-Erkennung,Identifizierung neuer Betrugstypen nicht in Trainingsdaten,Task
+Fraud Detection,Kontinuierliche Modellverbesserung,Modellversionierung & Rollback,Implementierung von Modellversionierung und sicherem Rollback,Task
+Digital Wallet,User-Experience-Design,Benutzerforschung & Personas,Durchführung von Benutzerforschung und Entwicklung von Kundenprofilen,Task
+Digital Wallet,User-Experience-Design,User-Journey-Mapping,Mapping von End-to-End-Wallet-Nutzungs-Journeys,Task
+Digital Wallet,User-Experience-Design,UI/UX-Design,Design intuitiver mobiler Wallet-Benutzeroberfläche,Task
+Digital Wallet,User-Experience-Design,Usability-Testing,Durchführung von Usability-Testing mit Zielbenutzern,Task
+Digital Wallet,Zahlungsgateway-Integration,Zahlungsgateway-Auswahl,Evaluierung und Auswahl von Zahlungsgateway-Anbieter,Task
+Digital Wallet,Zahlungsgateway-Integration,Kartennetzwerk-Zertifizierung,Erlangung von Visa- und Mastercard-Zertifizierung,Task
+Digital Wallet,Zahlungsgateway-Integration,PCI-DSS-Compliance,Erreichen von PCI-DSS-Level-1-Compliance,Task
+Digital Wallet,Zahlungsgateway-Integration,Zahlungsmethoden-Unterstützung,Unterstützung von Kredit-/Debitkarten, Bankkonten und digitalen Währungen,Feature
+Digital Wallet,Tokenisierung & Sicherheit,Karten-Tokenisierung,Implementierung von EMV-Tokenisierung für sichere Speicherung,Feature
+Digital Wallet,Tokenisierung & Sicherheit,Biometrische Authentifizierung,Implementierung von Fingerabdruck- und Gesichtserkennung-Authentifizierung,Feature
+Digital Wallet,Tokenisierung & Sicherheit,End-to-End-Verschlüsselung,Implementierung von Verschlüsselung für Daten in Transit und Ruhe,Task
+Digital Wallet,Tokenisierung & Sicherheit,Betrugspräventions-Regeln,Implementierung von Transaktionsgeschwindigkeit und Anomalieerkennung,Task
+Digital Wallet,P2P-Übertragungsfunktionen,Kontakt-Discovery,Aktivierung kontaktbasierter Empfänger-Discovery,Feature
+Digital Wallet,P2P-Übertragungsfunktionen,Echtzeit-Transfer-Verarbeitung,Aufbau sofortiger Peer-to-Peer-Transferfähigkeit,Feature
+Digital Wallet,P2P-Übertragungsfunktionen,Split-Payment-Feature,Entwicklung von Rechnungsaufteilungs- und Gruppenzahlungsfunktionalität,Feature
+Digital Wallet,P2P-Übertragungsfunktionen,Transfer-Limits & Kontrollen,Implementierung konfigurierbarer Transferlimits und Kontrollen,Task
+Digital Wallet,QR-Code-Zahlung,QR-Code-Generierung,Generierung eindeutiger QR-Codes für Händlerzahlungen,Task
+Digital Wallet,QR-Code-Zahlung,QR-Code-Scanning,Implementierung kamerabasierter QR-Code-Scanning,Task
+Digital Wallet,QR-Code-Zahlung,Händler-Zahlungsverarbeitung,Verarbeitung QR-initiierter Händlerzahlungen,Task
+Digital Wallet,QR-Code-Zahlung,Offline-Zahlungs-Unterstützung,Aktivierung Offline-QR-Zahlung mit Sync,Feature
+Digital Wallet,Treue- & Prämienprogramm,Treue-Punkte-Engine,Aufbau von Punktesammel- und Einlösungs-Engine,Feature
+Digital Wallet,Treue- & Prämienprogramm,Partner-Integration,Integration mit Händler-Treueprogrammen,Task
+Digital Wallet,Treue- & Prämienprogramm,Gamification-Elemente,Implementierung von Badges, Errungenschaften und Challenges,Feature
+Digital Wallet,Treue- & Prämienprogramm,Personalisierte Angebote,Entwicklung KI-gestützter personalisierter Angebotsempfehlungen,Feature
+Digital Wallet,Beta-Testing,Beta-Tester-Rekrutierung,Rekrutierung diverser Gruppe von Beta-Testern,Task
+Digital Wallet,Beta-Testing,Closed-Beta-Launch,Start geschlossener Beta mit limitierter Benutzergruppe,Task
+Digital Wallet,Beta-Testing,Bug-Tracking & Behebung,Verfolgung und Behebung kritischer Beta-Probleme,Bug
+Digital Wallet,Beta-Testing,Beta-Feedback-Analyse,Analyse von Beta-Benutzerfeedback und Nutzungsmetriken,Task
+Digital Wallet,Öffentlicher Start,Marketing-Kampagne,Durchführung mehrkanaliger Marketing-Launch-Kampagne,Task
+Digital Wallet,Öffentlicher Start,App-Store-Einreichung,Einreichung von Apps bei Apple App Store und Google Play,Task
+Digital Wallet,Öffentlicher Start,Kunden-Support-Bereitschaft,Training Support-Team und Vorbereitung von Self-Help-Inhalten,Task
+Digital Wallet,Öffentlicher Start,Launch-Monitoring,Überwachung Systemleistung und Benutzerakquisition,Task
+Robo Advisory,Anlagestrategie-Framework,Anlagephilosophie-Definition,Definition von Anlagephilosophie und Asset-Allokations-Ansatz,Documentation
+Robo Advisory,Anlagestrategie-Framework,Modellportfolio-Konstruktion,Konstruktion diversifizierter Modellportfolios nach Risikolevel,Task
+Robo Advisory,Anlagestrategie-Framework,ETF-Auswahlkriterien,Definition von ETF-Screening und Auswahlmethodik,Documentation
+Robo Advisory,Anlagestrategie-Framework,Rebalancing-Strategie,Definition von Rebalancing-Schwellenwerten und Auslösern,Documentation
+Robo Advisory,Portfolio-Optimierungsalgorithmen,Mean-Variance-Optimierung,Implementierung Markowitz-Portfolio-Optimierung,Task
+Robo Advisory,Portfolio-Optimierungsalgorithmen,Risk-Parity-Allokation,Entwicklung von Risk-Parity-Allokationsalgorithmen,Task
+Robo Advisory,Portfolio-Optimierungsalgorithmen,Black-Litterman-Modell,Implementierung Black-Litterman-View-basierter Optimierung,Task
+Robo Advisory,Portfolio-Optimierungsalgorithmen,Constraint-Implementierung,Implementierung von Anlageklassen- und Wertpapier-Level-Constraints,Task
+Robo Advisory,Risikoprofilierungssystem,Risikofragebogen-Design,Design wissenschaftlich validierter Risikofragebogen,Task
+Robo Advisory,Risikoprofilierungssystem,Risiko-Scoring-Algorithmus,Entwicklung von Risikotoleranz-Scoring-Methodik,Task
+Robo Advisory,Risikoprofilierungssystem,Eignung-Assessment,Implementierung von Investment-Eignungs-Bestimmung,Task
+Robo Advisory,Risikoprofilierungssystem,Risikoprofil-Validierung,Validierung von Risikoprofiling-Genauigkeit durch Backtesting,Task
+Robo Advisory,Automatisiertes Rebalancing,Drift-Monitoring,Überwachung von Portfolio-Drift von Zielallokation,Task
+Robo Advisory,Automatisiertes Rebalancing,Rebalancing-Trade-Generierung,Generierung optimaler Rebalancing-Handelsorders,Task
+Robo Advisory,Automatisiertes Rebalancing,Cashflow-Management,Einbeziehung von Ein- und Auszahlungen ins Rebalancing,Task
+Robo Advisory,Automatisiertes Rebalancing,Transaktionskosten-Optimierung,Minimierung von Transaktionskosten und Steuerauswirkungen,Task
+Robo Advisory,Tax-Loss Harvesting,Verlust-Harvesting-Algorithmus,Entwicklung automatisierten Tax-Loss-Harvesting-Algorithmus,Feature
+Robo Advisory,Tax-Loss Harvesting,Wash-Sale-Prävention,Implementierung von Wash-Sale-Regel-Compliance-Logik,Task
+Robo Advisory,Tax-Loss Harvesting,Ersatz-Wertpapier-Auswahl,Auswahl wesentlich unterschiedlicher Ersatz-Wertpapiere,Task
+Robo Advisory,Tax-Loss Harvesting,Tax-Lot-Accounting,Implementierung spezifischer Lot-Identifikations-Buchhaltung,Task
+Robo Advisory,Kunden-Dashboard,Portfolio-Leistungs-Visualisierung,Aufbau intuitiver Leistungsverfolgung-Dashboard,Feature
+Robo Advisory,Kunden-Dashboard,Zielplanungs-Tools,Entwicklung zielbasierter Planungs- und Projektionstools,Feature
+Robo Advisory,Kunden-Dashboard,Asset-Allokations-Ansicht,Visualisierung aktueller vs. Ziel-Asset-Allokation,Task
+Robo Advisory,Kunden-Dashboard,Mobile-App-Entwicklung,Entwicklung von iOS- und Android-Mobilanwendungen,Feature
+Robo Advisory,Regulatorische Genehmigungen,Investment-Adviser-Registrierung,Registrierung als Registered Investment Adviser bei SEC,Task
+Robo Advisory,Regulatorische Genehmigungen,Form-ADV-Einreichung,Vorbereitung und Einreichung von Form-ADV-Offenlegungsdokumenten,Documentation
+Robo Advisory,Regulatorische Genehmigungen,Compliance-Programm-Entwicklung,Entwicklung von Compliance-Richtlinien und Verfahren,Documentation
+Robo Advisory,Regulatorische Genehmigungen,Verwahrstellenvereinbarung,Einrichtung qualifizierter Verwahrstellen-Vereinbarung,Task
+Robo Advisory,Kundenakquisitionskampagne,Zielmarkt-Definition,Definition idealer Kundenprofil und Segmente,Task
+Robo Advisory,Kundenakquisitionskampagne,Digital-Marketing-Strategie,Entwicklung von SEO-, SEM- und Social-Media-Strategie,Task
+Robo Advisory,Kundenakquisitionskampagne,Empfehlungsprogramm-Launch,Start von Kunden-Empfehlungs-Incentive-Programm,Feature
+Robo Advisory,Kundenakquisitionskampagne,Performance-Attribution,Verfolgung von Kundenakquisitionskosten und LTV nach Kanal,Task
+Blockchain Pay,Blockchain-Protokollauswahl,Protokoll-Evaluierung,Evaluierung von Ethereum, Stellar, Ripple und Hyperledger,Task
+Blockchain Pay,Blockchain-Protokollauswahl,Skalierbarkeits-Analyse,Bewertung von Transaktionsdurchsatz und Latenzanforderungen,Task
+Blockchain Pay,Blockchain-Protokollauswahl,Kostenanalyse,Analyse von Transaktionsgebühren und Betriebskosten,Task
+Blockchain Pay,Blockchain-Protokollauswahl,Technologieauswahl-Bericht,Dokumentation von Blockchain-Protokoll-Auswahlbegründung,Documentation
+Blockchain Pay,Smart-Contract-Entwicklung,Smart-Contract-Design,Design von Zahlungs-Smart-Contract-Logik und Schnittstellen,Task
+Blockchain Pay,Smart-Contract-Entwicklung,Contract-Entwicklung,Entwicklung und Testen von Smart Contracts in Solidity,Task
+Blockchain Pay,Smart-Contract-Entwicklung,Sicherheits-Audit,Durchführung Drittanbieter-Smart-Contract-Sicherheits-Audit,Task
+Blockchain Pay,Smart-Contract-Entwicklung,Contract-Deployment,Bereitstellung auditierter Smart Contracts auf Blockchain,Task
+Blockchain Pay,Devisenintegration,FX-Rate-Oracle-Integration,Integration von Echtzeit-FX-Rate-Oracle-Feeds,Task
+Blockchain Pay,Devisenintegration,Multi-Währungs-Unterstützung,Unterstützung von Zahlungen in wichtigen Fiat- und Kryptowährungen,Feature
+Blockchain Pay,Devisenintegration,FX-Conversion-Logik,Implementierung automatisierter Währungsumrechnung,Task
+Blockchain Pay,Devisenintegration,Rate-Transparenz,Transparente Anzeige von FX-Raten und Gebühren für Benutzer,Task
+Blockchain Pay,KYC/AML-Compliance,KYC-Prozess-Design,Design von Kundenidentifizierungs- und Verifizierungsprozess,Documentation
+Blockchain Pay,KYC/AML-Compliance,Identitätsverifizierungs-Integration,Integration mit Jumio oder ähnlicher Identitätsverifizierung,Task
+Blockchain Pay,KYC/AML-Compliance,Transaktionsüberwachungs-Regeln,Implementierung von Blockchain-Transaktionsüberwachung für AML,Task
+Blockchain Pay,KYC/AML-Compliance,Sanctions-Screening,Screening von Transaktionen gegen OFAC- und Sanktionslisten,Task
+Blockchain Pay,Settlement-Mechanismus,Liquiditätspool-Management,Verwaltung von Kryptowährungs-Liquiditätspools,Task
+Blockchain Pay,Settlement-Mechanismus,Settlement-Finalitäts-Regeln,Definition von Zahlungs-Settlement- und Bestätigungsregeln,Documentation
+Blockchain Pay,Settlement-Mechanismus,Atomic-Swap-Implementierung,Implementierung von Atomic Swaps für vertrauenslosen Austausch,Feature
+Blockchain Pay,Settlement-Mechanismus,Dispute-Resolution-Prozess,Entwicklung von Zahlungs-Dispute-Resolutionsverfahren,Documentation
+Blockchain Pay,Bankpartnerintegration,Fiat-On-Ramp-Integration,Integration mit Bankpartnern für Fiat-Einzahlungen,Task
+Blockchain Pay,Bankpartnerintegration,Fiat-Off-Ramp-Integration,Aktivierung von Kryptowährung-zu-Fiat-Abhebung,Task
+Blockchain Pay,Bankpartnerintegration,Bank-API-Integration,Integration mit Banking-APIs für Kontoverifizierung,Task
+Blockchain Pay,Bankpartnerintegration,Reconciliation-Automatisierung,Automatisierung von Fiat-Crypto-Reconciliation-Prozessen,Task
+Blockchain Pay,Pilot-Transaktionen,Internes Testing,Durchführung interner Testtransaktionen auf Testnet,Task
+Blockchain Pay,Pilot-Transaktionen,Partner-Pilot,Durchführung Pilot mit ausgewählten Remittance-Partnern,Task
+Blockchain Pay,Pilot-Transaktionen,User-Acceptance-Testing,Test mit echten Benutzern und kleinen Transaktionsbeträgen,Task
+Blockchain Pay,Pilot-Transaktionen,Performance-Benchmarking,Messung von Transaktionsgeschwindigkeit und Erfolgsraten,Task
+Blockchain Pay,Vollständiger Netzwerkstart,Netzwerkpartner-Onboarding,Onboarding von Banken und Zahlungsanbietern zum Netzwerk,Task
+Blockchain Pay,Vollständiger Netzwerkstart,Geografische Expansion,Start von Service in prioritären Korridoren,Task
+Blockchain Pay,Vollständiger Netzwerkstart,Marketing & Bildung,Aufklärung des Marktes über Blockchain-Zahlungsvorteile,Task
+Blockchain Pay,Vollständiger Netzwerkstart,24/7-Betriebs-Setup,Einrichtung rund-um-die-Uhr-Überwachung und Support,Task
+Risk Analytics,Datenaggregations-Framework,Datenquellen-Inventar,Katalogisierung aller risikorelevanter Datenquellen,Task
+Risk Analytics,Datenaggregations-Framework,Data-Lake-Architektur,Design von Unternehmens-Data-Lake für Risikoanalytik,Task
+Risk Analytics,Datenaggregations-Framework,ETL-Pipeline-Entwicklung,Aufbau automatisierter Datenaufnahme-Pipelines,Task
+Risk Analytics,Datenaggregations-Framework,Datenqualitäts-Framework,Implementierung von Datenvalidierungs- und Qualitätskontrollen,Task
+Risk Analytics,Kreditrisikomodelle,Ausfallwahrscheinlichkeits-Modell,Entwicklung von PD-Modellen mittels logistischer Regression,Task
+Risk Analytics,Kreditrisikomodelle,Loss-Given-Default-Modell,Aufbau von LGD-Schätzungsmodellen,Task
+Risk Analytics,Kreditrisikomodelle,Exposure-at-Default-Berechnung,Implementierung von EAD-Berechnungsmethodiken,Task
+Risk Analytics,Kreditrisikomodelle,Erwartete-Kreditverlust-Berechnung,Berechnung IFRS-9/CECL-erwarteter Kreditverluste,Task
+Risk Analytics,Marktrisiko-Berechnungen,Value-at-Risk-Berechnung,Implementierung historischer und Monte-Carlo-VaR,Task
+Risk Analytics,Marktrisiko-Berechnungen,Greeks- & Sensitivitäts-Analyse,Berechnung von Options-Greeks und Rate-Sensitivitäten,Task
+Risk Analytics,Marktrisiko-Berechnungen,Marktrisikofaktor-Mapping,Mapping von Positionen zu Marktrisikofaktoren,Task
+Risk Analytics,Marktrisiko-Berechnungen,Backtesting-Framework,Backtesting von VaR-Modell-Genauigkeit und Verletzungen,Task
+Risk Analytics,Bewertung operationeller Risiken,Risk- & Control-Self-Assessment,Durchführung RCSA über Geschäftseinheiten hinweg,Task
+Risk Analytics,Bewertung operationeller Risiken,Key-Risk-Indicator-Framework,Definition und Überwachung operationeller KRIs,Task
+Risk Analytics,Bewertung operationeller Risiken,Verlustdaten-Erfassung,Erfassung und Kategorisierung operationeller Verlustereignisse,Task
+Risk Analytics,Bewertung operationeller Risiken,Szenario-Analyse,Durchführung operationeller Risikozenario-Workshops,Task
+Risk Analytics,Stresstestszenarien,Makroökonomisches-Szenario-Design,Design adverser und schwer adverser Szenarien,Task
+Risk Analytics,Stresstestszenarien,Szenario-Kalibrierung,Kalibrierung von Szenarien zu Wahrscheinlichkeitsniveaus,Task
+Risk Analytics,Stresstestszenarien,Portfolio-Auswirkungs-Modellierung,Modellierung von Stress-Auswirkung auf Portfolio-Leistung,Task
+Risk Analytics,Stresstestszenarien,CCAR- & DFAST-Compliance,Sicherstellung Dodd-Frank-Stresstest-Compliance,Documentation
+Risk Analytics,Automatisierung der regulatorischen Berichterstattung,Berichtsvorlagen-Entwicklung,Entwicklung von Vorlagen für regulatorische Berichte,Documentation
+Risk Analytics,Automatisierung der regulatorischen Berichterstattung,Automatisierte Berichtserstellung,Automatisierung von Basel-III-, CCAR- und Liquiditätsberichterstattung,Task
+Risk Analytics,Automatisierung der regulatorischen Berichterstattung,Berichtsvalidierungs-Kontrollen,Implementierung automatisierter Berichtsvalidierungsprüfungen,Task
+Risk Analytics,Automatisierung der regulatorischen Berichterstattung,Einreichungs-Workflow,Aufbau regulatorischer Einreichungs-Workflow und Audit-Trail,Task
+Risk Analytics,Executive Dashboard,Risikoappetit-Monitoring,Überwachung von Risikometriken gegen vorstandsgenehmigte Limits,Feature
+Risk Analytics,Executive Dashboard,Konzentrations-Risiko-Visualisierung,Visualisierung von Portfolio-Konzentrationen und Korrelationen,Task
+Risk Analytics,Executive Dashboard,Trend-Analyse,Anzeige historischer Trends und Forward-Indikatoren,Task
+Risk Analytics,Executive Dashboard,Drill-Down-Fähigkeiten,Aktivierung von Drill-Down von Portfolio- zu Positionsebene,Feature
+Trade Finance,Dokumentendigitalisierung,Dokumentenstandards-Definition,Definition digitaler Dokumentenstandards und Formate,Documentation
+Trade Finance,Dokumentendigitalisierung,OCR- & Dokumentenerfassung,Implementierung OCR für Papierdokument-Digitalisierung,Task
+Trade Finance,Dokumentendigitalisierung,Elektronisches Dokumentenrepository,Aufbau zentralisiertes Handelsdokumenten-Repository,Task
+Trade Finance,Dokumentendigitalisierung,Versionskontrolle & Audit-Trail,Implementierung von Dokumentenversionierung und Änderungsverfolgung,Task
+Trade Finance,Akkreditiv-Workflow,LC-Antragsverarbeitung,Digitalisierung LC-Antrag und KYC-Prozess,Task
+Trade Finance,Akkreditiv-Workflow,Compliance-Prüfung,Automatisierung Sanktions- und Compliance-Screening,Task
+Trade Finance,Akkreditiv-Workflow,LC-Ausgabe & Änderung,Digitalisierung LC-Ausgabe und Änderungs-Workflows,Task
+Trade Finance,Akkreditiv-Workflow,Dokumentenprüfung,Aufbau von Tools zur Dokumentdiskrepanz-Identifizierung,Feature
+Trade Finance,Rechnungsfinanzierungsmodul,Rechnungsverifizierung,Verifizierung von Rechnungsauthentizität und zugrunde liegendem Handel,Task
+Trade Finance,Rechnungsfinanzierungsmodul,Kreditbewertung,Implementierung automatisierter Käuferkreditbewertung,Task
+Trade Finance,Rechnungsfinanzierungsmodul,Diskontsatz-Berechnung,Berechnung von Diskontsätzen basierend auf Risikofaktoren,Task
+Trade Finance,Rechnungsfinanzierungsmodul,Finanzierung & Settlement,Automatisierung von Finanzierungs- und Settlement-Prozessen,Task
+Trade Finance,Supply-Chain-Transparenz,Sendungsverfolgung-Integration,Integration mit Reedereien und IoT-Sensoren,Task
+Trade Finance,Supply-Chain-Transparenz,Meilenstein-Event-Erfassung,Erfassung wichtiger Versand- und Zoll-Meilensteine,Task
+Trade Finance,Supply-Chain-Transparenz,Echtzeit-Transparenz-Dashboard,Aufbau von End-to-End-Supply-Chain-Transparenz,Feature
+Trade Finance,Supply-Chain-Transparenz,Ausnahme-Alarme,Konfiguration von Alarmen für Versandverzögerungen und Ausnahmen,Feature
+Trade Finance,Smart-Contract-Automatisierung,Smart-Contract-Design,Design selbstausführender Handelsfinanzierungs-Smart-Contracts,Task
+Trade Finance,Smart-Contract-Automatisierung,Event-Oracle-Integration,Integration von Versand- und Zahlungs-Event-Orakeln,Task
+Trade Finance,Smart-Contract-Automatisierung,Automatisierte Zahlungsfreigabe,Auslösung von Zahlungen bei dokumentiertem Meilenstein-Abschluss,Feature
+Trade Finance,Smart-Contract-Automatisierung,Dispute-Resolution-Mechanismus,Implementierung Multi-Party-Dispute-Resolutionslogik,Task
+Trade Finance,Banknetzwerkintegration,SWIFT-Integration,Integration mit SWIFT-Netzwerk für Bank-Messaging,Task
+Trade Finance,Banknetzwerkintegration,Bankpartner-Onboarding,Onboarding von Korrespondenzbanken auf digitale Plattform,Task
+Trade Finance,Banknetzwerkintegration,Interbank-Reconciliation,Automatisierung von Interbank-Positions-Reconciliation,Task
+Trade Finance,Banknetzwerkintegration,Grenzüberschreitende-Zahlungsschienen,Integration mit grenzüberschreitenden Zahlungsnetzwerken,Task
+Trade Finance,Plattformtests,End-to-End-Transaktions-Testing,Durchführung vollständiger Handelsfinanzierungs-Transaktionsabläufe,Task
+Trade Finance,Plattformtests,Multi-Party-Testing,Test von Workflows mit mehreren Banken und Parteien,Task
+Trade Finance,Plattformtests,Performance- & Last-Testing,Durchführung von Plattform-Performance- und Skalierbarkeitstests,Task
+Trade Finance,Plattformtests,Behebung Dokument-Upload-Fehler,Behebung von Problemen mit großen Dokumentuploads,Bug
+Open Banking,API-Sicherheits-Framework,OAuth-2.0-Implementierung,Implementierung OAuth-2.0-Autorisierungs-Framework,Task
+Open Banking,API-Sicherheits-Framework,API-Sicherheitsstandards,Definition von API-Sicherheitsrichtlinien und Standards,Documentation
+Open Banking,API-Sicherheits-Framework,Bedrohungsmodellierung,Durchführung API-Bedrohungsmodellierung und Risikobewertung,Task
+Open Banking,API-Sicherheits-Framework,Penetrationstests,Durchführung API-Sicherheits-Penetrationstests,Task
+Open Banking,Authentifizierung & Autorisierung,Strong-Customer-Authentication,Implementierung SCA für Zahlungsinitiierung,Feature
+Open Banking,Authentifizierung & Autorisierung,Einwilligungs-Management,Aufbau granularer Einwilligungserfassung und -verwaltung,Task
+Open Banking,Authentifizierung & Autorisierung,Token-Management,Implementierung sicherer Token-Generierung und -Erneuerung,Task
+Open Banking,Authentifizierung & Autorisierung,Betrugserkennungs-Integration,Integration von Betrugserkennung in Authentifizierungs-Flow,Task
+Open Banking,Kontoinformations-APIs,Kontolisten-API,Entwicklung API zum Abrufen von Kundenkontolisten,Feature
+Open Banking,Kontoinformations-APIs,Saldenabfrage-API,Aufbau Echtzeit-Saldenabfrage-API,Feature
+Open Banking,Kontoinformations-APIs,Transaktionshistorie-API,Implementierung Transaktionshistorie-Abruf-API,Feature
+Open Banking,Kontoinformations-APIs,Dauerauftrag- & Lastschrift-APIs,Freigabe wiederkehrender Zahlungsinformations-APIs,Feature
+Open Banking,Zahlungsinitiierungs-APIs,Einzelsofortzahlungs-API,Entwicklung Sofortzahlungs-Initiierungs-API,Feature
+Open Banking,Zahlungsinitiierungs-APIs,Massenzahlungs-API,Aufbau Massenzahlungs-Initiierungsfähigkeit,Feature
+Open Banking,Zahlungsinitiierungs-APIs,Zahlungsstatus-API,Implementierung Zahlungsstatus-Verfolgungs-API,Feature
+Open Banking,Zahlungsinitiierungs-APIs,Rückerstattungsverarbeitungs-API,Entwicklung Zahlungsrückerstattungs- und Storno-APIs,Feature
+Open Banking,Entwicklerportal,API-Dokumentation,Erstellung umfassender API-Dokumentation,Documentation
+Open Banking,Entwicklerportal,Interaktive API-Konsole,Aufbau API-Sandbox und Testing-Umgebung,Feature
+Open Banking,Entwicklerportal,Code-Beispiele & SDKs,Entwicklung von SDKs in Python, Java, Node.js und .NET,Task
+Open Banking,Entwicklerportal,Entwickler-Support-Forum,Start von Entwickler-Community und Support-Forum,Task
+Open Banking,Drittanbieter-Partner-Onboarding,TPP-Registrierungsprozess,Design von Drittanbieter-Provider-Registrierungs-Workflow,Task
+Open Banking,Drittanbieter-Partner-Onboarding,Zertifikat-Management,Implementierung eIDAS-Zertifikatsvalidierung,Task
+Open Banking,Drittanbieter-Partner-Onboarding,Onboarding-Dokumentation,Erstellung TPP-Onboarding-Leitfäden und Materialien,Documentation
+Open Banking,Drittanbieter-Partner-Onboarding,Sandbox-Testing,Bereitstellung Sandbox-Umgebung für TPP-Testing,Task
+Open Banking,Überwachung & Analyse,API-Nutzungs-Analytik,Aufbau API-Nutzungs-Dashboards und Analytik,Feature
+Open Banking,Überwachung & Analyse,Performance-Monitoring,Überwachung API-Latenz und Verfügbarkeits-SLAs,Task
+Open Banking,Überwachung & Analyse,Anomalie-Erkennung,Implementierung API-Nutzungs-Anomalie-Erkennung,Feature
+Open Banking,Überwachung & Analyse,Regulatorische Berichterstattung,Generierung regulatorischer Berichte zu API-Nutzung,Documentation

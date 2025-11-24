@@ -1283,6 +1283,51 @@ export class TaskManagementOperation extends BaseOperation {
     }
 
     /**
+     * Load milestone-specific tasks from CSV file
+     */
+    private loadMilestoneTasksFromCSV(csvPath?: string, isGerman: boolean = false): Map<string, Array<{ title: string; description: string; type: string }>> {
+        const tasksMap = new Map<string, Array<{ title: string; description: string; type: string }>>();
+
+        if (!csvPath) return tasksMap;
+
+        // Determine the dataset directory from csvPath
+        const datasetDir = path.dirname(csvPath);
+        const milestoneTasksPath = path.join(datasetDir, 'milestone-tasks.csv');
+
+        if (!fs.existsSync(milestoneTasksPath)) {
+            return tasksMap;
+        }
+
+        try {
+            const { parse } = require('csv-parse/sync');
+            const fileContent = fs.readFileSync(milestoneTasksPath, 'utf-8');
+            const records = parse(fileContent, {
+                columns: true,
+                skip_empty_lines: true,
+                trim: true,
+            });
+
+            for (const record of records) {
+                const key = `${record.project_short_title}::${record.milestone_title}`;
+                if (!tasksMap.has(key)) {
+                    tasksMap.set(key, []);
+                }
+                tasksMap.get(key)!.push({
+                    title: record.task_title,
+                    description: record.task_description,
+                    type: record.task_type
+                });
+            }
+
+            console.log(`Loaded milestone-specific tasks from ${milestoneTasksPath}`);
+        } catch (error: any) {
+            console.log(`Error loading milestone tasks CSV: ${error.message}`);
+        }
+
+        return tasksMap;
+    }
+
+    /**
      * Simple hash function for string to number
      */
     private hashString(str: string): number {
@@ -1322,6 +1367,16 @@ export class TaskManagementOperation extends BaseOperation {
         console.log(`Found ${milestoneMappings.length} milestones\n`);
 
         const isGerman = csvPath?.includes('data-de') || csvPath?.includes('sff-data-de');
+
+        // Try to load milestone-specific tasks from CSV
+        const milestoneTasksMap = this.loadMilestoneTasksFromCSV(csvPath, isGerman);
+        const useCSVTasks = milestoneTasksMap.size > 0;
+
+        if (useCSVTasks) {
+            console.log(`Using milestone-specific tasks from CSV (${milestoneTasksMap.size} milestones with custom tasks)\n`);
+        } else {
+            console.log(`No milestone-tasks.csv found, using generic tasks\n`);
+        }
 
         const GENERIC_TASKS_EN = [
             { title: 'Research and Requirements Analysis', description: 'Conduct comprehensive research and gather requirements for this milestone', type: 'Task' },
@@ -1539,14 +1594,24 @@ export class TaskManagementOperation extends BaseOperation {
                 const assigneeIdsFromMs = assigneeUserIds;
 
                 // Generate unique tasks for THIS milestone based on project + milestone combination
-                const milestoneTasks = this.selectTasksForMilestone(
-                    GENERIC_TASKS,
-                    i,
-                    milestoneMappings.length,
-                    ms.project_short_title,
-                    ms.milestone_title
-                );
-                console.log(`  Selected ${milestoneTasks.length} unique tasks for "${ms.project_short_title} - ${ms.milestone_title}"`);
+                let milestoneTasks: Array<{ title: string; description: string; type: string }>;
+
+                const milestoneKey = `${ms.project_short_title}::${ms.milestone_title}`;
+                if (useCSVTasks && milestoneTasksMap.has(milestoneKey)) {
+                    // Use CSV tasks for this specific milestone
+                    milestoneTasks = milestoneTasksMap.get(milestoneKey)!;
+                    console.log(`  Using ${milestoneTasks.length} CSV tasks for "${ms.project_short_title} - ${ms.milestone_title}"`);
+                } else {
+                    // Fallback to generic tasks
+                    milestoneTasks = this.selectTasksForMilestone(
+                        GENERIC_TASKS,
+                        i,
+                        milestoneMappings.length,
+                        ms.project_short_title,
+                        ms.milestone_title
+                    );
+                    console.log(`  Selected ${milestoneTasks.length} generic tasks for "${ms.project_short_title} - ${ms.milestone_title}"`);
+                }
 
                 for (let taskIdx = 0; taskIdx < milestoneTasks.length; taskIdx++) {
                     const t = milestoneTasks[taskIdx];

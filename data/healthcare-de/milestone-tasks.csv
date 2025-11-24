@@ -1,0 +1,233 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+EHR Platform,Bewertung der regulatorischen Compliance,HIPAA-Compliance-Review,Bewertung der HIPAA Privacy- und Security-Rule-Anforderungen,Task
+EHR Platform,Bewertung der regulatorischen Compliance,Meaningful-Use-Analyse,Analyse der CMS Meaningful Use-Zertifizierungskriterien,Task
+EHR Platform,Bewertung der regulatorischen Compliance,Staatliche regulatorische Anforderungen,Überprüfung bundesstaatsspezifischer Gesundheitsinformationsaustauschlgesetze,Task
+EHR Platform,Bewertung der regulatorischen Compliance,Compliance-Gap-Analyse,Dokumentation von Compliance-Lücken und Sanierungsplan,Documentation
+EHR Platform,Datenmodelldesign & Standardausrichtung,Klinisches Datenmodelldesign,Design normalisiertes klinisches Datenmodell,Task
+EHR Platform,Datenmodelldesign & Standardausrichtung,HL7 FHIR-Implementierung,Implementierung von HL7 FHIR-Ressourcendefinitionen,Task
+EHR Platform,Datenmodelldesign & Standardausrichtung,Terminologie-Integration,Integration von SNOMED CT, LOINC und RxNorm-Terminologien,Task
+EHR Platform,Datenmodelldesign & Standardausrichtung,Datenwörterbuch-Dokumentation,Dokumentation umfassendes Datenwörterbuch,Documentation
+EHR Platform,Kernplattformentwicklung,Patientenverwaltungsmodul,Entwicklung von Patientenregistrierung und Demografieverwaltung,Task
+EHR Platform,Kernplattformentwicklung,Klinische Dokumentation,Aufbau klinischer Notizenerfassung mit Vorlagen,Feature
+EHR Platform,Kernplattformentwicklung,Auftragserfassung & Ergebnisse,Implementierung computergestütztes Arztauftragseingabesystem,Feature
+EHR Platform,Kernplattformentwicklung,Medikamentenmanagement,Entwicklung von E-Verschreibung und Medikamentenverabreichungsprotokoll,Feature
+EHR Platform,Integration klinischer Arbeitsabläufe,Kliniker-Workflow-Analyse,Analyse aktueller klinischer Arbeitsabläufe und Pain Points,Task
+EHR Platform,Integration klinischer Arbeitsabläufe,Workflow-Engine-Entwicklung,Aufbau konfigurierbarer klinischer Workflow-Engine,Task
+EHR Platform,Integration klinischer Arbeitsabläufe,Aufgabenverwaltung & Warnungen,Implementierung klinischer Aufgabenlisten und Warnungsbenachrichtigungen,Feature
+EHR Platform,Integration klinischer Arbeitsabläufe,Mobiler klinischer Zugriff,Entwicklung mobiler Anwendung für Klinikerzugriff,Feature
+EHR Platform,Interoperabilitätstests,HL7-Schnittstellenentwicklung,Entwicklung von HL7 v2-Schnittstellen für Legacy-Systemintegration,Task
+EHR Platform,Interoperabilitätstests,Direct Secure Messaging,Implementierung Direct-Protokoll für sicheren Gesundheitsinformationsaustausch,Task
+EHR Platform,Interoperabilitätstests,Gesundheitsinformationsaustausch,Verbindung zum regionalen Gesundheitsinformationsaustausch,Task
+EHR Platform,Interoperabilitätstests,Interoperabilitätsvalidierung,Durchführung von Integrating the Healthcare Enterprise-Tests,Task
+EHR Platform,Sicherheits- & Datenschutzaudit,Sicherheitsarchitektur-Review,Überprüfung von Sicherheitskontrollen und Architektur,Task
+EHR Platform,Sicherheits- & Datenschutzaudit,Penetrationstests,Durchführung von Anwendungs- und Infrastruktur-Penetrationstests,Task
+EHR Platform,Sicherheits- & Datenschutzaudit,Audit-Log-Review,Validierung umfassender Audit-Protokollierung von Zugriffen,Task
+EHR Platform,Sicherheits- & Datenschutzaudit,Drittanbieter-Sicherheitsbewertung,Erlangung der HITRUST CSF-Zertifizierung,Documentation
+EHR Platform,Pilot-Krankenhauseinführung,Pilotstandort-Auswahl,Auswahl von Pilot-Krankenhauseinheit oder Klinik,Task
+EHR Platform,Pilot-Krankenhauseinführung,Datenmigration,Migration von Patientenakten aus Legacy-System,Task
+EHR Platform,Pilot-Krankenhauseinführung,Mitarbeiterschulung,Schulung klinisches und administratives Personal,Task
+EHR Platform,Pilot-Krankenhauseinführung,Go-Live-Support,Bereitstellung intensiver Vor-Ort-Go-Live-Unterstützung,Task
+EHR Platform,Vollständiger Rollout & Schulung,Rollout-Projektplanung,Planung phasenweiser Rollout über alle Einrichtungen,Task
+EHR Platform,Vollständiger Rollout & Schulung,Super-User-Schulung,Schulung von Super-Usern und Clinical-Informatics-Champions,Task
+EHR Platform,Vollständiger Rollout & Schulung,End-User-Schulungsprogramm,Durchführung umfassenden End-User-Schulungsprogramms,Task
+EHR Platform,Vollständiger Rollout & Schulung,Optimierung & Verfeinerung,Durchführung Post-Implementierungs-Optimierung,Task
+Drug Discovery,Literaturrecherche & Datenerfassung,Wissenschaftliches Literatur-Mining,Mining veröffentlichter Forschung für Compound-Target-Beziehungen,Task
+Drug Discovery,Literaturrecherche & Datenerfassung,Klinische-Studie-Datenanalyse,Analyse klinischer Studienergebnisse und Outcomes,Task
+Drug Discovery,Literaturrecherche & Datenerfassung,Patent-Landschaftsanalyse,Überprüfung pharmazeutischer Patentlandschaft,Task
+Drug Discovery,Literaturrecherche & Datenerfassung,Target-Identifikation,Identifizierung und Validierung krankheitsrelevanter Arzneimittelziele,Task
+Drug Discovery,Molekulare Datenbankeinrichtung,Chemische Strukturdatenbank,Aufbau Datenbank chemischer Verbindungsstrukturen,Task
+Drug Discovery,Molekulare Datenbankeinrichtung,Bioaktivitätsdaten-Integration,Integration von Compound-Bioaktivitätsdaten aus ChEMBL und PubChem,Task
+Drug Discovery,Molekulare Datenbankeinrichtung,Proteinstrukturdatenbank,Kuratierung von Proteinstrukturdaten aus PDB,Task
+Drug Discovery,Molekulare Datenbankeinrichtung,Datenbank-Qualitätskontrolle,Validierung von Datenqualität und Strukturstandardisierung,Task
+Drug Discovery,Machine-Learning-Modelltraining,Molekularer Deskriptor-Berechnung,Berechnung molekularer Fingerabdrücke und Deskriptoren,Task
+Drug Discovery,Machine-Learning-Modelltraining,QSAR-Modellentwicklung,Entwicklung quantitativer Struktur-Aktivitäts-Beziehungsmodelle,Task
+Drug Discovery,Machine-Learning-Modelltraining,Deep Learning für Arzneimitteldesign,Training von Graph Neural Networks für molekulare Eigenschaftsvorhersage,Feature
+Drug Discovery,Machine-Learning-Modelltraining,Modellvalidierung,Validierung der Modellleistung mittels Kreuzvalidierung,Task
+Drug Discovery,Automatisierung des Compound-Screenings,Virtual-Screening-Pipeline,Implementierung High-Throughput-Virtual-Screening-Pipeline,Task
+Drug Discovery,Automatisierung des Compound-Screenings,Molekulares Docking,Durchführung automatisierter molekularer Docking-Simulationen,Task
+Drug Discovery,Automatisierung des Compound-Screenings,Hit-Identifikation,Identifizierung vielversprechender Hit-Compounds aus Screening,Task
+Drug Discovery,Automatisierung des Compound-Screenings,Roboter-Labor-Automatisierung,Integration mit robotischen High-Throughput-Screening-Systemen,Feature
+Drug Discovery,Lead-Optimierung,Strukturbasiertes Design,Anwendung strukturbasierter Arzneimitteldesign-Methoden,Task
+Drug Discovery,Lead-Optimierung,ADMET-Vorhersage,Vorhersage von Absorption, Verteilung, Metabolismus und Toxizität,Task
+Drug Discovery,Lead-Optimierung,Lead-Compound-Synthese,Synthese und Charakterisierung von Lead-Compounds,Task
+Drug Discovery,Lead-Optimierung,SAR-Analyse,Durchführung von Struktur-Aktivitäts-Beziehungsanalyse,Task
+Drug Discovery,Präklinische Validierung,In-Vitro-Wirksamkeitstests,Durchführung zellbasierter Assay-Validierung,Task
+Drug Discovery,Präklinische Validierung,In-Vivo-Tierstudien,Durchführung von Tiermodell-Wirksamkeits- und Sicherheitsstudien,Task
+Drug Discovery,Präklinische Validierung,Toxikologiestudien,Durchführung präklinischer Toxikologiebewertung,Task
+Drug Discovery,Präklinische Validierung,IND-Enabling-Studien,Abschluss IND-Enabling-Paket für FDA-Einreichung,Task
+Drug Discovery,Patentanmeldung & Dokumentation,Patent-Prior-Art-Recherche,Durchführung umfassender Patent-Prior-Art-Recherche,Task
+Drug Discovery,Patentanmeldung & Dokumentation,Patentantrags-Entwurf,Entwurf Patentantrag mit Ansprüchen,Documentation
+Drug Discovery,Patentanmeldung & Dokumentation,Vorläufige Patentanmeldung,Einreichung vorläufiger Patentanmeldung,Task
+Drug Discovery,Patentanmeldung & Dokumentation,Wissenschaftliche Publikation,Vorbereitung peer-reviewed wissenschaftlicher Publikationen,Documentation
+Telemedicine,Plattform-Architekturdesign,Architekturanforderungen,Definition von Skalierbarkeits-, Sicherheits- und Integrationsanforderungen,Documentation
+Telemedicine,Plattform-Architekturdesign,Cloud-Architekturdesign,Design HIPAA-konformer Cloud-Architektur,Task
+Telemedicine,Plattform-Architekturdesign,Microservices-Design,Design Microservices-basierter Plattformarchitektur,Task
+Telemedicine,Plattform-Architekturdesign,API-Strategie,Definition RESTful-API-Strategie für Integrationen,Documentation
+Telemedicine,Videokonsultationssystem,WebRTC-Video-Plattform,Implementierung WebRTC-basierter Videokonsultation,Feature
+Telemedicine,Videokonsultationssystem,Bildschirmfreigabe & Annotation,Ermöglichung von Bildschirmfreigabe und Bildannotation,Feature
+Telemedicine,Videokonsultationssystem,Virtuelles Wartezimmer,Aufbau digitaler Wartezimmer-Erfahrung,Task
+Telemedicine,Videokonsultationssystem,Aufzeichnung & Transkription,Implementierung von Konsultationsaufzeichnung und Transkription,Feature
+Telemedicine,Wearable-Device-Integration,Wearable-Device-Auswahl,Evaluierung und Auswahl kompatibler Wearable-Geräte,Task
+Telemedicine,Wearable-Device-Integration,Bluetooth- & API-Integration,Integration mit Wearable-Device-APIs und Protokollen,Task
+Telemedicine,Wearable-Device-Integration,Vitalzeichen-Streaming,Streaming von Echtzeit-Vitalzeichen während Konsultationen,Feature
+Telemedicine,Wearable-Device-Integration,Remote-Patientenüberwachung,Ermöglichung kontinuierlicher Remote-Patientenüberwachung,Feature
+Telemedicine,Elektronisches Rezeptmodul,E-Verschreibungs-Integration,Integration mit Surescripts oder ähnlichem E-Verschreibungsnetzwerk,Task
+Telemedicine,Elektronisches Rezeptmodul,Arzneimitteldatenbank-Integration,Integration von Formulary- und Arzneimittelinteraktionsdatenbanken,Task
+Telemedicine,Elektronisches Rezeptmodul,Verschreibung kontrollierter Substanzen,Unterstützung DEA-konformer E-Verschreibung kontrollierter Substanzen,Task
+Telemedicine,Elektronisches Rezeptmodul,Rezepthistorie-Zugriff,Bereitstellung von Zugriff auf Patientenmedikationshistorie,Task
+Telemedicine,Datensicherheitsimplementierung,End-to-End-Verschlüsselung,Implementierung von Verschlüsselung für Video- und Datenübertragung,Task
+Telemedicine,Datensicherheitsimplementierung,Authentifizierung & Autorisierung,Implementierung von Multi-Faktor-Authentifizierung und RBAC,Task
+Telemedicine,Datensicherheitsimplementierung,BAA & HIPAA-Compliance,Sicherstellung Business Associate Agreement-Compliance,Documentation
+Telemedicine,Datensicherheitsimplementierung,Sicherheits-Audit & Penetrationstest,Durchführung unabhängiger Sicherheitsbewertung,Task
+Telemedicine,Anbieterschulungsprogramm,Plattformschulung,Schulung von Gesundheitsdienstleistern zur Plattformnutzung,Task
+Telemedicine,Anbieterschulungsprogramm,Virtuelle Konsultationsfähigkeiten,Bereitstellung von Schulung zu effektiver Telemedizin-Konsultation,Task
+Telemedicine,Anbieterschulungsprogramm,Technischer Support-Schulung,Schulung von Anbietern zur Fehlerbehebung häufiger Probleme,Task
+Telemedicine,Anbieterschulungsprogramm,Schulungsmaterial-Entwicklung,Entwicklung umfassender Schulungsleitfäden und Videos,Documentation
+Telemedicine,Patientenonboarding,Patientenportal-Entwicklung,Entwicklung Patienten-Selbstbedienungsportal,Feature
+Telemedicine,Patientenonboarding,Patientenbildungsmaterialien,Erstellung von Patienten-Leitfäden und Anleitungsvideos,Documentation
+Telemedicine,Patientenonboarding,Gerätekompatibilitätstests,Test der Plattform über Geräte und Browser hinweg,Task
+Telemedicine,Patientenonboarding,Patienten-Support-Helpline,Einrichtung technischer Patienten-Support-Hotline,Task
+Telemedicine,Behördliche Genehmigung,Staatliche Lizenzierungs-Compliance,Sicherstellung Anbieterlizenzierungs-Compliance über Bundesstaaten hinweg,Task
+Telemedicine,Behördliche Genehmigung,Telegesundheits-Richtlinienentwicklung,Entwicklung klinischer Protokolle und Telegesundheits-Richtlinien,Documentation
+Telemedicine,Behördliche Genehmigung,Credentialing & Privilegierung,Abschluss Anbieter-Credentialing für Telemedizin,Task
+Telemedicine,Behördliche Genehmigung,CMS-Erstattungs-Zertifizierung,Erlangung CMS-Telegesundheits-Erstattungszertifizierung,Documentation
+Clinical Trials,Studienprotokoll-Managementsystem,Protokoll-Verfassung,Aufbau strukturierter Protokollverfassung und Versionierung,Task
+Clinical Trials,Studienprotokoll-Managementsystem,Amendment-Tracking,Verfolgung von Protokolländerungen und behördlichen Einreichungen,Task
+Clinical Trials,Studienprotokoll-Managementsystem,Standort-Dokumentenverwaltung,Verwaltung wesentlicher Dokumente für Studienstandorte,Task
+Clinical Trials,Studienprotokoll-Managementsystem,Regulatorische Einreichungsintegration,Integration mit regulatorischen Einreichungssystemen,Task
+Clinical Trials,Patienten-Matching-Algorithmus,Eignungskriterien-Engine,Aufbau Regel-Engine für Ein-/Ausschlusskriterien,Task
+Clinical Trials,Patienten-Matching-Algorithmus,EHR-Data-Mining,Mining von EHR-Daten zur Identifizierung potenziell geeigneter Patienten,Feature
+Clinical Trials,Patienten-Matching-Algorithmus,AI-gestütztes Matching,Entwicklung von Machine Learning für Patienten-Studien-Matching,Feature
+Clinical Trials,Patienten-Matching-Algorithmus,Arztbenachrichtigung,Benachrichtigung von Ärzten über potenziell geeignete Patienten,Task
+Clinical Trials,Elektronische Datenerfassung,EDC-Plattformauswahl,Auswahl und Implementierung klinischer EDC-Plattform,Task
+Clinical Trials,Elektronische Datenerfassung,eCRF-Design,Design elektronischer Case Report Forms,Task
+Clinical Trials,Elektronische Datenerfassung,Edit-Check-Programmierung,Programmierung von Datenvalidierung und Edit-Checks,Task
+Clinical Trials,Elektronische Datenerfassung,Mobile Datenerfassung,Ermöglichung Offline-mobiler Datenerfassungsfähigkeit,Feature
+Clinical Trials,Berichterstattung unerwünschter Ereignisse,AE-Erfassung & Codierung,Aufbau unerwünschter Ereigniserfassung mit MedDRA-Codierung,Task
+Clinical Trials,Berichterstattung unerwünschter Ereignisse,Schwerwiegende-AE-Workflow,Implementierung beschleunigter SAE-Meldeworkflow,Task
+Clinical Trials,Berichterstattung unerwünschter Ereignisse,Regulatorische Berichterstattung,Automatisierung regulatorischer AE-Berichterstattung an FDA und IRBs,Task
+Clinical Trials,Berichterstattung unerwünschter Ereignisse,Sicherheitsüberwachungs-Dashboard,Aufbau Echtzeit-Sicherheitsüberwachungs-Dashboard,Feature
+Clinical Trials,Regulatorische Einreichungstools,eCTD-Einreichung,Generierung elektronischer Common Technical Document-Einreichungen,Task
+Clinical Trials,Regulatorische Einreichungstools,Einreichungs-Tracking,Verfolgung regulatorischer Einreichungsstatus und Korrespondenz,Task
+Clinical Trials,Regulatorische Einreichungstools,Globale Einreichungsunterstützung,Unterstützung multinationaler regulatorischer Einreichungen,Feature
+Clinical Trials,Regulatorische Einreichungstools,Regulatorische Intelligence,Integration regulatorischer Anforderungs-Updates,Task
+Clinical Trials,Multi-Site-Integration,Standortauswahl & Aktivierung,Verwaltung von Standort-Machbarkeit, Auswahl und Aktivierung,Task
+Clinical Trials,Multi-Site-Integration,Standort-Monitoring,Ermöglichung Remote- und Vor-Ort-Monitoring-Workflows,Task
+Clinical Trials,Multi-Site-Integration,Standort-Kommunikation,Bereitstellung sicheres Kommunikationsportal für Standorte,Task
+Clinical Trials,Multi-Site-Integration,Standort-Leistungsmetriken,Verfolgung von Standort-Einschreibung und Leistungs-KPIs,Task
+Clinical Trials,Datenanalyse-Dashboard,Einschreibungs-Analytik,Verfolgung Einschreibungsleistung gegen Ziele,Feature
+Clinical Trials,Datenanalyse-Dashboard,Datenqualitätsmetriken,Überwachung von Datenvollständigkeit und Abfrageraten,Task
+Clinical Trials,Datenanalyse-Dashboard,Interim-Analyse-Unterstützung,Unterstützung von Data Safety Monitoring Board-Reviews,Task
+Clinical Trials,Datenanalyse-Dashboard,Prädiktive Analytik,Vorhersage von Einschreibungszeitplänen und Protokollrisiken,Feature
+Genomics,Sequenzierungsdaten-Pipeline,NGS-Datenverarbeitung,Aufbau Next-Generation-Sequencing-Datenpipeline,Task
+Genomics,Sequenzierungsdaten-Pipeline,Qualitätskontrolle & Filterung,Implementierung Read-Qualitätsfilterung und Trimming,Task
+Genomics,Sequenzierungsdaten-Pipeline,Alignment & Mapping,Durchführung Referenzgenom-Alignment mittels BWA oder ähnlich,Task
+Genomics,Sequenzierungsdaten-Pipeline,Pipeline-Automatisierung,Automatisierung End-to-End-Sequenzierungsanalyse-Workflow,Task
+Genomics,Varianten-Annotationssystem,Varianten-Calling,Implementierung GATK-basierter Varianten-Calling-Pipeline,Task
+Genomics,Varianten-Annotationssystem,Annotationsdatenbanken,Integration von ClinVar, gnomAD und COSMIC-Datenbanken,Task
+Genomics,Varianten-Annotationssystem,Varianten-Klassifikation,Klassifikation von Varianten mittels ACMG/AMP-Richtlinien,Task
+Genomics,Varianten-Annotationssystem,Strukturelle Varianten-Detektion,Erkennung und Annotation struktureller genomischer Varianten,Feature
+Genomics,Pharmakogenomik-Datenbank,PGx-Allel-Detektion,Erkennung pharmakogenomischer Allele aus Sequenzierungsdaten,Task
+Genomics,Pharmakogenomik-Datenbank,Arzneimittel-Gen-Interaktionsdatenbank,Integration von PharmGKB- und CPIC-Richtliniendatenbank,Task
+Genomics,Pharmakogenomik-Datenbank,Dosierungsempfehlungen,Generierung evidenzbasierter Medikamentendosierungsempfehlungen,Feature
+Genomics,Pharmakogenomik-Datenbank,Arzneimittelinteraktions-Warnungen,Implementierung pharmakogenomischer Warnungen in EHR,Feature
+Genomics,Klinische Entscheidungsunterstützung,Varianten-Interpretation,Aufbau automatisierter Varianten-Interpretationstools,Feature
+Genomics,Klinische Entscheidungsunterstützung,Literatur-Evidenz,Verknüpfung von Varianten mit unterstützender wissenschaftlicher Literatur,Task
+Genomics,Klinische Entscheidungsunterstützung,Therapieempfehlungen,Bereitstellung von Präzisionsmedizin-Behandlungsempfehlungen,Feature
+Genomics,Klinische Entscheidungsunterstützung,Klinische Berichtsgenerierung,Generierung klinischer genomischer Interpretationsberichte,Task
+Genomics,Genetische Beratungsschnittstelle,Familiengeschichten-Tool,Aufbau interaktives Familien-Stammbaum-Tool,Feature
+Genomics,Genetische Beratungsschnittstelle,Risikobewertungs-Rechner,Implementierung genetischer Risikorechner,Task
+Genomics,Genetische Beratungsschnittstelle,Beratungsnotizen,Bereitstellung strukturierter genetischer Beratungsdokumentation,Task
+Genomics,Genetische Beratungsschnittstelle,Patientenbildungsmaterialien,Entwicklung von Genomik-Patientenbildungsinhalten,Documentation
+Genomics,Datenschutz- & Einwilligungsmanagement,Informierte-Einwilligungs-Verwaltung,Verwaltung genomischer Test-Einwilligung,Task
+Genomics,Datenschutz- & Einwilligungsmanagement,Datenaustausch-Präferenzen,Erfassung von Patienten-Forschungsdatenaustausch-Präferenzen,Task
+Genomics,Datenschutz- & Einwilligungsmanagement,De-Identifikationstools,Implementierung genomischer Daten-De-Identifikation,Task
+Genomics,Datenschutz- & Einwilligungsmanagement,GINA-Compliance,Sicherstellung Genetic Information Nondiscrimination Act-Compliance,Documentation
+Genomics,Forschungskooperationsportal,Kohorten-Discovery,Ermöglichung für Forscher genomische Kohorten zu entdecken,Feature
+Genomics,Forschungskooperationsportal,Datenzugriffs-Governance,Implementierung Datenzugriffsanforderungs- und Genehmigungsworkflow,Task
+Genomics,Forschungskooperationsportal,Sichere Analyseumgebung,Bereitstellung sicherer genomischer Datenanalyse-Arbeitsumgebung,Task
+Genomics,Forschungskooperationsportal,Datenbeitrags-Portal,Ermöglichung für Forscher genomische Datensätze beizutragen,Feature
+Medical Imaging,DICOM-Integration,DICOM-Empfänger,Implementierung DICOM-Netzwerkempfänger und Speicherung,Task
+Medical Imaging,DICOM-Integration,Modality Worklist,Integration Modality Worklist mit RIS,Task
+Medical Imaging,DICOM-Integration,PACS-Integration,Integration mit bestehender PACS-Infrastruktur,Task
+Medical Imaging,DICOM-Integration,DICOM-Standards-Compliance,Sicherstellung IHE-Profil-Compliance,Documentation
+Medical Imaging,Bildvorverarbeitungs-Pipeline,Bildnormalisierung,Normalisierung von Bildintensität und Auflösung,Task
+Medical Imaging,Bildvorverarbeitungs-Pipeline,Region-of-Interest-Extraktion,Automatisierung ROI-Erkennung und Extraktion,Task
+Medical Imaging,Bildvorverarbeitungs-Pipeline,Bildaugmentation,Implementierung Datenaugmentation für Modelltraining,Task
+Medical Imaging,Bildvorverarbeitungs-Pipeline,Qualitätsbewertung,Bewertung und Filterung qualitativ schlechter Bilder,Task
+Medical Imaging,Deep-Learning-Modelltraining,Modellarchitektur-Auswahl,Evaluierung CNN-Architekturen für medizinische Bildgebung,Task
+Medical Imaging,Deep-Learning-Modelltraining,Transfer-Learning,Anwendung von Transfer-Learning aus ImageNet-Modellen,Task
+Medical Imaging,Deep-Learning-Modelltraining,Modelltraining & Validierung,Training von Modellen auf annotierten medizinischen Bildgebungsdatensätzen,Task
+Medical Imaging,Deep-Learning-Modelltraining,Ensemble-Methoden,Implementierung Modell-Ensemble für verbesserte Genauigkeit,Task
+Medical Imaging,Radiologen-Workflow-Integration,Worklist-Integration,Integration AI-Befunde in Radiologen-Worklist,Task
+Medical Imaging,Radiologen-Workflow-Integration,Hanging-Protokolle,Implementierung intelligenter Hanging-Protokolle mit AI-Ergebnissen,Feature
+Medical Imaging,Radiologen-Workflow-Integration,Annotationstools,Bereitstellung von Radiologen-Annotations- und Feedback-Tools,Task
+Medical Imaging,Radiologen-Workflow-Integration,Berichtsgenerierung,Auto-Population von Befunden in strukturierten Berichten,Feature
+Medical Imaging,Diagnostische Genauigkeitsvalidierung,Klinische Validierungsstudie,Durchführung prospektiver klinischer Validierungsstudie,Task
+Medical Imaging,Diagnostische Genauigkeitsvalidierung,Leistungsmetriken,Berechnung von Sensitivität, Spezifität und AUC,Task
+Medical Imaging,Diagnostische Genauigkeitsvalidierung,Reader-Studie,Durchführung Multi-Reader-Multi-Case-Studie,Task
+Medical Imaging,Diagnostische Genauigkeitsvalidierung,Validierungsbericht,Dokumentation klinischer Validierungsergebnisse,Documentation
+Medical Imaging,FDA-Zulassungsverfahren,510(k)-Vorbereitung,Vorbereitung FDA 510(k)-Premarket-Notification,Documentation
+Medical Imaging,FDA-Zulassungsverfahren,Prädikatsgeräte-Analyse,Identifizierung und Analyse von Prädikatsgeräten,Task
+Medical Imaging,FDA-Zulassungsverfahren,Klinische-Evidenz-Zusammenstellung,Zusammenstellung klinischer Leistungsevidenz,Task
+Medical Imaging,FDA-Zulassungsverfahren,FDA-Einreichung & Zulassung,Einreichung und Erlangung FDA 510(k)-Zulassung,Task
+Medical Imaging,Klinische Einführung,Installation & Konfiguration,Installation AI-System an klinischen Standorten,Task
+Medical Imaging,Klinische Einführung,Radiologen-Schulung,Schulung von Radiologen zu AI-unterstützter Interpretation,Task
+Medical Imaging,Klinische Einführung,Leistungsüberwachung,Überwachung realer AI-Leistungsmetriken,Task
+Medical Imaging,Klinische Einführung,Kontinuierliche Modellverbesserung,Implementierung kontinuierlichen Lernens und Modell-Updates,Task
+Pharmacy Auto,Robotisches Ausgabesystem,Systemdesign & Layout,Design Apotheken-Workflow und Roboter-Layout,Task
+Pharmacy Auto,Robotisches Ausgabesystem,Roboterbeschaffung,Beschaffung automatisierter Ausgaberoboter,Task
+Pharmacy Auto,Robotisches Ausgabesystem,Installation & Integration,Installation von Robotern und Integration mit Apothekensystem,Task
+Pharmacy Auto,Robotisches Ausgabesystem,Sicherheitszertifizierung,Erlangung Sicherheitszertifizierung für Robotersysteme,Documentation
+Pharmacy Auto,Bestandsverwaltung,Automatisierte Bestandsverfolgung,Implementierung Barcode-basierter Bestandsverfolgung,Feature
+Pharmacy Auto,Bestandsverwaltung,Nachbestellpunkt-Optimierung,Optimierung von Bestandsnachbestellpunkten und Mengen,Task
+Pharmacy Auto,Bestandsverwaltung,Verfallsdaten-Management,Verfolgung und Warnung für ablaufende Medikamente,Feature
+Pharmacy Auto,Bestandsverwaltung,Kontrollierte-Substanz-Verfolgung,Implementierung DEA-konformer kontrollierter Substanzverfolgung,Task
+Pharmacy Auto,Rezeptverifizierung,E-Rezept-Integration,Integration mit E-Verschreibungsnetzwerken,Task
+Pharmacy Auto,Rezeptverifizierung,Klinische Entscheidungsunterstützung,Implementierung von Arzneimittelinteraktions- und Allergieprüfung,Feature
+Pharmacy Auto,Rezeptverifizierung,Vorabgenehmigung,Verwaltung Vorabgenehmigungs-Workflow,Task
+Pharmacy Auto,Rezeptverifizierung,Apotheker-Verifizierungs-Workflow,Design abschließender Apotheker-Verifizierungsprozess,Task
+Pharmacy Auto,Etikettendruck & Verpackung,Automatisierter Etikettendruck,Automatisierung von Rezeptetiketten-Generierung und Druck,Task
+Pharmacy Auto,Etikettendruck & Verpackung,Medikamentenverpackung,Implementierung automatisierter Medikamentenverpackung,Task
+Pharmacy Auto,Etikettendruck & Verpackung,Patienteninformationsblätter,Auto-Generierung und Einbeziehung von Patientenmedikationsinformationen,Task
+Pharmacy Auto,Etikettendruck & Verpackung,Barcode-Verifizierung,Verifizierung Medikamentenverpackung mit Barcode-Scanning,Task
+Pharmacy Auto,Qualitätskontrollprüfungen,Medikamentenverifizierung,Implementierung automatisierter Medikamentenverifizierungsprüfungen,Feature
+Pharmacy Auto,Qualitätskontrollprüfungen,Gewichtsverifizierung,Verifizierung Paketgewicht gegen erwartete Werte,Task
+Pharmacy Auto,Qualitätskontrollprüfungen,Bilderkennung-QC,Verwendung Computer Vision für Pillenidentifikation,Feature
+Pharmacy Auto,Qualitätskontrollprüfungen,Qualitätsmetriken-Dashboard,Verfolgung von Ausgabegenauigkeit und Fehlerraten,Task
+Pharmacy Auto,Mitarbeiterschulung,Apotheker-Schulungsprogramm,Schulung von Apothekern auf automatisierten Systemen,Task
+Pharmacy Auto,Mitarbeiterschulung,Techniker-Schulung,Schulung von Apothekertechnikern zur Roboterbedienung,Task
+Pharmacy Auto,Mitarbeiterschulung,Sicherheitsverfahren,Schulung von Personal zu Notfallverfahren und manueller Überbrückung,Documentation
+Pharmacy Auto,Mitarbeiterschulung,Kompetenzbewertung,Durchführung von Personal-Kompetenzbewertungen,Task
+Pharmacy Auto,Go-Live-Support,Parallelbetrieb,Betrieb manueller und automatisierter Systeme parallel,Task
+Pharmacy Auto,Go-Live-Support,Prozessoptimierung,Optimierung von Workflows basierend auf anfänglichen Operationen,Task
+Pharmacy Auto,Go-Live-Support,Problemlösung,Lösung von Go-Live-technischen und Prozessproblemen,Bug
+Pharmacy Auto,Go-Live-Support,Leistungsüberwachung,Überwachung von Durchsatz- und Genauigkeitsmetriken,Task
+Patient Portal,User-Experience-Design,Patienten-Journey-Mapping,Mapping von Patientenportal-User-Journeys,Task
+Patient Portal,User-Experience-Design,UI/UX-Design,Design intuitive und barrierefreie Benutzeroberfläche,Task
+Patient Portal,User-Experience-Design,Usability-Tests,Durchführung Usability-Tests mit Patienten,Task
+Patient Portal,User-Experience-Design,Barrierefreiheits-Compliance,Sicherstellung WCAG 2.1 AA-Barrierefreiheits-Compliance,Task
+Patient Portal,Terminplanung,Anbieter-Verfügbarkeitsintegration,Integration von Echtzeit-Anbieter-Terminverfügbarkeit,Task
+Patient Portal,Terminplanung,Online-Terminbuchung,Ermöglichung Selbstbedienungs-Terminbuchung,Feature
+Patient Portal,Terminplanung,Terminerinnerungen,Versand automatisierter SMS- und E-Mail-Erinnerungen,Feature
+Patient Portal,Terminplanung,Virtueller-Besuch-Terminplanung,Unterstützung Telemedizin-Terminplanung,Feature
+Patient Portal,Laborergebnis-Integration,Labor-Schnittstellenentwicklung,Entwicklung HL7-Schnittstelle für Laborergebnisse,Task
+Patient Portal,Laborergebnis-Integration,Ergebnisfreigabe-Regeln,Implementierung anbieterdefinierter Ergebnisfreigabe-Regeln,Task
+Patient Portal,Laborergebnis-Integration,Ergebnisvisualisierung,Visualisierung von Labortrends und Referenzbereichen,Feature
+Patient Portal,Laborergebnis-Integration,Ergebnisinterpretation,Bereitstellung patientenfreundlicher Ergebnisinterpretationen,Task
+Patient Portal,Gesundheitsmetriken-Tracking,Vitalzeichen-Eingabe,Ermöglichung Patienten-Selbsteingabe von Vitalzeichen,Feature
+Patient Portal,Gesundheitsmetriken-Tracking,Wearable-Device-Integration,Integration von Daten aus Fitness-Trackern und Wearables,Feature
+Patient Portal,Gesundheitsmetriken-Tracking,Gesundheitsziel-Setzung,Ermöglichung für Patienten Gesundheitsziele zu setzen und zu verfolgen,Feature
+Patient Portal,Gesundheitsmetriken-Tracking,Fortschrittsvisualisierung,Visualisierung von Gesundheitsmetriken über Zeit,Task
+Patient Portal,Medikamentenerinnerungen,Medikamentenlisten-Verwaltung,Ermöglichung für Patienten Medikamentenlisten zu verwalten,Task
+Patient Portal,Medikamentenerinnerungen,Dosis-Erinnerungs-Benachrichtigungen,Versand von Medikamentenerinnerungs-Push-Benachrichtigungen,Feature
+Patient Portal,Medikamentenerinnerungen,Nachfüllungsanfragen,Ermöglichung von Online-Rezeptnachfüllungsanfragen,Feature
+Patient Portal,Medikamentenerinnerungen,Adhärenz-Tracking,Verfolgung und Berichterstattung von Medikamenten-Adhärenz,Feature
+Patient Portal,Sichere Nachrichtenübermittlung,Patienten-Anbieter-Messaging,Implementierung HIPAA-konformer sicherer Nachrichtenübermittlung,Feature
+Patient Portal,Sichere Nachrichtenübermittlung,Nachrichtenrouting,Weiterleitung von Nachrichten an geeignete Pflegeteammitglieder,Task
+Patient Portal,Sichere Nachrichtenübermittlung,Anhang-Unterstützung,Unterstützung sicherer Freigabe von Bildern und Dokumenten,Task
+Patient Portal,Sichere Nachrichtenübermittlung,Antwortzeit-Tracking,Verfolgung und Berichterstattung von Anbieter-Antwortzeiten,Task
+Patient Portal,Mobile-App-Entwicklung,iOS-App-Entwicklung,Entwicklung nativer iOS-Mobile-Anwendung,Feature
+Patient Portal,Mobile-App-Entwicklung,Android-App-Entwicklung,Entwicklung nativer Android-Mobile-Anwendung,Feature
+Patient Portal,Mobile-App-Entwicklung,Push-Benachrichtigungen,Implementierung Push-Benachrichtigungsfähigkeit,Feature
+Patient Portal,Mobile-App-Entwicklung,Biometrische Authentifizierung,Unterstützung Touch-ID- und Face-ID-Authentifizierung,Feature

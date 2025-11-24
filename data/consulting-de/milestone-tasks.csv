@@ -1,0 +1,257 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Digital Transform,Ist-Zustandsbewertung,As-Is-Prozess-Mapping,Dokumentation aktueller Geschäftsprozesse und Workflows,Task
+Digital Transform,Ist-Zustandsbewertung,Legacy-Systeminventar,Katalogisierung bestehender Technologiesysteme und Abhängigkeiten,Task
+Digital Transform,Ist-Zustandsbewertung,Stakeholder-Interviewprogramm,Durchführung strukturierter Interviews mit Schlüsselstakeholdern,Task
+Digital Transform,Ist-Zustandsbewertung,Ist-Zustandsbewertungsbericht,Zusammenstellung von Ergebnissen und Problemstellungsdokumentation,Documentation
+Digital Transform,Bewertung der digitalen Reife,Anwendung digitales Reifegradmodell,Anwendung branchenüblicher digitaler Reifegradbeurteilung,Task
+Digital Transform,Bewertung der digitalen Reife,Capability-Gap-Analyse,Identifizierung von Lücken zwischen aktuellem und Zielzustand,Task
+Digital Transform,Bewertung der digitalen Reife,Benchmark-Wettbewerbsanalyse,Vergleich digitaler Fähigkeiten mit Branchenwettbewerbern,Task
+Digital Transform,Bewertung der digitalen Reife,Reifegrad-Scorecard-Entwicklung,Erstellung digitaler Bereitschafts-Scorecard und Heatmaps,Documentation
+Digital Transform,Entwicklung der strategischen Roadmap,Zukunftsvisions-Workshops,Durchführung von Visionsworkshops mit Führungsteam,Task
+Digital Transform,Entwicklung der strategischen Roadmap,Business-Case-Entwicklung,Aufbau finanzieller Business Case mit ROI-Projektionen,Task
+Digital Transform,Entwicklung der strategischen Roadmap,Initiativ-Priorisierungsmatrix,Priorisierung von Initiativen mittels Wert-Aufwand-Framework,Task
+Digital Transform,Entwicklung der strategischen Roadmap,3-Jahres-Transformations-Roadmap,Entwicklung phasierter Implementierungs-Roadmap mit Meilensteinen,Documentation
+Digital Transform,Technologie-Stack-Auswahl,Definition technischer Anforderungen,Definition funktionaler und nichtfunktionaler Anforderungen,Documentation
+Digital Transform,Technologie-Stack-Auswahl,Anbieterbewertung & RFP,Durchführung von RFP-Prozess und Anbieterfähigkeitsbewertung,Task
+Digital Transform,Technologie-Stack-Auswahl,Proof-of-Concept-Testen,Durchführung von POCs für ausgewählte Technologielösungen,Task
+Digital Transform,Technologie-Stack-Auswahl,Technologieauswahl-Empfehlung,Dokumentation von Technologieauswahlbegründung und Entscheidung,Documentation
+Digital Transform,Pilotprojekt-Implementierung,Pilotumfang & Erfolgskriterien,Definition von Pilotumfang und messbaren Erfolgskennzahlen,Task
+Digital Transform,Pilotprojekt-Implementierung,Agile-Team-Bildung,Zusammenstellung funktionsübergreifender Pilot-Implementierungsteams,Task
+Digital Transform,Pilotprojekt-Implementierung,MVP-Entwicklung & Bereitstellung,Entwicklung und Bereitstellung des Minimum Viable Product,Task
+Digital Transform,Pilotprojekt-Implementierung,Pilot-Ergebnisanalyse,Messung von Ergebnissen und Sammlung gewonnener Erkenntnisse,Task
+Digital Transform,Prozess-Reengineering,To-Be-Prozessdesign,Design optimierter zukünftiger Geschäftsprozesse,Task
+Digital Transform,Prozess-Reengineering,Standardarbeitsanweisungen,Dokumentation neuer SOPs und Arbeitsanweisungen,Documentation
+Digital Transform,Prozess-Reengineering,Auswirkungsanalyse von Änderungen,Analyse organisatorischer Änderungsauswirkungen nach Abteilung,Task
+Digital Transform,Prozess-Reengineering,Prozessautomatisierungsmöglichkeiten,Identifizierung von RPA- und Workflow-Automatisierungskandidaten,Task
+Digital Transform,Mitarbeiterschulungsprogramm,Schulungsbedarfsanalyse,Bewertung von Qualifikationslücken und Schulungsanforderungen,Task
+Digital Transform,Mitarbeiterschulungsprogramm,Schulungsinhalts-Entwicklung,Entwicklung rollenbasierter Schulungsmaterialien und E-Learning,Task
+Digital Transform,Mitarbeiterschulungsprogramm,Train-the-Trainer-Sitzungen,Durchführung Trainer-Zertifizierung für interne Champions,Task
+Digital Transform,Mitarbeiterschulungsprogramm,Endbenutzer-Schulungsbereitstellung,Durchführung von Präsenz- und virtuellen Schulungs-Rollouts,Task
+Digital Transform,Vollständiger Rollout,Rollout-Kommunikationsplan,Entwicklung umfassender Change-Kommunikationsstrategie,Documentation
+Digital Transform,Vollständiger Rollout,Produktions-Deployment,Durchführung phasierter Produktiv-Go-Live nach Abteilung,Task
+Digital Transform,Vollständiger Rollout,Hypercare-Support-Zeitraum,Bereitstellung intensiver Post-Launch-Unterstützung und Problemlösung,Task
+Digital Transform,Vollständiger Rollout,Benefits-Realization-Tracking,Einrichtung von KPI-Tracking und Benefits-Messung,Task
+Change Mgmt,Stakeholder-Analyse,Stakeholder-Identifizierung & Mapping,Identifizierung und Mapping aller Fusions-Stakeholder,Task
+Change Mgmt,Stakeholder-Analyse,Einfluss- & Auswirkungsbewertung,Bewertung von Stakeholder-Einfluss und Change-Auswirkungsniveaus,Task
+Change Mgmt,Stakeholder-Analyse,Widerstandsrisiko-Evaluierung,Identifizierung potenzieller Widerstandsquellen,Task
+Change Mgmt,Stakeholder-Analyse,Stakeholder-Engagement-Strategie,Entwicklung maßgeschneiderter Engagement-Ansätze nach Stakeholder-Gruppe,Documentation
+Change Mgmt,Kommunikationsstrategie,Kernbotschafts-Framework,Entwicklung zentraler Fusionsnarrative und Messaging-Säulen,Task
+Change Mgmt,Kommunikationsstrategie,Kommunikationskanal-Auswahl,Definition geeigneter Kanäle für jede Zielgruppe,Task
+Change Mgmt,Kommunikationsstrategie,Kommunikationskalender,Erstellung detaillierter Kommunikationszeitpläne und Kadenz,Task
+Change Mgmt,Kommunikationsstrategie,FAQ & Gesprächsleitfaden-Entwicklung,Vorbereitung umfassender FAQs und Führungsgesprächsleitfäden,Documentation
+Change Mgmt,Kulturbewertung,Organisationskultur-Umfrage,Durchführung von Kulturbewertungsumfragen in beiden Organisationen,Task
+Change Mgmt,Kulturbewertung,Kultur-Workshop-Moderation,Moderation von Kulturintegrationsworkshops,Task
+Change Mgmt,Kulturbewertung,Kulturkompatibilitäts-Analyse,Analyse kultureller Lücken und Integrationsherausforderungen,Task
+Change Mgmt,Kulturbewertung,Zielkultur-Definition,Definition gewünschter zukünftiger Organisationskultur,Documentation
+Change Mgmt,Führungsausrichtung,Führungsvisions-Ausrichtungssitzungen,Ausrichtung des Führungsteams auf Fusionsvision und Ziele,Task
+Change Mgmt,Führungsausrichtung,Integrations-Governance-Struktur,Einrichtung Integrationslenkungsausschuss und Arbeitsströme,Task
+Change Mgmt,Führungsausrichtung,Führungsrollenmodell-Coaching,Coaching von Führungskräften zu sichtbaren Change-Sponsorship-Verhaltensweisen,Task
+Change Mgmt,Führungsausrichtung,Führungskommunikations-Training,Training von Führungskräften zur Übermittlung schwieriger Fusionsbotschaften,Task
+Change Mgmt,Change-Champion-Netzwerk,Champion-Auswahlkriterien,Definition von Kriterien und Auswahl von Change Champions organisationsweit,Task
+Change Mgmt,Change-Champion-Netzwerk,Champion-Onboarding & Training,Training von Champions zu Change-Methodologie und Rolle,Task
+Change Mgmt,Change-Champion-Netzwerk,Champion-Netzwerk-Meetings,Moderation regelmäßiger Champion-Community-of-Practice-Meetings,Task
+Change Mgmt,Change-Champion-Netzwerk,Champion-Anerkennungsprogramm,Design von Anerkennungs- und Belohnungsprogramm für Champions,Task
+Change Mgmt,Training & Entwicklung,Qualifikationslücken-Analyse,Identifizierung von Fähigkeitslücken in fusionierter Organisation,Task
+Change Mgmt,Training & Entwicklung,Schulungscurriculum-Design,Design rollenbasierter Schulungsprogramme für neue Prozesse,Task
+Change Mgmt,Training & Entwicklung,Learning-Management-System-Setup,Konfiguration von LMS für Schulungsbereitstellung und -verfolgung,Task
+Change Mgmt,Training & Entwicklung,Schulungseffektivitätsmessung,Messung von Schulungsabschluss und Wissensspeicherung,Task
+Change Mgmt,Integrationsplanung,Tag-1-Bereitschaftsplanung,Planung kritischer Tag-1-Betriebsanforderungen,Task
+Change Mgmt,Integrationsplanung,Integrations-Meilenstein-Tracking,Verfolgung von Integrationsstrom-Fortschritt und Abhängigkeiten,Task
+Change Mgmt,Integrationsplanung,Risiko- & Problem-Management,Überwachung und Minderung von Integrationsrisiken und -problemen,Task
+Change Mgmt,Integrationsplanung,Synergie-Realisierungs-Tracking,Verfolgung der Fusions-Synergiezielerreichung,Task
+Change Mgmt,Post-Merger-Bewertung,Mitarbeiter-Puls-Umfragen,Durchführung regelmäßiger Mitarbeiterstimmungs-Pulschecks,Task
+Change Mgmt,Post-Merger-Bewertung,Integrations-Erfolgskennzahlen,Messung von Integrations-KPIs und Geschäftsergebnissen,Task
+Change Mgmt,Post-Merger-Bewertung,Lessons-Learned-Workshops,Moderation von Post-Integrations-Lessons-Learned-Sitzungen,Task
+Change Mgmt,Post-Merger-Bewertung,Abschließender Integrationsbericht,Dokumentation von Integrationsergebnissen und Empfehlungen,Documentation
+HR Analytics,Anforderungserhebung,Geschäftsproblem-Definition,Definition zentraler HR-Herausforderungen zur Bewältigung mit Analytik,Task
+HR Analytics,Anforderungserhebung,Stakeholder-Requirements-Workshops,Durchführung von Workshops zur Erfassung von CHRO- und HR-Führungsbedürfnissen,Task
+HR Analytics,Anforderungserhebung,Use-Case-Priorisierung,Priorisierung von Analytik-Use-Cases nach Geschäftswert,Task
+HR Analytics,Anforderungserhebung,Analytik-Anforderungsdokument,Dokumentation funktionaler Anforderungen und Erfolgskriterien,Documentation
+HR Analytics,Datenquellen-Integration,HR-Systeme-Audit,Inventarisierung aller HR-Datenquellen und Qualitätsbewertung,Task
+HR Analytics,Datenquellen-Integration,Datenintegrationsarchitektur,Design von ETL-Architektur für einheitliches HR-Data-Warehouse,Task
+HR Analytics,Datenquellen-Integration,API- & Connector-Entwicklung,Aufbau von Konnektoren zu HRIS-, ATS- und LMS-Systemen,Task
+HR Analytics,Datenquellen-Integration,Datenqualitäts-Validierungsregeln,Implementierung von Datenvalidierungs- und Bereinigungsregeln,Task
+HR Analytics,Entwicklung prädiktiver Modelle,Feature-Engineering,Engineering prädiktiver Features aus HR-Daten,Task
+HR Analytics,Entwicklung prädiktiver Modelle,Algorithmus-Auswahl & Training,Training und Vergleich von Machine-Learning-Algorithmen,Task
+HR Analytics,Entwicklung prädiktiver Modelle,Modellvalidierungs-Testing,Validierung der Modellgenauigkeit auf Holdout-Test-Datensatz,Task
+HR Analytics,Entwicklung prädiktiver Modelle,Modell-Interpretierbarkeitsanalyse,Sicherstellung der Modellerklärbarkeit für HR-Stakeholder,Task
+HR Analytics,Analyse des Fluktuationsrisikos,Fluktuationstreiber-Analyse,Identifizierung zentraler Faktoren, die zur Mitarbeiterfluktuation beitragen,Task
+HR Analytics,Analyse des Fluktuationsrisikos,Flugrisiko-Bewertungsmodell,Entwicklung von Mitarbeiterfluktuationsrisiko-Score,Feature
+HR Analytics,Analyse des Fluktuationsrisikos,Frühwarnsystem,Konfiguration automatisierter Warnungen für Hochrisiko-Mitarbeiter,Feature
+HR Analytics,Analyse des Fluktuationsrisikos,Retention-Interventions-Playbook,Entwicklung datengestützter Retention-Interventionsstrategien,Documentation
+HR Analytics,Bewertung der Qualifikationslücken,Skills-Taxonomie-Entwicklung,Erstellung standardisierter Skills-Taxonomie und Kompetenzmodell,Task
+HR Analytics,Bewertung der Qualifikationslücken,Aktuelles Skills-Inventar,Mapping aktueller Mitarbeiterkompetenzen und Proficiency-Levels,Task
+HR Analytics,Bewertung der Qualifikationslücken,Zukünftige Skills-Anforderungen,Prognose benötigter Kompetenzen für Geschäftsstrategie,Task
+HR Analytics,Bewertung der Qualifikationslücken,Gap-Analyse & Empfehlungen,Quantifizierung von Qualifikationslücken und Empfehlung von Upskilling-Programmen,Task
+HR Analytics,Nachfolgeplanungstools,Schlüsselpositions-Identifizierung,Identifizierung kritischer Rollen, die Nachfolgeplanung erfordern,Task
+HR Analytics,Nachfolgeplanungstools,Talent-Pool-Bewertung,Bewertung von High-Potential-Mitarbeitern für Nachfolgebereitschaft,Task
+HR Analytics,Nachfolgeplanungstools,Nachfolgebereitschafts-Dashboard,Aufbau Nine-Box-Grid und Nachfolgebank-Stärkeansichten,Feature
+HR Analytics,Nachfolgeplanungstools,Entwicklungsplan-Empfehlungen,Generierung personalisierter Entwicklungspläne für Nachfolger,Task
+HR Analytics,Dashboard-Entwicklung,Dashboard-Design & UX,Design intuitiver Self-Service-Analytik-Dashboards,Task
+HR Analytics,Dashboard-Entwicklung,KPI-Metrik-Definition,Definition von HR-KPIs und Berechnungsmethodiken,Documentation
+HR Analytics,Dashboard-Entwicklung,Power-BI-Dashboard-Build,Entwicklung interaktiver Dashboards in Power BI oder Tableau,Task
+HR Analytics,Dashboard-Entwicklung,Mobile-Dashboard-Optimierung,Optimierung von Dashboards für mobilen Gerätezugriff,Feature
+HR Analytics,HR-Team-Schulung,Analytik-Literacy-Training,Training des HR-Teams zur Dateninterpretation und Insights,Task
+HR Analytics,HR-Team-Schulung,Dashboard-Benutzertraining,Durchführung praktischer Dashboard-Navigations-Schulung,Task
+HR Analytics,HR-Team-Schulung,Datengestützte Entscheidungsfindung,Training zur Einbindung von Analytik in HR-Prozesse,Task
+HR Analytics,HR-Team-Schulung,Analytik-Benutzerleitfaden,Erstellung umfassender Dashboard-Benutzerdokumentation,Documentation
+Customer XP,Customer-Journey-Mapping,Kundenprofile-Entwicklung,Entwicklung detaillierter Kundenprofile basierend auf Forschung,Task
+Customer XP,Customer-Journey-Mapping,Journey-Mapping-Workshops,Moderation funktionsübergreifender Journey-Mapping-Sitzungen,Task
+Customer XP,Customer-Journey-Mapping,Schmerzpunkt-Priorisierung,Identifizierung und Priorisierung von Kundenreibungspunkten,Task
+Customer XP,Customer-Journey-Mapping,Journey-Map-Visualisierung,Erstellung visueller Journey-Maps mit emotionalen Kurven,Documentation
+Customer XP,Voice-of-Customer-Programm,Feedback-Erfassungsstrategie,Design mehrkanaliger Feedback-Erfassungsansätze,Task
+Customer XP,Voice-of-Customer-Programm,Umfrageinstrument-Design,Entwicklung von NPS-, CSAT- und CES-Umfrageinstrumenten,Task
+Customer XP,Voice-of-Customer-Programm,Feedback-Plattform-Implementierung,Implementierung von Medallia- oder Qualtrics-Feedback-Plattform,Task
+Customer XP,Voice-of-Customer-Programm,Text-Analytics-Konfiguration,Konfiguration von Sentimentanalyse und Textkategorisierung,Feature
+Customer XP,Touchpoint-Analyse,Touchpoint-Inventar,Katalogisierung aller Kundeninteraktions-Touchpoints,Task
+Customer XP,Touchpoint-Analyse,Touchpoint-Leistungsbewertung,Bewertung jedes Touchpoints auf Erlebniskennzahlen,Task
+Customer XP,Touchpoint-Analyse,Omnichannel-Konsistenz-Überprüfung,Bewertung der Konsistenz über digitale und physische Kanäle,Task
+Customer XP,Touchpoint-Analyse,Touchpoint-Optimierungs-Roadmap,Priorisierung von Touchpoint-Verbesserungen nach Auswirkung,Documentation
+Customer XP,Service-Design-Workshops,Design-Thinking-Training,Training des Teams zu menschzentrierter Designmethodologie,Task
+Customer XP,Service-Design-Workshops,Ideations- & Brainstorming-Sitzungen,Moderation von Ideationsworkshops für Erlebnisverbesserungen,Task
+Customer XP,Service-Design-Workshops,Service-Blueprint-Entwicklung,Erstellung detaillierter Service-Blueprints für Schlüssel-Journeys,Task
+Customer XP,Service-Design-Workshops,Prototyp-Entwicklung,Entwicklung von Low-Fidelity-Prototypen zum Testen,Task
+Customer XP,Prozessoptimierung,Process-Mining-Analyse,Anwendung von Process Mining zum Verständnis tatsächlicher Kundenströme,Task
+Customer XP,Prozessoptimierung,Engpass-Identifizierung,Identifizierung von Prozessschritten, die Verzögerungen und Frustration verursachen,Task
+Customer XP,Prozessoptimierung,Prozess-Redesign,Neugestaltung von Prozessen zur Beseitigung von Verschwendung und Verbesserung des Flusses,Task
+Customer XP,Prozessoptimierung,Standardarbeits-Dokumentation,Dokumentation optimierter Prozess-Standardarbeitsanweisungen,Documentation
+Customer XP,Technologie-Enablement,CX-Technologie-Assessment,Bewertung kundenzugewandter Technologiefähigkeiten,Task
+Customer XP,Technologie-Enablement,CRM-Verbesserungs-Implementierung,Implementierung von CRM-Verbesserungen für bessere Kundensichtbarkeit,Task
+Customer XP,Technologie-Enablement,Self-Service-Portal-Entwicklung,Aufbau von Kunden-Self-Service-Portal und Wissensbasis,Feature
+Customer XP,Technologie-Enablement,Chatbot- & AI-Integration,Bereitstellung KI-gestützter Chatbots für häufige Anfragen,Feature
+Customer XP,Metriken- & KPI-Framework,CX-Metriken-Framework-Design,Design umfassenden Kundenexperience-Messrahmens,Documentation
+Customer XP,Metriken- & KPI-Framework,Baseline-Metriken-Festlegung,Festlegung aktueller Baseline für alle CX-Metriken,Task
+Customer XP,Metriken- & KPI-Framework,Echtzeit-Dashboards,Aufbau von Executive- und operativen CX-Dashboards,Task
+Customer XP,Metriken- & KPI-Framework,Closed-Loop-Feedback-Prozess,Implementierung von Prozess zum Schließen der Schleife bei Kundenfeedback,Task
+Customer XP,Einrichtung kontinuierlicher Verbesserung,CX-Governance-Modell,Einrichtung von CX-Lenkungsausschuss und Governance,Task
+Customer XP,Einrichtung kontinuierlicher Verbesserung,Verbesserungs-Backlog-Management,Erstellung priorisierter Backlog von CX-Verbesserungen,Task
+Customer XP,Einrichtung kontinuierlicher Verbesserung,Test- & Lernkultur,Etablierung schneller Experimentier- und A/B-Testing-Fähigkeit,Task
+Customer XP,Einrichtung kontinuierlicher Verbesserung,Mitarbeiter-CX-Training,Training von Frontline-Mitarbeitern zu kundenzentrischen Verhaltensweisen,Task
+Agile Scale,Agile-Reifegradassessment,Ist-Zustand-Agile-Assessment,Bewertung aktueller Agile-Adoption und Reife,Task
+Agile Scale,Agile-Reifegradassessment,Team-Praxis-Evaluierung,Bewertung von Agile-Praktiken und Zeremonien auf Teamebene,Task
+Agile Scale,Agile-Reifegradassessment,Organisationsimpediment-Analyse,Identifizierung organisatorischer Barrieren für Agile-Skalierung,Task
+Agile Scale,Agile-Reifegradassessment,Reifegrad-Bewertungsbericht,Dokumentation aktueller Zustand und Verbesserungsmöglichkeiten,Documentation
+Agile Scale,Framework-Auswahl,Framework-Evaluierungskriterien,Definition von Kriterien zur Auswahl des Skalierungs-Frameworks,Task
+Agile Scale,Framework-Auswahl,SAFe vs Scrum@Scale Analyse,Vergleich von SAFe, LeSS und anderen Skalierungs-Frameworks,Task
+Agile Scale,Framework-Auswahl,Framework-Anpassungs-Design,Anpassung ausgewählter Frameworks an Organisationskontext,Task
+Agile Scale,Framework-Auswahl,Framework-Auswahl-Begründung,Dokumentation von Framework-Auswahlentscheidung und Ansatz,Documentation
+Agile Scale,Pilot-Team-Setup,Pilot-ART-Identifizierung,Identifizierung von Pilot-Agile-Release-Train-Teams,Task
+Agile Scale,Pilot-Team-Setup,Team-Topologie-Design,Design von Teamstruktur und Abhängigkeiten,Task
+Agile Scale,Pilot-Team-Setup,Backlog-Vorbereitung,Vorbereitung initialen Programm-Backlogs und Epics,Task
+Agile Scale,Pilot-Team-Setup,PI-Planungsevent-Moderation,Moderation erstem Program-Increment-Planungsevent,Task
+Agile Scale,Coaching & Mentoring,Agile-Coach-Rekrutierung,Einstellung oder Beauftragung erfahrener Agile-Coaches,Task
+Agile Scale,Coaching & Mentoring,Führungs-Coaching-Programm,Coaching von Führungskräften zu Lean-Agile-Führungsprinzipien,Task
+Agile Scale,Coaching & Mentoring,Team-Coaching-Rotation,Bereitstellung eingebetteten Coachings für Pilot-Teams,Task
+Agile Scale,Coaching & Mentoring,Coaching-Effektivitätsmessung,Messung von Coaching-Auswirkung auf Teamleistung,Task
+Agile Scale,Tools & Infrastruktur,Agile-Tool-Auswahl,Auswahl und Beschaffung von Jira, Azure DevOps oder Rally,Task
+Agile Scale,Tools & Infrastruktur,Tool-Konfiguration & Setup,Konfiguration von Tool für skalierte Agile-Workflows,Task
+Agile Scale,Tools & Infrastruktur,CI/CD-Pipeline-Implementierung,Implementierung von Continuous Integration und Deployment Pipelines,Feature
+Agile Scale,Tools & Infrastruktur,Metriken- & Reporting-Dashboards,Aufbau von Agile-Metriken-Dashboards und Berichten,Task
+Agile Scale,Community of Practice,CoP-Charter-Entwicklung,Einrichtung von Chartas für Scrum-Master- und PO-Communities,Documentation
+Agile Scale,Community of Practice,Monatliche CoP-Sitzungen,Moderation regelmäßiger Community-of-Practice-Meetings,Task
+Agile Scale,Community of Practice,Wissensaustausch-Plattform,Erstellung von Agile-Wissensrepository und Best Practices,Task
+Agile Scale,Community of Practice,Internes Zertifizierungsprogramm,Entwicklung interner Agile-Zertifizierungspfade,Task
+Agile Scale,Skalierung auf Unternehmensebene,Skalierungsstrategie & Roadmap,Entwicklung von Strategie zur Skalierung über Pilot hinaus,Documentation
+Agile Scale,Skalierung auf Unternehmensebene,Zusätzlicher ART-Start,Start zusätzlicher Agile Release Trains,Task
+Agile Scale,Skalierung auf Unternehmensebene,Portfolio-Management-Integration,Implementierung von Lean-Portfolio-Management-Praktiken,Task
+Agile Scale,Skalierung auf Unternehmensebene,Agile-HR-Praktiken,Anpassung von HR-Praktiken zur Unterstützung agiler Arbeitsweisen,Task
+Agile Scale,Erfolgsmessungs-Review,OKR-Zielerreichungs-Analyse,Überprüfung der Objectives-and-Key-Results-Zielerreichung,Task
+Agile Scale,Erfolgsmessungs-Review,Team-Health-Assessment,Durchführung von Team-Health- und Zufriedenheitsumfragen,Task
+Agile Scale,Erfolgsmessungs-Review,Geschäftswert-Geliefert,Messung von Geschäftsergebnissen und Wertbereitstellung,Task
+Agile Scale,Erfolgsmessungs-Review,Skalierungs-Erfolgsbericht,Dokumentation von Skalierungsergebnissen und gewonnenen Erkenntnissen,Documentation
+Cloud Strategy,Cloud-Readiness-Assessment,Anwendungsportfolio-Analyse,Inventarisierung und Kategorisierung aller Anwendungen für Cloud,Task
+Cloud Strategy,Cloud-Readiness-Assessment,Cloud-Readiness-Bewertung,Bewertung von Anwendungen auf Cloud-Eignung-Dimensionen,Task
+Cloud Strategy,Cloud-Readiness-Assessment,Abhängigkeits-Mapping,Mapping von Anwendungsabhängigkeiten und Integrationspunkten,Task
+Cloud Strategy,Cloud-Readiness-Assessment,Readiness-Assessment-Bericht,Dokumentation von Bewertungsergebnissen und Empfehlungen,Documentation
+Cloud Strategy,Kosten-Nutzen-Analyse,Ist-Zustand-Kosten-Baseline,Festlegung aktueller Infrastruktur- und Betriebskosten,Task
+Cloud Strategy,Kosten-Nutzen-Analyse,TCO-Modellierung,Aufbau Total-Cost-of-Ownership-Modell für Cloud-Szenarien,Task
+Cloud Strategy,Kosten-Nutzen-Analyse,Business-Case-Entwicklung,Entwicklung finanzieller Business Case mit ROI-Projektionen,Task
+Cloud Strategy,Kosten-Nutzen-Analyse,Behebung TCO-Modell-Berechnungsfehler,Korrektur von Fehlern in Kostenberechnungsformeln,Bug
+Cloud Strategy,Multi-Cloud-Architektur,Cloud-Provider-Strategie,Definition Multi-Cloud- oder Hybrid-Cloud-Strategie,Documentation
+Cloud Strategy,Multi-Cloud-Architektur,Referenzarchitektur-Design,Design Zielzustand-Cloud-Referenzarchitektur,Task
+Cloud Strategy,Multi-Cloud-Architektur,Landing-Zone-Design,Design von Cloud-Landing-Zones für jede Umgebung,Task
+Cloud Strategy,Multi-Cloud-Architektur,Netzwerkarchitektur-Design,Design von Hybrid-Konnektivität und Netzwerktopologie,Task
+Cloud Strategy,Migrationspriorisierung,Migrationswellen-Planung,Gruppierung von Anwendungen in logische Migrationswellen,Task
+Cloud Strategy,Migrationspriorisierung,6R-Strategie-Zuweisung,Zuweisung von Rehost-, Replatform-, Refactor-Strategie pro Anwendung,Task
+Cloud Strategy,Migrationspriorisierung,Risikobewertung,Bewertung von Migrationsrisiken und Entwicklung von Minderungsplänen,Task
+Cloud Strategy,Migrationspriorisierung,Migrations-Roadmap,Erstellung detaillierter Migrationszeitpläne und Abhängigkeiten,Documentation
+Cloud Strategy,Sicherheits- & Compliance-Review,Cloud-Sicherheitsanforderungen,Definition von Cloud-Sicherheitsrichtlinien und -standards,Documentation
+Cloud Strategy,Sicherheits- & Compliance-Review,Compliance-Gap-Analyse,Bewertung der Compliance mit regulatorischen Anforderungen,Task
+Cloud Strategy,Sicherheits- & Compliance-Review,Identity- & Access-Management-Design,Design von Cloud-IAM- und privilegierter Zugriffsstrategie,Task
+Cloud Strategy,Sicherheits- & Compliance-Review,Datensouveränitäts-Review,Überprüfung von Datenresidenz- und Souveränitätsanforderungen,Task
+Cloud Strategy,Migrationswelle 1,Pre-Migrations-Validierung,Validierung von Anwendungsleistung und Abhängigkeiten,Task
+Cloud Strategy,Migrationswelle 1,Migrations-Ausführung,Durchführung von Lift-and-Shift- oder Replatform-Migrationen,Task
+Cloud Strategy,Migrationswelle 1,Post-Migrations-Testing,Durchführung funktionaler und Leistungstests,Task
+Cloud Strategy,Migrationswelle 1,Produktions-Cutover,Durchführung Cutover zu Cloud-Umgebung,Task
+Cloud Strategy,Optimierung & FinOps,Right-Sizing-Analyse,Analyse Ressourcenauslastung und Right-Sizing von Instanzen,Task
+Cloud Strategy,Optimierung & FinOps,Reserved-Instance-Strategie,Entwicklung von RI- und Savings-Plan-Kaufstrategie,Task
+Cloud Strategy,Optimierung & FinOps,Kostenzuordnung & Chargeback,Implementierung von Kostenzuordnungs-Tagging und Chargeback,Task
+Cloud Strategy,Optimierung & FinOps,FinOps-Dashboard & Reporting,Aufbau von Cloud-Kostensichtbarkeits-Dashboards,Feature
+Cloud Strategy,Governance-Framework,Cloud-Governance-Richtlinien,Entwicklung von Cloud-Governance-Richtlinien und Leitplanken,Documentation
+Cloud Strategy,Governance-Framework,Cloud-Center-of-Excellence,Einrichtung Cloud-CoE-Team und Betriebsmodell,Task
+Cloud Strategy,Governance-Framework,Service-Katalog-Entwicklung,Erstellung von Self-Service-Cloud-Servicekatalog,Task
+Cloud Strategy,Governance-Framework,Automatisierte Richtlinien-Durchsetzung,Implementierung automatisierter Compliance- und Richtlinien-Durchsetzung,Feature
+Cyber Risk,Asset-Inventarisierung & Klassifizierung,IT-Asset-Discovery-Scanning,Durchführung automatisierter Netzwerk- und Cloud-Asset-Discovery,Task
+Cyber Risk,Asset-Inventarisierung & Klassifizierung,Asset-Klassifizierungsschema,Definition von Asset-Kritikalität und Datensensitivitäts-Klassifizierung,Documentation
+Cyber Risk,Asset-Inventarisierung & Klassifizierung,Configuration-Management-Database,Befüllung CMDB mit Asset-Inventar und Attributen,Task
+Cyber Risk,Asset-Inventarisierung & Klassifizierung,Crown-Jewels-Identifizierung,Identifizierung kritischster Assets, die Schutz erfordern,Task
+Cyber Risk,Schwachstellenbewertung,Schwachstellen-Scanning,Durchführung authentifizierter Schwachstellen-Scans aller Assets,Task
+Cyber Risk,Schwachstellenbewertung,Patch-Management-Analyse,Bewertung von Patch-Levels und fehlenden Sicherheitsupdates,Task
+Cyber Risk,Schwachstellenbewertung,Konfigurations-Baseline-Review,Überprüfung von Systemkonfigurationen gegen CIS-Benchmarks,Task
+Cyber Risk,Schwachstellenbewertung,Schwachstellenregister,Erstellung priorisiertes Schwachstellenbehebungs-Register,Documentation
+Cyber Risk,Penetrationstest,Scoping & Rules-of-Engagement,Definition von Penetrationstest-Umfang und Autorisierung,Documentation
+Cyber Risk,Penetrationstest,Externe Penetrationstests,Durchführung externer Netzwerk- und Anwendungstests,Task
+Cyber Risk,Penetrationstest,Interne Penetrationstests,Durchführung interner Netzwerk- und Privilege-Escalation-Tests,Task
+Cyber Risk,Penetrationstest,Social-Engineering-Assessment,Test von Mitarbeiteranfälligkeit für Phishing und Social Engineering,Task
+Cyber Risk,Risikoquantifizierung,FAIR-Risikoanalyse,Anwendung von Factor Analysis of Information Risk Methodologie,Task
+Cyber Risk,Risikoquantifizierung,Bedrohungsmodellierung,Modellierung von Bedrohungsakteuren und Angriffsszenarien,Task
+Cyber Risk,Risikoquantifizierung,Verlustereignis-Häufigkeitsschätzung,Schätzung der Wahrscheinlichkeit von Verlustereignissen,Task
+Cyber Risk,Risikoquantifizierung,Risikoregister & Heat-Map,Entwicklung von Unternehmens-Cyber-Risikoregister und Visualisierung,Documentation
+Cyber Risk,Sanierungsfahrplan,Risikobehandlungs-Entscheidungen,Festlegung von Risikoakzeptanz, -minderung, -übertragung oder -vermeidung,Task
+Cyber Risk,Sanierungsfahrplan,Kontrollauswahl,Auswahl von Sicherheitskontrollen zur Adressierung identifizierter Risiken,Task
+Cyber Risk,Sanierungsfahrplan,Sanierungspriorisierung,Priorisierung von Sanierungsaktivitäten nach Risikominderung,Task
+Cyber Risk,Sanierungsfahrplan,Mehrjahres-Sicherheits-Roadmap,Entwicklung phasierter Sicherheitsverbesserungs-Roadmap,Documentation
+Cyber Risk,Implementierung von Sicherheitskontrollen,Identity- & Access-Management,Implementierung von MFA und privilegiertem Zugriffsmanagement,Feature
+Cyber Risk,Implementierung von Sicherheitskontrollen,Netzwerksegmentierung,Implementierung von Mikrosegmentierung und Zero-Trust-Architektur,Task
+Cyber Risk,Implementierung von Sicherheitskontrollen,Endpoint-Detection-&-Response,Bereitstellung von EDR-Lösung über alle Endpunkte,Feature
+Cyber Risk,Implementierung von Sicherheitskontrollen,Security-Information-&-Event-Management,Implementierung von SIEM und Sicherheitsüberwachung,Task
+Cyber Risk,Incident-Response-Planung,Incident-Response-Team-Bildung,Einrichtung CSIRT-Team und On-Call-Rotation,Task
+Cyber Risk,Incident-Response-Planung,Incident-Response-Playbooks,Entwicklung von Incident-typspezifischen Reaktions-Playbooks,Documentation
+Cyber Risk,Incident-Response-Planung,Tabletop-Übung-Moderation,Moderation von Cyber-Incident-Tabletop-Übungen,Task
+Cyber Risk,Incident-Response-Planung,Forensik-Fähigkeit-Setup,Etablierung digitaler Forensik- und Vorfallanalyse-Fähigkeit,Task
+Cyber Risk,Compliance-Validierung,Kontrolltest-Programm,Design und Durchführung von Sicherheitskontroll-Testprogramm,Task
+Cyber Risk,Compliance-Validierung,Compliance-Nachweiserfassung,Sammlung von Compliance-Nachweisen und Dokumentation,Task
+Cyber Risk,Compliance-Validierung,Drittanbieter-Audit-Koordination,Koordination von SOC-2- oder ISO-27001-Audit,Task
+Cyber Risk,Compliance-Validierung,Compliance-Attestationsbericht,Erstellung von Compliance-Attestation und Zertifizierung,Documentation
+Data Governance,Bewertung der Datenlandschaft,Datenquellen-Inventar,Katalogisierung aller Unternehmens-Datenquellen und -systeme,Task
+Data Governance,Bewertung der Datenlandschaft,Datenfluss-Mapping,Mapping von Datenflüssen zwischen Systemen und Prozessen,Task
+Data Governance,Bewertung der Datenlandschaft,Datenqualitätsprofiling,Profiling von Datenqualitätsdimensionen über Quellen hinweg,Task
+Data Governance,Bewertung der Datenlandschaft,Bewertungsergebnis-Bericht,Dokumentation des Datenlandschaft-Ist-Zustands,Documentation
+Data Governance,Governance-Framework-Design,Betriebsmodell-Design,Definition von Data-Governance-Betriebsmodell und Rollen,Documentation
+Data Governance,Governance-Framework-Design,Richtlinien- & Standards-Entwicklung,Entwicklung von Datenrichtlinien, Standards und Verfahren,Documentation
+Data Governance,Governance-Framework-Design,Governance-Council-Charter,Einrichtung Data-Governance-Council und Entscheidungsrechte,Documentation
+Data Governance,Governance-Framework-Design,RACI-Matrix-Entwicklung,Definition von RACI für Data-Governance-Aktivitäten,Documentation
+Data Governance,Datenqualitätsregeln,Datenqualitätsdimensionen,Definition von Vollständigkeits-, Genauigkeits-, Konsistenz-, Zeitnähe-Regeln,Documentation
+Data Governance,Datenqualitätsregeln,Geschäftsregeln-Definition,Dokumentation von Geschäftsregeln für kritische Datenelemente,Documentation
+Data Governance,Datenqualitätsregeln,DQ-Validierungsregel-Engine,Implementierung automatisierter Datenqualitäts-Validierungsregeln,Task
+Data Governance,Datenqualitätsregeln,Datenqualitäts-Scorecard,Erstellung von Datenqualitätsmetriken und Scorecard,Feature
+Data Governance,Master Data Management,MDM-Strategie & Ansatz,Definition von MDM-Strategie und Implementierungsansatz,Documentation
+Data Governance,Master Data Management,Golden-Record-Regeln,Definition von Matching-, Merging- und Survivorship-Regeln,Documentation
+Data Governance,Master Data Management,MDM-Plattform-Implementierung,Implementierung von Informatica- oder SAP-MDM-Plattform,Task
+Data Governance,Master Data Management,Kunden-Master-Data-Harmonisierung,Erstellung einzelnen Kunden-Golden-Records,Task
+Data Governance,Metadaten-Management,Geschäftsglossar-Entwicklung,Erstellung Unternehmens-Geschäftsglossar und Definitionen,Documentation
+Data Governance,Metadaten-Management,Technisches-Metadaten-Harvesting,Harvesting technischer Metadaten aus Quellsystemen,Task
+Data Governance,Metadaten-Management,Metadaten-Repository-Setup,Implementierung von Collibra- oder Alation-Metadatenplattform,Task
+Data Governance,Metadaten-Management,Lineage-Mapping,Dokumentation durchgängiger Datenlineage für kritische Daten,Task
+Data Governance,Datenkatalog-Implementierung,Katalog-Plattform-Bereitstellung,Bereitstellung und Konfiguration von Datenkatalog-Plattform,Task
+Data Governance,Datenkatalog-Implementierung,Asset-Registrierung & Tagging,Registrierung von Daten-Assets und Anbringung von Governance-Tags,Task
+Data Governance,Datenkatalog-Implementierung,Such- & Discovery-Optimierung,Optimierung von Katalogsuche und Discovery-Funktionen,Task
+Data Governance,Datenkatalog-Implementierung,Benutzerzugriff & Berechtigungen,Konfiguration rollenbasierter Zugriff auf Katalog,Task
+Data Governance,Stewardship-Schulung,Data-Steward-Rollendefinition,Definition von Data-Steward-Rollen und Verantwortlichkeiten,Documentation
+Data Governance,Stewardship-Schulung,Steward-Onboarding-Programm,Onboarding und Training ernannter Data Stewards,Task
+Data Governance,Stewardship-Schulung,Stewardship-Toolkit,Entwicklung von Data-Stewardship-Tools und Vorlagen,Documentation
+Data Governance,Stewardship-Schulung,Stewardship-Community-Building,Moderation von Data-Steward-Community of Practice,Task
+Data Governance,Überwachung & Berichterstattung,Governance-Metriken-Framework,Definition von Data-Governance-KPIs und Metriken,Documentation
+Data Governance,Überwachung & Berichterstattung,Automatisierte Berichterstattung,Aufbau automatisierter Governance-Dashboards und Berichte,Task
+Data Governance,Überwachung & Berichterstattung,Reifegradassessment,Durchführung periodischer Data-Governance-Reifegradassessments,Task
+Data Governance,Überwachung & Berichterstattung,Executive-Reporting,Erstellung Executive-Summary von Governance-Fortschritt,Documentation

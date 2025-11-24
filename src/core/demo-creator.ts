@@ -42,7 +42,10 @@ export async function runDemoCreation(
             'wp-employee-assignments.json',
             'task-folder-mappings.json',
             'task-board-mappings.json',
-            'user-partnership-pms.json'
+            'user-partnership-pms.json',
+            'contractor-mappings.json',
+            'other-cost-mappings-de.json',
+            'other-cost-mappings-en.json'
         ];
 
         for (const file of filesToDelete) {
@@ -419,9 +422,10 @@ export async function runDemoCreation(
                     }
                 }
 
-                // Contractors (generic, not per-dataset)
+                // Contractors (created only once, shared across all datasets)
                 const contractorsPath = './data/contractors.csv';
-                if (fs.existsSync(contractorsPath)) {
+                const contractorMappingsPath = './data/cache/contractor-mappings.json';
+                if (fs.existsSync(contractorsPath) && !fs.existsSync(contractorMappingsPath)) {
                     socket.emit('log', { type: 'info', message: '\n=== Creating Contractors ===' });
                     try {
                         const { ContractorsOperation } = await import('../operations/ims/contractors');
@@ -432,22 +436,29 @@ export async function runDemoCreation(
                         socket.emit('log', { type: 'error', message: `Contractors creation failed: ${error.message}` });
                         socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
+                } else if (fs.existsSync(contractorMappingsPath)) {
+                    socket.emit('log', { type: 'info', message: '\n=== Contractors Already Created ===' });
+                    socket.emit('log', { type: 'success', message: '✓ Using existing contractors from cache\n' });
                 }
 
-                // Other Costs (language-specific)
+                // Other Costs (created once per language, shared across datasets of same language)
                 const language = dataGroup.endsWith('-de') ? 'de' : 'en';
                 const otherCostsPath = `./data/other-costs-${language}.csv`;
-                if (fs.existsSync(otherCostsPath)) {
+                const otherCostMappingsPath = `./data/cache/other-cost-mappings-${language}.json`;
+                if (fs.existsSync(otherCostsPath) && !fs.existsSync(otherCostMappingsPath)) {
                     socket.emit('log', { type: 'info', message: '\n=== Creating Other Costs ===' });
                     try {
                         const { OtherCostsOperation } = await import('../operations/ims/other-costs');
                         const otherCostsOp = new OtherCostsOperation(imsCustomersApiClient);
-                        const costMappings = await otherCostsOp.createOtherCosts(otherCostsPath, organizationId);
+                        const costMappings = await otherCostsOp.createOtherCosts(otherCostsPath, organizationId, language);
                         socket.emit('log', { type: 'success', message: `✓ Other costs created: ${costMappings?.length || 0}\n` });
                     } catch (error: any) {
                         socket.emit('log', { type: 'error', message: `Other costs creation failed: ${error.message}` });
                         socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
+                } else if (fs.existsSync(otherCostMappingsPath)) {
+                    socket.emit('log', { type: 'info', message: '\n=== Other Costs Already Created ===' });
+                    socket.emit('log', { type: 'success', message: `✓ Using existing ${language} other costs from cache\n` });
                 }
 
                 // Projects
@@ -489,12 +500,12 @@ export async function runDemoCreation(
                         }
 
                         // Assign other costs to projects
-                        if (projectMappings.length > 0 && fs.existsSync(otherCostsPath)) {
+                        if (projectMappings.length > 0 && fs.existsSync(otherCostMappingsPath)) {
                             socket.emit('log', { type: 'info', message: '\n=== Assigning Other Costs to Projects ===' });
                             try {
                                 const { OtherCostsOperation } = await import('../operations/ims/other-costs');
                                 const otherCostsOp = new OtherCostsOperation(imsCustomersApiClient);
-                                await otherCostsOp.assignCostsToProjects(projectMappings, organizationId);
+                                await otherCostsOp.assignCostsToProjects(projectMappings, organizationId, language);
                                 socket.emit('log', { type: 'success', message: '✓ Other costs assigned to projects\n' });
                             } catch (error: any) {
                                 socket.emit('log', { type: 'error', message: `Other costs assignment failed: ${error.message}` });

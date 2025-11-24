@@ -1,0 +1,249 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+5G Network,Spectrum Acquisition,FCC-Spektrumauktion Teilnahme,An der bundesweiten Spektrumauktion teilnehmen,Task
+5G Network,Spectrum Acquisition,Lizenzerwerb Dokumentation,Lizenzdokumentation vorbereiten und einreichen,Documentation
+5G Network,Spectrum Acquisition,Frequenzbandanalyse,Verfügbare Frequenzbänder für optimale Abdeckung analysieren,Task
+5G Network,Spectrum Acquisition,Regulierungskonformität Prüfung,Einhaltung der Telekommunikationsvorschriften sicherstellen,Task
+5G Network,Network Architecture Design,Kernnetz-Topologie Planung,Gesamtnetzwerk-Topologie und -Architektur entwerfen,Task
+5G Network,Network Architecture Design,5G-Standards Konformitätsbewertung,Konformität mit 3GPP 5G-Standards überprüfen,Task
+5G Network,Network Architecture Design,Kapazitätsplanung & Modellierung,Netzwerkkapazität und Verkehrsmuster modellieren,Task
+5G Network,Network Architecture Design,Architektur Dokumentation,Umfassende Architekturdokumentation erstellen,Documentation
+5G Network,Core Network Upgrade,Legacy-System Bewertung,Bestehende 4G-Infrastruktur für Upgrade-Pfad bewerten,Task
+5G Network,Core Network Upgrade,Kernausrüstung Beschaffung,5G-Kernnetzwerkausrüstung beschaffen,Task
+5G Network,Core Network Upgrade,Software-Migrationsplanung,Migration von 4G- zu 5G-Kern-Software planen,Task
+5G Network,Core Network Upgrade,Integrationstests,Integration zwischen Legacy- und neuen Systemen testen,Task
+5G Network,Radio Access Network Deployment,Standortuntersuchung & Auswahl,Optimale Turmstandorte untersuchen und auswählen,Task
+5G Network,Radio Access Network Deployment,Basisstation Installation,5G-Basisstationen an ausgewählten Standorten installieren,Task
+5G Network,Radio Access Network Deployment,Backhaul-Netzwerk Einrichtung,Backhaul-Verbindungen für Basisstationen konfigurieren,Task
+5G Network,Radio Access Network Deployment,RAN-Leistungstest,Funkzugangsnetz-Leistung testen,Task
+5G Network,Tower & Antenna Installation,Statik-Bewertung,Strukturelle Anforderungen für Türme bewerten,Task
+5G Network,Tower & Antenna Installation,Antennenmontagehardware,Antennenmontagessysteme installieren,Task
+5G Network,Tower & Antenna Installation,MIMO-Antennenkonfiguration,Massive MIMO-Antennen-Arrays konfigurieren,Task
+5G Network,Tower & Antenna Installation,Standort Inbetriebnahme,Fertiggestellte Turmstandorte in Betrieb nehmen,Task
+5G Network,Testing & Optimization,Drive-Testing Kampagne,Umfassende Drive-Tests durchführen,Task
+5G Network,Testing & Optimization,Abdeckungsanalyse,Netzabdeckung analysieren und Lücken identifizieren,Task
+5G Network,Testing & Optimization,Störungsminderung,Störungsquellen identifizieren und mindern,Task
+5G Network,Testing & Optimization,Leistungs-Benchmarking,Leistung gegen Ziele benchmarken,Task
+5G Network,Commercial Launch Phase 1,Marketingkampagne Vorbereitung,5G-Launch-Marketingmaterialien vorbereiten,Task
+5G Network,Commercial Launch Phase 1,Kundengeräte-Zertifizierung,Kompatible 5G-Geräte zertifizieren,Task
+5G Network,Commercial Launch Phase 1,Serviceplan-Entwicklung,5G-Servicepläne und Preisgestaltung entwickeln,Task
+5G Network,Commercial Launch Phase 1,Handelspartner-Schulung,Handelspartner für 5G-Angebote schulen,Task
+5G Network,National Coverage Expansion,Marktpriorisierung Analyse,Märkte für Expansion priorisieren,Task
+5G Network,National Coverage Expansion,Zusätzliche Standort-Bereitstellung,Zusätzliche Turmstandorte bereitstellen,Task
+5G Network,National Coverage Expansion,Ländliche Abdeckungsstrategie,Strategie für ländliche Abdeckung entwickeln,Task
+5G Network,National Coverage Expansion,Roaming-Vereinbarungen,Roaming-Vereinbarungen mit Partnern etablieren,Task
+Streaming Platform,Content Licensing Negotiations,Studio-Partnerschaft Kontaktaufnahme,Partnerschaften mit großen Studios initiieren,Task
+Streaming Platform,Content Licensing Negotiations,Content-Katalog Bewertung,Verfügbare Content-Bibliotheken bewerten,Task
+Streaming Platform,Content Licensing Negotiations,Lizenzverhandlungen,Lizenzbedingungen und Preisgestaltung verhandeln,Task
+Streaming Platform,Content Licensing Negotiations,Rechteverwaltung Einrichtung,Digital Rights Management System einrichten,Task
+Streaming Platform,Platform Architecture Design,Microservices-Architektur Planung,Microservices-basierte Plattform entwerfen,Task
+Streaming Platform,Platform Architecture Design,Datenbankschema Design,Datenbankschema für Content-Metadaten entwerfen,Task
+Streaming Platform,Platform Architecture Design,API-Gateway Konfiguration,API-Gateway und Routing konfigurieren,Task
+Streaming Platform,Platform Architecture Design,Skalierbarkeit Test-Framework,Framework für Skalierbarkeitstests entwickeln,Task
+Streaming Platform,Video Encoding Pipeline,Transcoding-Workflow Design,Video-Transcoding-Workflow entwerfen,Task
+Streaming Platform,Video Encoding Pipeline,Multi-Bitrate Encoding Einrichtung,Adaptive Bitrate-Kodierung konfigurieren,Task
+Streaming Platform,Video Encoding Pipeline,Qualitätskontrolle Automatisierung,Videoqualitätskontrolle automatisieren,Task
+Streaming Platform,Video Encoding Pipeline,Speicher-Optimierung,Videospeicherung und -auslieferung optimieren,Task
+Streaming Platform,Recommendation Engine,Nutzerverhalten Datenerfassung,Nutzerverhaltens-Tracking implementieren,Task
+Streaming Platform,Recommendation Engine,ML-Modell Entwicklung,Machine-Learning-Empfehlungsmodelle entwickeln,Feature
+Streaming Platform,Recommendation Engine,A/B-Testing Framework,A/B-Testing-Framework für Empfehlungen erstellen,Task
+Streaming Platform,Recommendation Engine,Personalisierungs-Algorithmus,Personalisierungsalgorithmen implementieren,Feature
+Streaming Platform,User Interface Development,UI/UX Design Mockups,Benutzeroberflächen-Design-Mockups erstellen,Task
+Streaming Platform,User Interface Development,React-Komponentenbibliothek,Wiederverwendbare React-Komponentenbibliothek erstellen,Feature
+Streaming Platform,User Interface Development,Responsive Design Implementierung,Responsive Design für alle Geräte implementieren,Feature
+Streaming Platform,User Interface Development,Barrierefreiheit Konformität,WCAG-Barrierefreiheitskonformität sicherstellen,Task
+Streaming Platform,Payment & Subscription System,Zahlungsgateway Integration,Zahlungsverarbeitungs-Gateways integrieren,Task
+Streaming Platform,Payment & Subscription System,Abonnement-Stufen Konfiguration,Abonnement-Stufen und Preisgestaltung konfigurieren,Task
+Streaming Platform,Payment & Subscription System,Abrechnungs-Automatisierung,Wiederkehrende Abrechnungsprozesse automatisieren,Task
+Streaming Platform,Payment & Subscription System,Betrugserkennung System,Betrugserkennungsmechanismen implementieren,Task
+Streaming Platform,Beta Testing,Beta-Nutzer Rekrutierung,Beta-Tester rekrutieren und einarbeiten,Task
+Streaming Platform,Beta Testing,Feedback-Erfassungssystem,Feedback-Erfassungsmechanismen einrichten,Task
+Streaming Platform,Beta Testing,Leistungsüberwachung,Plattformleistung während Beta überwachen,Task
+Streaming Platform,Beta Testing,Fehler-Tracking & Behebung,Identifizierte Fehler verfolgen und beheben,Bug
+Streaming Platform,Global Launch,Infrastruktur-Skalierung,Infrastruktur für globalen Traffic skalieren,Task
+Streaming Platform,Global Launch,CDN-Konfiguration,Content-Delivery-Netzwerk global konfigurieren,Task
+Streaming Platform,Global Launch,Lokalisierung & Übersetzung,Plattform für Zielmärkte lokalisieren,Task
+Streaming Platform,Global Launch,Launch-Marketingkampagne,Globale Marketingkampagne durchführen,Task
+Content CDN,Network Topology Analysis,Verkehrsmuster-Analyse,Content-Verkehrsmuster analysieren,Task
+Content CDN,Network Topology Analysis,Geografische Verteilungs-Modellierung,Optimale geografische Verteilung modellieren,Task
+Content CDN,Network Topology Analysis,Peering-Punkt Identifikation,Optimale Peering-Punkte identifizieren,Task
+Content CDN,Network Topology Analysis,Kapazitätsplanung,CDN-Kapazitätsanforderungen planen,Task
+Content CDN,Edge Server Deployment,Rechenzentrum-Standortauswahl,Edge-Rechenzentrumsstandorte auswählen,Task
+Content CDN,Edge Server Deployment,Hardware-Beschaffung,Edge-Server-Hardware beschaffen,Task
+Content CDN,Edge Server Deployment,Netzwerk-Konfiguration,Edge-Server-Netzwerk konfigurieren,Task
+Content CDN,Edge Server Deployment,Server Inbetriebnahme,Edge-Server in Betrieb nehmen,Task
+Content CDN,Caching Strategy Optimization,Cache-Trefferquote Analyse,Cache-Trefferquoten analysieren und optimieren,Task
+Content CDN,Caching Strategy Optimization,Content-Popularität Vorhersage,Content-Popularitätsvorhersage implementieren,Feature
+Content CDN,Caching Strategy Optimization,Cache-Verdrängungs-Richtlinie,Cache-Verdrängungsrichtlinien optimieren,Task
+Content CDN,Caching Strategy Optimization,Origin-Shield Konfiguration,Origin-Shield-Schutz konfigurieren,Task
+Content CDN,Load Balancing Configuration,Load-Balancer Bereitstellung,Load-Balancing-Infrastruktur bereitstellen,Task
+Content CDN,Load Balancing Configuration,Zustandsprüfung Implementierung,Server-Zustandsprüfungen implementieren,Task
+Content CDN,Load Balancing Configuration,Geografische Routing-Regeln,Geografisches Routing konfigurieren,Task
+Content CDN,Load Balancing Configuration,Failover-Tests,Failover-Mechanismen testen,Task
+Content CDN,DDoS Protection,DDoS-Erkennungssystem,DDoS-Erkennung implementieren,Task
+Content CDN,DDoS Protection,Rate-Limiting Konfiguration,Rate-Limiting-Regeln konfigurieren,Task
+Content CDN,DDoS Protection,Traffic-Scrubbing Einrichtung,Traffic-Scrubbing-Zentren einrichten,Task
+Content CDN,DDoS Protection,Incident-Response Verfahren,Incident-Response-Verfahren entwickeln,Documentation
+Content CDN,Performance Monitoring,Metriken-Erfassungssystem,Metriken-Erfassung implementieren,Task
+Content CDN,Performance Monitoring,Echtzeit-Dashboard,Echtzeit-Überwachungs-Dashboard erstellen,Feature
+Content CDN,Performance Monitoring,Alarmierungs-Konfiguration,Leistungsalarmierung konfigurieren,Task
+Content CDN,Performance Monitoring,SLA-Tracking,SLA-Tracking und -Berichterstattung implementieren,Task
+Content CDN,Global Expansion,Marktanalyse,Potenzielle Expansionsmärkte analysieren,Task
+Content CDN,Global Expansion,Zusätzliche PoP-Bereitstellung,Zusätzliche Points of Presence bereitstellen,Task
+Content CDN,Global Expansion,Regionale Partnerschaften,Regionale CDN-Partnerschaften etablieren,Task
+Content CDN,Global Expansion,Konformitätsprüfung,Regulierungskonformität in neuen Märkten überprüfen,Task
+Digital Ads,Ad Exchange Integration,Exchange-Protokoll Implementierung,Ad-Exchange-Protokolle implementieren,Task
+Digital Ads,Ad Exchange Integration,Bid-Request Formatierung,Bid-Request-Formatierung konfigurieren,Task
+Digital Ads,Ad Exchange Integration,Response-Parsing Logik,Response-Parsing-Logik entwickeln,Feature
+Digital Ads,Ad Exchange Integration,Integrationstests,Exchange-Integrationen testen,Task
+Digital Ads,Real-Time Bidding System,Bidding-Algorithmus Entwicklung,RTB-Bidding-Algorithmen entwickeln,Feature
+Digital Ads,Real-Time Bidding System,Niedrige-Latenz Optimierung,Für niedrige Latenz beim Bieten optimieren,Task
+Digital Ads,Real-Time Bidding System,Gebotspreis-Berechnung,Gebotspreis-Berechnungslogik implementieren,Feature
+Digital Ads,Real-Time Bidding System,Leistungs-Benchmarking,Bidding-Leistung benchmarken,Task
+Digital Ads,Audience Segmentation,Datenerfassungs-Pipeline,Zielgruppendaten-Erfassungspipeline aufbauen,Task
+Digital Ads,Audience Segmentation,Segmentierungsmodell Entwicklung,Zielgruppensegmentierungsmodelle entwickeln,Feature
+Digital Ads,Audience Segmentation,Datenschutz-Konformität,Einhaltung der Datenschutzvorschriften sicherstellen,Task
+Digital Ads,Audience Segmentation,Segment-Tests,Effektivität der Zielgruppensegmente testen,Task
+Digital Ads,Creative Management Platform,Ad-Creative Upload-System,Creative-Upload-System aufbauen,Feature
+Digital Ads,Creative Management Platform,Creative-Freigabe Workflow,Freigabe-Workflow implementieren,Task
+Digital Ads,Creative Management Platform,Format-Validierung,Ad-Creative-Formate validieren,Task
+Digital Ads,Creative Management Platform,Versionskontroll-System,Creative-Versionskontrolle implementieren,Feature
+Digital Ads,Analytics & Attribution,Conversion-Tracking Einrichtung,Conversion-Tracking einrichten,Task
+Digital Ads,Analytics & Attribution,Attributionsmodell Entwicklung,Multi-Touch-Attributionsmodell entwickeln,Feature
+Digital Ads,Analytics & Attribution,Reporting-Dashboard,Analytics-Reporting-Dashboard erstellen,Feature
+Digital Ads,Analytics & Attribution,Data-Warehouse Integration,Mit Data-Warehouse integrieren,Task
+Digital Ads,Brand Safety Controls,Content-Klassifizierungssystem,Content-Klassifizierung implementieren,Task
+Digital Ads,Brand Safety Controls,Sperrlisten-Verwaltung,Sperrlistenverwaltungstools entwickeln,Feature
+Digital Ads,Brand Safety Controls,Kontextuelle Analyse,Kontextuelle Sicherheitsanalyse implementieren,Feature
+Digital Ads,Brand Safety Controls,Verstoß-Erkennung,Verstoß-Erkennungssystem aufbauen,Task
+Digital Ads,Advertiser Portal,Self-Service UI Entwicklung,Advertiser-Self-Service-Portal aufbauen,Feature
+Digital Ads,Advertiser Portal,Kampagnen-Management Tools,Kampagnenverwaltungstools entwickeln,Feature
+Digital Ads,Advertiser Portal,Budget-Kontrollsystem,Budget-Kontrollmechanismen implementieren,Feature
+Digital Ads,Advertiser Portal,Reporting-Funktionen,Reporting-Funktionen aufbauen,Feature
+Digital Ads,Publisher Onboarding,Publisher-Bewerbungsprozess,Publisher-Bewerbungs-Workflow erstellen,Task
+Digital Ads,Publisher Onboarding,Ad-Tag Generierung,Ad-Tag-Generierung implementieren,Feature
+Digital Ads,Publisher Onboarding,Integrations-Dokumentation,Publisher-Integrationsdokumentation erstellen,Documentation
+Digital Ads,Publisher Onboarding,Qualitätssicherung Tests,Publisher-Integrationen testen,Task
+News CMS,Content Workflow Design,Redaktioneller Workflow Mapping,Redaktionelle Workflow-Prozesse kartieren,Task
+News CMS,Content Workflow Design,Rollen & Berechtigungen Design,Rollenbasierte Berechtigungen entwerfen,Task
+News CMS,Content Workflow Design,Freigabeprozess Konfiguration,Content-Freigabeprozess konfigurieren,Task
+News CMS,Content Workflow Design,Workflow-Automatisierungsregeln,Workflow-Automatisierungsregeln definieren,Task
+News CMS,Editorial Tools Development,Rich-Text-Editor Integration,Rich-Text-Editor integrieren,Feature
+News CMS,Editorial Tools Development,Kollaboratives Bearbeiten,Kollaborative Bearbeitungsfunktionen implementieren,Feature
+News CMS,Editorial Tools Development,Versionsverlauf-System,Versionsverlaufs-Tracking aufbauen,Feature
+News CMS,Editorial Tools Development,Content-Planung,Content-Planung implementieren,Feature
+News CMS,Multimedia Asset Management,Asset-Upload System,Multimedia-Upload-System aufbauen,Feature
+News CMS,Multimedia Asset Management,Bild-Optimierungs-Pipeline,Bild-Optimierungs-Pipeline erstellen,Task
+News CMS,Multimedia Asset Management,Video-Transcoding,Video-Transcoding implementieren,Task
+News CMS,Multimedia Asset Management,Asset-Suche & Entdeckung,Asset-Suchfunktionalität aufbauen,Feature
+News CMS,AI Content Tagging,KI-Modell Training,Content-Klassifizierungsmodelle trainieren,Feature
+News CMS,AI Content Tagging,Auto-Tagging Implementierung,Automatisches Tagging implementieren,Feature
+News CMS,AI Content Tagging,Entity-Erkennung,Entity-Erkennungssystem aufbauen,Feature
+News CMS,AI Content Tagging,Tag-Qualität Validierung,Auto-Tag-Genauigkeit validieren,Task
+News CMS,Publishing Pipeline,Multi-Channel Publishing,Multi-Channel-Publishing implementieren,Feature
+News CMS,Publishing Pipeline,Content-Verteilungs API,Content-Verteilungs-API aufbauen,Feature
+News CMS,Publishing Pipeline,Publishing-Automatisierung,Publishing-Workflows automatisieren,Task
+News CMS,Publishing Pipeline,Rollback-Mechanismus,Content-Rollback implementieren,Feature
+News CMS,SEO Optimization,Metadaten-Verwaltung,SEO-Metadatenverwaltung aufbauen,Feature
+News CMS,SEO Optimization,Sitemap-Generierung,Automatische Sitemap-Generierung implementieren,Task
+News CMS,SEO Optimization,Schema-Markup Implementierung,Strukturierte Daten-Markup hinzufügen,Task
+News CMS,SEO Optimization,Performance-Optimierung,Seitenladegeschwindigkeit optimieren,Task
+News CMS,Mobile App Integration,API-Entwicklung,Mobile-API-Endpunkte entwickeln,Feature
+News CMS,Mobile App Integration,Push-Benachrichtigungssystem,Push-Benachrichtigungen implementieren,Feature
+News CMS,Mobile App Integration,Offline-Content Sync,Offline-Content-Synchronisierung aufbauen,Feature
+News CMS,Mobile App Integration,Mobile-Tests,Mobile-App-Integration testen,Task
+News CMS,Journalist Training,Schulungsmaterialien Erstellung,CMS-Schulungsmaterialien erstellen,Documentation
+News CMS,Journalist Training,Praxis-Workshops,Journalisten-Workshops durchführen,Task
+News CMS,Journalist Training,Support-Dokumentation,Benutzer-Support-Dokumentation schreiben,Documentation
+News CMS,Journalist Training,Feedback-Erfassung,Benutzer-Feedback erfassen und bearbeiten,Task
+Podcast Network,Studio Equipment Setup,Studio-Raum Design,Podcast-Studio-Layout entwerfen,Task
+Podcast Network,Studio Equipment Setup,Audio-Ausrüstung Beschaffung,Professionelle Audio-Ausrüstung beschaffen,Task
+Podcast Network,Studio Equipment Setup,Schalldämmung Installation,Schalldämmungsmaterialien installieren,Task
+Podcast Network,Studio Equipment Setup,Ausrüstungs-Tests,Alle Studio-Ausrüstungen testen,Task
+Podcast Network,Recording & Production Tools,DAW-Software Konfiguration,Digital-Audio-Workstation konfigurieren,Task
+Podcast Network,Recording & Production Tools,Audio-Plugin Integration,Audio-Verarbeitungs-Plugins integrieren,Task
+Podcast Network,Recording & Production Tools,Aufnahme-Vorlagen,Podcast-Aufnahmevorlagen erstellen,Task
+Podcast Network,Recording & Production Tools,Qualitätskontrolle Workflow,QC-Workflow etablieren,Task
+Podcast Network,Distribution Platform Integration,RSS-Feed Generierung,RSS-Feed-Generierung implementieren,Feature
+Podcast Network,Distribution Platform Integration,Plattform-API Integration,Mit Podcast-Plattformen integrieren,Task
+Podcast Network,Distribution Platform Integration,Metadaten-Verwaltung,Episoden-Metadatenverwaltung aufbauen,Feature
+Podcast Network,Distribution Platform Integration,Verteilungs-Automatisierung,Multi-Plattform-Verteilung automatisieren,Task
+Podcast Network,Monetization System,Ad-Insertion Technologie,Dynamische Ad-Insertion implementieren,Feature
+Podcast Network,Monetization System,Sponsoring-Verwaltung,Sponsoring-Verwaltungstools aufbauen,Feature
+Podcast Network,Monetization System,Premium-Abonnement,Premium-Abonnementsystem implementieren,Feature
+Podcast Network,Monetization System,Umsatz-Tracking,Umsatz-Tracking und -Reporting aufbauen,Feature
+Podcast Network,Analytics Dashboard,Hörer-Metriken Erfassung,Hörer-Analysedaten erfassen,Task
+Podcast Network,Analytics Dashboard,Dashboard-Entwicklung,Analytics-Dashboard aufbauen,Feature
+Podcast Network,Analytics Dashboard,Publikums-Einblicke,Publikums-Insight-Berichte implementieren,Feature
+Podcast Network,Analytics Dashboard,Leistungs-Reporting,Leistungsberichte erstellen,Feature
+Podcast Network,Creator Onboarding,Creator-Bewerbungsportal,Creator-Bewerbungssystem aufbauen,Feature
+Podcast Network,Creator Onboarding,Content-Richtlinien,Content-Richtlinien entwickeln,Documentation
+Podcast Network,Creator Onboarding,Onboarding-Schulung,Creator-Onboarding-Schulung erstellen,Task
+Podcast Network,Creator Onboarding,Support-System,Creator-Support-System implementieren,Feature
+Podcast Network,Marketing Launch,Markenidentität Entwicklung,Podcast-Netzwerk-Marke entwickeln,Task
+Podcast Network,Marketing Launch,Social-Media-Kampagne,Social-Media-Kampagnen durchführen,Task
+Podcast Network,Marketing Launch,PR & Medien-Kontaktaufnahme,Medien-Kontaktaufnahme durchführen,Task
+Podcast Network,Marketing Launch,Launch-Event Planung,Netzwerk-Launch-Event planen,Task
+Fiber Rollout,Network Planning & Design,Service-Bereich Kartierung,Glasfaser-Service-Bereiche kartieren,Task
+Fiber Rollout,Network Planning & Design,Nachfrage-Analyse,Abonnenten-Nachfrage analysieren,Task
+Fiber Rollout,Network Planning & Design,Netzwerk-Topologie Design,Glasfaser-Netzwerk-Topologie entwerfen,Task
+Fiber Rollout,Network Planning & Design,Kostenschätzung,Rollout-Kosten schätzen,Task
+Fiber Rollout,Permits & Rights of Way,Genehmigungsantrag Vorbereitung,Genehmigungsanträge vorbereiten,Task
+Fiber Rollout,Permits & Rights of Way,Kommunale Genehmigungsprozess,Kommunale Genehmigungen einholen,Task
+Fiber Rollout,Permits & Rights of Way,Wegerecht-Verhandlungen,Grundstücks-Wegerechte verhandeln,Task
+Fiber Rollout,Permits & Rights of Way,Regulierungs-Konformität,Regulierungskonformität sicherstellen,Task
+Fiber Rollout,Fiber Cable Procurement,Kabel-Spezifikationen,Glasfaser-Kabelspezifikationen definieren,Task
+Fiber Rollout,Fiber Cable Procurement,Lieferanten-Auswahl,Kabellieferanten auswählen,Task
+Fiber Rollout,Fiber Cable Procurement,Qualitäts-Tests,Kabelqualität testen,Task
+Fiber Rollout,Fiber Cable Procurement,Logistik-Planung,Kabellieferlogistik planen,Task
+Fiber Rollout,Trenching & Installation,Grabungs-Auftragnehmer Auswahl,Grabungs-Auftragnehmer auswählen,Task
+Fiber Rollout,Trenching & Installation,Unterirdische Versorgung Markierung,Unterirdische Versorgungsleitungen markieren,Task
+Fiber Rollout,Trenching & Installation,Glasfaser-Kabel Installation,Glasfaserkabel installieren,Task
+Fiber Rollout,Trenching & Installation,Wiederherstellungsarbeiten,Standort-Wiederherstellung abschließen,Task
+Fiber Rollout,Splice & Testing,Glasfaser-Spleiß Operationen,Glasfaserverbindungen spleißen,Task
+Fiber Rollout,Splice & Testing,OTDR-Tests,OTDR-Tests durchführen,Task
+Fiber Rollout,Splice & Testing,Signalverlust-Messung,Signalverlust messen,Task
+Fiber Rollout,Splice & Testing,Dokumentations-Aktualisierung,As-built-Dokumentation aktualisieren,Documentation
+Fiber Rollout,Customer Premises Equipment,ONT-Beschaffung,Optische Netzwerk-Terminals beschaffen,Task
+Fiber Rollout,Customer Premises Equipment,Installationsverfahren,CPE-Installationsverfahren entwickeln,Task
+Fiber Rollout,Customer Premises Equipment,Techniker-Schulung,Installations-Techniker schulen,Task
+Fiber Rollout,Customer Premises Equipment,Qualitätssicherung,Installations-QS implementieren,Task
+Fiber Rollout,Service Activation,Bereitstellungssystem Einrichtung,Service-Bereitstellung einrichten,Task
+Fiber Rollout,Service Activation,Abrechnungssystem Integration,Mit Abrechnungssystem integrieren,Task
+Fiber Rollout,Service Activation,Service-Tests,Service-Aktivierung testen,Task
+Fiber Rollout,Service Activation,Kundenservice-Schulung,Kundenservice-Mitarbeiter schulen,Task
+Fiber Rollout,Customer Migration,Migrations-Planung,Kundenmigration planen,Task
+Fiber Rollout,Customer Migration,Kundenkommunikation,Mit bestehenden Kunden kommunizieren,Task
+Fiber Rollout,Customer Migration,Service-Übergang,Service-Übergänge durchführen,Task
+Fiber Rollout,Customer Migration,Legacy-System Stilllegung,Legacy-Systeme außer Betrieb nehmen,Task
+Gaming Cloud,Cloud Infrastructure Setup,Cloud-Plattform Auswahl,Cloud-Plattform-Anbieter auswählen,Task
+Gaming Cloud,Cloud Infrastructure Setup,Rechenressourcen Bereitstellung,Rechenressourcen bereitstellen,Task
+Gaming Cloud,Cloud Infrastructure Setup,Netzwerk-Konfiguration,Cloud-Netzwerk konfigurieren,Task
+Gaming Cloud,Cloud Infrastructure Setup,Sicherheits-Härtung,Sicherheitsmaßnahmen implementieren,Task
+Gaming Cloud,Game Streaming Engine,Video-Encoding Optimierung,Video-Encoding für Gaming optimieren,Task
+Gaming Cloud,Game Streaming Engine,Input-Erfassungssystem,Input-Erfassungssystem aufbauen,Feature
+Gaming Cloud,Game Streaming Engine,Frame-Synchronisierung,Frame-Synchronisierung implementieren,Feature
+Gaming Cloud,Game Streaming Engine,Codec-Auswahl,Optimale Video-Codecs auswählen,Task
+Gaming Cloud,Input Latency Optimization,Netzwerkpfad-Optimierung,Netzwerkpfade optimieren,Task
+Gaming Cloud,Input Latency Optimization,Prädiktive Input-Handhabung,Prädiktive Eingabe implementieren,Feature
+Gaming Cloud,Input Latency Optimization,Latenz-Messung,End-to-End-Latenz messen,Task
+Gaming Cloud,Input Latency Optimization,Edge-Computing Integration,Edge-Computing integrieren,Task
+Gaming Cloud,Game Library Integration,Publisher-Partnerschaften,Spielepublisher-Partnerschaften etablieren,Task
+Gaming Cloud,Game Library Integration,Spiele-Portierungsprozess,Spiele auf Cloud-Plattform portieren,Task
+Gaming Cloud,Game Library Integration,DRM-Integration,Digital Rights Management integrieren,Task
+Gaming Cloud,Game Library Integration,Spiele-Katalog Verwaltung,Spielekatalog-System aufbauen,Feature
+Gaming Cloud,Social Features,Freunde-System Entwicklung,Freunde-System aufbauen,Feature
+Gaming Cloud,Social Features,In-Game-Chat,In-Game-Chat implementieren,Feature
+Gaming Cloud,Social Features,Achievement-System,Achievement-System erstellen,Feature
+Gaming Cloud,Social Features,Bestenlisten Implementierung,Globale Bestenlisten aufbauen,Feature
+Gaming Cloud,Cross-Platform Support,Plattform-Kompatibilität Tests,Cross-Plattform-Kompatibilität testen,Task
+Gaming Cloud,Cross-Platform Support,Controller-Unterstützung,Controller-Unterstützung implementieren,Feature
+Gaming Cloud,Cross-Platform Support,Mobile-Optimierung,Für mobile Geräte optimieren,Task
+Gaming Cloud,Cross-Platform Support,Spielstand-Synchronisierung,Spielstand-Synchronisierung implementieren,Feature
+Gaming Cloud,Beta Testing Program,Beta-Tester Rekrutierung,Beta-Tester rekrutieren,Task
+Gaming Cloud,Beta Testing Program,Feedback-System,Feedback-Erfassungssystem aufbauen,Feature
+Gaming Cloud,Beta Testing Program,Leistungsüberwachung,Beta-Leistung überwachen,Task
+Gaming Cloud,Beta Testing Program,Problem-Behebung,Beta-Probleme beheben,Bug
+Gaming Cloud,Commercial Launch,Infrastruktur-Skalierung,Für kommerziellen Launch skalieren,Task
+Gaming Cloud,Commercial Launch,Abonnement-Stufen,Abonnement-Stufen konfigurieren,Task
+Gaming Cloud,Commercial Launch,Zahlungs-Integration,Zahlungssysteme integrieren,Task
+Gaming Cloud,Commercial Launch,Marketing-Kampagne,Launch-Marketing durchführen,Task

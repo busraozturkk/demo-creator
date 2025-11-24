@@ -1,0 +1,237 @@
+project_short_title,milestone_title,task_title,task_description,task_type
+Smart Grid,Bewertung der Netzinfrastruktur,Netzwerktopologie-Analyse,Kartierung bestehender Netztopologie und Umspannwerksstandorte,Task
+Smart Grid,Bewertung der Netzinfrastruktur,Lastflussstudie,Durchführung von Energieflussanalyse und Kapazitätsbewertung,Task
+Smart Grid,Bewertung der Netzinfrastruktur,Asset-Zustandsbewertung,Bewertung von Alter und Zustand der Netzanlagen,Task
+Smart Grid,Bewertung der Netzinfrastruktur,Infrastrukturbewertungsbericht,Dokumentation aktueller Zustandsbefunde und Empfehlungen,Documentation
+Smart Grid,Smart-Meter-Beschaffung,Technische Spezifikationsentwicklung,Definition funktionaler und technischer AMI-Zähler-Anforderungen,Documentation
+Smart Grid,Smart-Meter-Beschaffung,Anbieter-RFP-Prozess,Ausgabe RFP und Bewertung von Smart-Meter-Anbieterangeboten,Task
+Smart Grid,Smart-Meter-Beschaffung,Zählertyp-Testen,Durchführung von Labor- und Feldtests für Kandidatenzähler,Task
+Smart Grid,Smart-Meter-Beschaffung,Beschaffungsvertragsvergabe,Verhandlung und Vergabe von Smart-Meter-Liefervertrag,Task
+Smart Grid,Kommunikationsnetzwerkdesign,Kommunikationstechnologie-Auswahl,Auswahl von Mesh-RF-, Mobilfunk- oder PLC-Kommunikationstechnologie,Task
+Smart Grid,Kommunikationsnetzwerkdesign,Netzwerkabdeckungsplanung,Design von Kommunikationsnetzwerk-Abdeckung und Backhaul,Task
+Smart Grid,Kommunikationsnetzwerkdesign,Cybersicherheits-Architektur,Design von Sicherheitskontrollen für AMI-Netzwerk,Task
+Smart Grid,Kommunikationsnetzwerkdesign,Netzwerkdesign-Dokumentation,Erstellung von Kommunikationsnetzwerk-Designspezifikationen,Documentation
+Smart Grid,Datenmanagementsplattform,MDMS-Plattformauswahl,Auswahl und Beschaffung von Meter-Data-Management-System,Task
+Smart Grid,Datenmanagementsplattform,Datenarchitektur-Design,Design von Data Warehouse und Analytics-Architektur,Task
+Smart Grid,Datenmanagementsplattform,Integrationsarchitektur,Design der Integration mit Abrechnungs- und OMS-Systemen,Task
+Smart Grid,Datenmanagementsplattform,Plattforminstallation & Konfiguration,Installation und Konfiguration von MDMS-Software-Plattform,Task
+Smart Grid,Erweiterte Analytik & Prognose,Historische Datenvorbereitung,Vorbereitung von Trainingsdatensätzen aus historischem Verbrauch,Task
+Smart Grid,Erweiterte Analytik & Prognose,Lastprognosemodelle,Entwicklung von Machine-Learning-Lastprognosemodellen,Feature
+Smart Grid,Erweiterte Analytik & Prognose,Anomalieerkennung-Algorithmen,Implementierung von Verbrauchs-Anomalie- und Diebstahlerkennung,Feature
+Smart Grid,Erweiterte Analytik & Prognose,Demand-Response-Optimierung,Aufbau von DR-Event-Optimierungsalgorithmen,Task
+Smart Grid,Zählereinführung Phase 1,Zähleraustausch-Logistik,Planung von Zähleraustausch-Logistik und Personalplanung,Task
+Smart Grid,Zählereinführung Phase 1,Feldbrigaden-Training,Training von Installationsbrigaden zu Zählerinstallationsverfahren,Task
+Smart Grid,Zählereinführung Phase 1,Wohnzähler-Installation,Installation von Smart Metern in Wohngebäuden,Task
+Smart Grid,Zählereinführung Phase 1,Zählerinbetriebnahme & Testen,Inbetriebnahme von Zählern und Verifizierung der Kommunikationskonnektivität,Task
+Smart Grid,Kundenportal-Launch,Kundenportal-Entwicklung,Entwicklung von Web- und mobilen Kundenengagement-Portal,Feature
+Smart Grid,Kundenportal-Launch,Echtzeit-Verbrauchsanzeige,Implementierung nahezu-Echtzeit-Energieverbrauch-Visualisierung,Feature
+Smart Grid,Kundenportal-Launch,Tarifvergleich-Tools,Aufbau von Tarifplan-Vergleichs- und Empfehlungstools,Task
+Smart Grid,Kundenportal-Launch,Kundenkommunikations-Kampagne,Start von Kunden-Awareness- und Bildungskampagne,Task
+Smart Grid,Vollständige Netzwerkintegration,Ausfallmanagement-Integration,Integration von AMI mit Ausfallmanagementsystem,Task
+Smart Grid,Vollständige Netzwerkintegration,Verteilungsautomatisierung,Implementierung automatisierter Schaltung und Fehlerortung,Feature
+Smart Grid,Vollständige Netzwerkintegration,Spannungsoptimierung,Bereitstellung von Conservation-Voltage-Reduction-Steuerungen,Task
+Smart Grid,Vollständige Netzwerkintegration,Netzzuverlässigkeits-Testing,Durchführung von End-to-End-Systemzuverlässigkeitstests,Task
+Wind Farm,Umweltverträglichkeitsprüfung,Vogel- & Fledermaus-Auswirkungsstudie,Durchführung von Vogel- und Fledermaus-Populationsauswirkungsbewertung,Task
+Wind Farm,Umweltverträglichkeitsprüfung,Lärmauswirkungsmodellierung,Modellierung betrieblicher Lärmauswirkungen auf nahe Wohngebiete,Task
+Wind Farm,Umweltverträglichkeitsprüfung,Visuelle Auswirkungsanalyse,Erstellung von Fotomontagen und Sichtbarkeitsanalyse,Task
+Wind Farm,Umweltverträglichkeitsprüfung,UVP-Bericht & Einreichung,Zusammenstellung und Einreichung der Umweltverträglichkeitsprüfung,Documentation
+Wind Farm,Standortauswahl & Genehmigungen,Windressourcen-Bewertung,Analyse meteorologischer Daten und Energieerzeugungspotential,Task
+Wind Farm,Standortauswahl & Genehmigungen,Grundstückspacht-Verhandlungen,Verhandlung von Grundstückspachtverträgen mit Grundstückseigentümern,Task
+Wind Farm,Standortauswahl & Genehmigungen,Netzanschluss-Antrag,Einreichung Netzanschlussanfrage bei Übertragungsnetzbetreiber,Task
+Wind Farm,Standortauswahl & Genehmigungen,Entwicklungsgenehmigung-Akquisition,Erlangung von Bebauungs- und Baugenehmigungen,Task
+Wind Farm,Turbinenbeschaffung,Turbinentechnologie-Auswahl,Auswahl von Turbinenmodell basierend auf Standortwind-Charakteristiken,Task
+Wind Farm,Turbinenbeschaffung,Stromabnahmevertrag,Verhandlung PPA mit Versorgungsunternehmen oder Großabnehmer,Task
+Wind Farm,Turbinenbeschaffung,Turbinenliefervertrag,Vergabe von Turbinenlieferungs- und Garantievertrag,Task
+Wind Farm,Turbinenbeschaffung,Long-Lead-Equipment-Bestellungen,Aufgabe von Bestellungen für Transformatoren und Schaltanlagen,Task
+Wind Farm,Fundamenttechnik,Geotechnische Untersuchung,Durchführung von Bodenbohrungen und Fundamentdesign-Analyse,Task
+Wind Farm,Fundamenttechnik,Fundamentdesign,Design von Stahlbeton-Turbinenfundamenten,Task
+Wind Farm,Fundamenttechnik,Fundamentausgrabung,Ausgrabung und Vorbereitung von Turbinenfundamentstandorten,Task
+Wind Farm,Fundamenttechnik,Betonfundament-Einbringung,Einbringen von Stahlbeton-Turbinenfundamenten,Task
+Wind Farm,Installation & Inbetriebnahme,Zufahrtsstraßen-Bau,Bau von Kranwegen und Turbinenzufahrtsstraßen,Task
+Wind Farm,Installation & Inbetriebnahme,Turm-Errichtung,Montage und Errichtung von Windturbinentürmen,Task
+Wind Farm,Installation & Inbetriebnahme,Gondel- & Rotor-Installation,Installation von Gondel- und Rotoreinheiten mit Schwerlastkran,Task
+Wind Farm,Installation & Inbetriebnahme,Turbineninbetriebnahme,Inbetriebnahme und Testen einzelner Turbinensysteme,Task
+Wind Farm,Netzanschluss,Sammelsystem-Bau,Installation unterirdischer Sammelsystemkabel,Task
+Wind Farm,Netzanschluss,Umspannwerksbau,Bau von Projektumspannwerk und Kontrollgebäude,Task
+Wind Farm,Netzanschluss,Übertragungsleitungs-Netzanschluss,Anschluss des Projekts an Versorgungsübertragungssystem,Task
+Wind Farm,Netzanschluss,Netzanschluss-Testing,Durchführung von Grid-Code-Compliance- und Schutztests,Task
+Wind Farm,Leistungsoptimierung,SCADA-System-Konfiguration,Konfiguration von Turbinen-SCADA-Überwachung und -steuerung,Task
+Wind Farm,Leistungsoptimierung,Leistungsfaktor-Analyse,Analyse tatsächlicher vs. erwarteter Energieerzeugung,Task
+Wind Farm,Leistungsoptimierung,Drosselungsoptimierung,Optimierung des Turbinenbetriebs während Drosselungsereignissen,Task
+Wind Farm,Leistungsoptimierung,Betriebs- & Wartungs-Setup,Einrichtung von O&M-Verfahren und Ersatzteillagerbestand,Documentation
+Solar Park,Grundstückserwerb & Genehmigung,Standortauswahlanalyse,Bewertung von Solareinstrahlung, Topographie und Netznähe,Task
+Solar Park,Grundstückserwerb & Genehmigung,Grundstückskauf oder -pacht,Sicherung von Grundstücksrechten durch Kauf oder Langzeitpacht,Task
+Solar Park,Grundstückserwerb & Genehmigung,Bebauungs- & Baugenehmigungen,Erlangung lokaler Bebauungsgenehmigung und Baugenehmigungen,Task
+Solar Park,Grundstückserwerb & Genehmigung,Umweltfreigabe,Abschluss von Umweltprüfung und Genehmigung,Task
+Solar Park,Solarpanel-Beschaffung,Modultechnologie-Auswahl,Auswahl monokristalliner oder bifazialer Modultechnologie,Task
+Solar Park,Solarpanel-Beschaffung,Modulqualitäts-Testing,Durchführung von Werksakzeptanztests für Stichprobenmodule,Task
+Solar Park,Solarpanel-Beschaffung,Modullieferungsvereinbarung,Vergabe mehrjähriger Modullieferungsvertrag,Task
+Solar Park,Solarpanel-Beschaffung,Logistik- & Import-Koordination,Koordination internationaler Schifffahrt und Zollabfertigung,Task
+Solar Park,Wechselrichter- & BOS-Design,Wechselrichter-Dimensionierung & Auswahl,Design von DC:AC-Verhältnis und Auswahl zentraler oder String-Wechselrichter,Task
+Solar Park,Wechselrichter- & BOS-Design,Tracker-System-Design,Design von Einachs-Tracker-Konfiguration und Reihenabstand,Task
+Solar Park,Wechselrichter- & BOS-Design,Elektrisches Design,Design von Mittelspannungssammelsystem und Schutzsystemen,Task
+Solar Park,Wechselrichter- & BOS-Design,Balance-of-System-Beschaffung,Beschaffung von Montagesystemen, Kabeln und elektrischer Ausrüstung,Task
+Solar Park,Bau & Installation,Standortvorbereitung & Planierung,Räumung von Vegetation und Planierung des Standorts auf Designhöhen,Task
+Solar Park,Bau & Installation,Tracker-Installation,Installation von Tracker-Pfosten und Drehmomentröhren,Task
+Solar Park,Bau & Installation,Modul-Montage,Montage von Solarmodulen auf Trackerstrukturen,Task
+Solar Park,Bau & Installation,Elektrische Installation,Installation von DC- und AC-Elektrosystemen und Wechselrichtern,Task
+Solar Park,Batteriespeicherintegration,Batterietechnologie-Auswahl,Auswahl von Lithium-Ionen-Batteriechemie und Konfiguration,Task
+Solar Park,Batteriespeicherintegration,Batteriesystem-Beschaffung,Beschaffung von Batteriecontainern und Energiemanagementsystem,Task
+Solar Park,Batteriespeicherintegration,Batterie-Installation,Installation von Batteriecontainern und elektrischen Verbindungen,Task
+Solar Park,Batteriespeicherintegration,Energiemanagement-System-Konfiguration,Konfiguration von Dispatch-Algorithmen und Netzdiensten,Task
+Solar Park,Netzanschluss,Umspannwerksbau,Bau von Projektumspannwerk und Schaltanlage,Task
+Solar Park,Netzanschluss,Übertragungsaufrüstungen,Abschluss versorgungserforderter Übertragungssystem-Aufrüstungen,Task
+Solar Park,Netzanschluss,Netzanschlussvereinbarung,Abschluss Netzanschlussvereinbarung mit Versorgungsunternehmen,Documentation
+Solar Park,Netzanschluss,Parallelbetrieb-Testing,Durchführung von Netzanschluss- und Parallelbetriebs-Tests,Task
+Solar Park,Inbetriebnahme & Testen,String-Testing & IV-Kurven-Verfolgung,Test von Modulstrings und Verifizierung elektrischer Eigenschaften,Task
+Solar Park,Inbetriebnahme & Testen,Wechselrichter-Inbetriebnahme,Inbetriebnahme und Testen von Wechselrichtersystemen,Task
+Solar Park,Inbetriebnahme & Testen,Leistungsfaktor-Testing,Messung des anfänglichen Systemleistungsfaktors,Task
+Solar Park,Inbetriebnahme & Testen,Garantie-Aktivierung,Aktivierung von Gerätegarantien und Registrierung von Assets,Documentation
+Grid Battery,Technologieauswahl,Batterietechnologie-Assessment,Bewertung von Lithium-Ionen- vs. Flow-Batterietechnologien,Task
+Grid Battery,Technologieauswahl,Use-Case-Definition,Definition primären Use-Case: Arbitrage, Frequenzregelung oder Kapazität,Task
+Grid Battery,Technologieauswahl,Wirtschaftlichkeitsanalyse,Modellierung von Umsatzströmen und Projektökonomie,Task
+Grid Battery,Technologieauswahl,Technologieauswahl-Bericht,Dokumentation von Technologieauswahlbegründung,Documentation
+Grid Battery,Standortvorbereitung,Standortakquisition,Erwerb oder Pacht von Standort nahe Übertragungsumspannwerk,Task
+Grid Battery,Standortvorbereitung,Geotechnische Untersuchung,Durchführung von Bodentests und Fundamentdesign,Task
+Grid Battery,Standortvorbereitung,Standortbauarbeiten,Durchführung von Planierung, Entwässerung und Fundamentarbeiten,Task
+Grid Battery,Standortvorbereitung,Sicherheitszaun & Zugang,Installation von Perimetersicherheit und Zugangskontrolle,Task
+Grid Battery,Batterieinstallation,Batteriecontainer-Lieferung,Lieferung und Positionierung von Batteriecontainern auf Fundamenten,Task
+Grid Battery,Batterieinstallation,Batterieregal-Installation,Installation von Batterieregalen und Modulen in Containern,Task
+Grid Battery,Batterieinstallation,Thermalmanagementsystem,Installation von HVAC-Systemen für Batterietemperaturkontrolle,Task
+Grid Battery,Batterieinstallation,DC-elektrische Verbindungen,Verkabelung von Batteriestrings und DC-Bus-Verbindungen,Task
+Grid Battery,Leistungswandlungssystem,Wechselrichter-Installation,Installation bidirektionaler Wechselrichter und Transformatoren,Task
+Grid Battery,Leistungswandlungssystem,Mittelspannungs-Schaltanlage,Installation von MV-Schaltanlagen und Schutzrelais,Task
+Grid Battery,Leistungswandlungssystem,Netzanschluss,Anschluss des Systems an Versorgungsübertragungs- oder Verteilnetz,Task
+Grid Battery,Leistungswandlungssystem,AC-System-Inbetriebnahme,Inbetriebnahme und Testen von AC-Elektrosystemen,Task
+Grid Battery,Steuerungs- & Überwachungssystem,Energiemanagement-System,Installation und Konfiguration von Batterie-Energiemanagementsystem,Task
+Grid Battery,Steuerungs- & Überwachungssystem,SCADA-Integration,Integration mit Versorgungs-SCADA und Marktsystemen,Task
+Grid Battery,Steuerungs- & Überwachungssystem,Fernüberwachungs-Setup,Konfiguration von Fernüberwachung und Diagnose,Task
+Grid Battery,Steuerungs- & Überwachungssystem,Dispatch-Algorithmus-Programmierung,Programmierung optimaler Dispatch- und Angebotsalgorithmen,Task
+Grid Battery,Sicherheit & Brandschutz,Branderkennungssystem,Installation von Rauch- und Wärmedetektionssystemen,Task
+Grid Battery,Sicherheit & Brandschutz,Brandschutz-Installation,Installation NFPA-855-konformer Brandschutzsystem,Task
+Grid Battery,Sicherheit & Brandschutz,Notabschaltsystem,Implementierung schneller Abschalt- und Isolationssysteme,Feature
+Grid Battery,Sicherheit & Brandschutz,Sicherheitsverfahrens-Dokumentation,Entwicklung von Notfall- und Sicherheitsverfahren,Documentation
+Grid Battery,Leistungstests,Kapazitäts-Testing,Durchführung vollständiger Lade-/Entlade-Kapazitätsverifizierung,Task
+Grid Battery,Leistungstests,Effizienz-Testing,Messung des Round-Trip-AC-AC-Wirkungsgrads,Task
+Grid Battery,Leistungstests,Antwortzeit-Testing,Verifizierung von Frequenzgang und Ramprate-Leistung,Task
+Grid Battery,Leistungstests,Inbetriebnahme-Bericht,Dokumentation von Leistungstest-Ergebnissen und Akzeptanz,Documentation
+Demand Response,Kundensegmentierung,Kundendaten-Analyse,Analyse von Lastprofilen und Kundensegmentierung,Task
+Demand Response,Kundensegmentierung,Segmentierungsmodell-Entwicklung,Entwicklung von Kundensegmentierung mittels Clustering-Algorithmen,Task
+Demand Response,Kundensegmentierung,DR-Potential-Assessment,Schätzung des Demand-Reduction-Potentials nach Segment,Task
+Demand Response,Kundensegmentierung,Zielsegment-Auswahl,Auswahl prioritärer Kundensegmente für DR-Programme,Task
+Demand Response,Preismodelldesign,Tarifstruktur-Analyse,Analyse bestehender Tarifstrukturen und Reformoptionen,Task
+Demand Response,Preismodelldesign,Time-of-Use-Tarifdesign,Design von TOU- oder dynamischen Preistarifstrukturen,Task
+Demand Response,Preismodelldesign,Incentive-Struktur,Design ereignisbasierter Incentive-Zahlungen,Task
+Demand Response,Preismodelldesign,Tarifeinreichung & Genehmigung,Vorbereitung und Einreichung von Tarif bei Regulierungskommission,Documentation
+Demand Response,IoT-Device-Integration,Smart-Thermostat-Programm,Start von Smart-Thermostat-Bring-Your-Own-Device-Programm,Feature
+Demand Response,IoT-Device-Integration,Device-API-Integration,Integration mit Nest-, Ecobee- und Honeywell-APIs,Task
+Demand Response,IoT-Device-Integration,Direktlastregelungs-Schalter,Installation versorgungsgesteuerter Schalter an Warmwasserbereitern und HVAC,Task
+Demand Response,IoT-Device-Integration,Geräteinbetriebnahme,Inbetriebnahme und Testen bidirektionaler Gerätekommunikation,Task
+Demand Response,Machine-Learning-Modelle,Lastprognosemodell,Entwicklung kurzfristiger Lastprognosemodelle,Task
+Demand Response,Machine-Learning-Modelle,Kunden-Baseline-Berechnung,Implementierung von Baseline-Last-Berechnungsalgorithmen,Task
+Demand Response,Machine-Learning-Modelle,Event-Optimierung,Aufbau von Event-Timing- und Benachrichtigungs-Optimierungsmodellen,Task
+Demand Response,Machine-Learning-Modelle,Abrechnung & Messung,Entwicklung von M&V-Algorithmen für Leistungsabrechnung,Task
+Demand Response,Kunden-App-Entwicklung,Mobile-App-Design,Design kundenorientierter mobiler Anwendung,Task
+Demand Response,Kunden-App-Entwicklung,Echtzeit-Benachrichtigungen,Implementierung von Push-Benachrichtigungen für DR-Events,Feature
+Demand Response,Kunden-App-Entwicklung,Gamification-Features,Aufbau von Engagement-Gamification und Belohnungen,Feature
+Demand Response,Kunden-App-Entwicklung,App-Beta-Testing,Durchführung von User-Acceptance-Testing mit Kundenpanel,Task
+Demand Response,Pilotprogramm,Pilot-Kundenrekrutierung,Rekrutierung von Kunden für Pilotprogramm,Task
+Demand Response,Pilotprogramm,Pilotprogramm-Durchführung,Durchführung von Pilot-DR-Events und Messung der Reaktion,Task
+Demand Response,Pilotprogramm,Kunden-Feedback-Erfassung,Sammlung von Kundenfeedback durch Umfragen,Task
+Demand Response,Pilotprogramm,Pilot-Ergebnisanalyse,Analyse von Pilotleistung und Wirtschaftlichkeit,Task
+Demand Response,Incentive-Management,Incentive-Zahlungsverarbeitung,Automatisierung von Incentive-Berechnung und Zahlungsverarbeitung,Task
+Demand Response,Incentive-Management,Leistungs-Tracking,Verfolgung von Kundenteilnahme und Leistung,Task
+Demand Response,Incentive-Management,Rechnungsgutschrift-Anwendung,Anwendung von DR-Gutschriften auf Kunden-Versorgungsrechnungen,Task
+Demand Response,Incentive-Management,Behebung Zahlungsberechnungsfehler,Behebung von Incentive-Berechnungsfehlern in Produktion,Bug
+Demand Response,Vollständiger Marktstart,Marketing-Kampagnen-Start,Durchführung Massenmarkt-Kundenakquisitionskampagne,Task
+Demand Response,Vollständiger Marktstart,Anmeldungsverarbeitung,Verarbeitung von Kundenanmeldungen und Geräteregistrierungen,Task
+Demand Response,Vollständiger Marktstart,Call-Center-Training,Training von Call-Center-Vertretern zu DR-Programmen,Task
+Demand Response,Vollständiger Marktstart,Programm-Evaluierung,Durchführung von Impact-Evaluierung und behördlicher Berichterstattung,Documentation
+Carbon Track,Bewertung der Emissionsbasislinie,Organisations-Grenzendefinition,Definition von operativen und Equity-Share-Berichtsgrenzen,Documentation
+Carbon Track,Bewertung der Emissionsbasislinie,Scope-1-&-2-Inventar,Berechnung direkter und eingekaufter Stromemissionen,Task
+Carbon Track,Bewertung der Emissionsbasislinie,Scope-3-Screening,Screening und Priorisierung wesentlicher Scope-3-Kategorien,Task
+Carbon Track,Bewertung der Emissionsbasislinie,Basisjahr-Auswahl,Auswahl und Begründung von Basisjahr für Reduktionsziele,Documentation
+Carbon Track,Datenerfassungs-Framework,Emissionsquellen-Identifizierung,Identifizierung und Katalogisierung aller Emissionsquellen,Task
+Carbon Track,Datenerfassungs-Framework,Datenerfassungs-Templates,Entwicklung standardisierter Datenerfassungsvorlagen,Documentation
+Carbon Track,Datenerfassungs-Framework,Datenmanagement-System,Implementierung von Carbon-Accounting-Software-Plattform,Task
+Carbon Track,Datenerfassungs-Framework,Automatisierte Datenintegration,Integration von Versorgungsrechnungs- und Brennstoffkauf-Datenfeeds,Task
+Carbon Track,Berechnungsmethodik,Emissionsfaktor-Auswahl,Auswahl geeigneter GHG-Protocol-Emissionsfaktoren,Documentation
+Carbon Track,Berechnungsmethodik,Berechnungsverfahren,Dokumentation von Berechnungsmethodiken für jede Quelle,Documentation
+Carbon Track,Berechnungsmethodik,Qualitätssicherungsverfahren,Entwicklung von QA/QC-Verfahren für Inventarqualität,Documentation
+Carbon Track,Berechnungsmethodik,Unsicherheitsbewertung,Quantifizierung von Datenqualität und Berechnungsunsicherheit,Task
+Carbon Track,Berichts-Dashboard,Dashboard-Design,Design von Executive- und operativen Carbon-Dashboards,Task
+Carbon Track,Berichts-Dashboard,KPI-Visualisierung,Aufbau von Kohlenstoffintensitäts- und Reduktionsverfolgungsmetriken,Feature
+Carbon Track,Berichts-Dashboard,Trendanalyse & Prognose,Implementierung von Emissionstrendanalyse und Prognose,Task
+Carbon Track,Berichts-Dashboard,Automatisierte Berichtserstellung,Konfiguration automatisierter monatlicher und jährlicher Berichte,Task
+Carbon Track,Drittanbieter-Verifizierung,Verifizierungsumfang-Definition,Definition von Verifizierungsumfang und Wesentlichkeitsschwellen,Documentation
+Carbon Track,Drittanbieter-Verifizierung,Nachweispaket-Vorbereitung,Zusammenstellung unterstützender Nachweise und Dokumentation,Task
+Carbon Track,Drittanbieter-Verifizierung,Prüfer-Engagement,Beauftragung ISO-14064-akkreditierter Verifizierungsstelle,Task
+Carbon Track,Drittanbieter-Verifizierung,Verifizierungserklärung,Erlangung von Limited- oder Reasonable-Assurance-Erklärung,Documentation
+Carbon Track,Regulatorische Compliance,Regulatorische Anforderungen-Analyse,Analyse anwendbarer THG-Berichterstattungsvorschriften,Task
+Carbon Track,Regulatorische Compliance,Compliance-Kalender,Entwicklung regulatorischer Berichterstattungsfristen-Kalender,Documentation
+Carbon Track,Regulatorische Compliance,Regulatorische Einreichungen,Einreichung erforderlicher regulatorischer THG-Berichte,Task
+Carbon Track,Regulatorische Compliance,CDP- & TCFD-Berichterstattung,Vorbereitung freiwilliger CDP- und TCFD-Offenlegungen,Documentation
+Carbon Track,Offset-Management,Offset-Strategie-Entwicklung,Entwicklung von Carbon-Offset-Beschaffungsstrategie,Documentation
+Carbon Track,Offset-Management,Offset-Projekt-Evaluierung,Evaluierung und Auswahl hochwertiger Offset-Projekte,Task
+Carbon Track,Offset-Management,Offset-Kaufvereinbarungen,Verhandlung und Abschluss von Offset-Kaufvereinbarungen,Task
+Carbon Track,Offset-Management,Offset-Register-Management,Verwaltung von Offset-Stilllegung in freiwilligen Registern,Task
+Nuclear Mod,Sicherheitssystem-Audit,Sicherheitssystem-Dokumentationsüberprüfung,Überprüfung bestehender Sicherheitssystem-Designdokumentation,Documentation
+Nuclear Mod,Sicherheitssystem-Audit,Begehung & Inspektion,Durchführung umfassender Anlagenbegehung und Inspektion,Task
+Nuclear Mod,Sicherheitssystem-Audit,Alterungsbewertung,Bewertung von Komponenten-Alterung und Obsoleszenzthemen,Task
+Nuclear Mod,Sicherheitssystem-Audit,Sicherheitsaudit-Bericht,Dokumentation von Befunden und Modernisierungsempfehlungen,Documentation
+Nuclear Mod,Regulatorischer Genehmigungsprozess,Lizenzänderungs-Antrag,Vorbereitung und Einreichung von 10-CFR-50.59-Evaluierung,Documentation
+Nuclear Mod,Regulatorischer Genehmigungsprozess,Sicherheitsanalysebericht-Update,Aktualisierung von Endsicherheitsanalysebericht-Kapiteln,Documentation
+Nuclear Mod,Regulatorischer Genehmigungsprozess,NRC-Review-Koordination,Koordination von NRC-Personal-Review und RAI-Antworten,Task
+Nuclear Mod,Regulatorischer Genehmigungsprozess,Lizenzänderungs-Ausgabe,Erlangung von NRC-Genehmigung und Lizenzänderung,Task
+Nuclear Mod,Kontrollraum-Upgrade,Human-Factors-Engineering-Studie,Durchführung von Human-Factors-Engineering-Analyse,Task
+Nuclear Mod,Kontrollraum-Upgrade,Digitales Kontrollsystem-Design,Design mikroprozessorbasierter Kontrollsysteme,Task
+Nuclear Mod,Kontrollraum-Upgrade,Kontrollpaneel-Fertigung,Fertigung neuer digitaler Kontrollpaneele,Task
+Nuclear Mod,Kontrollraum-Upgrade,Kontrollraum-Installation,Installation neuer Kontrollboards während Stillstand,Task
+Nuclear Mod,Reaktorinstrumentierung,Instrumentierungs- & Kontrolldesign,Design digitaler I&C-Systemersatz,Task
+Nuclear Mod,Reaktorinstrumentierung,Instrument-Beschaffung,Beschaffung sicherheitsqualifizierter digitaler Instrumente,Task
+Nuclear Mod,Reaktorinstrumentierung,Werksakzeptanzprüfung,Durchführung FAT sicherheitskritischer Instrumente,Task
+Nuclear Mod,Reaktorinstrumentierung,Feldinstallation & Terminierung,Installation von Instrumenten während Brennstoffwechselstillstand,Task
+Nuclear Mod,Notfallsystem-Verbesserung,Notdieselgenerator-Upgrade,Modernisierung von EDG-Kontroll- und Überwachungssystemen,Task
+Nuclear Mod,Notfallsystem-Verbesserung,Brennelementebecken-Instrumentierung,Installation verbesserter SFP-Füllstandsinstrumentierung,Feature
+Nuclear Mod,Notfallsystem-Verbesserung,FLEX-Ausrüstungs-Beschaffung,Beschaffung tragbarer Notfallausrüstung,Task
+Nuclear Mod,Notfallsystem-Verbesserung,Notfallverfahrens-Updates,Aktualisierung von Notbetriebsverfahren,Documentation
+Nuclear Mod,Mitarbeiterschulung & Zertifizierung,Schulungsprogramm-Entwicklung,Entwicklung von Schulungsmaterialien für neue Systeme,Documentation
+Nuclear Mod,Mitarbeiterschulung & Zertifizierung,Simulator-Modifikationen,Modifikation von Kontrollraum-Simulator für neue I&C,Task
+Nuclear Mod,Mitarbeiterschulung & Zertifizierung,Betreiber-Requalifizierungs-Training,Durchführung von Betreiber-Requalifizierung auf neue Systeme,Task
+Nuclear Mod,Mitarbeiterschulung & Zertifizierung,NRC-Betreiber-Prüfung,Durchführung von Betreiber-Lizenzprüfung für Modifikationen,Task
+Nuclear Mod,Testen & Validierung,Pre-Operational-Testing,Durchführung von Pre-Operational-Testverfahren,Task
+Nuclear Mod,Testen & Validierung,Integrierte Systemvalidierung,Durchführung integrierter System-Funktionstests,Task
+Nuclear Mod,Testen & Validierung,Sollwert-Verifizierung,Verifizierung von Sicherheitssystem-Aktivierungs-Sollwerten,Task
+Nuclear Mod,Testen & Validierung,Testergebnis-Dokumentation,Dokumentation von Testergebnissen und Akzeptanzkriterien,Documentation
+Nuclear Mod,Operative Übergabe,Post-Modifikations-Testing,Abschluss von Post-Modifikations-Testprogramm,Task
+Nuclear Mod,Operative Übergabe,Operative-Bereitschafts-Review,Durchführung von Management- und NRC-Bereitschafts-Reviews,Task
+Nuclear Mod,Operative Übergabe,Wiederinbetriebs-Autorisierung,Erlangung von Autorisierung zur Rückkehr der Anlage in Betrieb,Documentation
+Nuclear Mod,Operative Übergabe,Lessons-Learned-Dokumentation,Dokumentation von Implementierungs-Lessons-Learned,Documentation
+EV Charging,Netzwerkplanung & Standortauswahl,Marktanalyse,Analyse von EV-Adoptionstrends und Ladebedarf,Task
+EV Charging,Netzwerkplanung & Standortauswahl,Standortauswahl-Kriterien,Definition von Standortauswahlkriterien und Bewertungsmodell,Documentation
+EV Charging,Netzwerkplanung & Standortauswahl,Geografische Standortanalyse,Identifizierung optimaler Ladestandorte mittels GIS,Task
+EV Charging,Netzwerkplanung & Standortauswahl,Host-Standort-Partnerschaften,Verhandlung von Standortvereinbarungen mit Einzelhandels- und Gewerbepartnern,Task
+EV Charging,Ladegerätebeschaffung,Ladegeräte-Spezifikation,Definition von Level-2- und DC-Schnellladegerät-Anforderungen,Documentation
+EV Charging,Ladegerätebeschaffung,Anbieter-Evaluierung,Evaluierung von ChargePoint-, EVgo- und Electrify-America-Optionen,Task
+EV Charging,Ladegerätebeschaffung,Ladegeräte-Kaufvereinbarung,Vergabe von Ladegeräte-Liefervertrag,Task
+EV Charging,Ladegerätebeschaffung,Garantie- & Support-Bedingungen,Verhandlung von Wartungs- und Garantiebedingungen,Task
+EV Charging,Elektrische Infrastruktur,Versorgungsdienst-Upgrade,Koordination von Versorgungsdienst-Upgrades für Hochleistungsladen,Task
+EV Charging,Elektrische Infrastruktur,Transformator- & Paneel-Installation,Installation von Transformatoren und Verteilerpaneelen,Task
+EV Charging,Elektrische Infrastruktur,Leerrohr & Verkabelung,Verlegung von elektrischen Leerrohren und Kabeln zu Ladegerätestandorten,Task
+EV Charging,Elektrische Infrastruktur,Lastmanagement-System,Installation dynamischen Lastmanagements für Demand-Kontrolle,Feature
+EV Charging,Installation & Inbetriebnahme,Standortvorbereitung & Bauarbeiten,Vorbereitung von Betonplattformen und Grabungen für Ladegeräte,Task
+EV Charging,Installation & Inbetriebnahme,Ladegeräte-Montage & Installation,Montage und Installation von Ladestationen,Task
+EV Charging,Installation & Inbetriebnahme,Netzwerkkonnektivitäts-Setup,Konfiguration von Mobilfunk- oder WiFi-Netzwerkkonnektivität,Task
+EV Charging,Installation & Inbetriebnahme,Ladegeräte-Inbetriebnahme & Testen,Inbetriebnahme von Ladegeräten und Durchführung von Funktionstests,Task
+EV Charging,Zahlungssystemintegration,Zahlungsgateway-Integration,Integration von Kreditkarten- und Mobile-Payment-Verarbeitung,Task
+EV Charging,Zahlungssystemintegration,Preis-Konfiguration,Konfiguration von Time-of-Use- und sitzungsbasierter Preisgestaltung,Task
+EV Charging,Zahlungssystemintegration,RFID-Kartensystem,Implementierung von Mitglieder-RFID-Karten-Authentifizierung,Feature
+EV Charging,Zahlungssystemintegration,PCI-Compliance-Validierung,Sicherstellung von PCI-DSS-Compliance für Zahlungsverarbeitung,Task
+EV Charging,Mobile-App-Entwicklung,App-Design & Entwicklung,Entwicklung von iOS- und Android-Mobilanwendungen,Feature
+EV Charging,Mobile-App-Entwicklung,Standort-Locator & Verfügbarkeit,Implementierung von Echtzeit-Ladegeräte-Verfügbarkeitskarte,Feature
+EV Charging,Mobile-App-Entwicklung,Reservierungssystem,Aufbau von Ladegeräte-Reservierungs- und Planungsfunktion,Feature
+EV Charging,Mobile-App-Entwicklung,Push-Benachrichtigungen,Implementierung von Ladestatus-Benachrichtigungen,Task
+EV Charging,Marketing & Launch,Markenentwicklung,Entwicklung von Ladenetzwerk-Markenidentität,Task
+EV Charging,Marketing & Launch,Launch-Marketing-Kampagne,Durchführung digitaler und Outdoor-Werbekampagne,Task
+EV Charging,Marketing & Launch,Flottenpartnerschaften,Etablierung von Partnerschaften mit Flottenbetreibern,Task
+EV Charging,Marketing & Launch,Incentive-Programme,Start von Werbepreisen und Mitglieder-Incentives,Task

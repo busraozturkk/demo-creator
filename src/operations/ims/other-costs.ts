@@ -24,7 +24,7 @@ export class OtherCostsOperation {
     this.imsApiClient = imsApiClient;
   }
 
-  async createOtherCosts(csvPath: string, organizationId: number): Promise<CostMapping[]> {
+  async createOtherCosts(csvPath: string, organizationId: number, language: string = 'en'): Promise<CostMapping[]> {
     console.log(`\n=== Creating Other Costs ===`);
     console.log(`Loading other costs from: ${csvPath}`);
 
@@ -107,19 +107,20 @@ export class OtherCostsOperation {
     console.log(`  - Total cost details: ${mappings.length}\n`);
 
     // Save mappings to cache
-    this.saveCostMappings(mappings);
+    this.saveCostMappings(mappings, language);
 
     return mappings;
   }
 
   async assignCostsToProjects(
     projectMappings: Array<{ short_title: string; id: number; partnership_id?: number }>,
-    organizationId: number
+    organizationId: number,
+    language: string = 'en'
   ): Promise<void> {
     console.log(`\n=== Assigning Other Costs to Projects ===`);
 
     // Load cost mappings
-    const costMappingsPath = './data/cache/other-cost-mappings.json';
+    const costMappingsPath = `./data/cache/other-cost-mappings-${language}.json`;
     if (!fs.existsSync(costMappingsPath)) {
       console.log('  ✗ Other cost mappings not found. Skipping cost assignments.\n');
       return;
@@ -203,13 +204,13 @@ export class OtherCostsOperation {
     }));
   }
 
-  private saveCostMappings(mappings: CostMapping[]): void {
+  private saveCostMappings(mappings: CostMapping[], language: string = 'en'): void {
     const cacheDir = './data/cache';
     if (!fs.existsSync(cacheDir)) {
       fs.mkdirSync(cacheDir, { recursive: true });
     }
 
-    const cacheFile = path.join(cacheDir, 'other-cost-mappings.json');
+    const cacheFile = path.join(cacheDir, `other-cost-mappings-${language}.json`);
     fs.writeFileSync(cacheFile, JSON.stringify(mappings, null, 2));
     console.log(`Saved ${mappings.length} other cost mappings to: ${cacheFile}\n`);
   }
