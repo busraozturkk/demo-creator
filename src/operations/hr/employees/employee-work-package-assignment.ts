@@ -84,11 +84,13 @@ export class EmployeeWorkPackageAssignmentOperation extends BaseOperation {
    * 3. For each project-year combination:
    *    - Get all work packages needing PM
    *    - Get all employees with PM budget
-   *    - Randomly assign employees to work packages until all PM needs are met
+   *    - ALWAYS assign owner to every work package first
+   *    - Randomly assign remaining employees to work packages until all PM needs are met
    */
   async assignEmployeesToWorkPackages(
     projectMappings: Array<{id: number; short_title: string}>,
-    organizationId?: number
+    organizationId?: number,
+    ownerUserId?: number
   ): Promise<void> {
     console.log('Loading data for employee-work package assignment\n');
 
@@ -140,6 +142,17 @@ export class EmployeeWorkPackageAssignmentOperation extends BaseOperation {
 
     console.log(`Processing ${projectYears.size} project-year combinations\n`);
 
+    // Identify owner employee
+    const ownerEmployee = ownerUserId
+      ? this.employeeMappings.find((emp: any) => emp.user_id === ownerUserId)
+      : this.employeeMappings.find((emp: any) => emp.participate_in_projects === false);
+
+    if (ownerEmployee) {
+      console.log(`Owner employee: ${ownerEmployee.first_name} ${ownerEmployee.last_name} (ID: ${ownerEmployee.user_id})\n`);
+    } else {
+      console.log('Warning: No owner employee found\n');
+    }
+
     // Process each project-year combination
     for (const [key, projectYear] of projectYears) {
       console.log(`[Project: ${projectYear.project_short_title}, Year: ${projectYear.year}]`);
@@ -189,7 +202,31 @@ export class EmployeeWorkPackageAssignmentOperation extends BaseOperation {
       console.log(`  Total WP PM needed: ${workPackageNeeds.reduce((sum, wp) => sum + wp.totalPm, 0).toFixed(2)}`);
       console.log(`  Total Employee PM available: ${employeeBudgets.reduce((sum, e) => sum + e.totalPm, 0).toFixed(2)}\n`);
 
-      // Random assignment algorithm
+      // Step 1: ALWAYS assign owner to every work package first
+      if (ownerEmployee?.user_id) {
+        console.log(`  Assigning owner to all work packages...\n`);
+
+        for (const wp of workPackageNeeds) {
+          // Owner gets 30% of WP PM or 2 PM, whichever is less
+          const ownerPm = Math.min(2, Math.round((wp.totalPm * 0.3) * 100) / 100);
+
+          // Add owner to assigned employees
+          wp.assignedEmployees.push({
+            user_id: ownerEmployee.user_id,
+            employee_name: `${ownerEmployee.first_name} ${ownerEmployee.last_name}`,
+            pm: ownerPm
+          });
+
+          // Deduct from work package's remaining PM
+          wp.remainingPm -= ownerPm;
+
+          console.log(`    ${wp.work_package_title}: [OWNER] ${ownerEmployee.first_name} ${ownerEmployee.last_name} - ${ownerPm.toFixed(2)} PM`);
+        }
+
+        console.log('');
+      }
+
+      // Step 2: Random assignment algorithm for remaining PM
       let iterations = 0;
       const maxIterations = 1000;
 
