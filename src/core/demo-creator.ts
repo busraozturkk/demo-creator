@@ -7,6 +7,15 @@
 
 import { overrideConsole, restoreConsole } from '../server/console-utils';
 
+/**
+ * Helper function to safely emit to socket (handles null/undefined)
+ */
+function safeEmit(socket: any, event: string, data?: any) {
+    if (socket && typeof socket.emit === 'function') {
+        socket.emit(event, data);
+    }
+}
+
 export async function runDemoCreation(
     socket: any,
     dataGroup: string,
@@ -24,11 +33,11 @@ export async function runDemoCreation(
     overrideConsole(socket, jobId);
 
     try {
-        socket.emit('log', { type: 'info', message: 'Demo Creator Starting', jobId });
-        socket.emit('log', { type: 'info', message: `Environment: ${environment.toUpperCase()}`, jobId });
+        safeEmit(socket, 'log', { type: 'info', message: 'Demo Creator Starting', jobId });
+        safeEmit(socket, 'log', { type: 'info', message: `Environment: ${environment.toUpperCase()}`, jobId });
 
         // Clean cache before starting new demo
-        socket.emit('log', { type: 'info', message: '\n=== Cleaning Previous Demo Cache ===' });
+        safeEmit(socket, 'log', { type: 'info', message: '\n=== Cleaning Previous Demo Cache ===' });
         const fs = await import('fs');
         const path = await import('path');
         const cacheDir = './data/cache';
@@ -53,29 +62,29 @@ export async function runDemoCreation(
             const filePath = path.join(cacheDir, file);
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
-                socket.emit('log', { type: 'info', message: `  ✓ Deleted ${file}` });
+                safeEmit(socket, 'log', { type: 'info', message: `  ✓ Deleted ${file}` });
             }
         }
-        socket.emit('log', { type: 'success', message: 'Cache cleaned successfully\n' });
+        safeEmit(socket, 'log', { type: 'success', message: 'Cache cleaned successfully\n' });
 
         // Step 0: Create company
         let companyId: number | undefined;
         if (companyName) {
-            socket.emit('log', { type: 'info', message: '\n=== Step 0: Creating Company ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Step 0: Creating Company ===' });
             try {
                 const { CompanyCreationOperation } = await import('../operations/setup/company-creation');
                 const companyCreationOp = new CompanyCreationOperation();
                 companyId = await companyCreationOp.createCompany(companyName);
-                socket.emit('log', { type: 'success', message: `Company created successfully with ID: ${companyId}\n` });
+                safeEmit(socket, 'log', { type: 'success', message: `Company created successfully with ID: ${companyId}\n` });
             } catch (error: any) {
-                socket.emit('log', { type: 'error', message: `Company creation failed: ${error.message}` });
+                safeEmit(socket, 'log', { type: 'error', message: `Company creation failed: ${error.message}` });
                 throw error; // Stop execution if company creation fails
             }
         }
 
         // Step 1: Register account
         if (companyId && email && password && companyName) {
-            socket.emit('log', { type: 'info', message: '\n=== Step 1: Registering Account ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Step 1: Registering Account ===' });
             try {
                 const { AccountRegistrationOperation } = await import('../operations/setup/account-registration');
                 const registrationOp = new AccountRegistrationOperation();
@@ -86,23 +95,23 @@ export async function runDemoCreation(
                 const defaultPhoneNumber = '+49 30 12345678'; // Valid German phone number (Berlin area code)
 
                 await registrationOp.registerAccount(email, password, defaultFirstName, defaultLastName, defaultPhoneNumber, companyName, companyId);
-                socket.emit('log', { type: 'success', message: 'Account registered successfully\n' });
+                safeEmit(socket, 'log', { type: 'success', message: 'Account registered successfully\n' });
             } catch (error: any) {
-                socket.emit('log', { type: 'error', message: `Account registration failed: ${error.message}` });
+                safeEmit(socket, 'log', { type: 'error', message: `Account registration failed: ${error.message}` });
                 throw error; // Stop execution if registration fails
             }
         }
 
         // Step 2: Activate account via Yopmail
         if (email) {
-            socket.emit('log', { type: 'info', message: '\n=== Step 2: Activating Account ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Step 2: Activating Account ===' });
             try {
                 const { EmailActivationOperation } = await import('../operations/setup/email-activation');
                 const activationOp = new EmailActivationOperation();
                 await activationOp.activateAccount(email);
-                socket.emit('log', { type: 'success', message: 'Account activated successfully\n' });
+                safeEmit(socket, 'log', { type: 'success', message: 'Account activated successfully\n' });
             } catch (error: any) {
-                socket.emit('log', { type: 'error', message: `Account activation failed: ${error.message}` });
+                safeEmit(socket, 'log', { type: 'error', message: `Account activation failed: ${error.message}` });
                 throw error; // Stop execution if activation fails
             }
         }
@@ -116,10 +125,10 @@ export async function runDemoCreation(
         const envConfig = getEnvironmentConfig(env);
         const credentials = getCredentials(env);
 
-        socket.emit('log', { type: 'info', message: `API Base: ${envConfig.apiBaseUrl}` });
+        safeEmit(socket, 'log', { type: 'info', message: `API Base: ${envConfig.apiBaseUrl}` });
 
         // Login
-        socket.emit('log', { type: 'info', message: 'Logging in' });
+        safeEmit(socket, 'log', { type: 'info', message: 'Logging in' });
         const authService = new AuthService(envConfig.loginUrl);
 
         // Use provided credentials or fall back to .env credentials
@@ -127,7 +136,7 @@ export async function runDemoCreation(
         const loginPassword = password || credentials.password;
 
         await authService.login(loginEmail, loginPassword);
-        socket.emit('log', { type: 'success', message: 'Successfully authenticated!' });
+        safeEmit(socket, 'log', { type: 'success', message: 'Successfully authenticated!' });
 
         const apiClient = new ApiClient(authService, envConfig.apiBaseUrl);
         const hrApiClient = new ApiClient(authService, envConfig.hrApiBaseUrl);
@@ -135,11 +144,11 @@ export async function runDemoCreation(
         const imsCustomersApiClient = new ApiClient(authService, envConfig.imsCustomersApiBaseUrl);
 
         // Fetch current user information
-        socket.emit('log', { type: 'info', message: 'Fetching current user information' });
+        safeEmit(socket, 'log', { type: 'info', message: 'Fetching current user information' });
         const userInfo: any = await apiClient.executeRequest('GET', `/auth/users/${authService.getUserId()}`);
-        socket.emit('log', { type: 'info', message: `Current user: ${userInfo.name || userInfo.data?.name || 'Unknown'} (ID: ${userInfo.id || userInfo.data?.id})` });
+        safeEmit(socket, 'log', { type: 'info', message: `Current user: ${userInfo.name || userInfo.data?.name || 'Unknown'} (ID: ${userInfo.id || userInfo.data?.id})` });
 
-        socket.emit('log', { type: 'info', message: `Using data group: ${dataGroup}` });
+        safeEmit(socket, 'log', { type: 'info', message: `Using data group: ${dataGroup}` });
 
         // Organization ID
         const { OrganizationIdOperation } = await import('../operations/setup/organization-id');
@@ -151,26 +160,26 @@ export async function runDemoCreation(
         taskManagementApiClient.setPartnerId(organizationId.toString());
 
         // Approve user consent for Task Management API
-        socket.emit('log', { type: 'info', message: 'Approving user consent for Task Management API' });
+        safeEmit(socket, 'log', { type: 'info', message: 'Approving user consent for Task Management API' });
         try {
             await authService.approveUserConsent(organizationId.toString());
-            socket.emit('log', { type: 'success', message: 'User consent approved\n' });
+            safeEmit(socket, 'log', { type: 'success', message: 'User consent approved\n' });
         } catch (error: any) {
             // Consent might not be available yet, will be approved later during task management setup
-            socket.emit('log', { type: 'warning', message: `User consent not available yet (will retry later): ${error.message}\n` });
+            safeEmit(socket, 'log', { type: 'warning', message: `User consent not available yet (will retry later): ${error.message}\n` });
         }
 
         // Clean defaults
-        socket.emit('log', { type: 'info', message: '\n=== Step 1: Cleaning default data ===' });
+        safeEmit(socket, 'log', { type: 'info', message: '\n=== Step 1: Cleaning default data ===' });
         try {
             const { CleanDefaultsFromModuleOperation } = await import('../operations/utilities/clean-defaults-from-module');
             const cleanDefaultsOp = new CleanDefaultsFromModuleOperation(apiClient, '3');
             await cleanDefaultsOp.deleteAllDefaults();
-            socket.emit('log', { type: 'success', message: 'Clean defaults completed\n' });
+            safeEmit(socket, 'log', { type: 'success', message: 'Clean defaults completed\n' });
         } catch (error: any) {
-            socket.emit('log', { type: 'error', message: `Clean defaults failed: ${error.message}` });
+            safeEmit(socket, 'log', { type: 'error', message: `Clean defaults failed: ${error.message}` });
             console.error('Clean defaults error details:', error);
-            socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
         }
 
         // Location IDs
@@ -198,7 +207,7 @@ export async function runDemoCreation(
         }
 
         // Reference Data
-        socket.emit('log', { type: 'info', message: 'Step 2: Fetching reference data' });
+        safeEmit(socket, 'log', { type: 'info', message: 'Step 2: Fetching reference data' });
         const { ReferenceDataOperation } = await import('../operations/hr/hr-settings/reference-data');
         const referenceDataOp = new ReferenceDataOperation(apiClient, '3');
         await referenceDataOp.fetchAndCache();
@@ -225,7 +234,7 @@ export async function runDemoCreation(
         }
 
         // HR Reference Data
-        socket.emit('log', { type: 'info', message: 'Step 3: Fetching HR reference data' });
+        safeEmit(socket, 'log', { type: 'info', message: 'Step 3: Fetching HR reference data' });
         const { HrReferenceDataOperation } = await import('../operations/hr/hr-settings/hr-reference-data');
         const hrReferenceDataOp = new HrReferenceDataOperation(hrApiClient, referenceDataOp);
         await hrReferenceDataOp.fetchAndCache();
@@ -236,20 +245,20 @@ export async function runDemoCreation(
         await dayOffTypesOp.fetchAndCache();
 
         // Owner Employee
-        socket.emit('log', { type: 'info', message: '\n=== Creating Owner Employee ===' });
+        safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Owner Employee ===' });
         try {
             const { OwnerEmployeeOperation } = await import('../operations/hr/employees/owner-employee');
             const ownerEmployeeOp = new OwnerEmployeeOperation(apiClient, hrApiClient, authService);
             await ownerEmployeeOp.createOwnerEmployee();
-            socket.emit('log', { type: 'success', message: 'Owner employee created\n' });
+            safeEmit(socket, 'log', { type: 'success', message: 'Owner employee created\n' });
         } catch (error: any) {
-            socket.emit('log', { type: 'error', message: `Owner employee creation failed: ${error.message}` });
+            safeEmit(socket, 'log', { type: 'error', message: `Owner employee creation failed: ${error.message}` });
             console.error('Owner employee creation error:', error);
-            socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
         }
 
         // Employees
-        socket.emit('log', { type: 'info', message: '\n=== Creating Employees ===' });
+        safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Employees ===' });
         const employeesPath = `./data/${dataGroup}/employees.csv`;
         let employeeMappings = null;
         if (fs.existsSync(employeesPath)) {
@@ -258,55 +267,55 @@ export async function runDemoCreation(
                 const employeesOp = new EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
                 await employeesOp.createEmployees(employeesPath, emailDomain, { ownerEmail: loginEmail });
                 employeeMappings = employeesOp.getMappings();
-                socket.emit('log', { type: 'success', message: `Employees created: ${employeeMappings?.length || 0} employees\n` });
+                safeEmit(socket, 'log', { type: 'success', message: `Employees created: ${employeeMappings?.length || 0} employees\n` });
             } catch (error: any) {
-                socket.emit('log', { type: 'error', message: `Employee creation failed: ${error.message}` });
+                safeEmit(socket, 'log', { type: 'error', message: `Employee creation failed: ${error.message}` });
                 console.error('Employee creation error:', error);
-                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
             }
         } else {
-            socket.emit('log', { type: 'warning', message: `Employees file not found: ${employeesPath}\n` });
+            safeEmit(socket, 'log', { type: 'warning', message: `Employees file not found: ${employeesPath}\n` });
         }
 
         if (employeeMappings) {
             const employeeDetailsPath = `./data/${dataGroup}/employee-details.csv`;
 
             // Update owner employee contract first
-            socket.emit('log', { type: 'info', message: '\n=== Updating Owner Employee Contract ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Updating Owner Employee Contract ===' });
             try {
                 const { OwnerEmployeeOperation: OwnerEmpOp } = await import('../operations/hr/employees/owner-employee');
                 const ownerEmpOp = new OwnerEmpOp(apiClient, hrApiClient, authService);
                 const contractStartDate = await ownerEmpOp.updateOwnerEmployeeContract(hrReferenceDataOp, legalRequirementsOp);
-                socket.emit('log', { type: 'success', message: 'Owner employee contract updated\n' });
+                safeEmit(socket, 'log', { type: 'success', message: 'Owner employee contract updated\n' });
 
                 // Add salary for owner employee (use contract start date)
                 if (contractStartDate) {
-                    socket.emit('log', { type: 'info', message: '\n=== Adding Owner Employee Salary ===' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Adding Owner Employee Salary ===' });
                     await ownerEmpOp.addOwnerEmployeeSalary(80000, contractStartDate);
-                    socket.emit('log', { type: 'success', message: 'Owner employee salary added\n' });
+                    safeEmit(socket, 'log', { type: 'success', message: 'Owner employee salary added\n' });
                 }
             } catch (error: any) {
-                socket.emit('log', { type: 'error', message: `Owner contract update failed: ${error.message}` });
+                safeEmit(socket, 'log', { type: 'error', message: `Owner contract update failed: ${error.message}` });
                 console.error('Owner contract error:', error);
-                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
             }
 
             // Employee Contracts
-            socket.emit('log', { type: 'info', message: '\n=== Updating Employee Contracts ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Updating Employee Contracts ===' });
             const employeeContractsPath = `./data/${dataGroup}/employee-contracts.csv`;
             if (fs.existsSync(employeeContractsPath) && employeeMappings) {
                 try {
                     const { EmployeeContractsOperation } = await import('../operations/hr/employees/employee-contracts');
                     const employeeContractsOp = new EmployeeContractsOperation(hrApiClient, hrReferenceDataOp, legalRequirementsOp);
                     await employeeContractsOp.updateEmployeeContracts(employeeContractsPath, employeeMappings, employeeDetailsPath);
-                    socket.emit('log', { type: 'success', message: 'Employee contracts updated\n' });
+                    safeEmit(socket, 'log', { type: 'success', message: 'Employee contracts updated\n' });
                 } catch (error: any) {
-                    socket.emit('log', { type: 'error', message: `Employee contracts update failed: ${error.message}` });
+                    safeEmit(socket, 'log', { type: 'error', message: `Employee contracts update failed: ${error.message}` });
                     console.error('Employee contracts error:', error);
-                    socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                 }
             } else {
-                socket.emit('log', { type: 'warning', message: `Employee contracts file not found or no employee mappings\n` });
+                safeEmit(socket, 'log', { type: 'warning', message: `Employee contracts file not found or no employee mappings\n` });
             }
 
             // Note: Avatar upload moved to the end to prevent deletion during user assignment
@@ -328,7 +337,7 @@ export async function runDemoCreation(
                 // Departments
                 const departmentsPath = `./data/${dataGroup}/departments.csv`;
                 if (fs.existsSync(departmentsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Creating Departments ===' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Departments ===' });
                     try {
                         const { DepartmentsOperation } = await import('../operations/hr/hr-settings/departments');
                         const departmentsOp = new DepartmentsOperation(hrApiClient);
@@ -337,63 +346,63 @@ export async function runDemoCreation(
                             employeeMappings,
                             emailDomain
                         );
-                        socket.emit('log', { type: 'success', message: `✓ Departments created: ${departmentMappings?.length || 0}\n` });
+                        safeEmit(socket, 'log', { type: 'success', message: `✓ Departments created: ${departmentMappings?.length || 0}\n` });
 
                         // Occupations (Roles) - link to departments
                         const occupationsPath = `./data/${dataGroup}/occupations.csv`;
                         if (fs.existsSync(occupationsPath) && departmentMappings.length > 0) {
-                            socket.emit('log', { type: 'info', message: '\n=== Creating Occupations (Roles) ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Occupations (Roles) ===' });
                             try {
                                 const { OccupationsOperation } = await import('../operations/hr/hr-settings/occupations');
                                 const occupationsOp = new OccupationsOperation(apiClient, '3');
                                 await occupationsOp.createOccupations(occupationsPath, departmentMappings);
-                                socket.emit('log', { type: 'success', message: 'Occupations (roles) created and linked to departments\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: 'Occupations (roles) created and linked to departments\n' });
 
                                 // Refresh reference data to pick up new occupations with department_id
-                                socket.emit('log', { type: 'info', message: 'Refreshing reference data with new occupations' });
+                                safeEmit(socket, 'log', { type: 'info', message: 'Refreshing reference data with new occupations' });
                                 await referenceDataOp.fetchAndCache();
                                 await hrReferenceDataOp.fetchAndCache();
-                                socket.emit('log', { type: 'success', message: 'Reference data refreshed\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: 'Reference data refreshed\n' });
 
                                 // Now update owner employee details with the refreshed occupation data
-                                socket.emit('log', { type: 'info', message: '\n=== Updating Owner Employee Details ===' });
+                                safeEmit(socket, 'log', { type: 'info', message: '\n=== Updating Owner Employee Details ===' });
                                 try {
                                     const { OwnerEmployeeOperation } = await import('../operations/hr/employees/owner-employee');
                                     const ownerEmployeeOp = new OwnerEmployeeOperation(apiClient, hrApiClient, authService);
                                     await ownerEmployeeOp.updateOwnerEmployeeDetails(hrReferenceDataOp);
-                                    socket.emit('log', { type: 'success', message: 'Owner employee details updated\n' });
+                                    safeEmit(socket, 'log', { type: 'success', message: 'Owner employee details updated\n' });
                                 } catch (error: any) {
-                                    socket.emit('log', { type: 'error', message: `Owner employee details update failed: ${error.message}` });
+                                    safeEmit(socket, 'log', { type: 'error', message: `Owner employee details update failed: ${error.message}` });
                                     console.error('Owner employee details error:', error);
-                                    socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                                 }
 
                                 // Now update employee details with the refreshed occupation data
                                 if (fs.existsSync(employeeDetailsPath)) {
-                                    socket.emit('log', { type: 'info', message: '\n=== Updating Employee Details ===' });
+                                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Updating Employee Details ===' });
                                     try {
                                         const { EmployeesOperation } = await import('../operations/hr/employees/employees');
                                         const employeesOp = new EmployeesOperation(hrApiClient, hrReferenceDataOp, officesOp, apiClient);
                                         await employeesOp.updateEmployeeDetails(employeeDetailsPath, emailDomain);
-                                        socket.emit('log', { type: 'success', message: 'Employee details updated\n' });
+                                        safeEmit(socket, 'log', { type: 'success', message: 'Employee details updated\n' });
                                     } catch (error: any) {
-                                        socket.emit('log', { type: 'error', message: `Employee details update failed: ${error.message}` });
+                                        safeEmit(socket, 'log', { type: 'error', message: `Employee details update failed: ${error.message}` });
                                         console.error('Employee details error:', error);
-                                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                                     }
                                 } else {
-                                    socket.emit('log', { type: 'warning', message: `Employee details file not found\n` });
+                                    safeEmit(socket, 'log', { type: 'warning', message: `Employee details file not found\n` });
                                 }
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Occupations creation failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Occupations creation failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
 
                         // Teams
                         const teamsPath = `./data/${dataGroup}/teams.csv`;
                         if (fs.existsSync(teamsPath) && departmentMappings.length > 0) {
-                            socket.emit('log', { type: 'info', message: '\n=== Creating Teams ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Teams ===' });
                             try {
                                 const { TeamsOperation } = await import('../operations/hr/hr-settings/teams');
                                 const teamsOp = new TeamsOperation(hrApiClient);
@@ -403,17 +412,17 @@ export async function runDemoCreation(
                                     departmentMappings,
                                     emailDomain
                                 );
-                                socket.emit('log', { type: 'success', message: 'Teams created\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: 'Teams created\n' });
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Teams creation failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Teams creation failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
 
                         // C-level
                         const cLevelPath = `./data/${dataGroup}/c-level.csv`;
                         if (fs.existsSync(cLevelPath) && departmentMappings.length > 0) {
-                            socket.emit('log', { type: 'info', message: '\n=== Assigning C-Level ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning C-Level ===' });
                             try {
                                 const { CLevelOperation } = await import('../operations/hr/employees/c-level');
                                 const cLevelOp = new CLevelOperation(hrApiClient);
@@ -423,15 +432,15 @@ export async function runDemoCreation(
                                     departmentMappings,
                                     emailDomain
                                 );
-                                socket.emit('log', { type: 'success', message: 'C-level assigned\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: 'C-level assigned\n' });
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `C-level assignment failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `C-level assignment failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
                     } catch (error: any) {
-                        socket.emit('log', { type: 'error', message: `Departments creation failed: ${error.message}` });
-                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                        safeEmit(socket, 'log', { type: 'error', message: `Departments creation failed: ${error.message}` });
+                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
                 }
 
@@ -439,19 +448,19 @@ export async function runDemoCreation(
                 const contractorsPath = './data/contractors.csv';
                 const contractorMappingsPath = './data/cache/contractor-mappings.json';
                 if (fs.existsSync(contractorsPath) && !fs.existsSync(contractorMappingsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Creating Contractors ===' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Contractors ===' });
                     try {
                         const { ContractorsOperation } = await import('../operations/ims/contractors');
                         const contractorsOp = new ContractorsOperation(imsCustomersApiClient, apiClient);
                         const contractorMappings = await contractorsOp.createContractors(contractorsPath, organizationId);
-                        socket.emit('log', { type: 'success', message: `✓ Contractors created: ${contractorMappings?.length || 0}\n` });
+                        safeEmit(socket, 'log', { type: 'success', message: `✓ Contractors created: ${contractorMappings?.length || 0}\n` });
                     } catch (error: any) {
-                        socket.emit('log', { type: 'error', message: `Contractors creation failed: ${error.message}` });
-                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                        safeEmit(socket, 'log', { type: 'error', message: `Contractors creation failed: ${error.message}` });
+                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
                 } else if (fs.existsSync(contractorMappingsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Contractors Already Created ===' });
-                    socket.emit('log', { type: 'success', message: '✓ Using existing contractors from cache\n' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Contractors Already Created ===' });
+                    safeEmit(socket, 'log', { type: 'success', message: '✓ Using existing contractors from cache\n' });
                 }
 
                 // Other Costs (created once per language, shared across datasets of same language)
@@ -459,94 +468,94 @@ export async function runDemoCreation(
                 const otherCostsPath = `./data/other-costs-${language}.csv`;
                 const otherCostMappingsPath = `./data/cache/other-cost-mappings-${language}.json`;
                 if (fs.existsSync(otherCostsPath) && !fs.existsSync(otherCostMappingsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Creating Other Costs ===' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Other Costs ===' });
                     try {
                         const { OtherCostsOperation } = await import('../operations/ims/other-costs');
                         const otherCostsOp = new OtherCostsOperation(imsCustomersApiClient);
                         const costMappings = await otherCostsOp.createOtherCosts(otherCostsPath, organizationId, language);
-                        socket.emit('log', { type: 'success', message: `✓ Other costs created: ${costMappings?.length || 0}\n` });
+                        safeEmit(socket, 'log', { type: 'success', message: `✓ Other costs created: ${costMappings?.length || 0}\n` });
                     } catch (error: any) {
-                        socket.emit('log', { type: 'error', message: `Other costs creation failed: ${error.message}` });
-                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                        safeEmit(socket, 'log', { type: 'error', message: `Other costs creation failed: ${error.message}` });
+                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
                 } else if (fs.existsSync(otherCostMappingsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Other Costs Already Created ===' });
-                    socket.emit('log', { type: 'success', message: `✓ Using existing ${language} other costs from cache\n` });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Other Costs Already Created ===' });
+                    safeEmit(socket, 'log', { type: 'success', message: `✓ Using existing ${language} other costs from cache\n` });
                 }
 
                 // Projects
                 const projectsPath = `./data/${dataGroup}/projects.csv`;
                 if (fs.existsSync(projectsPath)) {
-                    socket.emit('log', { type: 'info', message: '\n=== Creating Projects ===' });
+                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Projects ===' });
                     try {
                         const { ProjectsOperation } = await import('../operations/project-management/projects');
                         const projectsOp = new ProjectsOperation(imsCustomersApiClient, apiClient);
                         const projectMappings = await projectsOp.createProjects(projectsPath, undefined, selectedProjects, projectTypeId);
-                        socket.emit('log', { type: 'success', message: `✓ Projects created: ${projectMappings?.length || 0}\n` });
+                        safeEmit(socket, 'log', { type: 'success', message: `✓ Projects created: ${projectMappings?.length || 0}\n` });
 
                         // Move projects to appropriate statuses
                         if (projectMappings.length > 0 && projectTypeId) {
-                            socket.emit('log', { type: 'info', message: '\n=== Moving Projects to Workflow Statuses ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Moving Projects to Workflow Statuses ===' });
                             try {
                                 const { ProjectStatusOperation } = await import('../operations/project-management/project-status');
                                 const projectStatusOp = new ProjectStatusOperation(apiClient, authService);
                                 await projectStatusOp.moveProjectsToStatuses(projectMappings, projectTypeId, organizationId);
-                                socket.emit('log', { type: 'success', message: '✓ Projects moved to appropriate statuses\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: '✓ Projects moved to appropriate statuses\n' });
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Project status update failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Project status update failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
 
                         // Assign contractors to projects
                         if (projectMappings.length > 0 && fs.existsSync(contractorsPath)) {
-                            socket.emit('log', { type: 'info', message: '\n=== Assigning Contractors to Projects ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning Contractors to Projects ===' });
                             try {
                                 const { ContractorsOperation } = await import('../operations/ims/contractors');
                                 const contractorsOp = new ContractorsOperation(imsCustomersApiClient, apiClient);
                                 await contractorsOp.assignContractorsToProjects(projectMappings, organizationId);
-                                socket.emit('log', { type: 'success', message: '✓ Contractors assigned to projects\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: '✓ Contractors assigned to projects\n' });
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Contractor assignment failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Contractor assignment failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
 
                         // Assign other costs to projects
                         if (projectMappings.length > 0 && fs.existsSync(otherCostMappingsPath)) {
-                            socket.emit('log', { type: 'info', message: '\n=== Assigning Other Costs to Projects ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning Other Costs to Projects ===' });
                             try {
                                 const { OtherCostsOperation } = await import('../operations/ims/other-costs');
                                 const otherCostsOp = new OtherCostsOperation(imsCustomersApiClient);
                                 await otherCostsOp.assignCostsToProjects(projectMappings, organizationId, language);
-                                socket.emit('log', { type: 'success', message: '✓ Other costs assigned to projects\n' });
+                                safeEmit(socket, 'log', { type: 'success', message: '✓ Other costs assigned to projects\n' });
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Other costs assignment failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Other costs assignment failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
 
                         // Milestones
                         const milestonesPath = `./data/${dataGroup}/milestones.csv`;
                         if (projectMappings.length > 0 && fs.existsSync(milestonesPath)) {
-                            socket.emit('log', { type: 'info', message: '\n=== Creating Milestones ===' });
+                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Milestones ===' });
                             try {
                                 const { MilestonesOperation } = await import('../operations/project-management/milestones');
                                 const milestonesOp = new MilestonesOperation(apiClient);
                                 const milestoneMappings = await milestonesOp.createMilestones(milestonesPath, projectMappings);
-                                socket.emit('log', { type: 'success', message: `✓ Milestones created: ${milestoneMappings?.length || 0}\n` });
+                                safeEmit(socket, 'log', { type: 'success', message: `✓ Milestones created: ${milestoneMappings?.length || 0}\n` });
 
                                 // If work packages are NOT enabled, configure milestones for R&D assignment
                                 if (!includeWorkPackages && milestoneMappings.length > 0) {
-                                    socket.emit('log', { type: 'info', message: '\n=== Configuring Milestones for R&D ===' });
+                                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Configuring Milestones for R&D ===' });
                                     try {
                                         // Enable R&D assignment (use organizationId as partner)
                                         await milestonesOp.enableRAndDForMilestones(milestoneMappings, projectMappings, organizationId);
-                                        socket.emit('log', { type: 'success', message: '✓ R&D assignment enabled\n' });
+                                        safeEmit(socket, 'log', { type: 'success', message: '✓ R&D assignment enabled\n' });
 
                                         // Set periods
                                         await milestonesOp.setMilestonePeriods(milestoneMappings, projectMappings);
-                                        socket.emit('log', { type: 'success', message: '✓ Periods set for milestones\n' });
+                                        safeEmit(socket, 'log', { type: 'success', message: '✓ Periods set for milestones\n' });
 
                                         // Re-save milestone mappings with updated period info
                                         const cacheDirPath = './data/cache';
@@ -555,10 +564,10 @@ export async function runDemoCreation(
                                             fs.mkdirSync(cacheDirPath, { recursive: true });
                                         }
                                         fs.writeFileSync(cacheFilePath, JSON.stringify(milestoneMappings, null, 2));
-                                        socket.emit('log', { type: 'success', message: '✓ Milestone mappings updated with periods\n' });
+                                        safeEmit(socket, 'log', { type: 'success', message: '✓ Milestone mappings updated with periods\n' });
                                     } catch (error: any) {
-                                        socket.emit('log', { type: 'error', message: `Milestone R&D configuration failed: ${error.message}` });
-                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                        safeEmit(socket, 'log', { type: 'error', message: `Milestone R&D configuration failed: ${error.message}` });
+                                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                     }
                                 }
 
@@ -566,48 +575,48 @@ export async function runDemoCreation(
                                 if (includeWorkPackages) {
                                     const workPackagesPath = `./data/${dataGroup}/work-packages.csv`;
                                     if (milestoneMappings.length > 0 && fs.existsSync(workPackagesPath)) {
-                                        socket.emit('log', { type: 'info', message: '\n=== Creating Work Packages ===' });
+                                        safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Work Packages ===' });
                                         try {
                                             const { WorkPackagesOperation } = await import('../operations/project-management/work-packages');
                                             const workPackagesOp = new WorkPackagesOperation(apiClient);
                                             const projectsData = projectsOp.getProjectsData();
                                             await workPackagesOp.createWorkPackages(workPackagesPath, milestoneMappings, projectsData);
-                                            socket.emit('log', { type: 'success', message: '✓ Work packages created\n' });
+                                            safeEmit(socket, 'log', { type: 'success', message: '✓ Work packages created\n' });
 
                                             // Calculate yearly max PM for employees
-                                            socket.emit('log', { type: 'info', message: '\n=== Calculating Yearly Max PM ===' });
+                                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Calculating Yearly Max PM ===' });
                                             try {
                                                 const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
                                                 const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
                                                 await yearlyPmOp.calculateYearlyMaxPm();
-                                                socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
+                                                safeEmit(socket, 'log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
 
                                                 // Assign employees to project-management
-                                                socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Projects ===' });
+                                                safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning Employees to Projects ===' });
                                                 try {
                                                     const projectMappingsForAssignment = projectsOp.getMappings();
                                                     if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
                                                         await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
-                                                        socket.emit('log', { type: 'success', message: 'Employees assigned to project-management\n' });
+                                                        safeEmit(socket, 'log', { type: 'success', message: 'Employees assigned to project-management\n' });
 
                                                         // Assign PM to work packages
-                                                        socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Work Packages ===' });
+                                                        safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning PM to Work Packages ===' });
                                                         try {
                                                             const { WorkPackagePmAssignmentOperation } = await import('../operations/project-management/work-package-pm-assignment');
                                                             const wpPmAssignmentOp = new WorkPackagePmAssignmentOperation(apiClient);
                                                             await wpPmAssignmentOp.assignPmToWorkPackages(projectMappingsForAssignment, organizationId);
-                                                            socket.emit('log', { type: 'success', message: 'Work package PM assignments completed\n' });
+                                                            safeEmit(socket, 'log', { type: 'success', message: 'Work package PM assignments completed\n' });
 
                                                             // Assign employees to work packages
-                                                            socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Work Packages ===' });
+                                                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning Employees to Work Packages ===' });
                                                             try {
                                                                 const { EmployeeWorkPackageAssignmentOperation } = await import('../operations/hr/employees/employee-work-package-assignment');
                                                                 const empWpAssignmentOp = new EmployeeWorkPackageAssignmentOperation(apiClient);
                                                                 await empWpAssignmentOp.assignEmployeesToWorkPackages(projectMappingsForAssignment, organizationId);
-                                                                socket.emit('log', { type: 'success', message: 'Employee-work package assignments completed\n' });
+                                                                safeEmit(socket, 'log', { type: 'success', message: 'Employee-work package assignments completed\n' });
 
                                                                 // Task Management (always setup structure)
-                                                                socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
+                                                                safeEmit(socket, 'log', { type: 'info', message: '\n=== Setting up Task Management ===' });
                                                                 try {
                                                                     const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                                                                     const taskMgmtOp = new TaskManagementOperation(authService);
@@ -658,7 +667,7 @@ export async function runDemoCreation(
                                                                     const tasksPath = `./data/${dataGroup}/tasks.csv`;
                                                                     if (fs.existsSync(tasksPath)) {
                                                                         await taskMgmtOp.createTasksForWorkPackages(tasksPath);
-                                                                        socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                                        safeEmit(socket, 'log', { type: 'success', message: 'Task management setup completed\n' });
                                                                         try {
                                                                             await taskMgmtOp.addOwnerTrackedTime({
                                                                                 userId: authService.getUserId(),          // owner user
@@ -668,78 +677,78 @@ export async function runDemoCreation(
                                                                                 partnerId: organizationId.toString(),     // Partner header
                                                                                 defaultTimerCategoryIndex: 0              // Development
                                                                             });
-                                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
+                                                                            safeEmit(socket, 'log', { type: 'success', message: '✓ Owner tracked time created (WP flow)\n' });
                                                                         } catch (e: any) {
-                                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
+                                                                            safeEmit(socket, 'log', { type: 'warning', message: `Owner tracked time failed (WP flow): ${e.message}\n` });
                                                                         }
                                                                     } else {
-                                                                        socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
+                                                                        safeEmit(socket, 'log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                                     }
                                                                 } catch (error: any) {
-                                                                    socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
-                                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                                    safeEmit(socket, 'log', { type: 'error', message: `Task management setup failed: ${error.message}` });
+                                                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                                                 }
                                                             } catch (error: any) {
-                                                                socket.emit('log', { type: 'error', message: `Employee-work package assignment failed: ${error.message}` });
-                                                                socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                                safeEmit(socket, 'log', { type: 'error', message: `Employee-work package assignment failed: ${error.message}` });
+                                                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                                             }
                                                         } catch (error: any) {
-                                                            socket.emit('log', { type: 'error', message: `Work package PM assignment failed: ${error.message}` });
-                                                            socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                            safeEmit(socket, 'log', { type: 'error', message: `Work package PM assignment failed: ${error.message}` });
+                                                            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                                         }
                                                     } else {
-                                                        socket.emit('log', { type: 'warning', message: 'No project-management found for assignment\n' });
+                                                        safeEmit(socket, 'log', { type: 'warning', message: 'No project-management found for assignment\n' });
                                                     }
                                                 } catch (error: any) {
-                                                    socket.emit('log', { type: 'error', message: `Project assignment failed: ${error.message}` });
-                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                    safeEmit(socket, 'log', { type: 'error', message: `Project assignment failed: ${error.message}` });
+                                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                                 }
                                             } catch (error: any) {
-                                                socket.emit('log', { type: 'error', message: `Yearly PM calculation failed: ${error.message}` });
-                                                socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                safeEmit(socket, 'log', { type: 'error', message: `Yearly PM calculation failed: ${error.message}` });
+                                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                             }
                                         } catch (error: any) {
-                                            socket.emit('log', { type: 'error', message: `Work packages creation failed: ${error.message}` });
-                                            socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                            safeEmit(socket, 'log', { type: 'error', message: `Work packages creation failed: ${error.message}` });
+                                            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                         }
                                     }
                                 } else {
-                                    socket.emit('log', { type: 'info', message: '\nℹ Work packages skipped (includeWorkPackages = false)\n' });
+                                    safeEmit(socket, 'log', { type: 'info', message: '\nℹ Work packages skipped (includeWorkPackages = false)\n' });
 
                                     // If no work packages, assign PM directly to milestones
-                                    socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
+                                    safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
                                     try {
                                         const { EmployeeYearlyPmOperation } = await import('../operations/hr/employees/employee-yearly-pm');
                                         const yearlyPmOp = new EmployeeYearlyPmOperation(hrApiClient);
                                         await yearlyPmOp.calculateYearlyMaxPm();
-                                        socket.emit('log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
+                                        safeEmit(socket, 'log', { type: 'success', message: '✓ Yearly max PM calculated\n' });
 
                                         // Assign employees to projects
                                         const projectMappingsForAssignment = projectsOp.getMappings();
                                         if (projectMappingsForAssignment && projectMappingsForAssignment.length > 0) {
                                             await yearlyPmOp.assignEmployeesToProjects(projectMappingsForAssignment, apiClient, organizationId);
-                                            socket.emit('log', { type: 'success', message: 'Employees assigned to projects\n' });
+                                            safeEmit(socket, 'log', { type: 'success', message: 'Employees assigned to projects\n' });
 
                                             // Assign PM to milestones
-                                            socket.emit('log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
+                                            safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning PM to Milestones ===' });
                                             try {
                                                 const { MilestonePmAssignmentOperation } = await import('../operations/project-management/milestone-pm-assignment');
                                                 const msPmAssignmentOp = new MilestonePmAssignmentOperation(apiClient);
                                                 await msPmAssignmentOp.assignPmToMilestones(projectMappingsForAssignment, organizationId);
-                                                socket.emit('log', { type: 'success', message: 'Milestone PM assignments completed\n' });
+                                                safeEmit(socket, 'log', { type: 'success', message: 'Milestone PM assignments completed\n' });
 
                                                 // Assign employees to milestones (now that PM assignments exist)
-                                                socket.emit('log', { type: 'info', message: '\n=== Assigning Employees to Milestones ===' });
+                                                safeEmit(socket, 'log', { type: 'info', message: '\n=== Assigning Employees to Milestones ===' });
                                                 try {
                                                     const milestoneMappingsForAssignment = JSON.parse(fs.readFileSync('./data/cache/milestone-mappings.json', 'utf-8'));
                                                     await milestonesOp.assignEmployeesToMilestones(milestoneMappingsForAssignment, organizationId, authService.getUserId());
-                                                    socket.emit('log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
+                                                    safeEmit(socket, 'log', { type: 'success', message: '✓ Employees assigned to milestones\n' });
                                                 } catch (error: any) {
-                                                    socket.emit('log', { type: 'error', message: `Milestone employee assignment failed: ${error.message}\n` });
+                                                    safeEmit(socket, 'log', { type: 'error', message: `Milestone employee assignment failed: ${error.message}\n` });
                                                 }
 
                                                 // Task Management (always setup structure)
-                                                socket.emit('log', { type: 'info', message: '\n=== Setting up Task Management ===' });
+                                                safeEmit(socket, 'log', { type: 'info', message: '\n=== Setting up Task Management ===' });
                                                 try {
                                                     const { TaskManagementOperation } = await import('../operations/task-management/task-management');
                                                     const taskMgmtOp = new TaskManagementOperation(authService);
@@ -790,7 +799,7 @@ export async function runDemoCreation(
                                                     const tasksPath = `./data/${dataGroup}/tasks.csv`;
                                                     if (fs.existsSync(tasksPath)) {
                                                         await taskMgmtOp.createTasksForMilestones(tasksPath, projectMappingsForAssignment, organizationId.toString());
-                                                        socket.emit('log', { type: 'success', message: 'Task management setup completed\n' });
+                                                        safeEmit(socket, 'log', { type: 'success', message: 'Task management setup completed\n' });
                                                         try {
                                                             await taskMgmtOp.addOwnerTrackedTime({
                                                                 userId: authService.getUserId(),
@@ -800,9 +809,9 @@ export async function runDemoCreation(
                                                                 partnerId: organizationId.toString(),
                                                                 defaultTimerCategoryIndex: 0
                                                             });
-                                                            socket.emit('log', { type: 'success', message: '✓ Owner tracked time created\n' });
+                                                            safeEmit(socket, 'log', { type: 'success', message: '✓ Owner tracked time created\n' });
                                                         } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Owner tracked time failed: ${e.message}\n` });
+                                                            safeEmit(socket, 'log', { type: 'warning', message: `Owner tracked time failed: ${e.message}\n` });
                                                         }
 
                                                         // Add tracked time for milestone assignees
@@ -812,41 +821,41 @@ export async function runDemoCreation(
                                                                 partnerId: organizationId.toString(),
                                                                 defaultTimerCategoryIndex: 0
                                                             });
-                                                            socket.emit('log', { type: 'success', message: '✓ Milestone assignees tracked time created\n' });
+                                                            safeEmit(socket, 'log', { type: 'success', message: '✓ Milestone assignees tracked time created\n' });
                                                         } catch (e: any) {
-                                                            socket.emit('log', { type: 'warning', message: `Milestone assignees tracked time failed: ${e.message}\n` });
+                                                            safeEmit(socket, 'log', { type: 'warning', message: `Milestone assignees tracked time failed: ${e.message}\n` });
                                                         }
                                                     } else {
-                                                        socket.emit('log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
+                                                        safeEmit(socket, 'log', { type: 'warning', message: `Tasks CSV not found at ${tasksPath}, skipping task creation\n` });
                                                     }
                                                 } catch (error: any) {
-                                                    socket.emit('log', { type: 'error', message: `Task management setup failed: ${error.message}` });
-                                                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                    safeEmit(socket, 'log', { type: 'error', message: `Task management setup failed: ${error.message}` });
+                                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                                 }
                                             } catch (error: any) {
-                                                socket.emit('log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
-                                                socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                                safeEmit(socket, 'log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
+                                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                             }
                                         }
                                     } catch (error: any) {
-                                        socket.emit('log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
-                                        socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                                        safeEmit(socket, 'log', { type: 'error', message: `Milestone PM assignment failed: ${error.message}` });
+                                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                                     }
                                 }
                             } catch (error: any) {
-                                socket.emit('log', { type: 'error', message: `Milestones creation failed: ${error.message}` });
-                                socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                                safeEmit(socket, 'log', { type: 'error', message: `Milestones creation failed: ${error.message}` });
+                                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                             }
                         }
                     } catch (error: any) {
-                        socket.emit('log', { type: 'error', message: `Projects creation failed: ${error.message}` });
-                        socket.emit('log', { type: 'warning', message: 'Continuing with next step\n' });
+                        safeEmit(socket, 'log', { type: 'error', message: `Projects creation failed: ${error.message}` });
+                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
                     }
                 }
             }
 
             // Upload employee avatars as the LAST step (after all user assignments)
-            socket.emit('log', { type: 'info', message: '\n=== Uploading Employee Avatars (Final Step) ===' });
+            safeEmit(socket, 'log', { type: 'info', message: '\n=== Uploading Employee Avatars (Final Step) ===' });
 
             // Determine language from dataset (all datasets end with -en or -de)
             const isGerman = dataGroup.endsWith('-de');
@@ -861,21 +870,21 @@ export async function runDemoCreation(
                     const { EmployeeAvatarsOperation } = await import('../operations/hr/employees/employee-avatars');
                     const avatarsOp = new EmployeeAvatarsOperation(hrApiClient);
                     await avatarsOp.uploadAvatars(avatarsDir, avatarMappingsPath, employeeMappings);
-                    socket.emit('log', { type: 'success', message: '✓ Employee avatars uploaded successfully\n' });
+                    safeEmit(socket, 'log', { type: 'success', message: '✓ Employee avatars uploaded successfully\n' });
                 } catch (error: any) {
-                    socket.emit('log', { type: 'error', message: `Avatar upload failed: ${error.message}` });
-                    socket.emit('log', { type: 'warning', message: 'Continuing\n' });
+                    safeEmit(socket, 'log', { type: 'error', message: `Avatar upload failed: ${error.message}` });
+                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing\n' });
                 }
             } else {
-                socket.emit('log', { type: 'warning', message: 'No avatar mappings or directory found, skipping\n' });
+                safeEmit(socket, 'log', { type: 'warning', message: 'No avatar mappings or directory found, skipping\n' });
             }
         }
 
-        socket.emit('complete');
+        safeEmit(socket, 'complete');
 
     } catch (error: any) {
-        socket.emit('log', { type: 'error', message: `Fatal Error: ${error.message}` });
-        socket.emit('error', { message: error.message });
+        safeEmit(socket, 'log', { type: 'error', message: `Fatal Error: ${error.message}` });
+        safeEmit(socket, 'error', { message: error.message });
     } finally {
         // Restore console
         restoreConsole();

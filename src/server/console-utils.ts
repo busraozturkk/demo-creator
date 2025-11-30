@@ -19,15 +19,17 @@ export function overrideConsole(socket: any, jobId?: string | number) {
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
         ).join(' ');
 
-        // Detect message patterns
-        if (message.includes('Failed') || message.includes('failed') || message.includes('Error:')) {
-            socket.emit('log', { type: 'error', message, jobId });
-        } else if (message.includes('successfully') || message.includes('Successfully') || message.includes('Created') || message.includes('completed')) {
-            socket.emit('log', { type: 'success', message, jobId });
-        } else if (message.includes('Warning:') || message.includes('warning') || message.includes('Skipping')) {
-            socket.emit('log', { type: 'warning', message, jobId });
-        } else {
-            socket.emit('log', { type: 'info', message, jobId });
+        // Detect message patterns and emit if socket is connected
+        if (socket) {
+            if (message.includes('Failed') || message.includes('failed') || message.includes('Error:')) {
+                socket.emit('log', { type: 'error', message, jobId });
+            } else if (message.includes('successfully') || message.includes('Successfully') || message.includes('Created') || message.includes('completed')) {
+                socket.emit('log', { type: 'success', message, jobId });
+            } else if (message.includes('Warning:') || message.includes('warning') || message.includes('Skipping')) {
+                socket.emit('log', { type: 'warning', message, jobId });
+            } else {
+                socket.emit('log', { type: 'info', message, jobId });
+            }
         }
 
         originalConsole.log.apply(console, args);
@@ -38,7 +40,9 @@ export function overrideConsole(socket: any, jobId?: string | number) {
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
         ).join(' ');
 
-        socket.emit('log', { type: 'error', message, jobId });
+        if (socket) {
+            socket.emit('log', { type: 'error', message, jobId });
+        }
         originalConsole.error.apply(console, args);
     };
 
@@ -47,7 +51,9 @@ export function overrideConsole(socket: any, jobId?: string | number) {
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
         ).join(' ');
 
-        socket.emit('log', { type: 'warning', message, jobId });
+        if (socket) {
+            socket.emit('log', { type: 'warning', message, jobId });
+        }
         originalConsole.warn.apply(console, args);
     };
 }
@@ -79,7 +85,9 @@ export function overrideConsoleForStep(socket: any) {
             type = 'warning';
         }
 
-        socket.emit('step-log', { type, message });
+        if (socket) {
+            socket.emit('step-log', { type, message });
+        }
         originalConsole.log.apply(console, args);
     };
 
@@ -95,7 +103,9 @@ export function overrideConsoleForStep(socket: any) {
             return String(arg);
         }).join(' ');
 
-        socket.emit('step-log', { type: 'error', message });
+        if (socket) {
+            socket.emit('step-log', { type: 'error', message });
+        }
         originalConsole.error.apply(console, args);
     };
 
@@ -111,7 +121,9 @@ export function overrideConsoleForStep(socket: any) {
             return String(arg);
         }).join(' ');
 
-        socket.emit('step-log', { type: 'warning', message });
+        if (socket) {
+            socket.emit('step-log', { type: 'warning', message });
+        }
         originalConsole.warn.apply(console, args);
     };
 }
