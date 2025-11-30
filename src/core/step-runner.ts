@@ -121,6 +121,11 @@ export async function runSingleStep(stepId: string, session: any) {
                 console.log(`Organization ID: ${session.organizationId}`);
             }
 
+            // Set partner ID for all API clients
+            session.apiClient.setPartnerId(session.organizationId.toString());
+            session.taskManagementApiClient.setPartnerId(session.organizationId.toString());
+            session.imsCustomersApiClient.setPartnerId(session.organizationId.toString());
+
             console.log('Removing default occupation groups, occupations, and titles');
             const { CleanDefaultsFromModuleOperation } = await import('../operations/utilities/clean-defaults-from-module');
             const cleanDefaultsOp = new CleanDefaultsFromModuleOperation(session.apiClient, '3');

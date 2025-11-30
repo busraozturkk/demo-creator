@@ -146,6 +146,7 @@ export async function runDemoCreation(
         const organizationId = await organizationIdOp.fetchAndCache();
         apiClient.setPartnerId(organizationId.toString());
         imsCustomersApiClient.setPartnerId(organizationId.toString());
+        taskManagementApiClient.setPartnerId(organizationId.toString());
 
         // Clean defaults
         socket.emit('log', { type: 'info', message: '\n=== Step 1: Cleaning default data ===' });
