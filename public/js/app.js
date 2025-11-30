@@ -1084,7 +1084,7 @@ async function renderJobsDashboard() {
                 ` : ''}
 
                 ${job.state === 'failed' && job.failedReason ? `
-                    <div class="job-progress-text" style="color: #f44336;">
+                    <div class="job-progress-text" style="color: #9c27b0;">
                         <i class="fa-solid fa-exclamation-triangle"></i> ${job.failedReason}
                     </div>
                 ` : ''}
@@ -1207,15 +1207,21 @@ async function clearCompletedJobs() {
 
     for (const job of completedJobs) {
         try {
-            await fetch(`/api/job/${job.id}/stop`, {
-                method: 'POST',
+            await fetch(`/api/job/${job.id}`, {
+                method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });
+
+            // Remove from active logs
+            activeJobLogs.delete(job.id.toString());
+            openJobLogs.delete(job.id.toString());
         } catch (error) {
             console.error(`Error clearing job ${job.id}:`, error);
         }
     }
 
+    // Re-fetch and render
+    await fetchJobs();
     renderJobsDashboard();
 }
 

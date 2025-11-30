@@ -296,6 +296,30 @@ router.post('/api/job/:jobId/stop', async (req, res) => {
 });
 
 /**
+ * Remove/delete a job from the queue (for completed/failed jobs)
+ */
+router.delete('/api/job/:jobId', async (req, res) => {
+    try {
+        const { demoQueue } = await import('../queue/demo-queue');
+        const job = await demoQueue.getJob(req.params.jobId);
+
+        if (!job) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        // Remove the job from queue
+        await job.remove();
+
+        console.log(`[API] Job ${job.id} removed from queue`);
+
+        res.json({ success: true, message: 'Job removed successfully' });
+    } catch (error: any) {
+        console.error('[API] Failed to remove job:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * Version endpoint for client-side update checking
  */
 router.get('/api/version', (req, res) => {

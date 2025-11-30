@@ -604,7 +604,7 @@ body {
 
 .status-badge.failed {
     background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
+    color: #9c27b0;
 }
 
 /* Progress Bar */
@@ -690,7 +690,7 @@ body {
 }
 
 .step-status.failed {
-    background: #f44336;
+    background: #9c27b0;
     color: white;
 }
 
@@ -1302,7 +1302,7 @@ body {
 }
 
 .step-item.error {
-    border-color: #f44336;
+    border-color: #9c27b0;
     background: rgba(244, 67, 54, 0.08);
 }
 
@@ -1327,7 +1327,7 @@ body {
 }
 
 .step-item.error .step-status {
-    color: #f44336;
+    color: #9c27b0;
 }
 
 .step-info {
@@ -2169,7 +2169,7 @@ button,
 }
 
 .job-card.failed::before {
-    background: #f44336;
+    background: #9c27b0;
     transform: scaleY(1);
 }
 
@@ -2213,7 +2213,7 @@ button,
 
 .job-status-badge.failed {
     background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
+    color: #9c27b0;
 }
 
 .job-details {
