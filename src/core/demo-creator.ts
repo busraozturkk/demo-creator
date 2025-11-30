@@ -181,27 +181,35 @@ export async function runDemoCreation(
         }
 
         // Location IDs
+        safeEmit(socket, 'log', { type: 'info', message: 'Fetching location data' });
         const { LocationIdsOperation } = await import('../operations/hr/hr-settings/location-ids');
         const locationIdsOp = new LocationIdsOperation(apiClient);
         const cachedLocations = locationIdsOp.getLocationData();
         if (!cachedLocations) {
             await locationIdsOp.fetchAndCacheLocationIds();
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Location data cached' });
+        } else {
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Using cached location data' });
         }
 
         // Qualification Groups
         const qualificationGroupsPath = `./data/${dataGroup}/qualification-groups.csv`;
         if (fs.existsSync(qualificationGroupsPath)) {
+            safeEmit(socket, 'log', { type: 'info', message: 'Creating qualification groups' });
             const { QualificationGroupsOperation } = await import('../operations/hr/hr-settings/qualification-groups');
             const qualificationGroupsOp = new QualificationGroupsOperation(apiClient, '3');
             await qualificationGroupsOp.createQualificationGroups(qualificationGroupsPath);
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Qualification groups created' });
         }
 
         // Titles
         const titlesPath = `./data/${dataGroup}/titles.csv`;
         if (fs.existsSync(titlesPath)) {
+            safeEmit(socket, 'log', { type: 'info', message: 'Creating titles' });
             const { TitlesOperation } = await import('../operations/hr/hr-settings/titles');
             const titlesOp = new TitlesOperation(apiClient, '3');
             await titlesOp.createTitles(titlesPath);
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Titles created' });
         }
 
         // Reference Data
@@ -209,18 +217,23 @@ export async function runDemoCreation(
         const { ReferenceDataOperation } = await import('../operations/hr/hr-settings/reference-data');
         const referenceDataOp = new ReferenceDataOperation(apiClient, '3');
         await referenceDataOp.fetchAndCache();
+        safeEmit(socket, 'log', { type: 'success', message: '✓ Reference data cached' });
 
         // Settings
+        safeEmit(socket, 'log', { type: 'info', message: 'Updating settings' });
         const { SettingsOperation } = await import('../operations/setup/settings');
         const settingsOp = new SettingsOperation(apiClient, '3');
         await settingsOp.updateSetting('default_days_off_number', '24');
+        safeEmit(socket, 'log', { type: 'success', message: '✓ Settings updated (default days off: 24)' });
 
         // Offices
         const officesPath = `./data/${dataGroup}/offices.csv`;
         const { OfficesOperation } = await import('../operations/hr/hr-settings/offices');
         const officesOp = new OfficesOperation(hrApiClient);
         if (fs.existsSync(officesPath)) {
+            safeEmit(socket, 'log', { type: 'info', message: 'Creating offices' });
             await officesOp.createOffices(officesPath);
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Offices created' });
         }
 
         // Legal Requirements
@@ -228,7 +241,9 @@ export async function runDemoCreation(
         const { LegalRequirementsOperation } = await import('../operations/time-tracking/legal-requirements');
         const legalRequirementsOp = new LegalRequirementsOperation(taskManagementApiClient);
         if (fs.existsSync(legalRequirementsPath)) {
+            safeEmit(socket, 'log', { type: 'info', message: 'Creating legal requirements' });
             await legalRequirementsOp.createLegalRequirements(legalRequirementsPath);
+            safeEmit(socket, 'log', { type: 'success', message: '✓ Legal requirements created' });
         }
 
         // HR Reference Data
@@ -236,11 +251,14 @@ export async function runDemoCreation(
         const { HrReferenceDataOperation } = await import('../operations/hr/hr-settings/hr-reference-data');
         const hrReferenceDataOp = new HrReferenceDataOperation(hrApiClient, referenceDataOp);
         await hrReferenceDataOp.fetchAndCache();
+        safeEmit(socket, 'log', { type: 'success', message: '✓ HR reference data cached' });
 
         // Day Off Types
+        safeEmit(socket, 'log', { type: 'info', message: 'Fetching day off types' });
         const { DayOffTypesOperation } = await import('../operations/hr/hr-settings/day-off-types');
         const dayOffTypesOp = new DayOffTypesOperation(hrApiClient);
         await dayOffTypesOp.fetchAndCache();
+        safeEmit(socket, 'log', { type: 'success', message: '✓ Day off types cached' });
 
         // Owner Employee
         safeEmit(socket, 'log', { type: 'info', message: '\n=== Creating Owner Employee ===' });
@@ -320,17 +338,22 @@ export async function runDemoCreation(
 
             // Salary & Contributions
             if (employeeMappings && employeeMappings.length > 0) {
+                safeEmit(socket, 'log', { type: 'info', message: '\n=== Processing Employee Salaries ===' });
                 const { EmployeeSalaryPrefillOperation } = await import('../operations/hr/employees/employee-salary-prefill');
                 const salaryPrefillOp = new EmployeeSalaryPrefillOperation(hrApiClient);
                 const salariesPath = `./data/${dataGroup}/employee-salaries.csv`;
                 await salaryPrefillOp.loadSalaryData(salariesPath);
                 await salaryPrefillOp.prefillSalaryRecords(employeeMappings);
+                safeEmit(socket, 'log', { type: 'success', message: '✓ Salary records created' });
                 await salaryPrefillOp.prefillEmployerContributions(employeeMappings);
+                safeEmit(socket, 'log', { type: 'success', message: '✓ Employer contributions added\n' });
 
                 // Days Off
+                safeEmit(socket, 'log', { type: 'info', message: 'Creating employee days off' });
                 const { EmployeeDaysOffOperation } = await import('../operations/hr/employees/employee-days-off');
                 const daysOffOp = new EmployeeDaysOffOperation(hrApiClient, dayOffTypesOp);
                 await daysOffOp.createDaysOff(employeeMappings);
+                safeEmit(socket, 'log', { type: 'success', message: '✓ Days off created\n' });
 
                 // Departments
                 const departmentsPath = `./data/${dataGroup}/departments.csv`;
