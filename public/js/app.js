@@ -658,8 +658,8 @@ function addJobLog(jobId, type, message) {
     const logs = activeJobLogs.get(jobIdStr);
     logs.push({ type, message, timestamp: new Date().toLocaleTimeString() });
 
-    // Keep only last 100 logs to prevent memory issues
-    if (logs.length > 100) {
+    // Keep only last 500 logs to prevent memory issues
+    if (logs.length > 500) {
         logs.shift();
     }
 
