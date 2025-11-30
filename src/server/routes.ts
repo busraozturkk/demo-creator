@@ -278,10 +278,15 @@ router.post('/api/job/:jobId/stop', async (req, res) => {
             return res.json({ success: false, error: 'Job already finished' });
         }
 
-        // Remove the job from queue
-        await job.remove();
-
-        console.log(`[API] Job ${job.id} forcefully stopped by user`);
+        if (state === 'active') {
+            // For active jobs, mark as failed (this will stop the job)
+            await job.moveToFailed({ message: 'Cancelled by user' }, true);
+            console.log(`[API] Active job ${job.id} cancelled by user`);
+        } else {
+            // For waiting jobs, just remove from queue
+            await job.remove();
+            console.log(`[API] Waiting job ${job.id} removed by user`);
+        }
 
         res.json({ success: true, message: 'Job stopped successfully' });
     } catch (error: any) {

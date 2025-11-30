@@ -1009,9 +1009,21 @@ async function renderJobsDashboard() {
 
     dashboard.style.display = 'block';
 
+    // Save current scroll positions before re-rendering
+    const scrollPositions = new Map();
+    openJobLogs.forEach(jobId => {
+        const logsContainer = document.getElementById(`logs-${jobId}`);
+        if (logsContainer) {
+            const isAtBottom = logsContainer.scrollHeight - logsContainer.scrollTop - logsContainer.clientHeight < 10;
+            scrollPositions.set(jobId, {
+                position: logsContainer.scrollTop,
+                isAtBottom: isAtBottom
+            });
+        }
+    });
+
     jobsList.innerHTML = activeJobs.map(job => {
         const progress = job.progress || { percentage: 0, message: '' };
-        const percentage = Math.round(progress.percentage || 0);
         const message = progress.message || '';
 
         // Map data group names to display names
@@ -1066,10 +1078,9 @@ async function renderJobsDashboard() {
                 </div>
 
                 ${job.state === 'active' ? `
-                    <div class="job-progress-bar">
-                        <div class="job-progress-fill" style="width: ${percentage}%"></div>
+                    <div class="job-progress-text">
+                        <i class="fa-solid fa-spinner fa-spin"></i> ${message || 'Processing...'}
                     </div>
-                    <div class="job-progress-text">${message || 'Processing...'}</div>
                 ` : ''}
 
                 ${job.state === 'failed' && job.failedReason ? `
@@ -1080,7 +1091,7 @@ async function renderJobsDashboard() {
 
                 <div class="job-actions">
                     <button class="job-action-btn" onclick="toggleJobLogs('${job.id}')">
-                        <i class="fa-solid fa-terminal"></i> Logs
+                        <i class="fa-solid fa-list"></i> Logs
                     </button>
                     ${job.state === 'waiting' || job.state === 'active' ? `
                         <button class="job-action-btn cancel" onclick="cancelJob('${job.id}')">
@@ -1096,13 +1107,24 @@ async function renderJobsDashboard() {
         `;
     }).join('');
 
-    // Restore scroll positions and auto-scroll to bottom for new logs
+    // Restore scroll positions intelligently
     setTimeout(() => {
         openJobLogs.forEach(jobId => {
             const logsContainer = document.getElementById(`logs-${jobId}`);
             if (logsContainer) {
-                // Auto-scroll to bottom
-                logsContainer.scrollTop = logsContainer.scrollHeight;
+                const savedPosition = scrollPositions.get(jobId);
+                if (savedPosition) {
+                    // If user was at bottom, keep them at bottom (for new logs)
+                    // Otherwise, restore their scroll position
+                    if (savedPosition.isAtBottom) {
+                        logsContainer.scrollTop = logsContainer.scrollHeight;
+                    } else {
+                        logsContainer.scrollTop = savedPosition.position;
+                    }
+                } else {
+                    // First time opening logs, scroll to bottom
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+                }
             }
         });
     }, 0);
