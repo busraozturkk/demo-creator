@@ -307,10 +307,20 @@ router.delete('/api/job/:jobId', async (req, res) => {
             return res.status(404).json({ error: 'Job not found' });
         }
 
+        const state = await job.getState();
+
+        // Only allow removal of completed, failed, or waiting jobs
+        // Active jobs cannot be removed (Bull limitation)
+        if (state === 'active') {
+            return res.status(400).json({
+                error: 'Cannot delete active job. Please cancel it first.'
+            });
+        }
+
         // Remove the job from queue
         await job.remove();
 
-        console.log(`[API] Job ${job.id} removed from queue`);
+        console.log(`[API] Job ${job.id} (${state}) removed from queue`);
 
         res.json({ success: true, message: 'Job removed successfully' });
     } catch (error: any) {
