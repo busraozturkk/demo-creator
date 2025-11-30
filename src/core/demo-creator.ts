@@ -151,8 +151,13 @@ export async function runDemoCreation(
 
         // Approve user consent for Task Management API
         socket.emit('log', { type: 'info', message: 'Approving user consent for Task Management API' });
-        await authService.approveUserConsent(organizationId.toString());
-        socket.emit('log', { type: 'success', message: 'User consent approved\n' });
+        try {
+            await authService.approveUserConsent(organizationId.toString());
+            socket.emit('log', { type: 'success', message: 'User consent approved\n' });
+        } catch (error: any) {
+            // Consent might not be available yet, will be approved later during task management setup
+            socket.emit('log', { type: 'warning', message: `User consent not available yet (will retry later): ${error.message}\n` });
+        }
 
         // Clean defaults
         socket.emit('log', { type: 'info', message: '\n=== Step 1: Cleaning default data ===' });
