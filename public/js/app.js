@@ -1069,7 +1069,7 @@ async function renderJobsDashboard() {
                     <div class="job-progress-bar">
                         <div class="job-progress-fill" style="width: ${percentage}%"></div>
                     </div>
-                    <div class="job-progress-text">${percentage}% - ${message}</div>
+                    <div class="job-progress-text">${message || 'Processing...'}</div>
                 ` : ''}
 
                 ${job.state === 'failed' && job.failedReason ? `
@@ -1089,12 +1089,23 @@ async function renderJobsDashboard() {
                     ` : ''}
                 </div>
 
-                <div class="job-logs ${openJobLogs.has(job.id.toString()) ? 'show' : ''}" id="logs-${job.id}">
+                <div class="job-logs ${openJobLogs.has(job.id.toString()) ? 'show' : ''}" id="logs-${job.id}" data-job-id="${job.id}">
                     ${renderJobLogs(job.id)}
                 </div>
             </div>
         `;
     }).join('');
+
+    // Restore scroll positions and auto-scroll to bottom for new logs
+    setTimeout(() => {
+        openJobLogs.forEach(jobId => {
+            const logsContainer = document.getElementById(`logs-${jobId}`);
+            if (logsContainer) {
+                // Auto-scroll to bottom
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+        });
+    }, 0);
 }
 
 /**
