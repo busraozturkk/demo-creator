@@ -115,6 +115,9 @@ export class ApiClient {
 
         if (this.partnerId) {
             headers['partner-id'] = this.partnerId;
+            console.log(`[ApiClient] Using partner-id: ${this.partnerId}`);
+        } else {
+            console.log(`[ApiClient] WARNING: No partner-id set for request to ${this.appApiUrl}`);
         }
         if (customHeaders) Object.assign(headers, customHeaders);
         return headers;
