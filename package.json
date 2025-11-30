@@ -1,7 +1,7 @@
 {
   "name": "demo-creator",
-  "version": "1.0.0",
-  "description": "Automated demo account creation tool for Clusterix HR system",
+  "version": "2.0.0",
+  "description": "Automated demo account creation tool for Clusterix HR system with multi-job queue support",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
