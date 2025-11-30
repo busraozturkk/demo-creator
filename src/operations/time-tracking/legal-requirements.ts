@@ -66,10 +66,6 @@ export class LegalRequirementsOperation {
       console.log(`[${i + 1}/${legalRequirements.length}] Creating: ${requirement.title}`);
 
       try {
-        console.log(`Request URL: ${this.apiClient.getAppApiUrl()}/api/legal-requirements`);
-        console.log(`Request data:`, JSON.stringify(requirement, null, 2));
-        console.log(`Token (first 50 chars): ${this.apiClient.getBearerToken().substring(0, 50)}...`);
-
         await this.apiClient.executeRequest(
           'POST',
           '/api/legal-requirements',
@@ -79,7 +75,6 @@ export class LegalRequirementsOperation {
         console.log(`Created successfully\n`);
       } catch (error) {
         console.error(`Failed to create: ${error}\n`);
-        console.error(`Full error details:`, error);
       }
     }
 
