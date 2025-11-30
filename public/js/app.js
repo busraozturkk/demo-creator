@@ -1084,7 +1084,7 @@ async function renderJobsDashboard() {
                 ` : ''}
 
                 ${job.state === 'failed' && job.failedReason ? `
-                    <div class="job-progress-text" style="color: #9c27b0;">
+                    <div class="job-progress-text" style="color: #ab47bc;">
                         <i class="fa-solid fa-exclamation-triangle"></i> ${job.failedReason}
                     </div>
                 ` : ''}
@@ -1205,23 +1205,37 @@ async function clearCompletedJobs() {
     const jobs = await fetchJobs();
     const completedJobs = jobs.filter(job => job.state === 'completed' || job.state === 'failed');
 
-    for (const job of completedJobs) {
+    console.log(`Clearing ${completedJobs.length} jobs:`, completedJobs.map(j => `${j.id} (${j.state})`));
+
+    // Delete all jobs in parallel
+    const deletePromises = completedJobs.map(async (job) => {
         try {
-            await fetch(`/api/job/${job.id}`, {
+            const response = await fetch(`/api/job/${job.id}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             // Remove from active logs
             activeJobLogs.delete(job.id.toString());
             openJobLogs.delete(job.id.toString());
-        } catch (error) {
-            console.error(`Error clearing job ${job.id}:`, error);
-        }
-    }
 
-    // Re-fetch and render
-    await fetchJobs();
+            console.log(`✓ Cleared job ${job.id} (${job.state})`);
+        } catch (error) {
+            console.error(`✗ Error clearing job ${job.id}:`, error);
+        }
+    });
+
+    // Wait for all deletions to complete
+    await Promise.all(deletePromises);
+
+    // Small delay to ensure backend processing is complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Re-render dashboard
     renderJobsDashboard();
 }
 
