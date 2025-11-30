@@ -145,8 +145,14 @@ export async function runDemoCreation(
         const organizationIdOp = new OrganizationIdOperation(apiClient, authService);
         const organizationId = await organizationIdOp.fetchAndCache();
         apiClient.setPartnerId(organizationId.toString());
+        hrApiClient.setPartnerId(organizationId.toString());
         imsCustomersApiClient.setPartnerId(organizationId.toString());
         taskManagementApiClient.setPartnerId(organizationId.toString());
+
+        // Approve user consent for Task Management API
+        socket.emit('log', { type: 'info', message: 'Approving user consent for Task Management API' });
+        await authService.approveUserConsent(organizationId.toString());
+        socket.emit('log', { type: 'success', message: 'User consent approved\n' });
 
         // Clean defaults
         socket.emit('log', { type: 'info', message: '\n=== Step 1: Cleaning default data ===' });
