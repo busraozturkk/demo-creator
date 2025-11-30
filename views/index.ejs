@@ -242,15 +242,21 @@
         </div>
 
         <button type="button" id="createBtn" class="btn-primary">
-            <span class="button-text"><i class="fa-solid fa-sparkles"></i> CREATE DEMO ACCOUNT <i class="fa-solid fa-sparkles"></i></span>
-        </button>
-
-        <button type="button" id="createNewBtn" class="btn-primary" style="display: none;">
-            <span class="button-text"><i class="fa-solid fa-plus"></i> CREATE NEW DEMO ACCOUNT <i class="fa-solid fa-plus"></i></span>
+            <span class="button-text"><i class="fa-solid fa-plus"></i> ADD TO QUEUE <i class="fa-solid fa-plus"></i></span>
         </button>
 
         <div id="validationErrors" class="validation-errors-container"></div>
     </form>
+
+    <div id="jobsDashboard" class="jobs-dashboard" style="display: none;">
+        <div class="dashboard-header">
+            <h2><i class="fa-solid fa-tasks"></i> ACTIVE JOBS</h2>
+            <button type="button" id="clearCompletedBtn" class="btn-secondary">
+                <i class="fa-solid fa-broom"></i> Clear Completed
+            </button>
+        </div>
+        <div id="jobsList" class="jobs-list"></div>
+    </div>
 
     <div id="stepByStepContainer" class="step-by-step-container" style="display: none;">
         <div class="steps-panel">

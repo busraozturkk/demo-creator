@@ -490,8 +490,6 @@ document.getElementById('passwordConfirmToggle').addEventListener('click', funct
 
 // Create demo
 document.getElementById('createBtn').addEventListener('click', async () => {
-    if (isCreating) return;
-
     clearAllErrors();
     currentMode = document.querySelector('input[name="mode"]:checked').value;
 
@@ -554,29 +552,9 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     const selectedProjects = selectedProjectsValue ? JSON.parse(selectedProjectsValue) : [];
     const includeWorkPackages = document.querySelector('input[name="workPackages"]:checked').value === 'yes';
 
-    demoState = 'running';
-    isCreating = true;
-
-    // Immediately collapse any open dropdowns, then lock inputs
-    closeAllDropdowns();
-    disableFormInputs();
-    showForceStopButton();
-    updateCreateNewButton();
-
-    totalLogs = 0;
     const createBtn = document.getElementById('createBtn');
     createBtn.disabled = true;
-    createBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> IN PROGRESS <i class="fa-solid fa-spinner fa-spin"></i>';
-
-    document.getElementById('logContainer').style.display = 'block';
-    document.getElementById('progressBar').style.display = 'block';
-    document.getElementById('timerContainer').style.display = 'flex';
-    document.getElementById('progressFill').style.width = '0%';
-
-    startTimer();
-    document.getElementById('animationCharacter').classList.add('show');
-
-    socket.emit('demo-started');
+    createBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ADDING TO QUEUE <i class="fa-solid fa-spinner fa-spin"></i>';
 
     try {
         const response = await fetch('/api/create-demo', {
@@ -599,27 +577,94 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
         const data = await response.json();
 
         if (!data.success) {
-            throw new Error(data.error || 'Failed to start demo creation');
+            throw new Error(data.error || 'Failed to add job to queue');
         }
 
-        currentJobId = data.jobId;
-        addLog('info', `Job queued with ID: ${data.jobId}`);
+        // Show success message
+        showSuccessMessage(`Job added to queue! (ID: ${data.jobId})`);
+
+        // Clear form for next entry
+        clearFormForNextJob();
+
+        // Refresh job dashboard
+        renderJobsDashboard();
     } catch (error) {
-        addLog('error', `${error.message}`);
-        resetButton();
-        enableFormInputs();
-        hideForceStopButton();
-        demoState = 'failed';
-        isCreating = false;
-        updateCreateNewButton();
+        showValidationError(`Error: ${error.message}`);
+    } finally {
+        createBtn.disabled = false;
+        createBtn.innerHTML = '<span class="button-text"><i class="fa-solid fa-plus"></i> ADD TO QUEUE <i class="fa-solid fa-plus"></i></span>';
     }
 });
 
+/**
+ * Clear form fields for next job
+ */
+function clearFormForNextJob() {
+    // Clear text inputs
+    document.getElementById('companyName').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('passwordConfirm').value = '';
+    document.getElementById('emailDomain').value = '';
+
+    // Clear project selection
+    document.getElementById('selectedProjects').value = '';
+    const projectCheckboxes = document.querySelectorAll('.project-checkbox');
+    projectCheckboxes.forEach(cb => cb.checked = false);
+    const selectAllCheckbox = document.getElementById('selectAllProjects');
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+
+    // Keep data group, environment, project type, and work packages selections
+}
+
+/**
+ * Show success message
+ */
+function showSuccessMessage(message) {
+    const errorContainer = document.getElementById('validationErrors');
+    errorContainer.innerHTML = `
+        <div class="validation-error" style="border-left-color: #4caf50; color: #4caf50; background: rgba(76, 175, 80, 0.1);">
+            <i class="fa-solid fa-check-circle"></i> ${message}
+        </div>
+    `;
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        errorContainer.innerHTML = '';
+    }, 3000);
+}
+
 // Socket events
 socket.on('log', (data) => {
+    // Handle job-specific logs
+    if (data.jobId) {
+        addJobLog(data.jobId, data.type, data.message);
+    }
+    // Also show in main log if it's the current job
     addLog(data.type, data.message);
     updateProgress();
 });
+
+/**
+ * Add log entry to specific job
+ */
+function addJobLog(jobId, type, message) {
+    const jobIdStr = jobId.toString();
+
+    if (!activeJobLogs.has(jobIdStr)) {
+        activeJobLogs.set(jobIdStr, []);
+    }
+
+    const logs = activeJobLogs.get(jobIdStr);
+    logs.push({ type, message, timestamp: new Date().toLocaleTimeString() });
+
+    // Keep only last 100 logs to prevent memory issues
+    if (logs.length > 100) {
+        logs.shift();
+    }
+
+    // Update display if log is open (will be handled by next render cycle)
+}
 
 socket.on('complete', () => {
     addLog('success', 'Completed');
@@ -910,4 +955,268 @@ document.addEventListener('DOMContentLoaded', () => {
             resetForNewDemo();
         });
     }
+
+    // Start job polling
+    startJobPolling();
 });
+
+// =========================
+// JOB MANAGEMENT FUNCTIONS
+// =========================
+
+let jobPollingInterval = null;
+const activeJobLogs = new Map(); // jobId -> logs array
+const openJobLogs = new Set(); // Track which job logs are open
+
+/**
+ * Fetch all jobs from API
+ */
+async function fetchJobs() {
+    try {
+        const response = await fetch('/api/jobs');
+        const data = await response.json();
+        return data.jobs || [];
+    } catch (error) {
+        console.error('Error fetching jobs:', error);
+        return [];
+    }
+}
+
+/**
+ * Render jobs dashboard
+ */
+async function renderJobsDashboard() {
+    const jobs = await fetchJobs();
+    const dashboard = document.getElementById('jobsDashboard');
+    const jobsList = document.getElementById('jobsList');
+
+    if (!dashboard || !jobsList) return;
+
+    // Filter out completed and failed jobs older than 5 minutes
+    const activeJobs = jobs.filter(job => {
+        if (job.state === 'completed' || job.state === 'failed') {
+            const finishedTime = job.finishedOn || Date.now();
+            const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+            return finishedTime > fiveMinutesAgo;
+        }
+        return true;
+    });
+
+    if (activeJobs.length === 0) {
+        dashboard.style.display = 'none';
+        return;
+    }
+
+    dashboard.style.display = 'block';
+
+    jobsList.innerHTML = activeJobs.map(job => {
+        const progress = job.progress || { percentage: 0, message: '' };
+        const percentage = Math.round(progress.percentage || 0);
+        const message = progress.message || '';
+
+        // Map data group names to display names
+        const dataGroupNames = {
+            'manufacturing-en': 'Manufacturing & Product Development',
+            'healthcare-en': 'Healthcare & Pharmaceuticals',
+            'financial-en': 'Financial Services',
+            'consulting-en': 'Services & Consulting',
+            'energy-en': 'Energy & Utilities',
+            'government-en': 'Government & Public Sector',
+            'construction-en': 'Construction & Infrastructure',
+            'media-en': 'Media & Telecommunications',
+            'manufacturing-de': 'Fertigung & Produktentwicklung',
+            'healthcare-de': 'Gesundheitswesen & Pharmazeutika',
+            'financial-de': 'Finanzdienstleistungen',
+            'consulting-de': 'Dienstleistungen & Beratung',
+            'energy-de': 'Energie & Versorgung',
+            'government-de': 'Verwaltung & Öffentlicher Sektor',
+            'construction-de': 'Bau & Infrastruktur',
+            'media-de': 'Medien & Telekommunikation'
+        };
+
+        const dataGroupDisplay = dataGroupNames[job.data.dataGroup] || job.data.dataGroup;
+
+        return `
+            <div class="job-card ${job.state}" data-job-id="${job.id}">
+                <div class="job-header">
+                    <div class="job-title">
+                        <i class="fa-solid fa-building"></i> ${job.data.companyName || 'Demo Account'}
+                    </div>
+                    <span class="job-status-badge ${job.state}">
+                        ${job.state === 'waiting' ? '<i class="fa-solid fa-pause"></i> Queued' :
+                          job.state === 'active' ? '<i class="fa-solid fa-spinner fa-spin"></i> Running' :
+                          job.state === 'completed' ? '<i class="fa-solid fa-check"></i> Completed' :
+                          job.state === 'failed' ? '<i class="fa-solid fa-times"></i> Failed' : job.state}
+                    </span>
+                </div>
+
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fa-solid fa-envelope"></i> ${job.data.email || 'N/A'}
+                    </div>
+                    <div class="job-detail">
+                        <i class="fa-solid fa-database"></i> ${dataGroupDisplay}
+                    </div>
+                    <div class="job-detail">
+                        <i class="fa-solid fa-server"></i> ${job.data.environment || 'testing'}
+                    </div>
+                    <div class="job-detail">
+                        <i class="fa-solid fa-hashtag"></i> Job ID: ${job.id}
+                    </div>
+                </div>
+
+                ${job.state === 'active' ? `
+                    <div class="job-progress-bar">
+                        <div class="job-progress-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="job-progress-text">${percentage}% - ${message}</div>
+                ` : ''}
+
+                ${job.state === 'failed' && job.failedReason ? `
+                    <div class="job-progress-text" style="color: #f44336;">
+                        <i class="fa-solid fa-exclamation-triangle"></i> ${job.failedReason}
+                    </div>
+                ` : ''}
+
+                <div class="job-actions">
+                    <button class="job-action-btn" onclick="toggleJobLogs('${job.id}')">
+                        <i class="fa-solid fa-terminal"></i> Logs
+                    </button>
+                    ${job.state === 'waiting' || job.state === 'active' ? `
+                        <button class="job-action-btn cancel" onclick="cancelJob('${job.id}')">
+                            <i class="fa-solid fa-times"></i> Cancel
+                        </button>
+                    ` : ''}
+                </div>
+
+                <div class="job-logs ${openJobLogs.has(job.id.toString()) ? 'show' : ''}" id="logs-${job.id}">
+                    ${renderJobLogs(job.id)}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * Render logs for a specific job
+ */
+function renderJobLogs(jobId) {
+    const logs = activeJobLogs.get(jobId.toString());
+
+    if (!logs || logs.length === 0) {
+        return '<div style="color: var(--text-secondary); text-align: center; padding: 8px;">No logs yet...</div>';
+    }
+
+    return logs.map(log => {
+        const colorMap = {
+            'info': '#90caf9',
+            'success': '#a5d6a7',
+            'warning': '#ffcc80',
+            'error': 'var(--accent-primary)'
+        };
+        const color = colorMap[log.type] || '#90caf9';
+
+        return `<div class="log-entry" style="color: ${color}; margin-bottom: 4px;">
+            <span style="color: var(--text-secondary);">[${log.timestamp}]</span> ${log.message}
+        </div>`;
+    }).join('');
+}
+
+/**
+ * Toggle job logs visibility
+ */
+function toggleJobLogs(jobId) {
+    if (openJobLogs.has(jobId)) {
+        openJobLogs.delete(jobId);
+    } else {
+        openJobLogs.add(jobId);
+        // Initialize logs if first time
+        if (!activeJobLogs.has(jobId)) {
+            activeJobLogs.set(jobId, []);
+        }
+    }
+
+    // Re-render to update UI
+    renderJobsDashboard();
+}
+
+/**
+ * Cancel a job
+ */
+async function cancelJob(jobId) {
+    if (!confirm('Are you sure you want to cancel this job?')) return;
+
+    try {
+        const response = await fetch(`/api/job/${jobId}/stop`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            addLog('info', `Job ${jobId} cancelled successfully`);
+            renderJobsDashboard();
+        } else {
+            addLog('error', `Failed to cancel job: ${data.error}`);
+        }
+    } catch (error) {
+        addLog('error', `Error cancelling job: ${error.message}`);
+    }
+}
+
+/**
+ * Clear completed jobs
+ */
+async function clearCompletedJobs() {
+    const jobs = await fetchJobs();
+    const completedJobs = jobs.filter(job => job.state === 'completed' || job.state === 'failed');
+
+    for (const job of completedJobs) {
+        try {
+            await fetch(`/api/job/${job.id}/stop`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+        } catch (error) {
+            console.error(`Error clearing job ${job.id}:`, error);
+        }
+    }
+
+    renderJobsDashboard();
+}
+
+// Clear completed button handler
+document.addEventListener('DOMContentLoaded', () => {
+    const clearBtn = document.getElementById('clearCompletedBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearCompletedJobs);
+    }
+});
+
+/**
+ * Start polling for job updates
+ */
+function startJobPolling() {
+    // Update immediately
+    renderJobsDashboard();
+
+    // Then update every 2 seconds
+    if (jobPollingInterval) {
+        clearInterval(jobPollingInterval);
+    }
+
+    jobPollingInterval = setInterval(() => {
+        renderJobsDashboard();
+    }, 2000);
+}
+
+/**
+ * Stop polling for job updates
+ */
+function stopJobPolling() {
+    if (jobPollingInterval) {
+        clearInterval(jobPollingInterval);
+        jobPollingInterval = null;
+    }
+}

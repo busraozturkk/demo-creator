@@ -13,7 +13,7 @@ const originalConsole = {
  * Override console methods to emit logs to socket
  * Used for full demo creation mode
  */
-export function overrideConsole(socket: any) {
+export function overrideConsole(socket: any, jobId?: string | number) {
     console.log = (...args: any[]) => {
         const message = args.map(arg =>
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
@@ -21,13 +21,13 @@ export function overrideConsole(socket: any) {
 
         // Detect message patterns
         if (message.includes('Failed') || message.includes('failed') || message.includes('Error:')) {
-            socket.emit('log', { type: 'error', message });
+            socket.emit('log', { type: 'error', message, jobId });
         } else if (message.includes('successfully') || message.includes('Successfully') || message.includes('Created') || message.includes('completed')) {
-            socket.emit('log', { type: 'success', message });
+            socket.emit('log', { type: 'success', message, jobId });
         } else if (message.includes('Warning:') || message.includes('warning') || message.includes('Skipping')) {
-            socket.emit('log', { type: 'warning', message });
+            socket.emit('log', { type: 'warning', message, jobId });
         } else {
-            socket.emit('log', { type: 'info', message });
+            socket.emit('log', { type: 'info', message, jobId });
         }
 
         originalConsole.log.apply(console, args);
@@ -38,7 +38,7 @@ export function overrideConsole(socket: any) {
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
         ).join(' ');
 
-        socket.emit('log', { type: 'error', message });
+        socket.emit('log', { type: 'error', message, jobId });
         originalConsole.error.apply(console, args);
     };
 
@@ -47,7 +47,7 @@ export function overrideConsole(socket: any) {
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
         ).join(' ');
 
-        socket.emit('log', { type: 'warning', message });
+        socket.emit('log', { type: 'warning', message, jobId });
         originalConsole.warn.apply(console, args);
     };
 }

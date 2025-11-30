@@ -5,8 +5,9 @@ import { io } from '../server/app';
 /**
  * Process demo creation jobs
  * This processor runs independently and survives server restarts
+ * Concurrency: 5 jobs can run in parallel
  */
-demoQueue.process(async (job: Job<DemoJobData>) => {
+demoQueue.process(5, async (job: Job<DemoJobData>) => {
   const { dataGroup, emailDomain, environment, mode, socketId } = job.data;
 
   console.log(`\n[Queue] Processing job ${job.id} for ${dataGroup} in ${environment} mode`);
@@ -34,9 +35,10 @@ demoQueue.process(async (job: Job<DemoJobData>) => {
         // Update job progress
         job.progress(progress);
 
-        // Send to socket if connected
+        // Send to socket if connected (with job ID for multi-job tracking)
         if (socket) {
-          socket.emit('log', { type: 'info', message });
+          socket.emit('log', { type: 'info', message, jobId: job.id });
+          socket.emit(`log-${job.id}`, { type: 'info', message });
         }
       };
 
@@ -51,7 +53,8 @@ demoQueue.process(async (job: Job<DemoJobData>) => {
         job.data.companyName || '',
         job.data.selectedProjects || [],
         job.data.includeWorkPackages !== false,
-        job.data.projectType
+        job.data.projectType,
+        job.id  // Pass job ID for logging
       );
 
     } else {

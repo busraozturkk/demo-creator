@@ -1,50 +1,62 @@
 [
   {
-    "id": 12235,
+    "id": 14141,
     "name": "Vacation",
     "day_type_flag": "vacation",
-    "icon": "VacationHIcon",
-    "color": "#2186ab",
+    "icon": "IslandFullIcon",
+    "color": "#9B80BA",
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": true,
-    "created_at": "2025-10-10T03:25:30.000000Z",
-    "updated_at": "2025-10-10T03:25:30.000000Z"
+    "created_at": "2025-11-30T17:32:42.000000Z",
+    "updated_at": "2025-11-30T17:32:42.000000Z"
   },
   {
-    "id": 12236,
+    "id": 14142,
     "name": "Sick Day",
     "day_type_flag": "sick",
-    "icon": "SickHIcon",
-    "color": "#94ba5d",
+    "icon": "VirusFullIcon",
+    "color": "#94BA5D",
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-10T03:25:30.000000Z",
-    "updated_at": "2025-10-10T03:25:30.000000Z"
+    "created_at": "2025-11-30T17:32:42.000000Z",
+    "updated_at": "2025-11-30T17:32:42.000000Z"
   },
   {
-    "id": 12237,
+    "id": 14143,
     "name": "Home office",
     "day_type_flag": "home_office",
-    "icon": "HomeHIcon",
+    "icon": "BuildingHouseLineIcon",
     "color": "#38a09d",
     "is_working_day": true,
     "requires_substitute": false,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-10T03:25:30.000000Z",
-    "updated_at": "2025-10-10T03:25:30.000000Z"
+    "created_at": "2025-11-30T17:32:43.000000Z",
+    "updated_at": "2025-11-30T17:32:43.000000Z"
   },
   {
-    "id": 12238,
+    "id": 14144,
     "name": "Flexi",
     "day_type_flag": "other",
-    "icon": "RocketHIcon",
-    "color": "#38a09d",
+    "icon": "GanttFullIcon",
+    "color": "#40B7E3",
     "is_working_day": false,
     "requires_substitute": true,
     "is_half_day_allowed": false,
-    "created_at": "2025-10-10T03:25:30.000000Z",
-    "updated_at": "2025-10-10T03:25:30.000000Z"
+    "created_at": "2025-11-30T17:32:43.000000Z",
+    "updated_at": "2025-11-30T17:32:43.000000Z"
+  },
+  {
+    "id": 14145,
+    "name": "Other",
+    "day_type_flag": "other",
+    "icon": "EllipsisHorizontalCircleFullIcon",
+    "color": "#38A09D",
+    "is_working_day": false,
+    "requires_substitute": true,
+    "is_half_day_allowed": false,
+    "created_at": "2025-11-30T17:32:43.000000Z",
+    "updated_at": "2025-11-30T17:32:43.000000Z"
   }
 ]

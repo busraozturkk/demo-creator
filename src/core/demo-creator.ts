@@ -17,14 +17,15 @@ export async function runDemoCreation(
     companyName?: string,
     selectedProjects: string[] = [],
     includeWorkPackages: boolean = true,
-    projectTypeId?: number
+    projectTypeId?: number,
+    jobId?: string | number
 ) {
     // Override console for this execution
-    overrideConsole(socket);
+    overrideConsole(socket, jobId);
 
     try {
-        socket.emit('log', { type: 'info', message: 'Demo Creator Starting' });
-        socket.emit('log', { type: 'info', message: `Environment: ${environment.toUpperCase()}` });
+        socket.emit('log', { type: 'info', message: 'Demo Creator Starting', jobId });
+        socket.emit('log', { type: 'info', message: `Environment: ${environment.toUpperCase()}`, jobId });
 
         // Clean cache before starting new demo
         socket.emit('log', { type: 'info', message: '\n=== Cleaning Previous Demo Cache ===' });

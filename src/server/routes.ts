@@ -234,13 +234,24 @@ router.get('/api/jobs', async (req, res) => {
         const jobs = await demoQueue.getJobs(['waiting', 'active', 'completed', 'failed']);
 
         const jobsInfo = await Promise.all(
-            jobs.map(async (job) => ({
-                id: job.id,
-                state: await job.getState(),
-                progress: job.progress(),
-                data: job.data,
-                timestamp: job.timestamp,
-            }))
+            jobs.map(async (job) => {
+                const state = await job.getState();
+                const progress = job.progress();
+                return {
+                    id: job.id,
+                    state,
+                    progress: typeof progress === 'object' ? progress : { percentage: 0, message: '' },
+                    data: {
+                        dataGroup: job.data.dataGroup,
+                        companyName: job.data.companyName,
+                        email: job.data.email,
+                        environment: job.data.environment,
+                    },
+                    timestamp: job.timestamp,
+                    finishedOn: job.finishedOn,
+                    failedReason: job.failedReason,
+                };
+            })
         );
 
         res.json({ jobs: jobsInfo });
