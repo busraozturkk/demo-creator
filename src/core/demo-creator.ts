@@ -5,8 +5,6 @@
  * in sequence to create a complete demo account.
  */
 
-import { overrideConsole, restoreConsole } from '../server/console-utils';
-
 /**
  * Helper function to safely emit to socket (handles null/undefined)
  */
@@ -29,8 +27,8 @@ export async function runDemoCreation(
     projectTypeId?: number,
     jobId?: string | number
 ) {
-    // Override console for this execution
-    overrideConsole(socket, jobId);
+    // Note: We don't override console for parallel jobs to avoid log mixing
+    // All logging is done via safeEmit() instead
 
     try {
         safeEmit(socket, 'log', { type: 'info', message: 'Demo Creator Starting', jobId });
@@ -885,8 +883,5 @@ export async function runDemoCreation(
     } catch (error: any) {
         safeEmit(socket, 'log', { type: 'error', message: `Fatal Error: ${error.message}` });
         safeEmit(socket, 'error', { message: error.message });
-    } finally {
-        // Restore console
-        restoreConsole();
     }
 }
