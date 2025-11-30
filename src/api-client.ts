@@ -110,6 +110,7 @@ export class ApiClient {
             origin: DEFAULT_HEADERS.origin,
             referer: DEFAULT_HEADERS.referer,
             'user-agent': DEFAULT_HEADERS.userAgent,
+            timezone: 'Europe/Istanbul',
         };
 
         if (this.partnerId) {

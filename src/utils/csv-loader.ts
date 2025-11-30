@@ -70,9 +70,16 @@ export interface LegalRequirement {
     break_minutes: number;
     break_min_minutes: number;
   }>;
-  default_weekly_working_hours: number;
-  office_open_time: string;
-  office_close_time: string;
+  auto_lock_enabled: boolean;
+  auto_lock_period: string;
+  auto_lock_offset: number;
+  auto_lock_department_ids: number[];
+  auto_lock_contract_type_ids: number[];
+  auto_lock_relock_after: number;
+  auto_lock_relock_after_period: string;
+  lock_receivers: any[];
+  unlock_receivers: any[];
+  unlock_exclusions: any[];
 }
 
 export interface Employee {
@@ -292,9 +299,16 @@ export class CsvLoader {
       min_rest_hours: parseInt(record.min_rest_hours, 10),
       strict_level: record.strict_level,
       breaks: JSON.parse(record.breaks),
-      default_weekly_working_hours: parseInt(record.default_weekly_working_hours, 10),
-      office_open_time: record.office_open_time,
-      office_close_time: record.office_close_time,
+      auto_lock_enabled: false,
+      auto_lock_period: 'monthly',
+      auto_lock_offset: 1,
+      auto_lock_department_ids: [],
+      auto_lock_contract_type_ids: [],
+      auto_lock_relock_after: 1,
+      auto_lock_relock_after_period: 'days',
+      lock_receivers: [],
+      unlock_receivers: [],
+      unlock_exclusions: [],
     }));
   }
 
