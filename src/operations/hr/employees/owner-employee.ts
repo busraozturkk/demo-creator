@@ -411,6 +411,7 @@ export class OwnerEmployeeOperation extends BaseOperation {
         is_shareholder: false,
         contract_history: [],
         // RnD details
+        has_rnd: 1,
         rnd_ratio: 1.0,
         rnd_description: 'Software Development',
         // RnD meta

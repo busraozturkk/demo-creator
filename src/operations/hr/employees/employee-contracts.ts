@@ -27,6 +27,7 @@ interface EmployeeContractWithIds {
   is_current: boolean;
   vacation_day_number_type: string;
   currency_id?: number;
+  has_rnd?: number;
   rnd_description?: string;
   is_shareholder: boolean;
   contract_history?: any[];
@@ -249,6 +250,8 @@ export class EmployeeContractsOperation {
       vacation_day_number_type: 'per_year', // Default
       is_shareholder: contract.is_shareholder,
       currency_id: currencyId,
+      has_rnd: 1, // Enable R&D for all employees
+      rnd_description: 'Software Development', // Default R&D description
     };
 
     // Set date_contract_signing to 5 days before started_at
