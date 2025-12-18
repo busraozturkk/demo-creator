@@ -129,6 +129,10 @@ export interface EmployeeDetailWithIds {
     global_percentage: string;
   };
   occupation_id: number;
+  occupation_ids?: number[];
+  department_id?: number;
+  team_ids?: number[];
+  languages?: string[];
   personnel_number: string;
   working_days: number[];
   vacation_day_number_type: string;

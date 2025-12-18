@@ -71,6 +71,10 @@ export class EmployeesOperation extends BaseOperation {
       work_type: detail.work_type,
       work_location: detail.work_location,
       occupation_id: occupation.id,
+      occupation_ids: [occupation.id], // Array format for API
+      department_id: (occupation as any).department_id, // Department from occupation
+      team_ids: [], // Empty for now, can be populated from teams CSV later
+      languages: ['en'], // Default language, can be customized per employee
       personnel_number: detail.personnel_number,
       working_days: detail.working_days,
       vacation_day_number_type: detail.vacation_day_number_type,
