@@ -175,9 +175,9 @@ export async function runDemoCreation(
             await cleanDefaultsOp.deleteAllDefaults();
             safeEmit(socket, 'log', { type: 'success', message: 'Clean defaults completed\n' });
         } catch (error: any) {
-            safeEmit(socket, 'log', { type: 'error', message: `Clean defaults failed: ${error.message}` });
-            console.error('Clean defaults error details:', error);
-            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+            safeEmit(socket, 'log', { type: 'error', message: `Clean defaults failed: ${error.message}`, jobId });
+            safeEmit(socket, 'log', { type: 'error', message: `Clean defaults error details: ${error.stack || error}`, jobId });
+            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
         }
 
         // Location IDs
@@ -268,9 +268,9 @@ export async function runDemoCreation(
             await ownerEmployeeOp.createOwnerEmployee();
             safeEmit(socket, 'log', { type: 'success', message: 'Owner employee created\n' });
         } catch (error: any) {
-            safeEmit(socket, 'log', { type: 'error', message: `Owner employee creation failed: ${error.message}` });
-            console.error('Owner employee creation error:', error);
-            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+            safeEmit(socket, 'log', { type: 'error', message: `Owner employee creation failed: ${error.message}`, jobId });
+            safeEmit(socket, 'log', { type: 'error', message: `Owner employee creation error details: ${error.stack || error}`, jobId });
+            safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
         }
 
         // Employees
@@ -285,9 +285,9 @@ export async function runDemoCreation(
                 employeeMappings = employeesOp.getMappings();
                 safeEmit(socket, 'log', { type: 'success', message: `Employees created: ${employeeMappings?.length || 0} employees\n` });
             } catch (error: any) {
-                safeEmit(socket, 'log', { type: 'error', message: `Employee creation failed: ${error.message}` });
-                console.error('Employee creation error:', error);
-                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+                safeEmit(socket, 'log', { type: 'error', message: `Employee creation failed: ${error.message}`, jobId });
+                safeEmit(socket, 'log', { type: 'error', message: `Employee creation error details: ${error.stack || error}`, jobId });
+                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
             }
         } else {
             safeEmit(socket, 'log', { type: 'warning', message: `Employees file not found: ${employeesPath}\n` });
@@ -311,9 +311,9 @@ export async function runDemoCreation(
                     safeEmit(socket, 'log', { type: 'success', message: 'Owner employee salary added\n' });
                 }
             } catch (error: any) {
-                safeEmit(socket, 'log', { type: 'error', message: `Owner contract update failed: ${error.message}` });
-                console.error('Owner contract error:', error);
-                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+                safeEmit(socket, 'log', { type: 'error', message: `Owner contract update failed: ${error.message}`, jobId });
+                safeEmit(socket, 'log', { type: 'error', message: `Owner contract error details: ${error.stack || error}`, jobId });
+                safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
             }
 
             // Employee Contracts
@@ -326,9 +326,9 @@ export async function runDemoCreation(
                     await employeeContractsOp.updateEmployeeContracts(employeeContractsPath, employeeMappings, employeeDetailsPath);
                     safeEmit(socket, 'log', { type: 'success', message: 'Employee contracts updated\n' });
                 } catch (error: any) {
-                    safeEmit(socket, 'log', { type: 'error', message: `Employee contracts update failed: ${error.message}` });
-                    console.error('Employee contracts error:', error);
-                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+                    safeEmit(socket, 'log', { type: 'error', message: `Employee contracts update failed: ${error.message}`, jobId });
+                    safeEmit(socket, 'log', { type: 'error', message: `Employee contracts error details: ${error.stack || error}`, jobId });
+                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
                 }
             } else {
                 safeEmit(socket, 'log', { type: 'warning', message: `Employee contracts file not found or no employee mappings\n` });
@@ -393,9 +393,9 @@ export async function runDemoCreation(
                                     await ownerEmployeeOp.updateOwnerEmployeeDetails(hrReferenceDataOp);
                                     safeEmit(socket, 'log', { type: 'success', message: 'Owner employee details updated\n' });
                                 } catch (error: any) {
-                                    safeEmit(socket, 'log', { type: 'error', message: `Owner employee details update failed: ${error.message}` });
-                                    console.error('Owner employee details error:', error);
-                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+                                    safeEmit(socket, 'log', { type: 'error', message: `Owner employee details update failed: ${error.message}`, jobId });
+                                    safeEmit(socket, 'log', { type: 'error', message: `Owner employee details error details: ${error.stack || error}`, jobId });
+                                    safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
                                 }
 
                                 // Now update employee details with the refreshed occupation data
@@ -407,9 +407,9 @@ export async function runDemoCreation(
                                         await employeesOp.updateEmployeeDetails(employeeDetailsPath, emailDomain);
                                         safeEmit(socket, 'log', { type: 'success', message: 'Employee details updated\n' });
                                     } catch (error: any) {
-                                        safeEmit(socket, 'log', { type: 'error', message: `Employee details update failed: ${error.message}` });
-                                        console.error('Employee details error:', error);
-                                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n' });
+                                        safeEmit(socket, 'log', { type: 'error', message: `Employee details update failed: ${error.message}`, jobId });
+                                        safeEmit(socket, 'log', { type: 'error', message: `Employee details error details: ${error.stack || error}`, jobId });
+                                        safeEmit(socket, 'log', { type: 'warning', message: 'Continuing with next step\n', jobId });
                                     }
                                 } else {
                                     safeEmit(socket, 'log', { type: 'warning', message: `Employee details file not found\n` });

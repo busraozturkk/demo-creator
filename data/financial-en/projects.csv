@@ -1,9 +1,9 @@
 type_id,short_title,title,started_at,finished_at
-29,Core Banking,Next-Generation Core Banking Platform Modernization,2024-01-01,2025-12-31
-29,Fraud Detection,Real-time Fraud Detection and Prevention System,2024-02-01,2025-10-31
-29,Digital Wallet,Mobile-First Digital Wallet and Payment Platform,2024-01-15,2025-11-30
-29,Robo Advisory,AI-Powered Wealth Management and Robo-Advisory Platform,2024-03-01,2025-09-30
+29,Core Banking,Next-Generation Core Banking Platform Modernization,2024-01-01,2026-12-31
+29,Fraud Detection,Real-time Fraud Detection and Prevention System,2024-02-01,2026-10-31
+29,Digital Wallet,Mobile-First Digital Wallet and Payment Platform,2024-01-15,2026-11-30
+29,Robo Advisory,AI-Powered Wealth Management and Robo-Advisory Platform,2024-03-01,2026-09-30
 29,Blockchain Pay,Blockchain-Based Cross-Border Payment System,2024-04-01,2026-06-30
-29,Risk Analytics,Advanced Risk Analytics and Regulatory Reporting Platform,2024-02-15,2025-12-31
+29,Risk Analytics,Advanced Risk Analytics and Regulatory Reporting Platform,2024-02-15,2026-12-31
 29,Trade Finance,Digital Trade Finance and Supply Chain Financing Platform,2024-03-10,2026-03-31
-29,Open Banking,Open Banking API Gateway and Ecosystem Platform,2024-01-20,2025-08-31
+29,Open Banking,Open Banking API Gateway and Ecosystem Platform,2024-01-20,2026-08-31

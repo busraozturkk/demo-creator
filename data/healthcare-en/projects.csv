@@ -1,9 +1,9 @@
 type_id,short_title,title,started_at,finished_at
-29,EHR Platform,Next-Generation Electronic Health Records Platform,2024-01-01,2025-12-31
+29,EHR Platform,Next-Generation Electronic Health Records Platform,2024-01-01,2026-12-31
 29,Drug Discovery,AI-Driven Drug Discovery and Molecular Design Platform,2024-02-01,2026-08-31
-29,Telemedicine,Integrated Telemedicine and Remote Patient Monitoring System,2024-01-15,2025-10-31
-29,Clinical Trials,Clinical Trial Management and Patient Recruitment Platform,2024-03-01,2025-11-30
+29,Telemedicine,Integrated Telemedicine and Remote Patient Monitoring System,2024-01-15,2026-10-31
+29,Clinical Trials,Clinical Trial Management and Patient Recruitment Platform,2024-03-01,2026-11-30
 29,Genomics,Genomic Data Analysis and Personalized Medicine Platform,2024-04-01,2026-06-30
-29,Medical Imaging,AI-Powered Medical Imaging Analysis and Diagnosis Support,2024-02-15,2025-09-30
-29,Pharmacy Auto,Automated Pharmacy Management and Medication Dispensing System,2024-03-10,2025-12-31
-29,Patient Portal,Patient Engagement Portal with Health Analytics,2024-01-20,2025-08-31
+29,Medical Imaging,AI-Powered Medical Imaging Analysis and Diagnosis Support,2024-02-15,2026-09-30
+29,Pharmacy Auto,Automated Pharmacy Management and Medication Dispensing System,2024-03-10,2026-12-31
+29,Patient Portal,Patient Engagement Portal with Health Analytics,2024-01-20,2026-08-31

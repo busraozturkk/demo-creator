@@ -1,9 +1,9 @@
 type_id,short_title,title,started_at,finished_at
 29,Smart Grid,Intelligente Netzinfrastruktur und fortschrittliches Messsystem,2024-01-01,2026-12-31
 29,Wind Farm,Offshore-Windpark-Entwicklung und Netzintegration,2024-02-01,2026-06-30
-29,Solar Park,Solarpark im Versorgungsmaßstab mit Energiespeichersystem,2024-01-15,2025-11-30
-29,Grid Battery,Batterieenergiespeichersystem im Netzmaßstab,2024-03-01,2025-10-31
-29,Demand Response,KI-gesteuerte Nachfragesteuerungs- und Lastausgleichsplattform,2024-04-01,2025-12-31
-29,Carbon Track,CO2-Tracking- und Nachhaltigkeitsberichtsplattform,2024-02-15,2025-09-30
+29,Solar Park,Solarpark im Versorgungsmaßstab mit Energiespeichersystem,2024-01-15,2026-11-30
+29,Grid Battery,Batterieenergiespeichersystem im Netzmaßstab,2024-03-01,2026-10-31
+29,Demand Response,KI-gesteuerte Nachfragesteuerungs- und Lastausgleichsplattform,2024-04-01,2026-12-31
+29,Carbon Track,CO2-Tracking- und Nachhaltigkeitsberichtsplattform,2024-02-15,2026-09-30
 29,Nuclear Mod,Modernisierung und Sicherheitsupgrade von Kernkraftwerken,2024-03-10,2027-03-31
-29,EV Charging,Einführung des Elektrofahrzeug-Ladenetzes,2024-01-20,2025-12-31
+29,EV Charging,Einführung des Elektrofahrzeug-Ladenetzes,2024-01-20,2026-12-31
