@@ -362,6 +362,15 @@ body {
     z-index: 10;
 }
 
+.custom-select:has(.dropdown-menu.show) {
+    z-index: 1001;
+}
+
+.form-box:has(.dropdown-menu.show) {
+    z-index: 100;
+    position: relative;
+}
+
 .select-selected {
     cursor: pointer;
     user-select: none;
