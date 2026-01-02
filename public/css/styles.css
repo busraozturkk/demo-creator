@@ -120,7 +120,7 @@ body {
 }
 
 .container.wide {
-    max-width: 1200px;
+    max-width: 1400px;
 }
 
 /* Modern Header */
@@ -156,23 +156,38 @@ body {
 
 /* Modern Form Container */
 .form-container {
-    background: var(--bg-secondary);
-    padding: 32px;
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg);
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
     margin-bottom: 20px;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.form-container:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
+/* Form sections wrapper for side-by-side layout */
+.form-sections-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .form-section {
-    margin-bottom: 32px;
+    flex: 1;
+    margin-bottom: 0;
+    background: var(--bg-secondary);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    z-index: 2;
 }
 
 .form-section-title {
@@ -189,7 +204,16 @@ body {
 }
 
 .form-box {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+}
+
+.form-box:last-child {
+    margin-bottom: 0;
+}
+
+.form-actions {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .form-label {
@@ -335,6 +359,7 @@ body {
 /* Custom Select */
 .custom-select {
     position: relative;
+    z-index: 10;
 }
 
 .select-selected {
@@ -381,7 +406,7 @@ body {
     box-shadow: var(--shadow-md);
     max-height: 200px;
     overflow-y: auto;
-    z-index: 100;
+    z-index: 1000;
     opacity: 0;
     transform: translateY(-8px);
     pointer-events: none;
@@ -1544,6 +1569,14 @@ body {
 
     .container.wide {
         max-width: 100%;
+    }
+
+    .form-sections-wrapper {
+        flex-direction: column;
+    }
+
+    .form-section {
+        margin-bottom: 24px;
     }
 
     .animation-character {

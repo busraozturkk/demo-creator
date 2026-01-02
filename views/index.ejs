@@ -16,7 +16,7 @@
     <div class="character-art"></div>
 </div>
 
-<div class="container">
+<div class="container wide">
     <div class="app-header">
         <h1>DEMO CREATOR</h1>
         <div class="header-border"></div>
@@ -36,6 +36,7 @@
     </div>
 
     <form class="form-container" id="demoForm">
+        <div class="form-sections-wrapper">
         <div class="form-section">
             <div class="form-section-title">Company Information</div>
 
@@ -240,12 +241,15 @@
             </div>
         </div>
         </div>
+        </div>
 
-        <button type="button" id="createBtn" class="btn-primary">
-            <span class="button-text"><i class="fa-solid fa-plus"></i> ADD TO QUEUE <i class="fa-solid fa-plus"></i></span>
-        </button>
+        <div class="form-actions">
+            <button type="button" id="createBtn" class="btn-primary">
+                <span class="button-text"><i class="fa-solid fa-plus"></i> ADD TO QUEUE <i class="fa-solid fa-plus"></i></span>
+            </button>
 
-        <div id="validationErrors" class="validation-errors-container"></div>
+            <div id="validationErrors" class="validation-errors-container"></div>
+        </div>
     </form>
 
     <div id="jobsDashboard" class="jobs-dashboard" style="display: none;">
