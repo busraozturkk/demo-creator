@@ -38,6 +38,9 @@ let startTime = null;
 let currentJobId = null; // Track current running job
 // Demo lifecycle state: 'idle' | 'running' | 'completed' | 'stopped' | 'failed'
 let demoState = 'idle';
+// Child companies array
+let childCompanies = [];
+let childCompanyCounter = 0;
 
 /** Helper: force-collapse any open custom dropdowns */
 function closeAllDropdowns() {
@@ -154,17 +157,25 @@ function initDropdown(selectId, itemsId, inputId) {
 
             // Load projects when data group is selected
             if (inputId === 'dataGroup') {
-                loadProjects(this.getAttribute('data-value'));
+                const projectType = document.getElementById('projectType').value;
+                loadProjects(this.getAttribute('data-value'), projectType);
+            }
+
+            // Load projects when project type is selected
+            if (inputId === 'projectType') {
+                const dataGroup = document.getElementById('dataGroup').value;
+                loadProjects(dataGroup, this.getAttribute('data-value'));
             }
         });
     }
 }
 
 /**
- * Load projects from CSV based on selected data group
+ * Load projects from CSV based on selected data group and project type
  * @param {string} dataGroup
+ * @param {string} projectType - Optional project type ID to filter
  */
-async function loadProjects(dataGroup) {
+async function loadProjects(dataGroup, projectType = null) {
     const projectSelectionBox = document.getElementById('projectSelectionBox');
     const projectList = document.getElementById('projectList');
 
@@ -173,21 +184,34 @@ async function loadProjects(dataGroup) {
         return;
     }
 
+    // If no project type selected, show message
+    if (!projectType) {
+        projectSelectionBox.style.display = 'block';
+        projectList.innerHTML = '<div class="loading-projects">Please select a project type first</div>';
+        return;
+    }
+
     projectSelectionBox.style.display = 'block';
     projectList.innerHTML = '<div class="loading-projects">Loading projects...</div>';
 
     try {
-        const response = await fetch(`/api/projects/${dataGroup}`);
+        const url = `/api/projects/${dataGroup}?projectType=${projectType}`;
+        const response = await fetch(url);
         const data = await response.json();
 
         if (!response.ok || !data.projects) {
             throw new Error('Failed to load projects');
         }
 
+        if (data.projects.length === 0) {
+            projectList.innerHTML = '<div class="loading-projects">No projects found for selected project type</div>';
+            return;
+        }
+
         renderProjects(data.projects);
     } catch (error) {
-        projectList.innerHTML = '<div class="loading-projects">Error loading project-management</div>';
-        console.error('Error loading project-management:', error);
+        projectList.innerHTML = '<div class="loading-projects">Error loading projects</div>';
+        console.error('Error loading projects:', error);
     }
 }
 
@@ -488,6 +512,294 @@ document.getElementById('passwordConfirmToggle').addEventListener('click', funct
     }
 });
 
+// ============================================
+// CHILD COMPANIES MANAGEMENT
+// ============================================
+
+/**
+ * Add a new child company form
+ */
+function addChildCompany() {
+    if (isCreating) return;
+
+    const childId = ++childCompanyCounter;
+    const childData = {
+        id: childId,
+        companyName: '',
+        email: '',
+        useMainPassword: true,
+        password: '',
+        dataGroup: '',
+        emailDomain: '',
+        projectType: '',
+        selectedProjects: [],
+        includeWorkPackages: true
+    };
+
+    childCompanies.push(childData);
+    renderChildCompany(childData);
+}
+
+/**
+ * Remove a child company
+ */
+function removeChildCompany(childId) {
+    if (isCreating) return;
+
+    childCompanies = childCompanies.filter(c => c.id !== childId);
+    document.getElementById(`childCompany-${childId}`)?.remove();
+}
+
+/**
+ * Render a child company form
+ */
+function renderChildCompany(childData) {
+    const container = document.getElementById('childCompaniesList');
+    const childDiv = document.createElement('div');
+    childDiv.className = 'child-company-card';
+    childDiv.id = `childCompany-${childData.id}`;
+
+    childDiv.innerHTML = `
+        <div class="child-company-header">
+            <h3>Child Company #${childData.id}</h3>
+            <button type="button" class="btn-remove-child" onclick="removeChildCompany(${childData.id})">
+                <i class="fa-solid fa-trash"></i> Remove
+            </button>
+        </div>
+
+        <div class="child-company-fields">
+            <div class="form-box">
+                <label class="form-label">Company Name</label>
+                <input type="text"
+                    class="form-input child-company-name"
+                    data-child-id="${childData.id}"
+                    placeholder="Child Company Name">
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Email (Yopmail required)</label>
+                <input type="email"
+                    class="form-input child-email"
+                    data-child-id="${childData.id}"
+                    placeholder="child@yopmail.com">
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Password</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <input type="checkbox"
+                        class="child-use-main-password"
+                        data-child-id="${childData.id}"
+                        checked>
+                    <span>Use main password</span>
+                </div>
+                <input type="password"
+                    class="form-input child-password"
+                    data-child-id="${childData.id}"
+                    placeholder="••••••••"
+                    disabled>
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Email Domain</label>
+                <input type="text"
+                    class="form-input child-email-domain"
+                    data-child-id="${childData.id}"
+                    placeholder="child-company.com">
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Project Type</label>
+                <select class="form-input child-project-type" data-child-id="${childData.id}">
+                    <option value="">Select project type</option>
+                    <option value="29">SFF (German)</option>
+                    <option value="46">WBSO (Dutch)</option>
+                    <option value="119">Forschungsprämie (Austrian)</option>
+                    <option value="120">HMRC R&D Tax Relief (UK)</option>
+                    <option value="171">IRC41 (US)</option>
+                </select>
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Data</label>
+                <select class="form-input child-data-group" data-child-id="${childData.id}">
+                    <option value="">Select data</option>
+                    <optgroup label="English">
+                        <option value="manufacturing-en">Manufacturing & Product Development</option>
+                        <option value="healthcare-en">Healthcare & Pharmaceuticals</option>
+                        <option value="financial-en">Financial Services</option>
+                        <option value="consulting-en">Services & Consulting</option>
+                        <option value="energy-en">Energy & Utilities</option>
+                        <option value="government-en">Government & Public Sector</option>
+                        <option value="construction-en">Construction & Infrastructure</option>
+                        <option value="media-en">Media & Telecommunications</option>
+                    </optgroup>
+                    <optgroup label="Deutsch">
+                        <option value="manufacturing-de">Fertigung & Produktentwicklung</option>
+                        <option value="healthcare-de">Gesundheitswesen & Pharmazeutika</option>
+                        <option value="financial-de">Finanzdienstleistungen</option>
+                        <option value="consulting-de">Dienstleistungen & Beratung</option>
+                        <option value="energy-de">Energie & Versorgung</option>
+                        <option value="government-de">Verwaltung & Öffentlicher Sektor</option>
+                        <option value="construction-de">Bau & Infrastruktur</option>
+                        <option value="media-de">Medien & Telekommunikation</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-box child-project-box-${childData.id}" style="display: none;">
+                <label class="form-label">Select Projects</label>
+                <div class="project-selection-container">
+                    <div class="project-select-all">
+                        <label>
+                            <input type="checkbox" class="child-select-all-projects" data-child-id="${childData.id}">
+                            <span>Select All</span>
+                        </label>
+                    </div>
+                    <div class="project-list child-project-list-${childData.id}">
+                        <div class="loading-projects">Select a data group first</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-box">
+                <label class="form-label">Include Work Packages?</label>
+                <div class="mode-toggle">
+                    <input type="radio"
+                        id="childWorkPackagesYes-${childData.id}"
+                        name="childWorkPackages-${childData.id}"
+                        value="yes"
+                        checked>
+                    <label for="childWorkPackagesYes-${childData.id}" class="mode-option">Yes</label>
+
+                    <input type="radio"
+                        id="childWorkPackagesNo-${childData.id}"
+                        name="childWorkPackages-${childData.id}"
+                        value="no">
+                    <label for="childWorkPackagesNo-${childData.id}" class="mode-option">No</label>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(childDiv);
+    attachChildCompanyListeners(childData.id);
+}
+
+/**
+ * Attach event listeners to child company form
+ */
+function attachChildCompanyListeners(childId) {
+    // Use main password toggle
+    const useMainPasswordCheckbox = document.querySelector(`.child-use-main-password[data-child-id="${childId}"]`);
+    const childPasswordInput = document.querySelector(`.child-password[data-child-id="${childId}"]`);
+
+    useMainPasswordCheckbox.addEventListener('change', function() {
+        childPasswordInput.disabled = this.checked;
+        if (this.checked) {
+            childPasswordInput.value = '';
+        }
+    });
+
+    // Helper function to load projects for this child
+    const loadChildProjects = async () => {
+        const dataGroup = document.querySelector(`.child-data-group[data-child-id="${childId}"]`)?.value;
+        const projectType = document.querySelector(`.child-project-type[data-child-id="${childId}"]`)?.value;
+        const projectBox = document.querySelector(`.child-project-box-${childId}`);
+        const projectList = document.querySelector(`.child-project-list-${childId}`);
+
+        if (!dataGroup) {
+            projectBox.style.display = 'none';
+            return;
+        }
+
+        if (!projectType) {
+            projectBox.style.display = 'block';
+            projectList.innerHTML = '<div class="loading-projects">Please select a project type first</div>';
+            return;
+        }
+
+        projectBox.style.display = 'block';
+        projectList.innerHTML = '<div class="loading-projects">Loading projects...</div>';
+
+        try {
+            const response = await fetch(`/api/projects/${dataGroup}?projectType=${projectType}`);
+            const data = await response.json();
+
+            if (data.projects && data.projects.length > 0) {
+                projectList.innerHTML = data.projects.map((project, index) => `
+                    <div class="project-item">
+                        <label>
+                            <input type="checkbox"
+                                class="project-checkbox child-project-checkbox-${childId}"
+                                data-child-id="${childId}"
+                                data-short-title="${project.short_title}">
+                            <div class="project-item-content">
+                                <div class="project-item-title">${project.title}</div>
+                                <div class="project-item-details">${project.short_title} | ${project.started_at} - ${project.finished_at}</div>
+                            </div>
+                        </label>
+                    </div>
+                `).join('');
+
+                // Select all checkbox
+                const selectAllCheckbox = document.querySelector(`.child-select-all-projects[data-child-id="${childId}"]`);
+                selectAllCheckbox.addEventListener('change', function() {
+                    const checkboxes = document.querySelectorAll(`.child-project-checkbox-${childId}`);
+                    checkboxes.forEach(cb => cb.checked = this.checked);
+                });
+            } else {
+                projectList.innerHTML = '<div class="loading-projects">No projects found for selected project type</div>';
+            }
+        } catch (error) {
+            projectList.innerHTML = '<div class="loading-projects">Failed to load projects</div>';
+        }
+    };
+
+    // Data group change - load projects
+    const dataGroupSelect = document.querySelector(`.child-data-group[data-child-id="${childId}"]`);
+    dataGroupSelect.addEventListener('change', loadChildProjects);
+
+    // Project type change - load projects
+    const projectTypeSelect = document.querySelector(`.child-project-type[data-child-id="${childId}"]`);
+    projectTypeSelect.addEventListener('change', loadChildProjects);
+}
+
+/**
+ * Collect all child companies data
+ */
+function collectChildCompanies() {
+    const mainPassword = document.getElementById('password').value.trim();
+
+    return childCompanies.map(child => {
+        const companyName = document.querySelector(`.child-company-name[data-child-id="${child.id}"]`)?.value.trim();
+        const email = document.querySelector(`.child-email[data-child-id="${child.id}"]`)?.value.trim();
+        const useMainPassword = document.querySelector(`.child-use-main-password[data-child-id="${child.id}"]`)?.checked;
+        const password = useMainPassword ? mainPassword : document.querySelector(`.child-password[data-child-id="${child.id}"]`)?.value.trim();
+        const emailDomain = document.querySelector(`.child-email-domain[data-child-id="${child.id}"]`)?.value.trim();
+        const projectType = document.querySelector(`.child-project-type[data-child-id="${child.id}"]`)?.value;
+        const dataGroup = document.querySelector(`.child-data-group[data-child-id="${child.id}"]`)?.value;
+        const includeWorkPackages = document.querySelector(`input[name="childWorkPackages-${child.id}"]:checked`)?.value === 'yes';
+
+        const selectedCheckboxes = document.querySelectorAll(`.child-project-checkbox-${child.id}:checked`);
+        const selectedProjects = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-short-title'));
+
+        return {
+            companyName,
+            email,
+            password,
+            emailDomain,
+            projectType: projectType ? parseInt(projectType) : undefined,
+            dataGroup,
+            selectedProjects,
+            includeWorkPackages
+        };
+    });
+}
+
+// Add child company button
+document.getElementById('addChildCompanyBtn').addEventListener('click', addChildCompany);
+
 // Create demo
 document.getElementById('createBtn').addEventListener('click', async () => {
     clearAllErrors();
@@ -500,9 +812,11 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     const dataGroup = document.getElementById('dataGroup').value;
     const emailDomain = document.getElementById('emailDomain').value.trim();
     const environment = document.getElementById('environment').value || 'testing';
+    const projectType = document.getElementById('projectType').value;
 
     let hasError = false;
 
+    // Main company validation
     if (!companyName) { showValidationError('Company name is required'); hasError = true; }
     if (!email) { showValidationError('Email is required'); hasError = true; }
     else if (!validateEmail(email)) { showValidationError('Invalid email format'); hasError = true; }
@@ -514,6 +828,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     if (!passwordConfirm) { showValidationError('Password confirmation is required'); hasError = true; }
     else if (password !== passwordConfirm) { showValidationError('Passwords do not match'); hasError = true; }
 
+    if (!projectType) { showValidationError('Project type is required'); hasError = true; }
     if (!dataGroup) { showValidationError('Data selection is required'); hasError = true; }
     if (!emailDomain) { showValidationError('Email domain is required'); hasError = true; }
     if (!environment) { showValidationError('Environment selection is required'); hasError = true; }
@@ -521,6 +836,19 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     const selectedProjectsValue = document.getElementById('selectedProjects').value;
     const selectedProjects = selectedProjectsValue ? JSON.parse(selectedProjectsValue) : [];
     if (selectedProjects.length === 0) { showValidationError('Please select at least one project'); hasError = true; }
+
+    // Child companies validation
+    const childCompaniesData = collectChildCompanies();
+    childCompaniesData.forEach((child, index) => {
+        if (!child.companyName) { showValidationError(`Child Company #${index + 1}: Company name is required`); hasError = true; }
+        if (!child.email) { showValidationError(`Child Company #${index + 1}: Email is required`); hasError = true; }
+        else if (!validateEmail(child.email)) { showValidationError(`Child Company #${index + 1}: Invalid email format`); hasError = true; }
+        else if (!child.email.endsWith('@yopmail.com')) { showValidationError(`Child Company #${index + 1}: Email must be a yopmail.com address`); hasError = true; }
+        if (!child.projectType) { showValidationError(`Child Company #${index + 1}: Project type is required`); hasError = true; }
+        if (!child.dataGroup) { showValidationError(`Child Company #${index + 1}: Data selection is required`); hasError = true; }
+        if (!child.emailDomain) { showValidationError(`Child Company #${index + 1}: Email domain is required`); hasError = true; }
+        if (!child.selectedProjects || child.selectedProjects.length === 0) { showValidationError(`Child Company #${index + 1}: Please select at least one project`); hasError = true; }
+    });
 
     if (hasError) return;
 
@@ -551,6 +879,7 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
     const selectedProjectsValue = document.getElementById('selectedProjects').value;
     const selectedProjects = selectedProjectsValue ? JSON.parse(selectedProjectsValue) : [];
     const includeWorkPackages = document.querySelector('input[name="workPackages"]:checked').value === 'yes';
+    const childCompaniesData = collectChildCompanies();
 
     const createBtn = document.getElementById('createBtn');
     createBtn.disabled = true;
@@ -570,6 +899,7 @@ document.getElementById('confirmYes').addEventListener('click', async () => {
                 environment,
                 selectedProjects,
                 includeWorkPackages,
+                childCompanies: childCompaniesData,
                 socketId: socket.id
             })
         });
@@ -613,6 +943,11 @@ function clearFormForNextJob() {
     projectCheckboxes.forEach(cb => cb.checked = false);
     const selectAllCheckbox = document.getElementById('selectAllProjects');
     if (selectAllCheckbox) selectAllCheckbox.checked = false;
+
+    // Clear child companies
+    childCompanies = [];
+    childCompanyCounter = 0;
+    document.getElementById('childCompaniesList').innerHTML = '';
 
     // Keep data group, environment, project type, and work packages selections
 }

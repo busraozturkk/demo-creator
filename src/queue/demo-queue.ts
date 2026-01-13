@@ -35,6 +35,18 @@ export const demoQueue = new Bull('demo-creation', {
   },
 });
 
+// Child company data interface
+export interface ChildCompanyData {
+  companyName: string;
+  email: string;
+  password: string;
+  emailDomain: string;
+  dataGroup: string;
+  selectedProjects: string[];
+  includeWorkPackages: boolean;
+  projectType?: number;
+}
+
 // Job data interface
 export interface DemoJobData {
   dataGroup: string;
@@ -44,6 +56,7 @@ export interface DemoJobData {
   environment: 'testing' | 'production';
   mode: 'bulk' | 'step-by-step';
   companyName?: string;
+  childCompanies?: ChildCompanyData[];
   selectedProjects?: string[];
   includeWorkPackages?: boolean;
   projectType?: number;

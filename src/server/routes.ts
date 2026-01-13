@@ -53,10 +53,11 @@ router.get('/', (req, res) => {
 });
 
 /**
- * Fetch projects based on data group
+ * Fetch projects based on data group and optional project type
  */
 router.get('/api/projects/:dataGroup', (req, res) => {
     const { dataGroup } = req.params;
+    const { projectType } = req.query;
     const projectsPath = path.join(__dirname, '../../data', dataGroup, 'projects.csv');
 
     if (!fs.existsSync(projectsPath)) {
@@ -72,13 +73,19 @@ router.get('/api/projects/:dataGroup', (req, res) => {
             trim: true,
         });
 
-        const projects = records.map((record: any) => ({
+        let projects = records.map((record: any) => ({
             short_title: record.short_title,
             title: record.title,
             type_id: record.type_id,
             started_at: record.started_at,
             finished_at: record.finished_at,
         }));
+
+        // Filter by project type if provided
+        if (projectType) {
+            const typeId = parseInt(projectType as string);
+            projects = projects.filter((p: any) => parseInt(p.type_id) === typeId);
+        }
 
         res.json({ projects });
     } catch (error) {
@@ -91,7 +98,7 @@ router.get('/api/projects/:dataGroup', (req, res) => {
  * Now uses Bull queue for reliable job processing
  */
 router.post('/api/create-demo', async (req, res) => {
-    const { dataGroup, emailDomain, email, password, environment, companyName, selectedProjects, includeWorkPackages, projectType } = req.body;
+    const { dataGroup, emailDomain, email, password, environment, companyName, childCompanies, selectedProjects, includeWorkPackages, projectType } = req.body;
     const socketId = req.body.socketId;
 
     const socket = io.sockets.sockets.get(socketId);
@@ -110,6 +117,7 @@ router.post('/api/create-demo', async (req, res) => {
             password,
             environment: environment || 'testing',
             companyName,
+            childCompanies: childCompanies || [],
             selectedProjects: selectedProjects || [],
             includeWorkPackages: includeWorkPackages !== false,
             projectType: projectType ? parseInt(projectType) : undefined,

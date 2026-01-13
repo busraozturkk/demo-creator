@@ -42,7 +42,7 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
         }
       };
 
-      // Run demo creation with progress reporting
+      // Run main company demo creation
       await runDemoCreation(
         socket,
         dataGroup,
@@ -56,6 +56,53 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
         job.data.projectType,
         job.id  // Pass job ID for logging
       );
+
+      // Run child companies if any
+      const childCompanies = job.data.childCompanies || [];
+      if (childCompanies.length > 0) {
+        console.log(`[Queue] Job ${job.id} has ${childCompanies.length} child companies to create`);
+
+        for (let i = 0; i < childCompanies.length; i++) {
+          const child = childCompanies[i];
+          console.log(`[Queue] Creating child company ${i + 1}/${childCompanies.length}: ${child.companyName}`);
+
+          if (socket) {
+            socket.emit('log', {
+              type: 'info',
+              message: `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏢 CHILD COMPANY #${i + 1}: ${child.companyName}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`,
+              jobId: job.id
+            });
+          }
+
+          try {
+            await runDemoCreation(
+              socket,
+              child.dataGroup,
+              child.emailDomain,
+              child.email,
+              child.password,
+              environment,
+              child.companyName,
+              child.selectedProjects,
+              child.includeWorkPackages,
+              child.projectType,
+              job.id
+            );
+
+            console.log(`[Queue] Successfully created child company: ${child.companyName}`);
+          } catch (error: any) {
+            console.error(`[Queue] Failed to create child company ${child.companyName}:`, error.message);
+            if (socket) {
+              socket.emit('log', {
+                type: 'error',
+                message: `Failed to create child company "${child.companyName}": ${error.message}`,
+                jobId: job.id
+              });
+            }
+            // Continue with next child company instead of failing entire job
+          }
+        }
+      }
 
     } else {
       // Step-by-step mode - individual steps are run via separate API calls
