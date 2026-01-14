@@ -25,8 +25,9 @@ export async function runDemoCreation(
     selectedProjects: string[] = [],
     includeWorkPackages: boolean = true,
     projectTypeId?: number,
-    jobId?: string | number
-) {
+    jobId?: string | number,
+    existingCompanyId?: number  // For child companies that are already created
+): Promise<number | undefined> {  // Return parent company ID for child linking
     // Note: We don't override console for parallel jobs to avoid log mixing
     // All logging is done via safeEmit() instead
 
@@ -65,9 +66,10 @@ export async function runDemoCreation(
         }
         safeEmit(socket, 'log', { type: 'success', message: 'Cache cleaned successfully\n' , jobId});
 
-        // Step 0: Create company
-        let companyId: number | undefined;
-        if (companyName) {
+        // Step 0: Create company (skip if existingCompanyId is provided)
+        let companyId: number | undefined = existingCompanyId;
+
+        if (!existingCompanyId && companyName) {
             safeEmit(socket, 'log', { type: 'info', message: '\n=== Step 0: Creating Company ===' , jobId});
             try {
                 const { CompanyCreationOperation } = await import('../operations/setup/company-creation');
@@ -78,6 +80,8 @@ export async function runDemoCreation(
                 safeEmit(socket, 'log', { type: 'error', message: `Company creation failed: ${error.message}` , jobId});
                 throw error; // Stop execution if company creation fails
             }
+        } else if (existingCompanyId) {
+            safeEmit(socket, 'log', { type: 'info', message: `\n=== Using existing company ID: ${existingCompanyId} ===\n` , jobId});
         }
 
         // Step 1: Register account
@@ -903,8 +907,12 @@ export async function runDemoCreation(
 
         safeEmit(socket, 'complete');
 
+        // Return company ID for potential child company linking
+        return companyId;
+
     } catch (error: any) {
         safeEmit(socket, 'log', { type: 'error', message: `Fatal Error: ${error.message}` , jobId});
         safeEmit(socket, 'error', { message: error.message });
+        return undefined;
     }
 }

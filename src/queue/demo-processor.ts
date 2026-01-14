@@ -42,8 +42,8 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
         }
       };
 
-      // Run main company demo creation
-      await runDemoCreation(
+      // Run main company demo creation and get parent company ID
+      const parentCompanyId = await runDemoCreation(
         socket,
         dataGroup,
         emailDomain,
@@ -59,8 +59,17 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
 
       // Run child companies if any
       const childCompanies = job.data.childCompanies || [];
-      if (childCompanies.length > 0) {
-        console.log(`[Queue] Job ${job.id} has ${childCompanies.length} child companies to create`);
+      if (childCompanies.length > 0 && parentCompanyId) {
+        console.log(`[Queue] Job ${job.id} has ${childCompanies.length} child companies to create under parent ${parentCompanyId}`);
+
+        // Import child company creation operation
+        const { ChildCompanyCreationOperation } = await import('../operations/setup/child-company-creation');
+        const { AuthService } = await import('../auth');
+        const { parseEnvironment, getEnvironmentConfig } = await import('../environment');
+
+        // Parse environment and get config for auth
+        const env = parseEnvironment(environment);
+        const envConfig = getEnvironmentConfig(env);
 
         for (let i = 0; i < childCompanies.length; i++) {
           const child = childCompanies[i];
@@ -75,6 +84,45 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
           }
 
           try {
+            // Step 1: Create child company and link to parent
+            if (socket) {
+              socket.emit('log', {
+                type: 'info',
+                message: `\n=== Creating Child Company Entity ===`,
+                jobId: job.id
+              });
+            }
+
+            const childCompanyOp = new ChildCompanyCreationOperation();
+
+            // Login with main company credentials to get auth token for linking
+            const authService = new AuthService(envConfig.loginUrl);
+            await authService.login(job.data.email || '', job.data.password || '');
+
+            // Create child company and link via shareholder
+            const childCompanyId = await childCompanyOp.createAndLinkChildCompany(
+              child.companyName,
+              parentCompanyId,
+              authService
+            );
+
+            if (socket) {
+              socket.emit('log', {
+                type: 'success',
+                message: `Child company created and linked (ID: ${childCompanyId})\n`,
+                jobId: job.id
+              });
+            }
+
+            // Step 2: Run full demo creation for child company
+            if (socket) {
+              socket.emit('log', {
+                type: 'info',
+                message: `\n=== Setting Up Child Company Data ===`,
+                jobId: job.id
+              });
+            }
+
             await runDemoCreation(
               socket,
               child.dataGroup,
@@ -86,7 +134,8 @@ demoQueue.process(5, async (job: Job<DemoJobData>) => {
               child.selectedProjects,
               child.includeWorkPackages,
               child.projectType,
-              job.id
+              job.id,
+              childCompanyId  // Pass existing company ID to skip company creation
             );
 
             console.log(`[Queue] Successfully created child company: ${child.companyName}`);
