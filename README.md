@@ -1,3 +1,40 @@
+This repository contains the original implementation of the **Demo Creator** project, fully designed and developed by me.
+
+## Ownership & Background
+
+This project was independently built and maintained by me.
+It is being made public to clearly establish authorship and provide a transparent development timeline.
+
+The complete commit history in this repository reflects the original development of the project and serves as proof of ownership.
+
+## Purpose
+
+Demo Creator is designed to:
+
+* Create and manage demo environments efficiently
+* Automate setup processes for testing and showcasing applications
+* Simplify repetitive demo preparation workflows
+
+## License
+
+This project is licensed under the MIT License.
+
+## Notice
+
+You are free to use this project under the terms of the license. However:
+
+* Proper attribution is required
+* Claiming this work as your own is not permitted
+* Unauthorized use or redistribution without attribution may lead to legal action
+
+## Timeline
+
+All development history, including initial implementation and subsequent updates, is available in the commit timeline of this repository.
+
+## Contact
+
+For questions or collaboration, feel free to reach out via GitHub.
+
 # Demo Account Creator
 
 A TypeScript application for automated creation and population of demo accounts for Clusterix HR system.
