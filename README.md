@@ -37,7 +37,7 @@ For questions or collaboration, feel free to reach out via GitHub.
 
 # Demo Account Creator
 
-A TypeScript application for automated creation and population of demo accounts for Clusterix HR system.
+A TypeScript application for automated creation and population of demo accounts for system.
 
 ## Overview
 
